@@ -87,8 +87,19 @@ services:
   #     - QGIS_SERVER_LOG_LEVEL=0
   #     - DEBUG=1
 
+  nginx:
+    image: nginx
+    volumes:
+     - ./docker/nginx/conf/nginx-fcgi-sample.conf:/etc/nginx/nginx.conf
+    ports:
+     - "127.0.0.1:8010:80"
+    networks:
+     - puc_network
+    restart: always
+    depends_on:
+     - qgis
   qgis:
-    image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
+    image: qgis/qgis-server:stable
     environment:
       # Do not run the embedded copy of nginx
       SKIP_NGINX: "true"
@@ -99,16 +110,58 @@ services:
       QGIS_SERVER_WMS_MAX_HEIGHT: 5000
       QGIS_SERVER_WMS_MAX_WIDTH: 5000
     ports:
-      - ${QGIS_SERVER_PORT:-6000}:9993
+     - 9993:9993
+    networks:
+     - puc_network
     volumes:
      # Data should be mount RO when working
      # with GeoPackages and more than one QGIS container
-      - ./docker/qgis/data:/io/data:ro
-      - ./docker/qgis/plugins:/io/plugins
-      - ./docker/qgis/fonts:/usr/share/fonts
-      - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
-      # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
-    restart: on-failure
+     - ./docker/qgis/test/data:/io/data:ro
+     - ./docker/qgis/plugins:/io/plugins
+     - ./docker/qgis/fonts:/usr/share/fonts
+     - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
+     # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
+    restart: always
+
+
+  # qgis:
+  #   image: camptocamp/qgis-server:${QGIS_SERVER_VERSION:-3.38}
+  #   environment:
+  #     QGIS_CATCH_SEGV: 1
+  #     FCGID_MAX_REQUESTS_PER_PROCESS:
+  #     FCGID_MIN_PROCESSES: 1
+  #     FCGID_MAX_PROCESSES: 5
+  #     FCGID_IO_TIMEOUT: 40
+  #     FCGID_BUSY_TIMEOUT: 300
+  #     FCGID_IDLE_TIMEOUT: 300
+  #   ports:
+  #     - ${QGIS_SERVER_PORT:-6000}:80
+  #   volumes:
+  #    - ./docker/qgis/data:/etc/qgisserver
+  #   restart: on-failure
+
+  # qgis:
+  #   image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
+  #   environment:
+  #     # Do not run the embedded copy of nginx
+  #     SKIP_NGINX: "true"
+  #     # Improve rendering performance
+  #     QGIS_SERVER_PARALLEL_RENDERING: "true"
+  #     QGIS_SERVER_MAX_THREADS: 4
+  #     # Limit the maximum size returned by a GetMap
+  #     QGIS_SERVER_WMS_MAX_HEIGHT: 5000
+  #     QGIS_SERVER_WMS_MAX_WIDTH: 5000
+  #   ports:
+  #     - ${QGIS_SERVER_PORT:-6000}:9993
+  #   volumes:
+  #    # Data should be mount RO when working
+  #    # with GeoPackages and more than one QGIS container
+  #     - ./docker/qgis/data:/io/data:ro
+  #     - ./docker/qgis/plugins:/io/plugins
+  #     - ./docker/qgis/fonts:/usr/share/fonts
+  #     - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
+  #     # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
+  #   restart: on-failure
 
   mailserver:
     image: mailserver/docker-mailserver:${DOCKER_MAILSERVER_VERSION:-14.0.0}
@@ -139,3 +192,6 @@ volumes:
   vue_node_modules:
   docs_node_modules:
   database_data:
+
+networks:
+  puc_network:
