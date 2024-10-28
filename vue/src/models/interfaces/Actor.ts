@@ -43,5 +43,6 @@ export interface Actor extends Timestampable {
     logoToUpload: ContentImageFromUserFile
     imagesToUpload: ContentImageFromUserFile[]
     officeLocation: string
+    newSubmissionMessage?: string
   }
   

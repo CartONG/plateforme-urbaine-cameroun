@@ -179,6 +179,9 @@ class Actor
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?array $externalImages = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $newSubmissionMessage = null;
+
     public function __construct()
     {
         $this->expertises = new ArrayCollection();
@@ -504,6 +507,18 @@ class Actor
     public function setExternalImages(?array $externalImages): static
     {
         $this->externalImages = $externalImages;
+
+        return $this;
+    }
+
+    public function getNewSubmissionMessage(): ?string
+    {
+        return $this->newSubmissionMessage;
+    }
+
+    public function setNewSubmissionMessage(?string $newSubmissionMessage): static
+    {
+        $this->newSubmissionMessage = $newSubmissionMessage;
 
         return $this;
     }
