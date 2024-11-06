@@ -16,6 +16,7 @@
         "form": {
             "createTitle": "Ajouter un acteur",
             "editTitle": "Modifier les informations",
+            "validateTitle": "Valider l'acteur",
             "name": "Nom de l'acteur*",
             "acronym": "Acronyme*",
             "category": "Catégorie*",

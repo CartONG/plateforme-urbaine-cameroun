@@ -1,12 +1,18 @@
 <template>
     <Modal
-        :title="actorToEdit ? $t('actors.form.editTitle') : $t('actors.form.createTitle')"
+        :title="actorToEdit ?
+                    userStore.userIsAdmin() && !actorToEdit.isValidated ?
+                        $t('actors.form.validateTitle') :
+                        $t('actors.form.editTitle') :
+                    $t('actors.form.createTitle')"
         :show="appStore.showEditContentDialog"
         @close="actorsStore.actorEdition.active = false">
         <template #content>
             <div class="ContentForm__toValidate mt-3" v-if="actorToEdit && !actorToEdit.isValidated">
                 <img src="@/assets/images/actorToValidate.svg" alt="">
-                <span class="ml-2">Nouvelle soumission de Prénom NOM reçue le 31 janvier 2025 à 11h30.</span>
+                <span class="ml-2">Nouvelle soumission de {{ actorToEdit.name }} {{ actorToEdit.lastName }} reçue le 
+                    {{ createdDate }}.
+                </span>
             </div>
             <div class="ContentForm__ctn mt-4">
                 <v-form @submit.prevent="submitForm" id="actor-form">
@@ -95,7 +101,14 @@
             <v-btn color="white" @click="actorsStore.actorEdition.active = false">{{ $t('forms.cancel') }}</v-btn>
         </template>
         <template #footer-right>
-            <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">{{ actorToEdit ? $t('forms.modify') : $t('forms.create') }}</v-btn>
+            <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">
+                {{ actorToEdit ?
+                    userStore.userIsAdmin() && !actorToEdit.isValidated ?
+                        $t('forms.submit') :
+                        $t('forms.modify') :
+                    $t('forms.create') 
+                }}
+            </v-btn>
         </template>
     </Modal>
 </template>
@@ -116,9 +129,11 @@ import Modal from '@/components/global/Modal.vue';
 import type { MediaObject } from '@/models/interfaces/MediaObject';
 import ImagesLoader from '@/components/forms/ImagesLoader.vue';
 import { useThematicStore } from '@/stores/thematicStore';
+import { useUserStore } from '@/stores/userStore';
 const appStore = useApplicationStore();
 const actorsStore = useActorsStore();
 const thematicsStore = useThematicStore()
+const userStore = useUserStore();
 
 const actorToEdit: Actor | null = actorsStore.actorEdition.actor
 const { form, handleSubmit, isSubmitting } = ActorsFormService.getActorsForm(actorToEdit);
@@ -127,6 +142,18 @@ const categoryItems = Object.values(ActorsCategories)
 const expertisesItems = actorsStore.actorsExpertises
 const thematicsItems = computed(() => thematicsStore.thematics)
 const administrativeScopesItems = actorsStore.actorsAdministrativesScopes
+const createdDate = computed(() => {
+    if (actorToEdit) {
+        return new Intl.DateTimeFormat('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    }).format(new Date(actorToEdit.createdAt));
+    }
+    return null
+})
 
 const existingLogo = ref<(MediaObject | string)[]>([]);
 const existingImages = ref<(MediaObject | string)[]>([])
@@ -135,6 +162,7 @@ let existingExternalImages: string[] = []
 onMounted(async () => {
     await thematicsStore.getAll()
     if (actorToEdit) {
+        console.log(actorToEdit)
         actorToEdit.logo ? existingLogo.value = [actorToEdit.logo] : existingLogo.value = []
         existingImages.value = [...actorToEdit.images, ...actorToEdit.externalImages]
         existingHostedImages = actorToEdit.images
