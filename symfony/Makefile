@@ -58,7 +58,7 @@ make-run-migration: make-migration run-migration
 reset-database: recreate-database run-migration
 rerun-database: reset-database run-fixtures
 configure-database: enable-postgis
-create-short-migration: recreate-database run-migration make-migration rerun-migration
+create-short-migration: reset-database make-migration rerun-migration run-fixtures
 
 init-jwt-keypair:
 	@$(SYMFONY) lexik:jwt:generate-keypair --overwrite

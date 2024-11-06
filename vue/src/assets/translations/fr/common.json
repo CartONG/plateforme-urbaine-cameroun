@@ -122,5 +122,13 @@
         "project": "Projet",
         "actor": "Acteur",
         "resource": "Ressource"
+    },
+    "beneficiaryType": {
+        "population": "Population",
+        "local_communities": "Communautés locales",
+        "communities_of_communes": "Communautés de communes",
+        "regions": "Régions",
+        "local_institutions": "Institutions locales",
+        "associations_ngos": "Associations / ONG"
     }
 }

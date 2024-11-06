@@ -11,6 +11,7 @@ import type { AdministrativeScope } from '@/models/enums/AdministrativeScope';
 import type { Actor } from '@/models/interfaces/Actor';
 import { useApplicationStore } from './applicationStore';
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList';
+import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType';
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const projects: Ref<Project[]> = ref([])
@@ -28,6 +29,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     thematics: Thematic['id'][],
     statuses: Status[],
     interventionZones: AdministrativeScope[],
+    beneficiaryTypes: BeneficiaryType[],
     contractingActors: Actor['id'][],
     financialActors: Actor['id'][],
   }> = reactive({
@@ -35,6 +37,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     thematics: [],
     statuses: [],
     interventionZones: [],
+    beneficiaryTypes: [],
     contractingActors: [],
     financialActors: [],
   })
@@ -84,14 +87,21 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       const projectThematicIds = project.thematics.map((projectThematic) => projectThematic.id)
       const projectContractingActorIds = project.contractingActors.map((contractingActor) => contractingActor.id)
       const projectFinancialActorIds = project.financialActors.map((financialActor) => financialActor.id)
+      const searchValue = filters.searchValue.toLowerCase()
+      const valuesToSearchOn = [
+        project.name,
+        project.actor.name,
+        project.location
+      ].map((value) => value.toLowerCase())
 
       return (
-        project.name.toLowerCase().includes(filters.searchValue.toLowerCase()) &&
+        valuesToSearchOn.some((value) => value.includes(searchValue)) &&
         (filters.thematics.length === 0 || filters.thematics.some((thematic) => projectThematicIds.includes(thematic))) &&
         (filters.statuses.length === 0  || filters.statuses.some((status) => project.status === status)) &&
         (filters.interventionZones.length === 0  || filters.interventionZones.some((interventionZone) => project.interventionZone === interventionZone)) &&
         (filters.contractingActors.length === 0  || filters.contractingActors.some((contractingActor) => projectContractingActorIds.includes(contractingActor))) &&
-        (filters.financialActors.length === 0  || filters.financialActors.some((financialActor) => projectFinancialActorIds.includes(financialActor)))
+        (filters.financialActors.length === 0  || filters.financialActors.some((financialActor) => projectFinancialActorIds.includes(financialActor))) &&
+        (filters.beneficiaryTypes.length === 0  || filters.beneficiaryTypes.some((beneficiaryType) => project.beneficiaryTypes.includes(beneficiaryType)))
       )
     })
   })
@@ -119,6 +129,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.thematics = []
     filters.statuses = []
     filters.interventionZones = []
+    filters.beneficiaryTypes = []
     filters.contractingActors = []
     filters.financialActors = []
   }
