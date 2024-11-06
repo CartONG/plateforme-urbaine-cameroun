@@ -10,7 +10,7 @@ use ApiPlatform\State\ProcessorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ActorProcessor implements ProcessorInterface
+class ValidateEntityProcessor implements ProcessorInterface
 {
     
 

@@ -72,7 +72,7 @@
 
         <div class="d-flex w-100 justify-space-between align-center">
             <div class="d-flex ">
-                <span class="text-body-2"> {{ `${actorsStore.actors.length.toString()} ${actorsStore.actors.length > 1 ? $t('actors.actors') : $t('actors.actor')}` }}</span>
+                <span class="text-body-2"> {{ `${totalActors.length.toString()} ${$t('admin.member', totalActors.length)}`}}</span>
                 <span class="ml-3 cursor-pointer text-caption text-main-blue" @click="resetFilters">{{ $t('actors.resetFilters') }}</span>
                 <div class="Actors__filteredItemsCount ml-1">{{ filteredActors.length }}</div>
             </div>
@@ -138,8 +138,9 @@ const selectedAdminScope: Ref<string[] | null> = ref(null);
 const categoryItems = Object.values(ActorsCategories)
 const selectedCategory: Ref<ActorsCategories[] | null> = ref(null);
 
+const totalActors = computed(() => actorsStore.actors.filter(x => x.isValidated))
 const filteredActors = computed(() => {
-    let filteredActors = [...actorsStore.actors]
+    let filteredActors = [...totalActors.value]
 
     if (searchQuery.value) {
         filteredActors = filteredActors.filter((actor: Actor) => {
