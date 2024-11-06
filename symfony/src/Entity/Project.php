@@ -2,25 +2,27 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\GetCollection;
-use App\Enum\AdministrativeScope;
 use App\Enum\Status;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\AdministrativeScope;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Controller\Project\SimilarProjectsAction;
-use App\Repository\ProjectRepository;
-use App\Entity\Trait\SluggableEntity;
-use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\SluggableEntity;
+use App\Repository\ProjectRepository;
+use App\Entity\Trait\ToValidateEntity;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Trait\TimestampableEntity;
 use Doctrine\Common\Collections\Collection;
 use Jsor\Doctrine\PostGIS\Types\PostGISType;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Project\SimilarProjectsAction;
 use Symfony\Component\Serializer\Attribute\Groups;
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use App\Services\State\Provider\ProjectProvider;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ApiFilter(filterClass: SearchFilter::class, properties: ['slug' => SearchFilterInterface::STRATEGY_EXACT])]
@@ -28,6 +30,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     paginationEnabled: false,
     operations: [
         new GetCollection(
+            provider: ProjectProvider::class,
             uriTemplate: '/projects/all',
             normalizationContext: ['groups' => [self::PROJECT_READ_ALL]]
         ),
@@ -49,6 +52,7 @@ class Project
     use TimestampableEntity;
     use BlameableEntity;
     use SluggableEntity;
+    use ToValidateEntity;
 
     public const PROJECT_READ = 'project:read';
     public const PROJECT_READ_ALL = 'project:read:all';

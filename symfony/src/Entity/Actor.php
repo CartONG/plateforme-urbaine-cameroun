@@ -23,10 +23,11 @@ use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\SluggableEntity;
 use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\ToValidateEntity;
 use Doctrine\Common\Collections\Collection;
 use Jsor\Doctrine\PostGIS\Types\PostGISType;
 use App\Services\State\Provider\ActorProvider;
-use App\Services\State\Processor\ActorProcessor;
+use App\Services\State\Processor\ValidateEntityProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,15 +43,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ),
         new Get(),
         new Post(
-            processor: ActorProcessor::class,
+            processor: ValidateEntityProcessor::class,
             security: "is_granted('".UserRoles::ROLE_EDITOR_ACTORS."')"
         ),
         new Patch(
-            processor: ActorProcessor::class,
+            processor: ValidateEntityProcessor::class,
             security: 'is_granted("'.ActorVoter::EDIT.'", object)'
         ),
         new Put(
-            processor: ActorProcessor::class,
+            processor: ValidateEntityProcessor::class,
             security: 'is_granted("'.ActorVoter::EDIT.'", object)'
         ),
         new Delete(
@@ -69,6 +70,7 @@ class Actor
     use TimestampableEntity;
     use SluggableEntity;
     use BlameableEntity;
+    use ToValidateEntity;
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -84,10 +86,6 @@ class Actor
     #[ORM\Column(length: 255)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::PROJECT_READ_ALL, Project::PROJECT_READ])]
     private ?string $acronym = null;
-
-    #[ORM\Column]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_READ_COLLECTION])]
-    private ?bool $isValidated = false;
 
     #[ORM\Column(enumType: ActorCategory::class)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::PROJECT_READ])]
@@ -212,18 +210,6 @@ class Actor
     public function setAcronym(string $acronym): static
     {
         $this->acronym = strtoupper($acronym);
-
-        return $this;
-    }
-
-    public function getIsValidated(): ?bool
-    {
-        return $this->isValidated;
-    }
-
-    public function setIsValidated(bool $isValidated): static
-    {
-        $this->isValidated = $isValidated;
 
         return $this;
     }

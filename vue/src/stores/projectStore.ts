@@ -39,8 +39,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     financialActors: [],
   })
 
-  async function getAll(): Promise<void> {
-    if (projects.value.length === 0) {
+  async function getAll(forceGet = false): Promise<void> {
+    if (projects.value.length === 0 || forceGet) {
       projects.value = await ProjectService.getAll()
     }
   }
