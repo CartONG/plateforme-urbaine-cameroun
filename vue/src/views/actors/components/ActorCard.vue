@@ -13,7 +13,7 @@
         </template>
         <template #footer-left>
             <ShareButton :additionnal-path="actor.name"/>
-            <LikeButton />
+            <LikeButton :id="actor.id" />
         </template>
         <template #footer-right>
             <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>

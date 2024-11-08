@@ -6,7 +6,7 @@ import type { Status } from "@/models/enums/contents/Status";
 import type { User } from "@/models/interfaces/auth/User";
 
 export interface Project extends Timestampable {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   createdBy: User;

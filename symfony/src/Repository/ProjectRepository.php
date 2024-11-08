@@ -19,7 +19,7 @@ class ProjectRepository extends ServiceEntityRepository
 
     public function findLatest(): array {
         return $this->createQueryBuilder('p')
-            ->select("p.name, p.updatedAt, p.description, p.slug, p.logo as image, '" . ItemType::PROJECT->value . "' as type")
+            ->select("p.id, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '" . ItemType::PROJECT->value . "' as type")
             ->orderBy('p.updatedAt', 'DESC')
             ->setMaxResults(3)
             ->getQuery()

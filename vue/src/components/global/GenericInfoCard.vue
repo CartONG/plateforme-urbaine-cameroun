@@ -12,7 +12,7 @@
         <template #footer-left>
             <v-chip class="mr-2">{{ $t('itemType.' + type) }}</v-chip>
             <ShareButton />
-            <LikeButton />
+            <LikeButton :id="id" />
         </template>
         <template #footer-right>
             <v-icon class="InfoCard__actionIcon" icon="mdi mdi-open-in-new" color="light-blue"></v-icon>
@@ -28,6 +28,7 @@ import { ItemType } from '@/models/enums/app/ItemType';
 import { computed } from 'vue';
 
 const props = defineProps<{
+    id: string,
     title: string,
     description: string,
     image?: string,

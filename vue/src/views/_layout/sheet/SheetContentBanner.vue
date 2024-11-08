@@ -15,8 +15,8 @@
                     </v-btn>
                     <slot name="custom-actions"></slot>
                     <ShareButton />
-                    <LikeButton />
-                    <v-btn :to="{ name: 'map' }" class="text-main-blue px-2 hide-sm" ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1">{{ $t("content.createAMap") }}</v-btn>
+                    <LikeButton :id="id" />
+                    <v-btn :to="{ name: 'map' }" class="text-main-blue px-2 hide-sm ml-3" ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1">{{ $t("content.createAMap") }}</v-btn>
                     <UpdatedAtLabel :date="updatedAt" class="show-sm" />
                 </div>
             </template>
@@ -33,6 +33,7 @@ import LikeButton from '@/components/global/LikeButton.vue';
 import SheetContactActions from './SheetContactActions.vue';
 
 defineProps<{
+    id: string,
     title: string,
     subtitle: string,
     email: string,

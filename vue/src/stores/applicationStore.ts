@@ -9,6 +9,8 @@ import { useProjectStore } from '@/stores/projectStore'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import type { Ref } from 'vue'
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
+import type { LikesList } from '@/models/interfaces/LikesList'
+import { LikeService } from '@/services/likeSystem/LikeService'
 
 export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const { mobile } = useDisplay()
@@ -20,6 +22,7 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const showSnackBar = ref(false)
   const snackBarMessage = ref('')
   const currentContentPage: Ref<ContentPagesList> = ref(ContentPagesList.HOME)
+  const likesList: Ref<LikesList | null> = ref(null)
 
   const breadcrumbs = computed(() => {
     activeTab.value = NavigationTabsService.getTabsNumberFromRoute(route, activeTab.value)
@@ -35,5 +38,35 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     return route.name && typeof route.name === 'string' && lightUiRoutes.includes(route.name)
   })
 
-  return { mobile, showSnackBar, snackBarMessage, activeTab, activeDialog, breadcrumbs, is100vh, isLightHeader, triggerZoomReset, showEditContentDialog, currentContentPage }
+  async function getLikesList() {
+    likesList.value = await LikeService.getLikesList()
+  }
+
+  async function addLike(id: string) {
+    await LikeService.addLike(id)
+    await getLikesList()
+  }
+
+  async function deleteLike(id: number) {
+    await LikeService.deleteLike(id)
+    await getLikesList()
+  }
+
+  return { 
+    mobile,
+    showSnackBar,
+    snackBarMessage,
+    activeTab,
+    activeDialog,
+    breadcrumbs,
+    is100vh,
+    isLightHeader,
+    triggerZoomReset,
+    showEditContentDialog,
+    currentContentPage,
+    likesList,
+    getLikesList,
+    addLike,
+    deleteLike
+  }
 })

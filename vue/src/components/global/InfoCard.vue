@@ -9,9 +9,7 @@
         </div>
         <div class="InfoCard__footer" v-if="!light">
             <div class="InfoCard__footerBlock InfoCard__footerBlock--left">
-                <slot name="footer-left">
-                    <LikeButton />
-                </slot>
+                <slot name="footer-left"></slot>
             </div>
             <div class="InfoCard__footerBlock InfoCard__footerBlock--right">
                 <slot name="footer-right"></slot>

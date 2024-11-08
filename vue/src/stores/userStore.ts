@@ -12,6 +12,7 @@ import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ImageLoader } from '@/services/files/ImageLoader'
 import type { MediaObject } from '@/models/interfaces/MediaObject'
 import { UserService } from '@/services/userAndAuth/UserService'
+import { useApplicationStore } from './applicationStore'
 
 
 export const useUserStore = defineStore(StoresList.USER, () => {
@@ -44,6 +45,8 @@ export const useUserStore = defineStore(StoresList.USER, () => {
 
   const setCurrentUser = async () => {
     currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
+    const appStore = useApplicationStore()
+    appStore.getLikesList()
   }
 
   const signUp = async (values: SignUpValues) => {

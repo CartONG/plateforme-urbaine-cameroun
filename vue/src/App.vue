@@ -33,11 +33,12 @@ const appStore = useApplicationStore();
 const actorsStore = useActorsStore();
 const userStore = useUserStore();
 const thematicStore = useThematicStore()
-onBeforeMount(async () => {
-  await actorsStore.getActors()
-  await actorsStore.getActorsSelectListContent()
-  await thematicStore.getAll()
+onBeforeMount(() => {
   userStore.checkAuthenticated()
+  actorsStore.getActors()
+  actorsStore.getActorsSelectListContent()
+  thematicStore.getAll()
+  appStore.getLikesList()
 })
 </script>
 

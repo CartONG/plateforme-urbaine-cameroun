@@ -139,10 +139,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?string $description = null;
 
+    /**
+     * @var Collection<int, UserLike>
+     */
+    #[ORM\OneToMany(targetEntity: UserLike::class, mappedBy: 'userId', orphanRemoval: true)]
+    private Collection $userLikes;
+
     public function __construct()
     {
         $this->actorsCreated = new ArrayCollection();
         $this->setRoles([UserRoles::ROLE_USER]);
+        $this->userLikes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -378,6 +385,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLike>
+     */
+    public function getUserLikes(): Collection
+    {
+        return $this->userLikes;
+    }
+
+    public function addUserLike(UserLike $userLike): static
+    {
+        if (!$this->userLikes->contains($userLike)) {
+            $this->userLikes->add($userLike);
+            $userLike->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLike(UserLike $userLike): static
+    {
+        if ($this->userLikes->removeElement($userLike)) {
+            // set the owning side to null (unless already changed)
+            if ($userLike->getUserId() === $this) {
+                $userLike->setUserId(null);
+            }
+        }
 
         return $this;
     }

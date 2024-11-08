@@ -50,6 +50,7 @@ security:
         - { path: ^/api/administrative_scopes, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/news, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/kpis, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/user_likes, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

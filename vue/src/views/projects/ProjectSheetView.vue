@@ -5,6 +5,7 @@
                 <img :src="project.logo" class="SheetView__logo">
             </div>
             <SheetContentBanner
+                :id="project.id"
                 :title="project.name"
                 :subtitle="project.location"
                 :email="project.projectManagerEmail"

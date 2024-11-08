@@ -18,7 +18,7 @@
         </template>
         <template #footer-left>
             <ShareButton />
-            <LikeButton />
+            <LikeButton :id="project.id" />
         </template>
         <template #footer-right>
             <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>

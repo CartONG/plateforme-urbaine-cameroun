@@ -2,6 +2,7 @@
     <div class="HomeNews">
         <GenericInfoCard
             v-for="item in homeStore.news"
+            :id="item.id"
             :title="item.name"
             :description="item.description"
             :image="item.image"
