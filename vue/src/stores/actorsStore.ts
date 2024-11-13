@@ -20,10 +20,12 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   const actorsThematics: Thematic[] = reactive([])
   const actorsAdministrativesScopes: AdministrativeScope[] = reactive([])
 
-  async function getActors(): Promise<void> {
+  async function getActors(forceGet = false): Promise<void> {
+    if (actors.length === 0 || forceGet) {
       actors.splice(0, actors.length)
       actors.push(...await ActorsService.getActors())
       dataLoaded.value = true
+    }
   }
 
   async function getActorsSelectListContent(): Promise<void> {
