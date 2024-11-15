@@ -7,6 +7,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\GetCollection;
 use App\Enum\AdministrativeScope;
+use App\Enum\BeneficiaryType;
 use App\Enum\Status;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -157,6 +158,10 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::PROJECT_READ])]
     private ?string $calendar = null;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups([self::PROJECT_READ_ALL])]
+    private ?array $beneficiaryTypes = null;
 
     public function __construct()
     {
@@ -459,6 +464,21 @@ class Project
     public function setCalendar(?string $calendar): static
     {
         $this->calendar = $calendar;
+
+        return $this;
+    }
+
+    /**
+     * @return BeneficiaryType[]|null
+     */
+    public function getBeneficiaryTypes(): ?array
+    {
+        return $this->beneficiaryTypes;
+    }
+
+    public function setBeneficiaryTypes(?array $beneficiaryTypes): static
+    {
+        $this->beneficiaryTypes = $beneficiaryTypes;
 
         return $this;
     }

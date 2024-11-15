@@ -11,6 +11,7 @@ App\Entity\Project:
     images: []
     partners: []
     interventionZone: '<randomElement(<(App\Enum\AdministrativeScope::toArray())>)>'
+    beneficiaryTypes: ['<randomElement(<(App\Enum\BeneficiaryType::toArray())>)>']
     financialActors: '<numberBetween(1, 5)>x @actor_*'
     actor: '@actor_*'
     contractingActors: '<numberBetween(1, 5)>x @actor_*'

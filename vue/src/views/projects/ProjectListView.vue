@@ -3,19 +3,18 @@
         <div class="ProjectsView__listCtn">
             <div class="ProjectsView__listHeader">
                 <h3 class="ProjectsView__projectCount">{{ projectsCount }} {{ projectsCount > 1 ? $t('projects.projects') : $t('projects.project') }}</h3>
-                <v-autocomplete
-                    @update:search="projectStore.filters.searchValue = $event"
+                <v-text-field
+                    v-model="projectStore.filters.searchValue"
                     class="ProjectsView__searchBar"
                     variant="outlined"
                     hide-details="auto"
                     :label="$t('filters.search')"
                     density="comfortable"
-                    :items="projectNames"
                 >
                     <template v-slot:prepend-inner>
                         <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
                     </template>
-                </v-autocomplete>
+                </v-text-field>
                 <v-select
                     class="fit"
                     variant="outlined"
@@ -42,7 +41,7 @@
                 ></v-pagination>
             </div>
         </div>
-        <div class="ProjectsView__mapCtn">
+        <div class="ProjectsView__mapCtn" v-if="!useApplicationStore().mobile">
             <ProjectMap />
         </div>
     </div>

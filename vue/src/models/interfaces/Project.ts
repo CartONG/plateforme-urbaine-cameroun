@@ -4,6 +4,7 @@ import type { AdministrativeScope } from "@/models/enums/AdministrativeScope";
 import type { Timestampable } from "@/models/interfaces/common/Timestampable";
 import type { Status } from "@/models/enums/contents/Status";
 import type { User } from "@/models/interfaces/auth/User";
+import type { BeneficiaryType } from "@/models/enums/contents/BeneficiaryType";
 
 export interface Project extends Timestampable {
   id: number;
@@ -22,6 +23,7 @@ export interface Project extends Timestampable {
   images: string[];
   partners: string[];
   interventionZone: AdministrativeScope;
+  beneficiaryTypes: BeneficiaryType[];
   thematics: Thematic[];
   projectManagerName: string;
   projectManagerPosition: string;
