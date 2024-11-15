@@ -65,7 +65,7 @@ class Project
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL])]
+    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, Actor::ACTOR_READ_ITEM])]
     private ?string $location = null;
 
     #[ORM\Column(

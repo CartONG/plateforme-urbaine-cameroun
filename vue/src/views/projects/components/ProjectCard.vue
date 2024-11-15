@@ -6,7 +6,7 @@
                     <span class="InfoCard__subTitle" >{{ project.location }}</span>
                     <span class="InfoCard__title">{{ project.name }}</span>
                     <div class="ProjectCard__infoCtn">
-                        <span>{{ project.actor.name }}</span>
+                        <span v-if="project.actor?.name">{{ project.actor.name }}</span>
                         <span v-if="!map" class="ProjectCard__updatedAt">{{ $t('labels.updatedAt') }} {{ getFormattedDate(project) }}</span>
                     </div>
                 </div>
@@ -33,11 +33,20 @@ import ChipList from '@/components/content/ChipList.vue';
 import { useDate } from '@/composables/useDate';
 import LikeButton from '@/components/global/LikeButton.vue';
 import ShareButton from '@/components/global/ShareButton.vue';
-defineProps<{
+import { onBeforeMount } from 'vue';
+const props = defineProps<{
   project: Project | null;
   map?: boolean;
   key?: any;
 }>();
+
+onBeforeMount(() => {
+  if (props.project) {
+    console.log(props.project);
+  } else {
+    console.log('Project not defined yet');
+  }
+});
 
 const getFormattedDate = (project: Project) => {
     const { localeDate } = useDate(new Date(project.updatedAt));

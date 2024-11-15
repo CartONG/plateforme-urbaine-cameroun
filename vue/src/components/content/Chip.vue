@@ -1,16 +1,20 @@
 <template>
-    <div class="Chip">{{ text }}</div>
+    <div :class="bgColorClass" class="Chip">{{ text }}</div>
 </template>
 
 <script setup lang="ts">
-defineProps({
-    text: String
+const props = defineProps({
+    text: String,
+    bgColor: {
+        type: String,
+        default: 'light-yellow',
+    }
 })
+const bgColorClass = `bg-${props.bgColor}`;
 </script>
 
 <style scoped lang="scss">
 .Chip {
-    background-color: rgb(var(--v-theme-light-yellow));
     color: rgb(var(--v-theme-main-blue));
     font-size: $font-size-sm;
     font-weight: 400;

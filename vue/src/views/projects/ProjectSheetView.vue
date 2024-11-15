@@ -41,7 +41,7 @@
             <div class="SheetView__infoCard">
                 <div class="SheetView__infoCardBlock">
                     <h5 class="SheetView__title">{{ $t('projectPage.projectOwner') }}</h5>
-                    <ActorCard :actor="project.actor" light="true" />
+                    <ActorCard :actor="(project.actor as Actor)" light="true" />
                 </div>
                 <div class="SheetView__infoCardBlock">
                     <h5 class="SheetView__title">{{ $t('projectPage.focalPoint') }}</h5>
@@ -57,7 +57,7 @@
             <SectionBanner :text="$t('projectPage.inImages')"/>
             <ContentDivider />
             <SectionBanner :text="$t('projectPage.otherProjectsWithSameThematics')" :hideHalfCircle="true" />
-            <div class="ProjectSheetView__projectCardCtn">
+            <div class="SheetView__infoCardCtn">
                 <ProjectCard v-for="project in similarProjects" :key="project.id" :project="project" />
             </div>
         </div>
@@ -81,6 +81,7 @@ import PrintButton from '@/components/global/PrintButton.vue';
 import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue';
 import SectionBanner from '@/components/banners/SectionBanner.vue';
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType';
+import type { Actor } from '@/models/interfaces/Actor';
 
 const userStore = useUserStore();
 const projectStore = useProjectStore();
@@ -118,16 +119,6 @@ const editProject = (project: Project) => { return };
 
 <style lang="scss">
 @import '@/assets/styles/views/SheetView';
-
-.ProjectSheetView__projectCardCtn {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    gap: 2rem;
-    > * {
-        flex: 1 0 25rem;
-    }
-}
 
 .ProjectSheetView {
     &__logo {

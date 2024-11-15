@@ -116,9 +116,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       case SortKey.UPDATED_AT_AZ:
         return sortedProjects.sort((a, b) => (new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()));
       case SortKey.ACTORS_AZ:
-        return sortedProjects.sort((a, b) => a.actor.name.localeCompare(b.actor.name));
+        return sortedProjects.sort((a, b) => (a.actor.name as string).localeCompare(b.actor.name as string));
       case SortKey.ACTORS_ZA:
-        return sortedProjects.sort((a, b) => b.actor.name.localeCompare(a.actor.name));
+        return sortedProjects.sort((a, b) => (b.actor.name as string).localeCompare(a.actor.name as string));
       default:
         return sortedProjects
     }

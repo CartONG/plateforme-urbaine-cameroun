@@ -107,7 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $actorsCreated;
 
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_ADMIN])]
     private ?bool $isValidated = false;
 
     #[ORM\Column(nullable: true)]
@@ -130,6 +130,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?string $signUpMessage = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    private ?MediaObject $logo = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -346,6 +354,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setsignUpMessage(?string $signUpMessage): static
     {
         $this->signUpMessage = $signUpMessage;
+
+        return $this;
+    }
+
+    public function getLogo(): ?MediaObject
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?MediaObject $logo): static
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

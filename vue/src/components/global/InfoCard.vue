@@ -34,7 +34,6 @@ defineProps<{
     padding: 25px;
     display: flex;
     flex-direction: column;
-    height: 100%;
 
     &[light="true"] {
         box-shadow: none;

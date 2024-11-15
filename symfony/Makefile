@@ -61,4 +61,4 @@ configure-database: enable-postgis
 create-short-migration: reset-database make-migration rerun-migration run-fixtures
 
 init-jwt-keypair:
-	@$(SYMFONY) lexik:jwt:generate-keypair
+	@$(SYMFONY) lexik:jwt:generate-keypair --overwrite

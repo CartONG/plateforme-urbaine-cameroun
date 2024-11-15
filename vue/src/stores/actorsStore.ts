@@ -2,7 +2,7 @@ import { StoresList } from '@/models/enums/app/StoresList'
 import type { Actor, ActorSubmission } from '@/models/interfaces/Actor'
 import { ActorsService } from '@/services/actors/ActorsService'
 import { defineStore } from 'pinia'
-import { reactive, ref, type Reactive, type Ref } from 'vue'
+import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
 import { useApplicationStore } from './applicationStore'
 import { useRouter } from 'vue-router'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
@@ -43,6 +43,12 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   const actorEdition: Reactive<{active: boolean, actor: Actor | null}> = reactive({
     active: false,
     actor: null
+  })
+
+  watch(() => actorEdition.active, () => {
+    if (!actorEdition.active) {
+      useApplicationStore().showEditContentDialog = false
+    }
   })
   function setActorEditionMode(actor: Actor | null) {
     actorEdition.actor = actor

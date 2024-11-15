@@ -1,6 +1,6 @@
 <template>
     <InfoCard
-        class="ActorCard"
+        class="ActorCard h-100"
         :to="actorProfileRoute"
     >
         <template #content >

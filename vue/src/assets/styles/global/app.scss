@@ -4,6 +4,7 @@
 @import '@/assets/styles/global/utils';
 @import '@/assets/styles/views/header';
 @import '@/assets/styles/views/actors';
+@import '@/assets/styles/views/ContentForm';
 
 #app {
     display: flex;
@@ -58,14 +59,15 @@ h4 {
         flex-direction: column;
         flex-grow: 1;
         position: relative;
+        min-height: calc(100vh - var(--dim-header-h));
 
         &--desktop{
-            padding: 0 0 30px 0;
+            padding: 0 0 9rem 0;
             background-size: 45% auto;
         }
     
         &--mobile{
-            padding: 0 20px;
+            // padding: 0 20px;
             background-size: 100% auto;
         }
     }

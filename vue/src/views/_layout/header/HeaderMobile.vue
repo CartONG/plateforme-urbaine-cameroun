@@ -63,7 +63,6 @@ const showMobileMenu = ref(false);
     &--mobile {
         height: $header-mobile-height;
         margin-top: $header-mobile-height;
-
         
         &::after {
             width: 100%;

@@ -11,7 +11,7 @@ App\Entity\User:
         lastName: Editor Doe
         email: editor@test.com
         plainPassword: Test1234
-        roles: [ 'ROLE_EDITOR_ACTORS', 'ROLE_EDITOR_PROJECTS', "ROLE_EDITOR_RESOURCES", "ROLE_EDITOR_DATA" ]
+        roles: [ 'ROLE_EDITOR_ACTORS', 'ROLE_EDITOR_PROJECTS', "ROLE_EDITOR_RESSOURCES", "ROLE_EDITOR_DATA" ]
         isValidated: true
     user_3:
         firstName: Jane

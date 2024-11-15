@@ -12,3 +12,9 @@ $bp-sm: 576px;
 $bp-md: 768px;
 $bp-lg: 992px;
 $bp-xl: 1100px;
+
+:root {
+  --dim-banner-h: 2rem;
+  --dim-header-nav-h: 5rem;
+  --dim-header-h: calc(var(--dim-banner-h) + var(--dim-header-nav-h));
+}

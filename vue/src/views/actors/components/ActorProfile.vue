@@ -14,7 +14,7 @@
                 :updatedAt="actor.lastUpdate"
                 @edit="editActor"
             />
-            <div class="SheetView__contentCtn my-6">
+            <div class="SheetView__contentCtn my-6" v-if="actor.description">
                 <div class="SheetView__title SheetView__title--divider">{{ $t('actorPage.description') }}</div>
                 <p>{{actor.description}}</p>
             </div>
@@ -49,7 +49,7 @@
 
             <div class="SheetView__infoCard">
                 <div>
-                    <h5 class="SheetView__title">{{ $t('projectPage.focalPoint') }}</h5>
+                    <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
                     <ContactCard
                         :name="actor.contactName"
                         :description="actor.contactPosition"
@@ -61,11 +61,7 @@
         <div class="SheetView__block SheetView__block--bottom">
             <SectionBanner :text="$t('actorPage.images')"/>
             <ImagesMosaic :images="[...actor.images, ...actor.externalImages]" />
-            <!--<ContentDivider />
-            <SectionBanner :text="$t('actorPage.similar')" :hideHalfCircle="true" />
-            <div class="ActorSheetView__projectCardCtn">
-                <ProjectCard v-for="project in similarProjects" :key="project.id" :project="project" />
-            </div>-->
+            <ContentDivider />
         </div>
     </div>
     
@@ -80,13 +76,13 @@ import ContentDivider from '@/components/content/ContentDivider.vue';
 import ActorRelatedContent from './ActorRelatedContent.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue';
-import ProjectCard from '@/views/projects/components/ProjectCard.vue';
 import ImagesMosaic from '@/components/content/ImagesMosaic.vue';
 import SectionBanner from '@/components/banners/SectionBanner.vue';
 import ContactCard from '@/components/content/ContactCard.vue';
 import { useApplicationStore } from '@/stores/applicationStore';
 import { useUserStore } from '@/stores/userStore';
 import ChipList from '@/components/content/ChipList.vue';
+import ProjectCard from '@/views/projects/components/ProjectCard.vue';
 
 const appStore = useApplicationStore();
 const userStore = useUserStore();

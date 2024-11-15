@@ -33,7 +33,7 @@ import AuthDialog from '@/views/auth/AuthDialog.vue';
 import { DialogKey } from '@/models/enums/app/DialogKey';
 import Form from '@/components/forms/Form.vue';
 import { useUserStore } from '@/stores/userStore';
-import { SignInForm } from '@/services/auth/forms/SignInForm';
+import { SignInForm } from '@/services/userAndAuth/forms/SignInForm';
 
 const userStore = useUserStore();
 const {form, errors, handleSubmit, isSubmitting} = SignInForm.getSignInForm();

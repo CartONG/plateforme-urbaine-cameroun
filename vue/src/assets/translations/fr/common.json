@@ -6,7 +6,7 @@
         "resources": "Ressources",
         "services": "Services",
         "map": "Ma carte",
-        "account": "Mon compte",
+        "myAccount": "Mon compte",
         "administration": "Administration",
         "members": "Membres",
         "content": "Contenu",
@@ -130,5 +130,15 @@
         "regions": "Régions",
         "local_institutions": "Institutions locales",
         "associations_ngos": "Associations / ONG"
+    },
+    "footer": {
+        "contact": "Contact",
+        "email": "Contactez-nous par mail",
+        "partners": "Partenaires",
+        "legal": "Mentions légales",
+        "cgu": "CGU",
+        "privacy": "Politique de confidentialité",
+        "plan": "Plan du site",
+        "cookies": "Cookies"
     }
 }

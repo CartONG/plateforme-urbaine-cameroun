@@ -79,7 +79,7 @@ import AuthDialog from '@/views/auth/AuthDialog.vue';
 import Form from '@/components/forms/Form.vue';
 import { DialogKey } from '@/models/enums/app/DialogKey';
 import { I18nT } from 'vue-i18n';
-import { UserProfileForm } from '@/services/auth/forms/UserProfileForm';
+import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm';
 import { useUserStore } from '@/stores/userStore';
 
 const {form, errors, handleSubmit, isSubmitting} = UserProfileForm.getSignUpForm();

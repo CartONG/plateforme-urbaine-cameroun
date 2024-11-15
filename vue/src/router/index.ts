@@ -12,6 +12,7 @@ import { useProjectStore } from '@/stores/projectStore'
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType';
 import { useActorsStore } from '@/stores/actorsStore';
 import type { Actor } from '@/models/interfaces/Actor';
+import { useUserStore } from '@/stores/userStore';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,9 +78,17 @@ const router = createRouter({
       component: () => import('@/views/map/MapView.vue')
     },
     {
-      path: '/members',
-      name: 'members',
-      component: () => import('@/views/member/MemberView.vue')
+      path: '/myAccount',
+      name: 'userAccount',
+      component: () => import('@/views/member/MemberView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore()
+        if (!userStore.userIsLogged) {
+          next({ path: '/' })
+        } else {
+          next()
+        }
+      }
     },
     {
       path: '/administration',
@@ -92,6 +101,14 @@ const router = createRouter({
         }
       },
       component: () => import('@/views/admin/AdminView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore()
+        if (!userStore.userIsAdmin()) {
+          next({ path: '/' })
+        } else {
+          next()
+        }
+      },
       children: [
         {
           path: 'membersPanel',

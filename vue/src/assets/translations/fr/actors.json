@@ -1,7 +1,6 @@
 {
     "actors": {
-        "actor": "acteur",
-        "actors": "acteurs",
+        "actor": "acteur | acteurs",
         "title": "Annuaire\ndes acteurs",
         "desc": "Consultez l’annuaire des acteurs du secteur de l’urbanisme au Cameroun.",
         "search": "Rechercher un acteur",
@@ -23,7 +22,7 @@
             "expertise": "Principaux domaines d'expertise*",
             "thematic": "Principales thématiques*",
             "adminScope": "Zones d'intervention*",
-            "description": "Description*",
+            "description": "Description",
             "contact": "Contact",
             "office": "Etablissement",
             "officeName": "Nom du siège",

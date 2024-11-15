@@ -25,4 +25,13 @@ const userStore = useUserStore();
     width: 70%;
     background-color: white;
 }
+.AdminPanel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    &__additionnalMenu {
+        font-weight: 700;
+        color: rgb(var(--v-theme-main-blue));
+    }
+}
 </style>

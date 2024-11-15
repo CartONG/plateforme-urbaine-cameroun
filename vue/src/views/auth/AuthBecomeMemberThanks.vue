@@ -44,19 +44,12 @@
 <script setup lang="ts">
 import AuthDialog from '@/views/auth/AuthDialog.vue';
 import Form from '@/components/forms/Form.vue';
-import { i18n } from '@/assets/plugins/i18n';
 import CheckPoint from '@/components/global/CheckPoint.vue';
-import { UserProfileForm } from '@/services/auth/forms/UserProfileForm';
-import { UserRoles } from '@/models/enums/auth/UserRoles';
-import { ref } from 'vue';
+import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm';
 import { useUserStore } from '@/stores/userStore';
 const userStore = useUserStore();
 
-const actionList = [
-  { label: i18n.t('auth.becomeMemberThanks.form.actionsRequest.addActors'), value: UserRoles.EDITOR_ACTORS, selected: ref(false)},
-  { label: i18n.t('auth.becomeMemberThanks.form.actionsRequest.addProjects'), value: UserRoles.EDITOR_PROJECTS, selected: ref(false)},
-  { label: i18n.t('auth.becomeMemberThanks.form.actionsRequest.addResources'), value: UserRoles.EDITOR_RESOURCES, selected: ref(false)}
-]
+const actionList = UserProfileForm.getRolesList()
 
 const {form, errors, handleSubmit, isSubmitting} = UserProfileForm.getSignUpThanksForm();
 

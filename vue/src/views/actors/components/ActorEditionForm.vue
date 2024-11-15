@@ -2,13 +2,13 @@
     <Modal
         :title="actorToEdit ? $t('actors.form.editTitle') : $t('actors.form.createTitle')"
         :show="appStore.showEditContentDialog"
-        @close="appStore.showEditContentDialog = false">
+        @close="actorsStore.actorEdition.active = false">
         <template #content>
-            <div class="Actors__form__toValidate mt-3" v-if="actorToEdit && !actorToEdit.isValidated">
+            <div class="ContentForm__toValidate mt-3" v-if="actorToEdit && !actorToEdit.isValidated">
                 <img src="@/assets/images/actorToValidate.svg" alt="">
                 <span class="ml-2">Nouvelle soumission de Prénom NOM reçue le 31 janvier 2025 à 11h30.</span>
             </div>
-            <div class="Actors__form__container mt-4">
+            <div class="ContentForm__ctn mt-4">
                 <v-form @submit.prevent="submitForm" id="actor-form">
                     <!-- General infos -->
                     <v-text-field density="compact" variant="outlined" v-model="form.name.value.value"
@@ -92,7 +92,7 @@
             </div>
         </template>
         <template #footer-left>
-            <v-btn color="white" @click="actorsStore.setActorEditionMode(null)" flat>{{ $t('forms.cancel') }}</v-btn>
+            <v-btn color="white" @click="actorsStore.actorEdition.active = false">{{ $t('forms.cancel') }}</v-btn>
         </template>
         <template #footer-right>
             <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">{{ actorToEdit ? $t('forms.modify') : $t('forms.create') }}</v-btn>

@@ -6,6 +6,9 @@
         "panelContentActors": "Acteurs",
         "panelContentProjects": "Projets",
         "panelContentResources": "Ressources",
-        "panelComments": "Gérer les commentaires"
+        "panelComments": "Gérer les commentaires",
+        "member": "Membre | Membres",
+        "add": "Ajouter",
+        "search": "Rechercher"
     }
 }

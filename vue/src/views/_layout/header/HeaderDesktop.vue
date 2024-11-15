@@ -44,7 +44,6 @@ const appStore = useApplicationStore();
 <style lang="scss">
 .Header {
     &--desktop {
-        $dim-banner: 2rem;
         $dim-logo: 10rem;
     
         &::after {
@@ -62,7 +61,7 @@ const appStore = useApplicationStore();
                 align-items: center;
                 padding: 0 1rem;
                 color: rgb(var(--v-theme-main-blue));
-                height: $dim-banner;
+                height: var(--dim-banner-h);
 
                 .Header__bannerLink {
                     display: flex;
@@ -101,7 +100,7 @@ const appStore = useApplicationStore();
                             z-index: 10;
                             position: relative;
                             height: $dim-logo;
-                            transform: translateY(-$dim-banner)
+                            transform: translateY(calc(-1 * var(--dim-banner-h)));
                         }
                     }
 

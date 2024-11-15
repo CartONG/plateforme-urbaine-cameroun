@@ -5,6 +5,7 @@ import type { User } from "./auth/User";
 import type { Timestampable } from "./common/Timestampable";
 import type { ContentImageFromUserFile } from "./ContentImage";
 import type { MediaObject } from "./MediaObject";
+import type { Project } from "./Project";
 import type { Thematic } from "./Thematic";
 
 export interface Actor extends Timestampable {
@@ -27,7 +28,7 @@ export interface Actor extends Timestampable {
     officeLocation: string;
     contactName: string;
     contactPosition: string;
-    projects: string[];
+    projects: Project[];
     logo: MediaObject;
     images: MediaObject[];
     externalImages: string[];
