@@ -15,3 +15,7 @@ import Caddyfile.base
 docs.{$DOMAIN} {
 	reverse_proxy http://docs:{$DOCS_PORT}
 }
+
+mail.{$DOMAIN} {
+	reverse_proxy http://mailpit:{$MAIL_UI_PORT}
+}

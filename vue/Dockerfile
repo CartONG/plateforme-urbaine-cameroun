@@ -2,12 +2,19 @@ FROM node:lts-alpine AS vue_base
 
 WORKDIR /app
 
+# persistent / runtime deps
+RUN apk add --no-cache \
+    	fish \
+	;
+
 ARG VITE_DOMAIN
 ENV VITE_DOMAIN=$VITE_DOMAIN
 
 COPY package.json yarn.lock ./
 RUN yarn
+
 COPY . .
+
 EXPOSE 3000
 
 # for Development environnement

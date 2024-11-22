@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	file \
 	gettext \
 	git \
+	fish \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN set -eux; \
@@ -47,14 +48,14 @@ CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile" ]
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
 
-ENV APP_ENV=dev XDEBUG_MODE=off
+ENV APP_ENV=dev XDEBUG_MODE=$XDEBUG_MODE XDEBUG_CONFIG=$XDEBUG_CONFIG
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
-# RUN set -eux; \
-# 	install-php-extensions \
-# 		xdebug \
-# 	;
+RUN set -eux; \
+    install-php-extensions \
+        xdebug \
+    ;
 
 COPY --link docker/frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 

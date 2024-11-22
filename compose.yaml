@@ -87,7 +87,7 @@ services:
     volumes:
       - nominatim-data:/var/lib/postgresql/14/main
     shm_size: 1gb
-    
+
   # qgis:
   #   image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
   #   restart: on-failure
@@ -123,29 +123,6 @@ services:
       - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
       # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
     restart: on-failure
-
-  mailserver:
-    image: mailserver/docker-mailserver:${DOCKER_MAILSERVER_VERSION:-14.0.0}
-    # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
-    hostname: mail.${DOMAIN}
-    ports:
-      - "${SMTP_RELAY_PORT:-25}:25"
-      - "${SMTP_OLD_PORT:-465}:465"
-      - "${SMTP_SUBMISSION_PORT:-587}:587"
-      - "${IMAP_PORT:-993}:993"
-    volumes:
-      - ./docker/mailserver/dms/mail-data/:/var/mail/
-      - ./docker/mailserver/dms/mail-state/:/var/mail-state/
-      - ./docker/mailserver/dms/mail-logs/:/var/log/mail/
-      - ./docker/mailserver/dms/config/:/tmp/docker-mailserver/
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - ENABLE_RSPAMD=1
-      - ENABLE_CLAMAV=1
-      - ENABLE_FAIL2BAN=1
-    cap_add:
-      - NET_ADMIN # For Fail2Ban to work
-    restart: always
 
 volumes:
   caddy_data:

@@ -57,6 +57,9 @@ down-remove-all:
 build:
 	$(DOCKER_COMP) build
 
+build-no-cache:
+	$(DOCKER_COMP) build --no-cache
+
 deploy: build-and-up init-jwt-keypair cc
 
 docker-config:

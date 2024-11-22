@@ -14,12 +14,31 @@ services:
       #- /app/vendor
     environment:
       # See https://xdebug.org/docs/all_settings#mode
-      XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
       XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+      MAIL_UI_PORT: ${MAIL_UI_PORT:-8025}
+      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway
     tty: true
+
+  mailpit:
+    ## "mailpit" as named container
+
+    image: axllent/mailpit
+    hostname: mail.${DOMAIN}
+    restart: unless-stopped
+    volumes:
+      - ./docker/mailpit/data:/data
+    ports:
+      - 8025:8025 # Web UI
+      - 1025:1025 # SMTP port
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
   vue_node_modules:
