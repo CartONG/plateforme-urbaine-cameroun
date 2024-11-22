@@ -42,6 +42,7 @@
         "symfony/uid": "7.1.*",
         "symfony/validator": "7.1.*",
         "symfony/yaml": "7.1.*",
+        "tilleuls/forgot-password-bundle": "^1.6",
         "vich/uploader-bundle": "*"
     },
     "config": {
