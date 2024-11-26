@@ -1,10 +1,10 @@
 <?php
 namespace App\Services\Serializer;
 
-use App\Entity\User;
+use ApiPlatform\Serializer\SerializerContextBuilderInterface;
+use App\Entity\User\User;
 use App\Model\Enums\UserRoles;
 use Symfony\Component\HttpFoundation\Request;
-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class UserContextBuilder implements SerializerContextBuilderInterface

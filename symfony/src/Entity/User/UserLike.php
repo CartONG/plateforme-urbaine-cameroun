@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
-use ApiPlatform\Metadata\Post;
-use Symfony\Component\Uid\Uuid;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\UserLikeRepository;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Services\State\Provider\UserLikeProvider;
+use ApiPlatform\Metadata\Post;
+use App\Repository\UserLikeRepository;
 use App\Services\State\Processor\UserLikeDeleteProcessor;
+use App\Services\State\Provider\UserLikeProvider;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserLikeRepository::class)]
 #[ORM\UniqueConstraint(

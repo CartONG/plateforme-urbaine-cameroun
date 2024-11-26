@@ -2,9 +2,9 @@
 
 namespace App\Services\State\Provider;
 
-use App\Entity\User;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Entity\User\User;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final class CurrentUserProvider implements ProviderInterface
