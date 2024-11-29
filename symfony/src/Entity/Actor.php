@@ -101,7 +101,7 @@ class Actor
     private Collection $expertises;
 
     /**
-     * @var Collection<int, Thematics>
+     * @var Collection<int, Thematic>
      */
     #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'actors')]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
@@ -255,7 +255,7 @@ class Actor
     }
 
     /**
-     * @return Collection<int, Thematics>
+     * @return Collection<int, Thematic>
      */
     public function getThematics(): Collection
     {

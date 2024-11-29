@@ -7,13 +7,17 @@ use CoopTilleuls\ForgotPasswordBundle\Entity\AbstractPasswordToken;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UserResetPasswordMailer
 {
     private const API_FORGOT_PASSWORD = '/api/forgot-password';
 
-    public function __construct(private readonly MailerInterface $mailer, private readonly string $domainUrl)
-    {
+    public function __construct(
+        private readonly MailerInterface $mailer,
+        private readonly TranslatorInterface $translator,
+        private readonly string $domainUrl,
+    ) {
     }
 
     public function sent(AbstractPasswordToken $passwordToken): void
@@ -23,11 +27,12 @@ final class UserResetPasswordMailer
 
         $email = (new TemplatedEmail())
             ->to(new Address($user->getEmail(), $user->getFullName()))
-            ->subject('Reset your password')
+            ->subject($this->translator->trans('mail.reset_password.subject'))
             ->htmlTemplate('mail/user/reset_password.html.twig')
             ->context(
                 [
                     'reset_password_url' => sprintf('%s%s/%s', $this->domainUrl, self::API_FORGOT_PASSWORD, $passwordToken->getToken()),
+                    'user' => $user,
                 ]
             );
 
