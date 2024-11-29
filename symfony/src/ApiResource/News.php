@@ -7,28 +7,27 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Services\State\Provider\LatestNewsProvider;
 
 #[ApiResource(
-  paginationEnabled: false,
-  operations: [
-    new GetCollection(
-      uriTemplate: '/news/latest',
-      provider: LatestNewsProvider::class,
-    )
-  ]
+    paginationEnabled: false,
+    operations: [
+        new GetCollection(
+            uriTemplate: '/news/latest',
+            provider: LatestNewsProvider::class,
+        ),
+    ]
 )]
 class News
 {
-  public int $id;
+    public int $id;
 
-  public string $name;
-  public string $description;
-  public $updatedAt;
-  public $type;
-  
-  public function setId(int $id)
-  {
-      $this->id = $id;
+    public string $name;
+    public string $description;
+    public $updatedAt;
+    public $type;
 
-      return $this;
-  }
+    public function setId(int $id)
+    {
+        $this->id = $id;
 
+        return $this;
+    }
 }

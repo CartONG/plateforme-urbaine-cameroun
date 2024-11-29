@@ -11,14 +11,13 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ProjectProcessor implements ProcessorInterface
 {
-
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
         private ValidatorProcessor $validatorProcessor,
-        private GeoDataProcessor $geoDataProcessor
-    )
-    {}
+        private GeoDataProcessor $geoDataProcessor,
+    ) {
+    }
 
     /**
      * @param Project $data
@@ -27,7 +26,7 @@ class ProjectProcessor implements ProcessorInterface
     {
         $this->validatorProcessor->process($data, $operation, $uriVariables, $context);
         $this->geoDataProcessor->process($data, $operation, $uriVariables, $context);
+
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 }
-

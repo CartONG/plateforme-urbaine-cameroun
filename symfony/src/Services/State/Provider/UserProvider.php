@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Services\State\Provider;
-use App\Model\Enums\UserRoles;
-use App\Repository\UserRepository;
+
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Model\Enums\UserRoles;
+use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final class UserProvider implements ProviderInterface
 {
     public function __construct(
         private UserRepository $userRepository,
-        private Security $security
+        private Security $security,
     ) {
     }
 

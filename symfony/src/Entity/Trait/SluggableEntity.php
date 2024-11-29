@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-trait SluggableEntity 
+trait SluggableEntity
 {
     #[ORM\Column(length: 128, unique: true, nullable: true)]
     #[Gedmo\Slug(fields: ['name'])]
@@ -23,6 +23,7 @@ trait SluggableEntity
     public function setSlug($slug): static
     {
         $this->slug = $slug;
+
         return $this;
     }
 }

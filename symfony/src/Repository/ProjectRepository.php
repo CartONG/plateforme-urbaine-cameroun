@@ -17,9 +17,10 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function findLatest(): array {
+    public function findLatest(): array
+    {
         return $this->createQueryBuilder('p')
-            ->select("p.id, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '" . ItemType::PROJECT->value . "' as type")
+            ->select("p.id, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '".ItemType::PROJECT->value."' as type")
             ->orderBy('p.updatedAt', 'DESC')
             ->setMaxResults(3)
             ->getQuery()
@@ -27,13 +28,14 @@ class ProjectRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTwoSimilarProjectsByThematics(Project $project): array {
+    public function findTwoSimilarProjectsByThematics(Project $project): array
+    {
         return $this->createQueryBuilder('p')
             ->leftJoin('p.thematics', 't')
             ->addSelect('t')
             ->andWhere('p.id != :id')
             ->andWhere('t.id IN (:thematicIds)')
-            ->setParameter('thematicIds', $project->getThematics()->map(fn($thematic) => $thematic->getId()))
+            ->setParameter('thematicIds', $project->getThematics()->map(fn ($thematic) => $thematic->getId()))
             ->setParameter('id', $project->getId())
             ->orderBy('p.updatedAt', 'DESC')
             ->setMaxResults(2)
@@ -41,28 +43,28 @@ class ProjectRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-//    /**
-//     * @return Project[] Returns an array of Project objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Project[] Returns an array of Project objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Project
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Project
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

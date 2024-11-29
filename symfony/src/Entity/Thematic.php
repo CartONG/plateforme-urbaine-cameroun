@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
-use App\Repository\ThematicRepository;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Post;
+use App\Repository\ThematicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ThematicRepository::class)]
 #[UniqueEntity('name')]
@@ -24,8 +24,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ),
         new Delete(
             security: 'is_granted("ROLE_ADMIN")'
-        )
-        ],
+        ),
+    ],
     normalizationContext: ['groups' => [self::THEMATIC_READ]],
 )]
 class Thematic

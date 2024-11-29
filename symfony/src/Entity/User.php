@@ -2,28 +2,28 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Post;
-use App\Model\Enums\UserRoles;
-use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Entity\Trait\ValidateableEntity;
+use App\Model\Enums\UserRoles;
+use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
+use App\Services\State\Provider\CurrentUserProvider;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Security\Voter\UserVoter;
-use App\Repository\UserRepository;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
-use App\Entity\Trait\ValidateableEntity;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Attribute\Groups;
-use App\Services\State\Provider\CurrentUserProvider;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -54,13 +54,12 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use ValidateableEntity;
     public const GROUP_GETME = 'user:get_me';
     public const GROUP_READ = 'user:read';
     public const GROUP_WRITE = 'user:write';
     public const GROUP_ADMIN = 'user:admin';
     private const ACCEPTED_ROLES = [UserRoles::ROLE_USER, UserRoles::ROLE_EDITOR_ACTORS, UserRoles::ROLE_EDITOR_PROJECTS, UserRoles::ROLE_EDITOR_RESSOURCES];
-
-    use ValidateableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -88,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_ADMIN])] 
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_ADMIN])]
     #[Assert\Choice(choices: self::ACCEPTED_ROLES, multiple: true)]
     private array $roles = [];
 

@@ -1,15 +1,16 @@
 <?php
+
 namespace App\Security\Voter;
 
 use App\Entity\User;
 use App\Model\Enums\UserRoles;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class UserVoter extends Voter
 {
-    const EDIT = 'edit';
+    public const EDIT = 'edit';
 
     private Security $security;
 
@@ -34,7 +35,7 @@ class UserVoter extends Voter
         /** @var User $userToEdit */
         $userToEdit = $subject;
 
-        if ($attribute === self::EDIT) {
+        if (self::EDIT === $attribute) {
             return $this->canEdit($user, $userToEdit);
         }
 

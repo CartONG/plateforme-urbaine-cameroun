@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Services\Serializer;
 
+use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use App\Entity\User;
 use App\Model\Enums\UserRoles;
 use Symfony\Component\HttpFoundation\Request;
-use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class UserContextBuilder implements SerializerContextBuilderInterface
@@ -23,7 +24,7 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $resourceClass = $context['resource_class'] ?? null;
 
-        if ($resourceClass === User::class && isset($context['groups']) && $this->authorizationChecker->isGranted(UserRoles::ROLE_ADMIN) && false === $normalization) {
+        if (User::class === $resourceClass && isset($context['groups']) && $this->authorizationChecker->isGranted(UserRoles::ROLE_ADMIN) && false === $normalization) {
             $context['groups'][] = User::GROUP_ADMIN;
         }
 

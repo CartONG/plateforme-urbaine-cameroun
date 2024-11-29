@@ -17,9 +17,10 @@ class ActorRepository extends ServiceEntityRepository
         parent::__construct($registry, Actor::class);
     }
 
-    public function findLatest(): array {
+    public function findLatest(): array
+    {
         return $this->createQueryBuilder('a')
-            ->select("a.id, a.name, a.updatedAt, a.description, a.slug, 'a.logo' as image, '" . ItemType::ACTOR->value . "' as type")
+            ->select("a.id, a.name, a.updatedAt, a.description, a.slug, 'a.logo' as image, '".ItemType::ACTOR->value."' as type")
             ->orderBy('a.updatedAt', 'DESC')
             ->setMaxResults(3)
             ->getQuery()

@@ -2,10 +2,9 @@
 
 namespace App\Services\State\Provider;
 
-use App\Repository\UserRepository;
 use ApiPlatform\Metadata\Operation;
-use App\Repository\UserLikeRepository;
 use ApiPlatform\State\ProviderInterface;
+use App\Repository\UserLikeRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

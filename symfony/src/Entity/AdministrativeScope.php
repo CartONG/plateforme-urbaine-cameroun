@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Entity\Actor;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\AdministrativeScopeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: AdministrativeScopeRepository::class)]
@@ -22,7 +21,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         ),
         new Delete(
             security: 'is_granted("ROLE_ADMIN")'
-        )
+        ),
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],

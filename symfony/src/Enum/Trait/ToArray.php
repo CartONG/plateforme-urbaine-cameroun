@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Enum\Trait;
 
-trait ToArray {
-  public static function toArray()
+trait ToArray
+{
+    public static function toArray()
     {
         $values = [];
 

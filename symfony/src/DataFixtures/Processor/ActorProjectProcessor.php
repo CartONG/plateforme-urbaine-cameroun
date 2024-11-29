@@ -1,19 +1,20 @@
 <?php
+
 namespace App\DataFixtures\Processor;
 
 use App\Entity\Actor;
 use App\Entity\Project;
 use Fidry\AliceDataFixtures\ProcessorInterface;
 
-final class ActorProjectProcessor  implements ProcessorInterface
+final class ActorProjectProcessor implements ProcessorInterface
 {
     public function preProcess(string $fixtureId, $object): void
     {
         // For testing purpose
         static $callCount = 0;
         if ($object instanceof Actor) {
-            $callCount++;
-            $isValidated = $callCount % 4 !== 0;
+            ++$callCount;
+            $isValidated = 0 !== $callCount % 4;
             $object->setIsValidated($isValidated);
         }
     }
