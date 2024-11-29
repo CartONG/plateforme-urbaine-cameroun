@@ -7,6 +7,7 @@
             :description="item.description"
             :image="item.image"
             :type="item.type"
+            :type-label="$t('itemType.' + item.type)"
             :slug="item.slug"
             :key="item.id" />
     </div>

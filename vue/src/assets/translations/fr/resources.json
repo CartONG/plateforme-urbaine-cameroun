@@ -1,0 +1,49 @@
+{
+    "resources": {
+        "resources": "ressource | ressource | ressources",
+        "title": "Centre de\nressources",
+        "desc": "Le centre de ressources est au coeur de la vie de la Plateforme Urbaine du Cameroun. Elle vous propose...",
+        "search": "Rechercher une ressource",
+        "thematic": "Thématique d'intervention",
+        "type": "Type",
+        "name": "Nom",
+        "add": "Ajouter une ressource",
+        "resourceType": {
+            "pdf": "PDF",
+            "web": "Page web",
+            "xlsx": "Excel",
+            "video": "Vidéo",
+            "image": "Image"
+        },
+        "form": {
+            "title": {
+                "create": "Ajouter une ressource",
+                "edit": "Modifier une ressource",
+                "validate": "Valider une ressource"
+            },
+            "fields": {
+                "name": {
+                    "label": "Nom de la ressource",
+                    "placeholder": "Nom de la ressource"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Description"
+                },
+                "type": {
+                    "label": "Type de ressource",
+                    "placeholder": "Type de ressource"
+                },
+                "file": {
+                    "label": "Joindre un fichier",
+                    "maxSize": "Fichier {maxSize} Mo maximum",
+                    "browse": "Parcourir..."
+                },
+                "link": {
+                    "label": "Lien",
+                    "placeholder": "https://"
+                }
+            }
+        }
+    }
+}

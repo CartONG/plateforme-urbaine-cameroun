@@ -1,5 +1,5 @@
 import { toTypedSchema } from "@vee-validate/zod";
-import { useForm, useField, type TypedSchema } from "vee-validate";
+import { useForm, useField } from "vee-validate";
 import { z } from "zod";
 import { i18n } from "@/assets/plugins/i18n";
 import type { User } from "@/models/interfaces/auth/User";
@@ -26,7 +26,7 @@ export class UserProfileForm {
           message: i18n.t('auth.becomeMember.form.privacyPolicy.error'),
         }),
         signUpMessage: z.string().min(10).max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) }).optional().or(z.literal('')),
-        description: z.string().max(5000, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) }).optional()
+        description: z.string().max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) }).optional()
       })
     }
 

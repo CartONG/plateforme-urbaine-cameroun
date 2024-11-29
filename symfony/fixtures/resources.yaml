@@ -1,0 +1,8 @@
+App\Entity\Resource:
+  resource_{1..100}:
+    name: 'Titre de la ressource <text(30)>'
+    type: '<randomElement(<(App\Enum\ResourceType::toArray())>)>'
+    description: <text(500)>
+    createdBy: '@user_*'
+    link: https://<domainName()>
+    isValidated: <boolean(90)>

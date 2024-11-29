@@ -21,3 +21,8 @@
         min-height: 2.75rem;
     }
 }
+
+.v-snackbar__wrapper {
+    background: rgba(white, .8);
+    backdrop-filter: blur(4px);
+}

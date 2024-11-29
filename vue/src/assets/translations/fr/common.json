@@ -53,13 +53,14 @@
         "create": "Créer",
         "delete": "Supprimer",
         "errorMessages": {
-                "required": "Ce champs est requis",
-                "minlength": "Ce champs doit avoir au moins {min} caractères",
-                "maxlength": "Ce champs doit avoir au maximum {max} caractères",
-                "email": "Veuillez renseigner une adresse email valide",
-                "url": "Veuillez renseigner une URL valide",
-                "phone": "Veuillez renseigner un numéro de téléphone valide",
-                "latLng": "Les coordonnées doivent être au format 'latitude, longitude', avec des valeurs valides."
+            "required": "Ce champs est requis",
+            "minlength": "Ce champs doit avoir au moins {min} caractères",
+            "maxlength": "Ce champs est limité à {max} caractères",
+            "email": "Veuillez renseigner une adresse email valide",
+            "url": "Veuillez renseigner une URL valide",
+            "https": "Veuillez renseigner un site en https://",
+            "phone": "Veuillez renseigner un numéro de téléphone valide",
+            "latLng": "Les coordonnées doivent être au format 'latitude, longitude', avec des valeurs valides."
         }
     },
     "filters": {
@@ -146,5 +147,30 @@
         "privacy": "Politique de confidentialité",
         "plan": "Plan du site",
         "cookies": "Cookies"
+    },
+    "notifications": {
+        "project": {
+            "create": "Le projet a été créé",
+            "edit": "Le projet a été modifié",
+            "validate": "Le projet a été validé",
+            "delete": "Le projet a été supprimé"
+        },
+        "resource": {
+            "create": "La ressource a été créé",
+            "edit": "La ressource a été modifié",
+            "validate": "La ressource a été validé",
+            "delete": "La ressource a été supprimé"
+        },
+        "common": {
+            "error": {
+                "411": "Une erreur est survenue lors de la validation du formulaire",
+                "500": "Une erreur est survenue, un rapport a été envoyé",
+                "moreDetails": "Détails :"
+            }
+        }
+    },
+    "list": {
+        "resetFilters": "Réinitialiser les filtres",
+        "filtersTitle": "Affinez votre recherche"
     }
 }

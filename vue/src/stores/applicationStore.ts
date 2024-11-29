@@ -1,8 +1,8 @@
+import { computed, ref } from 'vue'
+import { defineStore } from 'pinia'
 import { StoresList } from '@/models/enums/app/StoresList'
 import { NavigationTabsService } from '@/services/application/NavigationTabsService'
 import { BreadcrumbsService } from '@/services/application/BreadcrumbsService'
-import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { useProjectStore } from '@/stores/projectStore'
@@ -11,6 +11,7 @@ import type { Ref } from 'vue'
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
 import type { LikesList } from '@/models/interfaces/LikesList'
 import { LikeService } from '@/services/likeSystem/LikeService'
+import type { Notification } from '@/models/interfaces/Notification'
 
 export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const { mobile } = useDisplay()
@@ -19,8 +20,7 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const showEditContentDialog = ref(false)
   const route = useRoute();
   const triggerZoomReset = ref(false)
-  const showSnackBar = ref(false)
-  const snackBarMessage = ref('')
+  const notificationPile: Ref<Notification[]> = ref([])
   const currentContentPage: Ref<ContentPagesList> = ref(ContentPagesList.HOME)
   const likesList: Ref<LikesList | null> = ref(null)
 
@@ -51,11 +51,10 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     await LikeService.deleteLike(id)
     await getLikesList()
   }
-
+  
   return { 
     mobile,
-    showSnackBar,
-    snackBarMessage,
+    notificationPile,
     activeTab,
     activeDialog,
     breadcrumbs,

@@ -31,6 +31,13 @@ export class CommonZodSchema {
                   return regex.test(url);
               }, {
                   message: i18n.t('forms.errorMessages.url'),
+              })
+              .refine((url) => {
+                  if (!url) return true;
+                  const regex = /^https.*$/;
+                  return regex.test(url);
+              }, {
+                  message: i18n.t('forms.errorMessages.https'),
               }),
             email: z
               .string()
@@ -42,6 +49,13 @@ export class CommonZodSchema {
               .string()
               .min(1, { message: i18n.t('forms.errorMessages.required') })
               .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
+              .optional(),
+            maxLabel: z
+              .string()
+              .max(100, { message: i18n.t('forms.errorMessages.maxlength', { max: 100 }) }),
+            maxDescription: z
+              .string()
+              .max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) })
               .optional(),
             phone: z.string().optional().refine((phone) => {
                 if (!phone) return true;

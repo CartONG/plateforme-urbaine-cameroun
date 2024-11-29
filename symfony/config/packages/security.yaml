@@ -44,7 +44,7 @@ security:
         - { path: ^/auth, roles: PUBLIC_ACCESS }
         - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST]}
         - { path: ^/api/actors, roles: PUBLIC_ACCESS, methods: [GET] }
-        # - { path: ^/api/projects, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/projects, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/actor_expertises, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/thematics, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/administrative_scopes, roles: PUBLIC_ACCESS, methods: [GET] }
@@ -52,6 +52,7 @@ security:
         - { path: ^/api/kpis, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/user_likes, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/organisations, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/resources, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/forgot_password, role: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

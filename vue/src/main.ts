@@ -7,9 +7,10 @@ import { initSentry } from './assets/plugins/sentry'
 import { vuetify } from './assets/plugins/vuetify'
 import { i18nInstance } from './assets/plugins/i18n'
 
+const pinia = createPinia()
 const app = createApp(App)
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 initSentry(app, router)
 app.use(vuetify)

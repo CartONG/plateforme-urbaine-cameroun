@@ -4,6 +4,7 @@ import actorsFR from '@/assets/translations/fr/actors.json'
 import adminFR from '@/assets/translations/fr/admin.json'
 import authFR from '@/assets/translations/fr/auth.json'
 import projectsFR from '@/assets/translations/fr/projects.json'
+import resourcesFR from '@/assets/translations/fr/resources.json'
 import homeFR from '@/assets/translations/fr/home.json'
 
 export const i18nInstance = createI18n({
@@ -11,7 +12,7 @@ export const i18nInstance = createI18n({
   locale: 'fr',
   fallbackLocale: 'fr',
   messages: {
-    fr: {...commonFR, ...actorsFR, ...adminFR, ...authFR, ...projectsFR, ...homeFR }
+    fr: {...commonFR, ...actorsFR, ...adminFR, ...authFR, ...projectsFR, ...homeFR, ...resourcesFR }
   }
 })
 

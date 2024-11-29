@@ -15,6 +15,9 @@ import { FormType } from '@/models/enums/app/FormType';
 import type { Organisation } from '@/models/interfaces/Organisation';
 import { OrganisationService } from '@/services/organisations/OrganisationService';
 import { i18n } from '@/assets/plugins/i18n';
+import { addNotification } from '@/services/notifications/NotificationService';
+import { NotificationType } from '@/models/enums/app/NotificationType';
+import type { ComputedRef } from 'vue';
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const projects: Ref<Project[]> = ref([])
@@ -26,6 +29,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const isFilterModalShown: Ref<boolean> = ref(false)
   const sortingProjectsSelectedMethod = ref(SortKey.PROJECTS_AZ)
   const isProjectMapFullWidth = ref(false)
+  const isProjectFormShown = ref(false)
   const donors: Ref<Organisation[]> = ref([])
   const contractingOrganisations: Ref<Organisation[]> = ref([])
 
@@ -130,7 +134,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     ])].filter(v => v) as any[]).map((value) => value.toLowerCase())
   }
 
-  const orderedProjects = computed(async () => {
+  const orderedProjects: ComputedRef<Project[]> = computed(() => {
     const sortedProjects = [...filteredProjects.value]; 
     switch (sortingProjectsSelectedMethod.value) {
       case SortKey.PROJECTS_AZ:
@@ -160,6 +164,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
         }
       })
     }
+    addNotification(i18n.t(`notifications.project.${type}`), NotificationType.SUCCESS)
     return submittedProject
   }
 
@@ -168,6 +173,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     projects.value.forEach((p, key) => {
       if (p.id === project.id) {
         projects.value.splice(key, 1)
+        addNotification(i18n.t('notifications.project.delete'), NotificationType.SUCCESS)
       }
     })
   }
@@ -183,7 +189,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   }
 
   return {
-    projects, project, donors, contractingOrganisations, similarProjects,filters, isProjectMapFullWidth, isFilterModalShown, sortingProjectsSelectedMethod, hoveredProjectId, hoveredProject, activeProjectId, activeProject, filteredProjects, orderedProjects, map,
+    projects, project, donors, contractingOrganisations, similarProjects,filters, isProjectMapFullWidth, isProjectFormShown, isFilterModalShown, sortingProjectsSelectedMethod, hoveredProjectId, hoveredProject, activeProjectId, activeProject, filteredProjects, orderedProjects, map,
     getAll, getAllDonors, getAllContractingOrganisations, resetFilters, loadProjectBySlug, loadSimilarProjects, submitProject, deleteProject
   }
 })

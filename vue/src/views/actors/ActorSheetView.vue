@@ -12,7 +12,7 @@
                 :email="actor.email"
                 :website="actor.website"
                 :isEditable="isEditable"
-                :updatedAt="actor.lastUpdate"
+                :updatedAt="actor.updatedAt"
                 @edit="editActor"
             />
             <div class="SheetView__contentCtn my-6" v-if="actor.description">
@@ -74,7 +74,7 @@ import { computed, onMounted, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue';
 import ContentDivider from '@/components/content/ContentDivider.vue';
-import ActorRelatedContent from './ActorRelatedContent.vue';
+import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue';
 import ImagesMosaic from '@/components/content/ImagesMosaic.vue';
@@ -83,13 +83,12 @@ import ContactCard from '@/components/content/ContactCard.vue';
 import { useApplicationStore } from '@/stores/applicationStore';
 import { useUserStore } from '@/stores/userStore';
 import ChipList from '@/components/content/ChipList.vue';
-import ProjectCard from '@/views/projects/components/ProjectCard.vue';
 
 const appStore = useApplicationStore();
 const userStore = useUserStore();
 const actorsStore = useActorsStore();
 const actor = computed(() => actorsStore.selectedActor)
-// Handle page openened directly by shared url
+
 onMounted(() => {
     const route = useRoute();
     watchEffect(() => {

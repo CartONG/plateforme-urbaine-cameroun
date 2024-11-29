@@ -3,7 +3,6 @@
 @import '@/assets/styles/global/vuetifyOverrides';
 @import '@/assets/styles/global/utils';
 @import '@/assets/styles/views/header';
-@import '@/assets/styles/views/actors';
 @import '@/assets/styles/views/Form';
 @import '@/assets/styles/views/ContentForm';
 
@@ -75,7 +74,6 @@ h4 {
 }
 
 a:-webkit-any-link {
-    color: rgb(var(--v-theme-main-blue));
     cursor: pointer;
     text-decoration: none;
 }

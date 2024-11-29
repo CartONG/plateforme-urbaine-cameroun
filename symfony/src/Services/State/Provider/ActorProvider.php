@@ -13,9 +13,7 @@ final class ActorProvider implements ProviderInterface
     public function __construct(
         private ActorRepository $actorRepository,
         private Security $security
-    )
-    {
-    }
+    ) {}
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {

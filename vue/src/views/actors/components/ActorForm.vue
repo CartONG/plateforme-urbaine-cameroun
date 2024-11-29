@@ -1,20 +1,22 @@
 <template>
-    <Modal :title="actorToEdit ? $t('actors.form.editTitle') : $t('actors.form.createTitle')"
-        :show="appStore.showEditContentDialog" @close="actorsStore.actorEdition.active = false">
+    <Modal
+        :title="actorToEdit ? $t('actors.form.editTitle') : $t('actors.form.createTitle')"
+        :show="appStore.showEditContentDialog"
+        @close="actorsStore.actorEdition.active = false">
         <template #content>
-            <div class="ContentForm__toValidate mt-3" v-if="actorToEdit && !actorToEdit.isValidated">
-                <img src="@/assets/images/actorToValidate.svg" alt="">
-                <span class="ml-2">Nouvelle soumission de Prénom NOM reçue le 31 janvier 2025 à 11h30.</span>
-            </div>
+            <NewSubmission
+                v-if="actorToEdit && !actorToEdit.isValidated"
+                :created-by="actorToEdit.createdBy"
+                :created-at="actorToEdit.createdAt" />
             <v-form @submit.prevent="submitForm" id="actor-form" class="Form Form--actor">
                 <!-- General infos -->
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.name') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.name') }}</label>
                     <v-text-field density="compact" variant="outlined" v-model="form.name.value.value"
                         :error-messages="form.name.errorMessage.value" @blur="form.name.handleChange" />
                 </div>
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.acronym') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.acronym') }}</label>
                     <v-text-field density="compact" variant="outlined" v-model="form.acronym.value.value"
                         :error-messages="form.acronym.errorMessage.value" @blur="form.acronym.handleChange" />
                 </div>
@@ -25,14 +27,14 @@
                 </div>
 
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.category') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.category') }}</label>
                     <v-select density="compact" variant="outlined"
                         v-model="(form.category.value.value as ActorsCategories)" :items="categoryItems"
                         :error-messages="form.category.errorMessage.value" @blur="form.category.handleChange" />
 
                 </div>
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.expertise') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.expertise') }}</label>
                     <v-select density="compact" variant="outlined" multiple
                         v-model="(form.expertises.value.value as ActorExpertise[])" :items="expertisesItems"
                         item-title="name" item-value="@id" :error-messages="form.expertises.errorMessage.value"
@@ -40,7 +42,7 @@
 
                 </div>
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.thematic') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.thematic') }}</label>
                     <v-select density="compact" variant="outlined" multiple
                         v-model="(form.thematics.value.value as Thematic[])" :items="thematicsItems" item-title="name"
                         item-value="@id" :error-messages="form.thematics.errorMessage.value"
@@ -48,7 +50,7 @@
 
                 </div>
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('actors.form.adminScope') }}</label>
+                    <label class="Form__label required">{{ $t('actors.form.adminScope') }}</label>
                     <v-select density="compact" variant="outlined" multiple
                         v-model="(form.administrativeScopes.value.value as AdministrativeScope[])"
                         :items="administrativeScopesItems" item-title="name" item-value="@id"
@@ -121,11 +123,10 @@
             </v-form>
         </template>
         <template #footer-left>
-            <v-btn color="white" @click="actorsStore.actorEdition.active = false">{{ $t('forms.cancel') }}</v-btn>
+            <span class="text-action" @click="actorsStore.actorEdition.active = false">{{ $t('forms.cancel') }}</span>
         </template>
         <template #footer-right>
-            <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">{{ actorToEdit ?
-                $t('forms.modify') : $t('forms.create') }}</v-btn>
+            <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">{{ submitLabel }}</v-btn>
         </template>
     </Modal>
 </template>
@@ -146,6 +147,10 @@ import Modal from '@/components/global/Modal.vue';
 import type { MediaObject } from '@/models/interfaces/MediaObject';
 import ImagesLoader from '@/components/forms/ImagesLoader.vue';
 import { useThematicStore } from '@/stores/thematicStore';
+import { onInvalidSubmit } from '@/services/forms/FormService';
+import NewSubmission from '@/views/admin/components/form/NewSubmission.vue';
+import { i18n } from '@/assets/plugins/i18n';
+
 const appStore = useApplicationStore();
 const actorsStore = useActorsStore();
 const thematicsStore = useThematicStore()
@@ -156,6 +161,13 @@ const { form, handleSubmit, isSubmitting } = ActorsFormService.getActorsForm(act
 const categoryItems = Object.values(ActorsCategories)
 const expertisesItems = actorsStore.actorsExpertises
 const thematicsItems = computed(() => thematicsStore.thematics)
+const submitLabel = computed(() => {
+    if (actorToEdit) {
+        return !actorToEdit.isValidated ? i18n.t('forms.validate') : i18n.t('forms.edit')
+    } else {
+        return i18n.t('forms.create')
+    }
+})
 const administrativeScopesItems = actorsStore.actorsAdministrativesScopes
 
 const existingLogo = ref<(MediaObject | string)[]>([]);
@@ -202,8 +214,6 @@ const submitForm = handleSubmit(
         }
         actorsStore.createOrEditActor(actorSubmission, actorToEdit !== null)
     },
-    errors => {
-        console.error('Form validation failed:', errors);
-    }
+    (error) => onInvalidSubmit
 );
 </script>

@@ -14,7 +14,7 @@
             :type="formType"
             :project="projectSubmission"
             :isShown="isFormShown"
-            :key="projectSubmission?.id ?? 0"
+            :key="projectSubmission?.id ?? -1"
             @close="closeForm"
             @submitted="closeForm"
             />
@@ -90,6 +90,7 @@ const editProject = async (project: Project, type: FormType = FormType.EDIT) => 
 }
 
 const closeForm = () => {
+    projectSubmission.value = null
     isFormShown.value = false
 }
 

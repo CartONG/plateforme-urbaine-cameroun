@@ -13,8 +13,8 @@ App\Entity\Actor:
     officeLocation: '<numberBetween(2, 13)>.<numberBetween(100000, 999999)>, <numberBetween(8, 16)>.<numberBetween(100000, 999999)>'
     contactName: <name()>
     contactPosition: <jobTitle()>
-    website: <url()>
-    phone: <phoneNumber()>
+    website: https://<domainName()>
+    phone: <numerify('6########')>
     email: <email()>
     projects: '<numberBetween(1, 8)>x @project_*'
     createdAt: '<dateTimeBetween("-200 days", "now")>'

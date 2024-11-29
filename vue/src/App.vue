@@ -5,12 +5,7 @@
       <DialogController />
     </KeepAlive>
     <EditContentDialog />
-    <v-snackbar
-      v-model="appStore.showSnackBar"
-      color="main-green"
-      :timeout="2000">
-      {{ appStore.snackBarMessage }}
-    </v-snackbar>
+    <NotificationBox />
     <div :class="'App__content container ' + (appStore.mobile ? 'App__content--mobile' : 'App__content--desktop')">
       <v-breadcrumbs v-if="!appStore.mobile" class="Breadcrumbs" :items="appStore.breadcrumbs"></v-breadcrumbs>
       <RouterView />
@@ -30,6 +25,7 @@ import { useActorsStore } from '@/stores/actorsStore';
 import { useUserStore } from '@/stores/userStore';
 import EditContentDialog from '@/views/actors/components/EditContentDialog.vue';
 import { useThematicStore } from './stores/thematicStore';
+import NotificationBox from '@/views/_layout/notification/NotificationBox.vue';
 
 const appStore = useApplicationStore();
 const actorsStore = useActorsStore();

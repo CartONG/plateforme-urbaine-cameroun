@@ -2,9 +2,9 @@ App\Entity\Project:
   project_{1..500}:
     name: '@geoData_<current()>->name Urban Development'
     status: '<randomElement(<(App\Enum\Status::toArray())>)>'
-    description: <paragraph(8)>
-    deliverables: <paragraph(8)>
-    calendar: <paragraph(8)>
+    description: <text(500)>
+    deliverables: <text(500)>
+    calendar: <text(500)>
     geoData: '@geoData_<current()>'
     images: []
     partners: []
@@ -19,7 +19,7 @@ App\Entity\Project:
     focalPointEmail: <email()>
     focalPointTel: <numerify('6########')>
     focalPointPhoto: 'https://randomuser.me/api/portraits/men/<randomNumber(1, 92)>.jpg'
-    website: <url()>
+    website: https://<domainName()>
     logo: <imageUrl(200, 100)>
     createdBy: '@user_*'
     isValidated: <boolean(70)>

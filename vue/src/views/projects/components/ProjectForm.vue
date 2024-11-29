@@ -9,7 +9,7 @@
                     :created-by="project.createdBy"
                     :created-at="project.createdAt" />
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('projects.form.fields.name.label') }}</label>
+                    <label class="Form__label required">{{ $t('projects.form.fields.name.label') }}</label>
                     <v-text-field density="compact" variant="outlined" v-model="form.name.value.value"
                     :error-messages="form.name.errorMessage.value"
                     :placeholder="$t('projects.form.fields.name.label')"
@@ -46,7 +46,7 @@
                         @blur="form.website.handleChange" />
                 </div>
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('projects.form.fields.status.label') }}</label>
+                    <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
                     <v-select density="compact" variant="outlined"
                         chips
                         v-model="(form.status.value.value as Status)" :items="Object.values(Status)"
@@ -57,7 +57,7 @@
 
                 <FormSectionTitle :text="$t('projects.form.section.localization')" />
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('projects.form.fields.interventionZone.label') }}</label>
+                    <label class="Form__label required">{{ $t('projects.form.fields.interventionZone.label') }}</label>
                     <v-select density="compact" variant="outlined"
                         v-model="(form.interventionZone.value.value as AdministrativeScope)" :items="Object.values(AdministrativeScope)"
                         :placeholder="$t('projects.form.fields.interventionZone.label')"
@@ -107,7 +107,7 @@
                 <FormSectionTitle :text="$t('projects.form.section.focalPoint')" />
                 
                 <div class="Form__fieldCtn">
-                    <label class="Form__label">{{ $t('projects.form.fields.focalPointName.label') }}</label>
+                    <label class="Form__label required">{{ $t('projects.form.fields.focalPointName.label') }}</label>
                     <v-text-field density="compact" variant="outlined" v-model="form.focalPointName.value.value"
                         :placeholder="$t('projects.form.fields.focalPointName.label')"
                         :error-messages="form.focalPointName.errorMessage.value" @blur="form.focalPointName.handleChange"/>
@@ -166,6 +166,7 @@ import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType';
 import type { Organisation } from '@/models/interfaces/Organisation';
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope';
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue';
+import { onInvalidSubmit } from '@/services/forms/FormService';
 
 const projectStore = useProjectStore();
 const actorsStore = useActorsStore();
@@ -201,8 +202,6 @@ const submitForm = handleSubmit(
         const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
         emit('submitted', submittedProject)
     },
-    errors => {
-        console.error('Form validation failed:', errors);
-    }
+    () => onInvalidSubmit
 );
 </script>

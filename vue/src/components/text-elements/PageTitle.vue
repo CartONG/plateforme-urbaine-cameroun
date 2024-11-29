@@ -15,4 +15,19 @@ defineProps<{
     font-weight: 700;
     line-height: 60px;
 }
+
+
+@media (max-width: $bp-md) {
+    .PageTitle {
+        font-size: 3rem;
+        line-height: 3rem;
+    }
+}
+
+@media (max-width: $bp-sm) {
+    .PageTitle {
+        font-size: 2.5rem;
+        line-height: 2.5rem;
+    }
+}
 </style>

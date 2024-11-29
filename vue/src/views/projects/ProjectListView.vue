@@ -2,30 +2,40 @@
     <div class="ProjectsView" :is-project-map-full-width="isProjectMapFullWidth">
         <div class="ProjectsView__listCtn">
             <div class="ProjectsView__listHeader">
-                <h3 class="ProjectsView__projectCount">{{ projectsCount }} {{ projectsCount > 1 ? $t('projects.projects') : $t('projects.project') }}</h3>
-                <v-text-field
-                    v-model="projectStore.filters.searchValue"
-                    class="ProjectsView__searchBar"
-                    variant="outlined"
-                    hide-details="auto"
-                    :label="$t('filters.search')"
-                    density="comfortable"
-                >
-                    <template v-slot:prepend-inner>
-                        <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
-                    </template>
-                </v-text-field>
-                <v-select
-                    class="fit"
-                    variant="outlined"
-                    hide-details="auto"
-                    density="comfortable"
-                    :label="$t('filters.sortBy.placeholder')"
-                    :items="sortOptions"
-                    @update:model-value="setSortKey"
-                    item-title="label"
-                    item-value="value"
-                ></v-select>
+                <div class="ProjectsView__listHeaderBlock ProjectsView__listHeaderBlock--top">
+                    <h3 class="ProjectsView__projectCount">{{ projectsCount }} {{ $t('projects.projects', projectsCount) }}</h3>
+                    <v-btn
+                        v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS) || userStore.userIsAdmin()"
+                        @click="projectStore.isProjectFormShown = true"
+                        prepend-icon="mdi-plus"
+                        color="main-red"
+                    >{{ $t("projects.form.title.create")}}</v-btn>
+                </div>
+                <div class="ProjectsView__listHeaderBlock ProjectsView__listHeaderBlock--bottom">
+                    <v-text-field
+                        v-model="projectStore.filters.searchValue"
+                        class="ProjectsView__searchBar"
+                        variant="outlined"
+                        hide-details="auto"
+                        :label="$t('filters.search')"
+                        density="comfortable"
+                    >
+                        <template v-slot:prepend-inner>
+                            <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+                        </template>
+                    </v-text-field>
+                    <v-select
+                        class="ProjectsView__sortSelect fit"
+                        variant="outlined"
+                        hide-details="auto"
+                        density="comfortable"
+                        :label="$t('filters.sortBy.placeholder')"
+                        :items="sortOptions"
+                        @update:model-value="setSortKey"
+                        item-title="label"
+                        item-value="value"
+                    ></v-select>
+                </div>
             </div>
             <div class="ProjectsView__list">
                 <ProjectCard
@@ -33,7 +43,7 @@
                     :key="project.id"
                     :project="project"
                     @mouseover="setHoveredProject(project.id)" />               
-                <Pagination :items="filteredProjects" v-model="paginatedProjects" />
+                <Pagination :items="orderedProjects" v-model="paginatedProjects" />
             </div>
         </div>
         <div class="ProjectsView__mapCtn" v-if="!useApplicationStore().mobile">
@@ -52,7 +62,9 @@ import { ref } from 'vue';
 import { SortKey } from '@/models/enums/SortKey';
 import type { Project } from '@/models/interfaces/Project';
 import Pagination from '@/components/global/Pagination.vue';
-
+import { UserRoles } from '@/models/enums/auth/UserRoles';
+import { useUserStore } from '@/stores/userStore';
+const userStore = useUserStore()
 const projectStore = useProjectStore();
 
 const sortOptions = Object.values(SortKey).map((key) => {
@@ -72,9 +84,9 @@ const setSortKey = (key: SortKey) => {
 
 onBeforeMount(async () => await projectStore.getAll())
 
-const filteredProjects = computed(() => projectStore.filteredProjects)
+const orderedProjects = computed(() => projectStore.orderedProjects)
 const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)
-const projectsCount = computed(() => filteredProjects.value.length)
+const projectsCount = computed(() => orderedProjects.value.length)
 const paginatedProjects: Ref<Project[]> = ref([])
 </script>
 
@@ -113,20 +125,33 @@ const paginatedProjects: Ref<Project[]> = ref([])
 
         .ProjectsView__listHeader {
             display: flex;
-            flex-flow: row nowrap;
-            align-items: center;
-            gap: 1rem;
+            flex-flow: column nowrap;
+            gap: 1.5rem;
             margin-bottom: 1rem;
 
-            .ProjectsView__searchBar {
-                .v-field__prepend-inner > .v-icon, .v-field__append-inner > .v-icon, .v-field__clearable > .v-icon {
-                    opacity: 1;
+            .ProjectsView__listHeaderBlock {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+                gap: 1rem;
+
+                &--top {
+                    justify-content: space-between;
+                    .ProjectsView__projectCount {
+                        color: rgb(var(--v-theme-main-blue));
+                    }
                 }
-            }
-            .ProjectsView__projectCount {
-                flex: 1 0 auto;
-                margin-left: 1.5rem;
-                color: rgb(var(--v-theme-main-blue));
+
+                &--bottom {
+                    .ProjectsView__searchBar {
+                        .v-field__prepend-inner > .v-icon, .v-field__append-inner > .v-icon, .v-field__clearable > .v-icon {
+                            opacity: 1;
+                        }
+                    }
+                    .ProjectsView__sortSelect {
+                        max-width: 13rem;
+                    }
+                }
             }
         }
         .ProjectsView__list {

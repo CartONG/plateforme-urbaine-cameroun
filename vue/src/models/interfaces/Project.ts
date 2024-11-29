@@ -10,8 +10,9 @@ import type { GeoData } from "@/models/interfaces/geo/GeoData";
 import type { LocalizableSubmission } from "@/models/interfaces/common/LocalizableSubmission";
 import type { Organisation } from "@/models/interfaces/Organisation";
 import type { Validateable } from '@/models/interfaces/common/Validateable';
+import type { Blameable } from "@/models/interfaces/common/Blameable";
 
-export interface Project extends Timestampable, Validateable {
+export interface Project extends Timestampable, Validateable, Blameable {
   id: string;
   name: string;
   slug: string;

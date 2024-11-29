@@ -4,6 +4,7 @@ export enum StoresList {
     USER = "user",
     ACTORS = "actors",
     PROJECTS = "projects",
+    RESOURCES = "resources",
     THEMATICS = "thematics",
     HOME = "home",
 }

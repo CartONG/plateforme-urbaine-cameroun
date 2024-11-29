@@ -2,7 +2,7 @@
     <InfoCard class="GenericInfoCard" :to="to">
         <template #content>
             <div class="GenericInfoCard__imgCtn">
-                <img class="GenericInfoCard__img" :src="image">
+                <img class="GenericInfoCard__img" :src="image" v-if="image">
             </div>
             <div class="GenericInfoCard__infoCtn">
                 <span class="InfoCard__title">{{ title }}</span>
@@ -10,12 +10,22 @@
             </div>
         </template>
         <template #footer-left>
-            <v-chip class="mr-2">{{ $t('itemType.' + type) }}</v-chip>
+            <v-chip class="mr-2">{{ typeLabel }}</v-chip>
             <ShareButton />
             <LikeButton :id="id" />
+            <v-btn
+                class="GenericInfoCard__editBtn"
+                v-if="isEditable"
+                variant="text"
+                density="comfortable"
+                icon="mdi-pencil-outline"
+                color="main-blue"
+                @click.prevent="editFunction"
+                >
+        </v-btn>
         </template>
         <template #footer-right>
-            <v-icon class="InfoCard__actionIcon" icon="mdi mdi-open-in-new" color="light-blue"></v-icon>
+            <v-icon class="InfoCard__actionIcon" :icon="actionIcon ?? 'mdi-open-in-new'" color="light-blue"></v-icon>
         </template>
     </InfoCard>
 </template>
@@ -26,15 +36,22 @@ import LikeButton from '@/components/global/LikeButton.vue';
 import ShareButton from '@/components/global/ShareButton.vue';
 import { ItemType } from '@/models/enums/app/ItemType';
 import { computed } from 'vue';
+import imageDefault from '@/assets/images/Logo.png'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     id: string,
     title: string,
     description: string,
     image?: string,
+    typeLabel: string,
     type: ItemType,
-    slug: string,
-}>();
+    slug?: string,
+    actionIcon?: string
+    isEditable?: boolean
+    editFunction?: Function
+}>(), {
+    image: imageDefault
+});
 
 const to = computed(() => {
     switch (props.type) {
@@ -48,11 +65,10 @@ const to = computed(() => {
 
 <style lang="scss">
 .GenericInfoCard {
-    // padding: 1rem 1.25rem !important;
     padding: 0 !important;
-    $dim-img-h: 11rem;
+    $dim-img-h: 13rem;
     $dim-text-max-h: 3rem;
-    $dim-card-h: 23rem;
+    $dim-card-h: 26rem;
     $card-transition: all .15s ease-in;
     height: $dim-card-h;
     max-height: $dim-card-h;
@@ -67,31 +83,37 @@ const to = computed(() => {
         }
         .GenericInfoCard__infoCtn {
             margin-top: 0;
-            // max-height: calc($dim-card-h);
-            // height: calc($dim-text-max-h + $dim-img-h);
-            // min-height: calc($dim-text-max-h + $dim-img-h);
 
             .InfoCard__description  {
-                
                 max-height: calc($dim-text-max-h + $dim-img-h);
-                // min-height: calc($dim-text-max-h + $dim-img-h);
             }
         }
+        .GenericInfoCard__editBtn {
+            opacity: 1;
+        }
+    }
+    .GenericInfoCard__editBtn {
+        opacity: 0;
+        transition: all .15s ease-in;
     }
     
     .GenericInfoCard__imgCtn {
         position: absolute;
         transition: $card-transition;
         height: $dim-img-h;
-        background: #ddd;
         inset: 0;
         min-height: $dim-img-h;
         width: 100%;
-        // z-index: 1;
+        background: linear-gradient(to top, rgb(var(--v-theme-light-yellow)) 0%,  rgba(var(--v-theme-light-yellow), 15%) 100%);
 
-        .GenericInfoCard__img {            
+        .GenericInfoCard__img {
+            $dim-margin: 1rem;   
+            padding: $dim-margin;     
             width: 100%;
-            object-fit: cover;
+            height: 100%;
+            min-height: calc($dim-img-h);
+            object-fit: contain;
+            mix-blend-mode: multiply;
         }
     }
     .InfoCard__footer {

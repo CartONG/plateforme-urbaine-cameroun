@@ -9,32 +9,49 @@
                 <img src="@/assets/images/actorToValidate.svg" alt="">
                 <span class="ml-2">{{ $t("auth.editForm.newMember") }} 31 janvier 2025 à 11h30.</span>
             </div>
-            <div class="ContentForm__ctn mt-4">
-                <v-form @submit.prevent="submitForm" id="user-form">
-                <v-text-field density="compact" variant="outlined" v-model="form.firstName.value.value"
-                    :error-messages="form.firstName.errorMessage.value" :label="$t('auth.becomeMember.form.firstName')"
-                    @blur="form.firstName.handleChange" 
-                />
-                <v-text-field density="compact" variant="outlined" v-model="form.lastName.value.value"
-                    :error-messages="form.lastName.errorMessage.value" :label="$t('auth.becomeMember.form.lastName')"
-                    @blur="form.lastName.handleChange" 
-                />
-                <v-text-field density="compact" variant="outlined" v-model="form.email.value.value"
-                    :error-messages="form.email.errorMessage.value" :label="$t('auth.becomeMember.form.email')"
-                    @blur="form.email.handleChange" 
-                />
-                <v-text-field density="compact" variant="outlined" v-model="form.organisation.value.value"
-                    :error-messages="form.organisation.errorMessage.value" :label="$t('auth.becomeMemberThanks.form.organization')"
-                    @blur="form.organisation.handleChange" 
-                />
-                <v-text-field density="compact" variant="outlined" v-model="form.position.value.value"
-                    :error-messages="form.position.errorMessage.value" :label="$t('auth.becomeMemberThanks.form.functions')"
-                    @blur="form.position.handleChange" 
-                />
-                <v-text-field density="compact" variant="outlined" v-model="form.phone.value.value"
-                    :error-messages="form.phone.errorMessage.value" :label="$t('auth.becomeMemberThanks.form.telephone')"
-                    @blur="form.phone.handleChange" 
-                />
+            <v-form @submit.prevent="submitForm" id="user-form" class="Form Form--user">
+                <div class="Form__fieldCtn">
+                    <label class="Form__label required">{{ $t('auth.becomeMember.form.firstName') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.firstName.value.value"
+                        :error-messages="form.firstName.errorMessage.value" :placeholder="$t('auth.becomeMember.form.firstName')"
+                        @blur="form.firstName.handleChange" 
+                    />
+                </div>
+                <div class="Form__fieldCtn">
+                    <label class="Form__label required">{{ $t('auth.becomeMember.form.lastName') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.lastName.value.value"
+                        :error-messages="form.lastName.errorMessage.value" :placeholder="$t('auth.becomeMember.form.lastName')"
+                        @blur="form.lastName.handleChange" 
+                    />
+                </div>
+                <div class="Form__fieldCtn">
+                    <label class="Form__label required">{{ $t('auth.becomeMember.form.email') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.email.value.value"
+                        :error-messages="form.email.errorMessage.value" :placeholder="$t('auth.becomeMember.form.email')"
+                        @blur="form.email.handleChange" 
+                    />
+                </div>
+                <div class="Form__fieldCtn">
+                    <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.organization') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.organisation.value.value"
+                        :error-messages="form.organisation.errorMessage.value" :placeholder="$t('auth.becomeMemberThanks.form.organization')"
+                        @blur="form.organisation.handleChange" 
+                    />
+                </div>
+                <div class="Form__fieldCtn">
+                    <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.functions') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.position.value.value"
+                        :error-messages="form.position.errorMessage.value" :placeholder="$t('auth.becomeMemberThanks.form.functions')"
+                        @blur="form.position.handleChange" 
+                    />
+                </div>
+                <div class="Form__fieldCtn">
+                    <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.telephone') }}</label>
+                    <v-text-field density="compact" variant="outlined" v-model="form.phone.value.value"
+                        :error-messages="form.phone.errorMessage.value" :placeholder="$t('auth.becomeMemberThanks.form.telephone')"
+                        @blur="form.phone.handleChange" 
+                    />
+                </div>
                 <div class="ContentForm__rolesRequestCtn">
                     <span>{{ $t("auth.editForm.requestedRoles") }}</span>
                     <div class="ContentForm__rolesRequestItem" v-for="(role, index) in requestedRoles" :key="index">
@@ -43,13 +60,12 @@
                     </div>
                 </div>
             </v-form>
-            </div>
         </template>
         <template #footer-left>
-            <v-btn color="white" @click="adminStore.userEdition.active = false">{{ $t('forms.cancel') }}</v-btn>
+            <span class="text-action" @click="adminStore.userEdition.active = false">{{ $t('forms.cancel') }}</span>
         </template>
         <template #footer-right>
-            <v-btn type="submit" form="user-form" color="main-red" :loading="isSubmitting">{{ $t('forms.submit') }}</v-btn>
+            <v-btn type="submit" form="user-form" color="main-red" :loading="isSubmitting">{{ submitLabel }}</v-btn>
         </template>
     </Modal>
 </template>
@@ -61,11 +77,23 @@ import type { User } from '@/models/interfaces/auth/User';
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm';
 import { useAdminStore } from '@/stores/adminStore';
 import { useApplicationStore } from '@/stores/applicationStore';
+import { onInvalidSubmit } from '@/services/forms/FormService';
+import { i18n } from '@/assets/plugins/i18n';
+import { computed } from 'vue';
 const appStore = useApplicationStore();
 const adminStore = useAdminStore();
 const userToEdit: User | null = adminStore.userEdition.user
 const { form, handleSubmit, isSubmitting } = UserProfileForm.getUserEditionForm(userToEdit);
 const requestedRoles = UserProfileForm.getRolesList()
+
+const submitLabel = computed(() => {
+    if (userToEdit) {
+        return !userToEdit.isValidated ? i18n.t('forms.validate') : i18n.t('forms.edit')
+    } else {
+        return i18n.t('forms.create')
+    }
+})
+
 if (userToEdit) {
     requestedRoles.map(x => {
         if (userToEdit.roles.includes(x.value)) {
@@ -92,8 +120,6 @@ const submitForm = handleSubmit(
             adminStore.createUser(userSubmission);
         }
     },
-    errors => {
-        console.error('Form validation failed:', errors);
-    }
+    () => onInvalidSubmit
 );
 </script>

@@ -18,10 +18,10 @@ export class ProjectFormService {
                 .string()
                 .min(1, { message: i18n.t('forms.errorMessages.required') }),
             description: zodModels.description,
-            calendar: z.string().optional(),
-            deliverables: z.string().optional(),
-            focalPointName: z.string().optional(),
-            focalPointPosition: z.string().optional(),
+            calendar: zodModels.maxDescription,
+            deliverables: zodModels.maxDescription,
+            focalPointName: zodModels.maxLabel,
+            focalPointPosition: zodModels.maxLabel.optional(),
             focalPointEmail: zodModels.email,
             interventionZone: z.nativeEnum(AdministrativeScope),
             focalPointTel: zodModels.phone,
@@ -32,7 +32,7 @@ export class ProjectFormService {
             contractingOrganisation: zodModels.symfonyRelation,
             thematics: zodModels.symfonyRelations,
             beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType)),
-            website: z.string().url().optional(),
+            website: zodModels.website,
         })
 
         const { errors, handleSubmit, isSubmitting } = useForm<Partial<Project | ProjectSubmission>>({

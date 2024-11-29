@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router';
 import HomeView from '@/views/home/HomeView.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
-import ActorProfile from '@/views/actors/components/ActorProfile.vue'
+import ActorProfile from '@/views/actors/ActorSheetView.vue'
 import AdminMembers from '@/views/admin/components/AdminMembers.vue'
 import AdminContent from '@/views/admin/components/AdminContent.vue'
 import AdminComments from '@/views/admin/components/AdminComments.vue'
@@ -36,7 +36,7 @@ const router = createRouter({
     {
       path: '/actors',
       name: 'actors',
-      component: () => import('@/views/actors/ActorsView.vue')
+      component: () => import('@/views/actors/ActorListView.vue')
     },
     {
       path: '/actors/:slug',
@@ -73,7 +73,7 @@ const router = createRouter({
     {
       path: '/resources',
       name: 'resources',
-      component: () => import('@/views/resources/ResourcesView.vue')
+      component: () => import('@/views/resources/ResourceListView.vue')
     },
     {
       path: '/services',

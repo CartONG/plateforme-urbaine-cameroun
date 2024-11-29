@@ -29,6 +29,7 @@ defineProps<{
 <style lang="scss">
 .InfoCard.v-card {
     width: 100%;
+    justify-content: flex-end;
     padding: 25px;
     display: flex;
     flex-direction: column;
