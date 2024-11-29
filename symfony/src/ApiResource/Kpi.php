@@ -10,49 +10,49 @@ use App\Services\State\Provider\GlobalKpiProvider;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
-  paginationEnabled: false,
-  operations: [
-    new GetCollection(
-      uriTemplate: '/kpis/global',
-      provider: GlobalKpiProvider::class,
-      normalizationContext: [
-        'groups' => [self::KPI_READ]
-      ]
-    )
-  ]
+    paginationEnabled: false,
+    operations: [
+        new GetCollection(
+            uriTemplate: '/kpis/global',
+            provider: GlobalKpiProvider::class,
+            normalizationContext: [
+                'groups' => [self::KPI_READ],
+            ]
+        ),
+    ]
 )]
 class Kpi
 {
-  public const KPI_READ = 'kpi:read';
+    public const KPI_READ = 'kpi:read';
 
-  #[ApiProperty(identifier: true)]
-  #[Groups([self::KPI_READ])]
-  private KpiKey $key;
+    #[ApiProperty(identifier: true)]
+    #[Groups([self::KPI_READ])]
+    private KpiKey $key;
 
-  #[Groups([self::KPI_READ])]
-  private int $count;
+    #[Groups([self::KPI_READ])]
+    private int $count;
 
-  public function getKey(): KpiKey
-  {
-    return $this->key;
-  }
+    public function getKey(): KpiKey
+    {
+        return $this->key;
+    }
 
-  public function setKey(KpiKey $key): self
-  {
-    $this->key = $key;
+    public function setKey(KpiKey $key): self
+    {
+        $this->key = $key;
 
-    return $this;
-  }
+        return $this;
+    }
 
-  public function getCount(): int
-  {
-    return $this->count;
-  }
+    public function getCount(): int
+    {
+        return $this->count;
+    }
 
-  public function setCount(int $count): self
-  {
-    $this->count = $count;
+    public function setCount(int $count): self
+    {
+        $this->count = $count;
 
-    return $this;
-  }
+        return $this;
+    }
 }

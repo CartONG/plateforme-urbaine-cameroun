@@ -31,7 +31,7 @@ cc: sf
 recreate-database: restart-db-container drop-database create-database configure-database
 
 drop-database:
-	@$(SYMFONY) do:da:dr -f --if-exists 
+	@$(SYMFONY) do:da:dr -f --if-exists
 
 create-database:
 	@$(SYMFONY) do:da:cr --if-not-exists
@@ -62,3 +62,6 @@ create-short-migration: reset-database make-migration rerun-migration run-fixtur
 
 init-jwt-keypair:
 	@$(SYMFONY) lexik:jwt:generate-keypair --overwrite
+
+run-php-cs-fixer:
+	@$(DOCKER_EXEC_PHP) php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php

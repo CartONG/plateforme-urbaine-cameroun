@@ -2,36 +2,33 @@
 
 namespace App\Entity;
 
-use App\Entity\Thematic;
-use App\Enum\ActorCategory;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Post;
-use App\Entity\ActorExpertise;
-use App\Model\Enums\UserRoles;
-use Doctrine\DBAL\Types\Types;
-use ApiPlatform\Metadata\Patch;
-use Symfony\Component\Uid\Uuid;
-use ApiPlatform\Metadata\Delete;
-use Doctrine\ORM\Mapping as ORM;
-use App\Security\Voter\ActorVoter;
-use App\Entity\AdministrativeScope;
-use App\Repository\ActorRepository;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\SluggableEntity;
-use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
-use Doctrine\Common\Collections\Collection;
-use Jsor\Doctrine\PostGIS\Types\PostGISType;
-use App\Services\State\Provider\ActorProvider;
+use App\Enum\ActorCategory;
+use App\Model\Enums\UserRoles;
+use App\Repository\ActorRepository;
+use App\Security\Voter\ActorVoter;
 use App\Services\State\Processor\ActorProcessor;
+use App\Services\State\Provider\ActorProvider;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Jsor\Doctrine\PostGIS\Types\PostGISType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[UniqueEntity('name')]
@@ -68,15 +65,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 )]
 class Actor
 {
-    public const ACTOR_READ_COLLECTION = 'actor:read_collection';
-    public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
-    public const ACTOR_READ_ITEM = 'actor:read_item';
-    private const ACTOR_WRITE = 'actor:write';
-
     use TimestampableEntity;
     use SluggableEntity;
     use BlameableEntity;
     use ValidateableEntity;
+    public const ACTOR_READ_COLLECTION = 'actor:read_collection';
+    public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
+    public const ACTOR_READ_ITEM = 'actor:read_item';
+    private const ACTOR_WRITE = 'actor:write';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -124,7 +120,7 @@ class Actor
     private ?string $officeAddress = null;
 
     #[ORM\Column(
-        type: PostGISType::GEOMETRY, 
+        type: PostGISType::GEOMETRY,
         options: ['geometry_type' => 'POINT'],
         nullable: true
     )]
@@ -169,7 +165,7 @@ class Actor
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups([self::ACTOR_READ_COLLECTION,self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::PROJECT_READ])]
+    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::PROJECT_READ])]
     private ?MediaObject $logo = null;
 
     /**
@@ -193,7 +189,8 @@ class Actor
         $this->images = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid {
+    public function getId(): ?Uuid
+    {
         return $this->id;
     }
 
@@ -317,10 +314,12 @@ class Actor
         return $this;
     }
 
-    public function getOfficeLocation(): ?string {
+    public function getOfficeLocation(): ?string
+    {
         if (preg_match('/POINT\(([-\d\.]+) ([-\d\.]+)\)/', $this->officeLocation, $matches)) {
-            return $matches[1] . ',' . $matches[2];
+            return $matches[1].','.$matches[2];
         }
+
         return null;
     }
 
@@ -328,8 +327,8 @@ class Actor
     {
         // Convert lat/lng string into postgis point geometry
         if (preg_match('/^\s*(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)\s*$/', $coords, $matches)) {
-            $lat = (float)$matches[1];
-            $lng = (float)$matches[3];
+            $lat = (float) $matches[1];
+            $lng = (float) $matches[3];
 
             $this->officeLocation = sprintf('POINT(%f %f)', $lng, $lat);
         } else {
@@ -400,7 +399,7 @@ class Actor
     }
 
     /**
-    * @return Collection<int, Project>
+     * @return Collection<int, Project>
      */
     public function getProjects(): Collection
     {
@@ -501,4 +500,3 @@ class Actor
         return $this;
     }
 }
-    

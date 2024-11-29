@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Serializer;
 
 use ApiPlatform\Serializer\SerializerContextBuilderInterface;
@@ -23,7 +24,7 @@ final class UserContextBuilder implements SerializerContextBuilderInterface
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $resourceClass = $context['resource_class'] ?? null;
 
-        if ($resourceClass === User::class && isset($context['groups']) && $this->authorizationChecker->isGranted(UserRoles::ROLE_ADMIN) && false === $normalization) {
+        if (User::class === $resourceClass && isset($context['groups']) && $this->authorizationChecker->isGranted(UserRoles::ROLE_ADMIN) && false === $normalization) {
             $context['groups'][] = User::GROUP_ADMIN;
         }
 

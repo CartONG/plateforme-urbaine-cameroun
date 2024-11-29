@@ -16,11 +16,11 @@ class UserListener
 
     public function __construct(PasswordHasher $passwordHasher)
     {
-      $this->passwordHasher = $passwordHasher;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function hashPassword(User $user, LifecycleEventArgs $event): void
     {
-      $this->passwordHasher->hashPassword($user);
+        $this->passwordHasher->hashPassword($user);
     }
 }

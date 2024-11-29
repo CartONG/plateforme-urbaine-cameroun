@@ -9,7 +9,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 final class CurrentUserProvider implements ProviderInterface
 {
-
     public function __construct(private Security $security)
     {
     }

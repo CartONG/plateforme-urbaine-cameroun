@@ -10,12 +10,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 trait LocalizableEntity
 {
-    
-    #[Groups([PROJECT::PROJECT_WRITE])]
+    #[Groups([Project::PROJECT_WRITE])]
     private ?array $osmData = null;
-    
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups([PROJECT::PROJECT_READ, PROJECT::PROJECT_READ_ALL, Actor::ACTOR_READ_ITEM])]
+    #[Groups([Project::PROJECT_READ, Project::PROJECT_READ_ALL, Actor::ACTOR_READ_ITEM])]
     private ?GeoData $geoData = null;
 
     public function getOsmData(): ?array

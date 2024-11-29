@@ -7,7 +7,6 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserLikeRepository;
-use App\Services\State\Processor\UserLikeDeleteProcessor;
 use App\Services\State\Provider\UserLikeProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -16,7 +15,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\UniqueConstraint(
     name: 'unique_like_idx',
     columns: ['user_id_id', 'content_id']
-  )]
+)]
 #[ApiResource(
     operations: [
         new GetCollection(
@@ -27,7 +26,7 @@ use Symfony\Component\Uid\Uuid;
         ),
         new Delete(
             security: 'is_granted(\'IS_AUTHENTICATED_FULLY\')',
-        )
+        ),
     ]
 )]
 class UserLike

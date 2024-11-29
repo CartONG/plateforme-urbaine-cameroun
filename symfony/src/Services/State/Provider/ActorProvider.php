@@ -1,19 +1,20 @@
 <?php
 
 namespace App\Services\State\Provider;
-use App\Model\Enums\UserRoles;
+
 use ApiPlatform\Metadata\Operation;
-use App\Repository\ActorRepository;
 use ApiPlatform\State\ProviderInterface;
+use App\Model\Enums\UserRoles;
+use App\Repository\ActorRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final class ActorProvider implements ProviderInterface
 {
-    
     public function __construct(
         private ActorRepository $actorRepository,
-        private Security $security
-    ) {}
+        private Security $security,
+    ) {
+    }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {

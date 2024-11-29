@@ -115,7 +115,6 @@ class GeoData
         return $this;
     }
 
-    
     #[Groups([Project::PROJECT_READ_ALL])]
     public function getCoords(): ?array
     {

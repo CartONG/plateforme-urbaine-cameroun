@@ -50,7 +50,7 @@ class Resource
     use TimestampableEntity;
     use BlameableEntity;
     use ValidateableEntity;
-    
+
     public const RESOURCE_READ = 'resource:read';
     public const RESOURCE_READ_ALL = 'resource:read:all';
     public const RESOURCE_WRITE = 'resource:write';

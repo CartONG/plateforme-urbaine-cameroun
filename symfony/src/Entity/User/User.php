@@ -9,9 +9,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Entity\Actor;
-use App\Entity\MediaObject;
-use App\Entity\Project;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\UserRepository;
@@ -57,13 +54,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use ValidateableEntity;
     public const GROUP_GETME = 'user:get_me';
     public const GROUP_READ = 'user:read';
     public const GROUP_WRITE = 'user:write';
     public const GROUP_ADMIN = 'user:admin';
     private const ACCEPTED_ROLES = [UserRoles::ROLE_USER, UserRoles::ROLE_EDITOR_ACTORS, UserRoles::ROLE_EDITOR_PROJECTS, UserRoles::ROLE_EDITOR_RESSOURCES];
-
-    use ValidateableEntity;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

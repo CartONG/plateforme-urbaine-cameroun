@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
                 'donor' => new QueryParameter(filter: 'organisation.donor_filter'),
             ],
             normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]
-        )
+        ),
     ]
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['donor', 'contracting'])]
@@ -46,10 +46,10 @@ class Organisation
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Actor $actor = null;
 
-    #[ORM\Column(type: "boolean", options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $contracting = false;
 
-    #[ORM\Column(type: "boolean", options: ['default' => false])]
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private ?bool $donor = false;
 
     public function getId(): ?int

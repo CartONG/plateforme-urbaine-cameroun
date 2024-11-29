@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Security\Voter;
 
 use App\Entity\Actor;
@@ -10,8 +11,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ActorVoter extends Voter
 {
-    const EDIT = 'edit';
-    const CREATE = 'create';
+    public const EDIT = 'edit';
+    public const CREATE = 'create';
 
     private Security $security;
 
@@ -36,7 +37,7 @@ class ActorVoter extends Voter
         /** @var Actor $actor */
         $actor = $subject;
 
-        if ($attribute === self::EDIT) {
+        if (self::EDIT === $attribute) {
             return $this->canEdit($user, $actor);
         }
 

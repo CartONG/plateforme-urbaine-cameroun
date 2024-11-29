@@ -5,28 +5,28 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\GetCollection;
-use App\Enum\AdministrativeScope;
-use App\Enum\BeneficiaryType;
-use App\Enum\Status;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\Project\SimilarProjectsAction;
-use App\Repository\ProjectRepository;
-use App\Entity\Trait\SluggableEntity;
-use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\SluggableEntity;
+use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
+use App\Enum\AdministrativeScope;
+use App\Enum\BeneficiaryType;
+use App\Enum\Status;
 use App\Model\Enums\UserRoles;
+use App\Repository\ProjectRepository;
 use App\Services\State\Processor\ProjectProcessor;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -43,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             normalizationContext: ['groups' => [self::PROJECT_READ]],
             parameters: [
-                'slug' => new QueryParameter()
+                'slug' => new QueryParameter(),
             ]
         ),
         new GetCollection(
