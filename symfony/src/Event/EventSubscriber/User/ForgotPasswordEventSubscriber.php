@@ -2,13 +2,9 @@
 
 namespace App\Event\EventSubscriber\User;
 
-use App\Entity\User\User;
 use App\Services\Mailer\User\UserResetPasswordMailer;
 use CoopTilleuls\ForgotPasswordBundle\Event\CreateTokenEvent;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 
 final readonly class ForgotPasswordEventSubscriber implements EventSubscriberInterface
 {

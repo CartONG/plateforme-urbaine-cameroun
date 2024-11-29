@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity\User;
 
 use CoopTilleuls\ForgotPasswordBundle\Entity\AbstractPasswordToken;
