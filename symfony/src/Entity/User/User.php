@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
 use App\Entity\MediaObject;
 use App\Entity\Project;
-use App\Entity\Trait\Timestampable\TimestampableEntity;
+use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\UserRepository;

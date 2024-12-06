@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Trait\Timestampable;
+namespace App\Entity\Trait;
 
 use App\Entity\Actor;
 use App\Entity\Project;
