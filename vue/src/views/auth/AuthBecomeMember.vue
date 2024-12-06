@@ -2,10 +2,12 @@
   <AuthDialog>
     <template #title>{{ $t('auth.becomeMember.title') }}</template>
     <template #subtitle>
-      <i18n-t keypath="auth.becomeMember.subtitle.label" >
+      <i18n-t keypath="auth.becomeMember.subtitle.label">
         <template v-slot:url>
           <router-link
-            append :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_WHY } }">
+            append
+            :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_WHY } }"
+          >
             {{ $t('auth.becomeMember.subtitle.link') }}
           </router-link>
         </template>
@@ -13,7 +15,7 @@
     </template>
     <template #content>
       <Form @submit.prevent="onSubmit">
-        <v-text-field 
+        <v-text-field
           v-model="form.firstName.value.value"
           :label="$t('auth.becomeMember.form.firstName')"
           :error-messages="form.firstName.errorMessage.value"
@@ -46,51 +48,60 @@
           :error-messages="form.confirmPassword.errorMessage.value"
           @blur="form.confirmPassword.handleChange"
         />
-        <v-checkbox class="align-baseline"
+        <v-checkbox
+          class="align-baseline"
           v-model="form.acceptTerms.value.value"
           :error-messages="form.acceptTerms.errorMessage.value"
         >
           <template v-slot:label>
-            <i18n-t keypath="auth.becomeMember.form.privacyPolicy.label" tag="span" >
+            <i18n-t keypath="auth.becomeMember.form.privacyPolicy.label" tag="span">
               <template v-slot:url1>
                 <router-link
-                  append :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }">
+                  append
+                  :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
+                >
                   {{ $t('auth.becomeMember.form.privacyPolicy.confidentialPolicy') }}
                 </router-link>
               </template>
               <template v-slot:url2>
                 <router-link
-                  append :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }">
+                  append
+                  :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
+                >
                   {{ $t('auth.becomeMember.form.privacyPolicy.usePolicy') }}
                 </router-link>
               </template>
             </i18n-t>
           </template>
-        </v-checkbox>      
-        <div class="AuthDialog__error" v-if="userStore.errorWhileSignInOrSignUp">{{ $t('auth.becomeMember.error') }}</div>
-        <v-btn color="main-red" type="submit" block>{{ $t('auth.becomeMember.form.submit') }}</v-btn>
+        </v-checkbox>
+        <div class="AuthDialog__error" v-if="userStore.errorWhileSignInOrSignUp">
+          {{ $t('auth.becomeMember.error') }}
+        </div>
+        <v-btn color="main-red" type="submit" block>{{
+          $t('auth.becomeMember.form.submit')
+        }}</v-btn>
       </Form>
     </template>
   </AuthDialog>
 </template>
 
 <script setup lang="ts">
-import AuthDialog from '@/views/auth/AuthDialog.vue';
-import Form from '@/components/forms/Form.vue';
-import { DialogKey } from '@/models/enums/app/DialogKey';
-import { I18nT } from 'vue-i18n';
-import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm';
-import { useUserStore } from '@/stores/userStore';
+import AuthDialog from '@/views/auth/AuthDialog.vue'
+import Form from '@/components/forms/Form.vue'
+import { DialogKey } from '@/models/enums/app/DialogKey'
+import { I18nT } from 'vue-i18n'
+import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
+import { useUserStore } from '@/stores/userStore'
 
-const {form, errors, handleSubmit, isSubmitting} = UserProfileForm.getSignUpForm();
-const userStore = useUserStore();
+const { form, handleSubmit } = UserProfileForm.getSignUpForm()
+const userStore = useUserStore()
 
 const onSubmit = handleSubmit(
-  values => {
-    userStore.signUp(values);
+  (values) => {
+    userStore.signUp(values)
   },
-  errors => {
-    console.error('Form validation failed:', errors);
+  (errors) => {
+    console.error('Form validation failed:', errors)
   }
-);
+)
 </script>

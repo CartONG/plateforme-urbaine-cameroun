@@ -4,14 +4,13 @@
   </v-form>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss">
 .Form {
   width: 100%;
   display: flex;
-  flex-flow: column nowrap; 
+  flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
 

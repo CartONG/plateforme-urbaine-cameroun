@@ -1,4 +1,4 @@
-import type { KpiKey } from "@/models/enums/app/KpiKey"
+import type { KpiKey } from '@/models/enums/app/KpiKey'
 
 export interface Kpi {
   key: KpiKey

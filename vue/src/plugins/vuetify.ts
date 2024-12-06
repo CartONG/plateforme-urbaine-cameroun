@@ -9,7 +9,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 
 // Composables
-import {createVuetify, type ThemeDefinition} from 'vuetify'
+import { createVuetify, type ThemeDefinition } from 'vuetify'
 
 const pucCustomTheme: ThemeDefinition = {
   colors: {
@@ -19,9 +19,9 @@ const pucCustomTheme: ThemeDefinition = {
     'main-red': '#E83323',
     'main-yellow': '#F6CC47',
     'light-yellow': '#fdf5da',
-    'main-grey': "#E0E0E0",
-    'main-green': "#2D6438",
-  },
+    'main-grey': '#E0E0E0',
+    'main-green': '#2D6438'
+  }
 }
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
@@ -33,54 +33,60 @@ export default createVuetify({
       sm: 576,
       md: 768,
       lg: 992,
-      xl: 1100,
-    },
+      xl: 1100
+    }
   },
   theme: {
     defaultTheme: 'pucCustomTheme',
     themes: {
-      pucCustomTheme,
-    },
+      pucCustomTheme
+    }
   },
   defaults: {
     VBtn: {
       variant: 'flat',
-      style: [{
-        textTransform: 'none',
-        fontWeight: 'bold',
-        letterSpacing: '.045rem'
-      }],
+      style: [
+        {
+          textTransform: 'none',
+          fontWeight: 'bold',
+          letterSpacing: '.045rem'
+        }
+      ]
     },
     VTextField: {
-      hideDetails: "auto"
+      hideDetails: 'auto'
     },
     VTextarea: {
-      hideDetails: "auto"
+      hideDetails: 'auto'
     },
     VSelect: {
-      hideDetails: "auto"
+      hideDetails: 'auto'
     },
     VAutocomplete: {
-      hideDetails: "auto"
+      hideDetails: 'auto'
     },
     VPagination: {
       rounded: 'circle',
       color: 'main-blue',
-      activeColor: 'main-yellow',
+      activeColor: 'main-yellow'
     },
     VTabs: {
-      height: '38px',
+      height: '38px'
     },
     VBreadcrumbs: {
-      style: [{
-        padding: '.75rem 0',
-        fontSize: '.875rem',
-      }],
+      style: [
+        {
+          padding: '.75rem 0',
+          fontSize: '.875rem'
+        }
+      ]
     },
     VFieldLabel: {
-      style: [{
-        opacity: '1',
-      }],
-    },
-  },
+      style: [
+        {
+          opacity: '1'
+        }
+      ]
+    }
+  }
 })

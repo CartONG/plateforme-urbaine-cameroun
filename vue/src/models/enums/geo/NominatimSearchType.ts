@@ -6,5 +6,5 @@ export enum NominatimSearchType {
   COUNTY = 'county',
   STATE = 'state',
   COUNTRY = 'country',
-  POSTALCODE = 'postalcode',
+  POSTALCODE = 'postalcode'
 }

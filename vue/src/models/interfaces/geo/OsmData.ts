@@ -1,7 +1,7 @@
-import type { OsmId } from "./OsmId";
+import type { OsmId } from './OsmId'
 
 export interface OsmData {
-  osmId: OsmId,
-  osmType: string,
+  osmId: OsmId
+  osmType: string
   osmName: string
 }

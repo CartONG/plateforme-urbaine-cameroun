@@ -1,4 +1,4 @@
 <template>
-    <div>Comments Administration Component</div>
+  <div>Comments Administration Component</div>
 </template>
 <script setup lang="ts"></script>

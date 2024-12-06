@@ -1,8 +1,8 @@
-import type { NotificationType } from "@/models/enums/app/NotificationType";
+import type { NotificationType } from '@/models/enums/app/NotificationType'
 
 export interface Notification {
-  id: number;
-  message: string;
-  description?: string;
-  type: NotificationType;
+  id: number
+  message: string
+  description?: string
+  type: NotificationType
 }

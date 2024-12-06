@@ -16,9 +16,9 @@ import type { Notification } from '@/models/interfaces/Notification'
 export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const { mobile } = useDisplay()
   const activeTab = ref(0)
-  const activeDialog: Ref<DialogKey|null> = ref(null)
+  const activeDialog: Ref<DialogKey | null> = ref(null)
   const showEditContentDialog = ref(false)
-  const route = useRoute();
+  const route = useRoute()
   const triggerZoomReset = ref(false)
   const notificationPile: Ref<Notification[]> = ref([])
   const currentContentPage: Ref<ContentPagesList> = ref(ContentPagesList.HOME)
@@ -51,8 +51,8 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     await LikeService.deleteLike(id)
     await getLikesList()
   }
-  
-  return { 
+
+  return {
     mobile,
     notificationPile,
     activeTab,

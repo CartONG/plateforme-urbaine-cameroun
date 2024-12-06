@@ -12,7 +12,15 @@ export const i18nInstance = createI18n({
   locale: 'fr',
   fallbackLocale: 'fr',
   messages: {
-    fr: {...commonFR, ...actorsFR, ...adminFR, ...authFR, ...projectsFR, ...homeFR, ...resourcesFR }
+    fr: {
+      ...commonFR,
+      ...actorsFR,
+      ...adminFR,
+      ...authFR,
+      ...projectsFR,
+      ...homeFR,
+      ...resourcesFR
+    }
   }
 })
 

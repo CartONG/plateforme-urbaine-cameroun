@@ -17,41 +17,43 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import type { MediaObject } from '@/models/interfaces/MediaObject';
+import { ref, onMounted, computed } from 'vue'
+import type { MediaObject } from '@/models/interfaces/MediaObject'
 
 const props = defineProps<{
-  images: (string | MediaObject)[];
-}>();
+  images: (string | MediaObject)[]
+}>()
 
 interface ProcessedImage {
-  url: string;
-  width: number;
-  height: number;
-  ratio: number;
-  class: string;
-  original: string | MediaObject;
-  format: 'square' | 'horizontal' | 'vertical';
+  url: string
+  width: number
+  height: number
+  ratio: number
+  class: string
+  original: string | MediaObject
+  format: 'square' | 'horizontal' | 'vertical'
 }
 
-const imageData = ref<ProcessedImage[]>([]);
+const imageData = ref<ProcessedImage[]>([])
 
 onMounted(() => {
   props.images.forEach((image) => {
-    const imgUrl = (image as MediaObject).contentUrl ? (image as MediaObject).contentUrl : (image as string);
-    const img = new Image();
-    img.src = imgUrl;
+    const imgUrl = (image as MediaObject).contentUrl
+      ? (image as MediaObject).contentUrl
+      : (image as string)
+    const img = new Image()
+    img.src = imgUrl
     img.onload = () => {
-      const { width, height } = img;
-      const ratio = width / height;
-      
-      let format: 'square' | 'horizontal' | 'vertical';
+      const { width, height } = img
+      const ratio = width / height
+
+      let format: 'square' | 'horizontal' | 'vertical'
       if (Math.abs(ratio - 1) <= 0.2) {
-        format = 'square';
+        format = 'square'
       } else if (ratio > 1) {
-        format = 'horizontal';
+        format = 'horizontal'
       } else {
-        format = 'vertical';
+        format = 'vertical'
       }
 
       imageData.value.push({
@@ -62,130 +64,144 @@ onMounted(() => {
         class: '',
         original: image,
         format
-      });
-    };
-  });
-});
+      })
+    }
+  })
+})
 
-const maxRowWidth = 4;
+const maxRowWidth = 4
 type GridCell = {
-    occupied: boolean;
-    verticalImage: boolean;
-  };
-type Grid = GridCell[][];
+  occupied: boolean
+  verticalImage: boolean
+}
+type Grid = GridCell[][]
 
 const initRow = (grid: Grid) => {
-    const newRow = Array(maxRowWidth).fill(null).map(() => ({
+  const newRow = Array(maxRowWidth)
+    .fill(null)
+    .map(() => ({
       occupied: false,
       verticalImage: false
-    }));
-    grid.push(newRow);
-    return grid.length - 1;
-  };
+    }))
+  grid.push(newRow)
+  return grid.length - 1
+}
 
-const placeImage = (image: ProcessedImage, row: number, col: number, result: ProcessedImage[], grid: Grid) => {
-  const width = image.format === 'horizontal' ? 2 : 1;
-  const height = image.format === 'vertical' ? 2 : 1;
-  const className = `MosaicImg--${image.format}`;
+const placeImage = (
+  image: ProcessedImage,
+  row: number,
+  col: number,
+  result: ProcessedImage[],
+  grid: Grid
+) => {
+  const width = image.format === 'horizontal' ? 2 : 1
+  const height = image.format === 'vertical' ? 2 : 1
+  const className = `MosaicImg--${image.format}`
   // If we are in the last row, we need to create a new one if we have a vertical image to place
   if (row + height > grid.length) {
-    initRow(grid);
+    initRow(grid)
   }
   // Mark occupied cells in rows
   for (let r = row; r < row + height; r++) {
     for (let c = col; c < col + width; c++) {
-      grid[r][c].occupied = true;
-      grid[r][c].verticalImage = image.format === 'vertical';
+      grid[r][c].occupied = true
+      grid[r][c].verticalImage = image.format === 'vertical'
     }
   }
-  result.push({ ...image, class: className });
-};
+  result.push({ ...image, class: className })
+}
 
-const canPlaceImage = (row: number, col: number, width: number, height: number, grid: Grid): boolean => {
-  if (col + width > maxRowWidth) return false;
+const canPlaceImage = (
+  row: number,
+  col: number,
+  width: number,
+  height: number,
+  grid: Grid
+): boolean => {
+  if (col + width > maxRowWidth) return false
   for (let r = row; r < row + height; r++) {
     if (r >= grid.length) {
-      continue;
+      continue
     }
     for (let c = col; c < col + width; c++) {
-      if (grid[r][c].occupied) return false;
+      if (grid[r][c].occupied) return false
     }
   }
-  return true;
-};
+  return true
+}
 
 const processedImages = computed(() => {
-  let result: ProcessedImage[] = [];
+  const result: ProcessedImage[] = []
 
   // Sort images by shape
-  let sortedImages = [...imageData.value];
-  const horizontalImages = sortedImages.filter(img => img.format === 'horizontal');
-  const verticalImages = sortedImages.filter(img => img.format === 'vertical');
-  const squareImages = sortedImages.filter(img => img.format === 'square');
+  const sortedImages = [...imageData.value]
+  const horizontalImages = sortedImages.filter((img) => img.format === 'horizontal')
+  const verticalImages = sortedImages.filter((img) => img.format === 'vertical')
+  const squareImages = sortedImages.filter((img) => img.format === 'square')
 
   // Initialise a 2 dimensional grid
-  let grid: Grid = [];
-  initRow(grid);
+  const grid: Grid = []
+  initRow(grid)
   if (verticalImages.length > 0) {
-    initRow(grid);
+    initRow(grid)
   }
 
   // PLaces images by shape while ensuring we can fill the next line when vertical images are verticalImagePlaced
-  let currentRow = 0;
+  let currentRow = 0
   while (verticalImages.length > 0 || horizontalImages.length > 0 || squareImages.length > 0) {
     // Ensure we have 2 lines for vertical images
     while (currentRow + 1 >= grid.length) {
-      initRow(grid);
+      initRow(grid)
     }
 
     // Try to place first vertical image
-    let verticalImagePlaced = false;
+    let verticalImagePlaced = false
     for (let col = 0; col < maxRowWidth && verticalImages.length > 0; col++) {
       if (canPlaceImage(currentRow, col, 1, 2, grid)) {
-        const remainingSpacesCurrentRow = maxRowWidth - col - 1;
-        const remainingSpacesNextRow = maxRowWidth - 1;
+        const remainingSpacesCurrentRow = maxRowWidth - col - 1
+        const remainingSpacesNextRow = maxRowWidth - 1
 
         // Clone arrays of horizontal/square images to simulate filling lines
-        const tempHorizontal = [...horizontalImages];
-        const tempSquare = [...squareImages];
-        
-        let canFillCurrentRow = true;
-        let canFillNextRow = true;
+        const tempHorizontal = [...horizontalImages]
+        const tempSquare = [...squareImages]
+
+        let canFillCurrentRow = true
+        let canFillNextRow = true
 
         // Simulates filling the current line
-        let spacesNeeded = remainingSpacesCurrentRow;
+        let spacesNeeded = remainingSpacesCurrentRow
         while (spacesNeeded > 0) {
           if (spacesNeeded >= 2 && tempHorizontal.length > 0) {
-            tempHorizontal.shift();
-            spacesNeeded -= 2;
+            tempHorizontal.shift()
+            spacesNeeded -= 2
           } else if (tempSquare.length > 0) {
-            tempSquare.shift();
-            spacesNeeded -= 1;
+            tempSquare.shift()
+            spacesNeeded -= 1
           } else {
-            canFillCurrentRow = false;
-            break;
+            canFillCurrentRow = false
+            break
           }
         }
 
         // Simulates filling the next line
-        spacesNeeded = remainingSpacesNextRow;
+        spacesNeeded = remainingSpacesNextRow
         while (spacesNeeded > 0) {
           if (spacesNeeded >= 2 && tempHorizontal.length > 0) {
-            tempHorizontal.shift();
-            spacesNeeded -= 2;
+            tempHorizontal.shift()
+            spacesNeeded -= 2
           } else if (tempSquare.length > 0) {
-            tempSquare.shift();
-            spacesNeeded -= 1;
+            tempSquare.shift()
+            spacesNeeded -= 1
           } else {
-            canFillNextRow = false;
-            break;
+            canFillNextRow = false
+            break
           }
         }
 
         if (canFillCurrentRow && canFillNextRow) {
-          placeImage(verticalImages.shift()!, currentRow, col, result, grid);
-          verticalImagePlaced = true;
-          break;
+          placeImage(verticalImages.shift()!, currentRow, col, result, grid)
+          verticalImagePlaced = true
+          break
         }
       }
     }
@@ -194,9 +210,9 @@ const processedImages = computed(() => {
     if (!verticalImagePlaced && horizontalImages.length > 0) {
       for (let col = 0; col <= maxRowWidth - 2; col++) {
         if (canPlaceImage(currentRow, col, 2, 1, grid)) {
-          placeImage(horizontalImages.shift()!, currentRow, col, result, grid);
-          verticalImagePlaced = true;
-          break;
+          placeImage(horizontalImages.shift()!, currentRow, col, result, grid)
+          verticalImagePlaced = true
+          break
         }
       }
     }
@@ -205,43 +221,43 @@ const processedImages = computed(() => {
     if (!verticalImagePlaced && squareImages.length > 0) {
       for (let col = 0; col < maxRowWidth; col++) {
         if (canPlaceImage(currentRow, col, 1, 1, grid)) {
-          placeImage(squareImages.shift()!, currentRow, col, result, grid);
-          verticalImagePlaced = true;
-          break;
+          placeImage(squareImages.shift()!, currentRow, col, result, grid)
+          verticalImagePlaced = true
+          break
         }
       }
     }
 
     // If the current line is complete and there is no vertical image that overflows,
     // or if nothing more can be placed in the current line, go to the next line
-    if (grid[currentRow].every(cell => cell.occupied) || !verticalImagePlaced) {
-      let hasVerticalOverflow = false;
+    if (grid[currentRow].every((cell) => cell.occupied) || !verticalImagePlaced) {
+      let hasVerticalOverflow = false
       for (let col = 0; col < maxRowWidth; col++) {
         if (grid[currentRow][col].verticalImage) {
-          hasVerticalOverflow = true;
-          break;
+          hasVerticalOverflow = true
+          break
         }
       }
-      
+
       if (!hasVerticalOverflow || !verticalImagePlaced) {
-        currentRow++;
+        currentRow++
       }
     }
   }
 
-  return result;
-});
+  return result
+})
 
-const imageViewerSrc = ref<string>('');
-const showImageViewer = ref<boolean>(false);
+const imageViewerSrc = ref<string>('')
+const showImageViewer = ref<boolean>(false)
 
 function viewImage(image: string | MediaObject) {
   if (typeof image === 'string') {
-    imageViewerSrc.value = image;
+    imageViewerSrc.value = image
   } else {
-    imageViewerSrc.value = (image as MediaObject).contentUrl;
+    imageViewerSrc.value = (image as MediaObject).contentUrl
   }
-  showImageViewer.value = true;
+  showImageViewer.value = true
 }
 </script>
 

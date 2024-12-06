@@ -4,15 +4,15 @@
 </template>
 
 <script setup lang="ts">
-import HeaderMobile from './HeaderMobile.vue';
-import HeaderDesktop from './HeaderDesktop.vue';
-import { useApplicationStore } from '@/stores/applicationStore';
-const appStore = useApplicationStore();
+import HeaderMobile from './HeaderMobile.vue'
+import HeaderDesktop from './HeaderDesktop.vue'
+import { useApplicationStore } from '@/stores/applicationStore'
+const appStore = useApplicationStore()
 </script>
 <style lang="scss">
 .Header {
   &::after {
-    content: "";
+    content: '';
     right: 0;
     z-index: -1;
     background-size: contain;

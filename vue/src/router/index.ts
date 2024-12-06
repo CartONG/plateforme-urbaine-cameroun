@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, onBeforeRouteUpdate, onBeforeRouteLeave } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/home/HomeView.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import ActorProfile from '@/views/actors/ActorSheetView.vue'
@@ -9,10 +9,10 @@ import { useAdminStore } from '@/stores/adminStore'
 import { AdministrationPanels } from '@/models/enums/app/AdministrationPanels'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import { useProjectStore } from '@/stores/projectStore'
-import { ProjectListDisplay } from '@/models/enums/app/ProjectListType';
-import { useActorsStore } from '@/stores/actorsStore';
-import type { Actor } from '@/models/interfaces/Actor';
-import { useUserStore } from '@/stores/userStore';
+import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
+import { useActorsStore } from '@/stores/actorsStore'
+import type { Actor } from '@/models/interfaces/Actor'
+import { useUserStore } from '@/stores/userStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,10 +28,9 @@ const router = createRouter({
     {
       name: 'ui',
       path: '/ui',
-      beforeEnter: (to, from, next) => {
-        import.meta.env.MODE === 'production' ? next({ name: 'home' }) : next()
-      },
-      component: () => import('@/views/_layout/ui/UiView.vue'),
+      beforeEnter: (to, from, next) =>
+        import.meta.env.MODE === 'production' ? next({ name: 'home' }) : next(),
+      component: () => import('@/views/_layout/ui/UiView.vue')
     },
     {
       path: '/actors',
@@ -44,8 +43,10 @@ const router = createRouter({
       component: ActorProfile,
       beforeEnter: async (to, from, next) => {
         const actorsStore = useActorsStore()
-        const actor: Actor | undefined = actorsStore.actors.find(actor => actor.slug === to.params.slug);
-        actorsStore.setSelectedActor(actor?.id as string);
+        const actor: Actor | undefined = actorsStore.actors.find(
+          (actor) => actor.slug === to.params.slug
+        )
+        actorsStore.setSelectedActor(actor?.id as string)
         next()
       }
     },
@@ -101,7 +102,7 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      redirect: to => {
+      redirect: () => {
         const adminStore = useAdminStore()
         adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS
         return {
@@ -121,39 +122,44 @@ const router = createRouter({
         {
           path: 'membres',
           name: 'adminMembers',
-          component: AdminMembers,
+          component: AdminMembers
         },
         {
           path: 'content',
           name: 'adminContent',
           component: AdminContent,
-          redirect: to => ({ name: 'adminActors'}),
+          redirect: () => ({ name: 'adminActors' }),
           children: [
             {
               name: 'adminActors',
               path: 'actors',
-              component: () => import('@/views/admin/components/admin-content/AdminActorsPanel.vue'),
+              component: () => import('@/views/admin/components/admin-content/AdminActorsPanel.vue')
             },
             {
               name: 'adminProjects',
               path: 'projects',
-              component: () => import('@/views/admin/components/admin-content/AdminProjectsPanel.vue'),
-            },
+              component: () =>
+                import('@/views/admin/components/admin-content/AdminProjectsPanel.vue')
+            }
           ]
         },
         {
           name: 'adminComments',
           path: 'comments',
-          component: AdminComments,
-        },
+          component: AdminComments
+        }
       ]
-    },
-  ],
+    }
+  ]
 })
 
 router.beforeEach((to, from, next) => {
   const applicationStore = useApplicationStore()
-  if (typeof to.query.dialog === 'string' && Object.values(DialogKey).includes(to.query.dialog as any) && to.query.dialog != undefined) {
+  if (
+    typeof to.query.dialog === 'string' &&
+    Object.values(DialogKey).includes(to.query.dialog as any) &&
+    to.query.dialog != undefined
+  ) {
     applicationStore.activeDialog = to.query.dialog as DialogKey
   } else {
     applicationStore.activeDialog = null
