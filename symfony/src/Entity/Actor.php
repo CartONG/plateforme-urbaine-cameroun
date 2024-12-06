@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\SluggableEntity;
-use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\Timestampable\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ActorCategory;
 use App\Model\Enums\UserRoles;

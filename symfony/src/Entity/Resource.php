@@ -8,7 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\Timestampable\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ResourceType;
 use App\Repository\ResourceRepository;

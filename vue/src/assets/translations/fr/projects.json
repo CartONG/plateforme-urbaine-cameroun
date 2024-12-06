@@ -1,129 +1,127 @@
 {
-    "projects": {
-        "project": "projet",
-        "projects": "projet | projet | projets",
-        "status": {
-            "ongoing": "En cours",
-            "finalized": "Finalisé"
+  "projectPage": {
+    "about": "À propos",
+    "focalPoint": "Point de contact",
+    "inImages": "En images",
+    "keyNumbers": "Chiffres-clés",
+    "otherProjectsWithSameThematics": "D’autres projets avec des thématiques communes",
+    "partners": "Partenaires",
+    "projectCalendar": "Calendrier du projet",
+    "projectDeliverables": "Livrables du projet",
+    "projectOwner": "Responsable du projet"
+  },
+  "projects": {
+    "admin": {
+      "delete": "Supprimer",
+      "goToPage": "Aller sur la page du projet",
+      "sort": {
+        "options": {
+          "projectName": "Nom du projet",
+          "projectToValidate": "Projets en attente de validation"
         },
-        "scope": {
-            "national": "National",
-            "regional": "Régional",
-            "state": "Département",
-            "city": "Ville"
-        },
-        "map": {
-            "filterProjects": "Filtrer les projets"
-        },
-        "admin": {
-            "sort": {
-                "sortBy": "Trier par",
-                "options": {
-                    "projectToValidate": "Projets en attente de validation",
-                    "projectName": "Nom du projet"
-                }
-            },
-            "goToPage": "Aller sur la page du projet",
-            "delete": "Supprimer"
-
-        },
-        "form": {
-            "title": {
-                "create": "Ajouter un projet",
-                "edit": "Modifier un projet",
-                "validate": "Valider un projet"
-            },
-            "fields": {
-                "name": {
-                    "label": "Nom du projet",
-                    "placeholder": "Nom du projet"
-                },
-                "website": {
-                    "label": "Site internet",
-                    "placeholder": "Site internet"
-                },
-                "status": {
-                    "label": "Statut",
-                    "placeholder": "Statut"
-                },
-                "description": {
-                    "label": "Description",
-                    "placeholder": "Description"
-                },
-                "calendar": {
-                    "label": "Calendrier",
-                    "placeholder": "Calendrier"
-                },
-                "deliverables": {
-                    "label": "Livrables",
-                    "placeholder": "Livrables"
-                },
-                "interventionZone": {
-                    "label": "Zone d'intervention",
-                    "placeholder": "Zone d'intervention"
-                },
-                "focalPointEmail": {
-                    "label": "Email",
-                    "placeholder": "mail@siteinternet.com"
-                },
-                "focalPointTel": {
-                    "label": "Téléphone (Whatsapp)",
-                    "placeholder": "0000000000"
-                },
-                "focalPointName": {
-                    "label": "Nom complet du Point de contact",
-                    "placeholder": "Prénom NOM"
-                },
-                "focalPointPosition": {
-                    "label": "Intitulé du Point de contact",
-                    "placeholder": ""
-                }
-            },
-            "section": {
-                "thematics": "Thématiques",
-                "financial": "Financement",
-                "contractingOrganisation": "Maîtrise d'ouvrage",
-                "beneficiaryTypes": "Bénéficiaires",
-                "localization": "Localisation",
-                "projectOwner": "Responsable du projet",
-                "focalPoint": "Point de contact"
-            }
-
-        },
-        "popup": {
-            "filters": {
-                "title": "Filtres",
-                "projectOwner": {
-                    "label" : "Maitre d'ouvrage"
-                },
-                "financial": {
-                    "label" : "Financement"
-                },
-                "beneficiaries": {
-                    "label" : "Bénéficiaires"
-                },
-                "interventionZones": {
-                    "label" : "Zones d'intervention"
-                },
-                "thematics": {
-                    "label" : "Thématiques"
-                },
-                "status": {
-                    "label" : "Statut"
-                }
-            },
-            "showTheProjects": "Afficher les {count} projets"
-        }
+        "sortBy": "Trier par"
+      }
     },
-    "projectPage": {
-        "projectOwner": "Responsable du projet",
+    "form": {
+      "fields": {
+        "calendar": {
+          "label": "Calendrier",
+          "placeholder": "Calendrier"
+        },
+        "deliverables": {
+          "label": "Livrables",
+          "placeholder": "Livrables"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Description"
+        },
+        "focalPointEmail": {
+          "label": "Email",
+          "placeholder": "mail@siteinternet.com"
+        },
+        "focalPointName": {
+          "label": "Nom complet du Point de contact",
+          "placeholder": "Prénom NOM"
+        },
+        "focalPointPosition": {
+          "label": "Intitulé du Point de contact",
+          "placeholder": ""
+        },
+        "focalPointTel": {
+          "label": "Téléphone (Whatsapp)",
+          "placeholder": 0
+        },
+        "interventionZone": {
+          "label": "Zone d'intervention",
+          "placeholder": "Zone d'intervention"
+        },
+        "name": {
+          "label": "Nom du projet",
+          "placeholder": "Nom du projet"
+        },
+        "status": {
+          "label": "Statut",
+          "placeholder": "Statut"
+        },
+        "website": {
+          "label": "Site internet",
+          "placeholder": "Site internet"
+        }
+      },
+      "section": {
+        "beneficiaryTypes": "Bénéficiaires",
+        "contractingOrganisation": "Maîtrise d'ouvrage",
+        "financial": "Financement",
         "focalPoint": "Point de contact",
-        "about": "À propos",
-        "partners": "Partenaires",
-        "keyNumbers": "Chiffres-clés",
-        "projectCalendar": "Calendrier du projet",
-        "projectDeliverables": "Livrables du projet",
-        "inImages": "En images",
-        "otherProjectsWithSameThematics": "D’autres projets avec des thématiques communes"
+        "localization": "Localisation",
+        "projectOwner": "Responsable du projet",
+        "thematics": "Thématiques"
+      },
+      "title": {
+        "create": "Ajouter un projet",
+        "edit": "Modifier un projet",
+        "validate": "Valider un projet"
+      }
+    },
+    "map": {
+      "filterProjects": "Filtrer les projets"
+    },
+    "popup": {
+      "filters": {
+        "beneficiaries": {
+          "label": "Bénéficiaires"
+        },
+        "financial": {
+          "label": "Financement"
+        },
+        "interventionZones": {
+          "label": "Zones d'intervention"
+        },
+        "projectOwner": {
+          "label": "Maitre d'ouvrage"
+        },
+        "status": {
+          "label": "Statut"
+        },
+        "thematics": {
+          "label": "Thématiques"
+        },
+        "title": "Filtres"
+      },
+      "showTheProjects": "Afficher les {count} projets"
+    },
+    "project": "projet",
+    "projects": "projet | projet | projets",
+    "scope": {
+      "city": "Ville",
+      "national": "National",
+      "regional": "Régional",
+      "state": "Département"
+    },
+    "status": {
+      "finalized": "Finalisé",
+      "ongoing": "En cours"
     }
+  }
 }

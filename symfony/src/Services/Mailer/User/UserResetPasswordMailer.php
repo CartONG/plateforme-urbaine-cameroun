@@ -11,7 +11,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UserResetPasswordMailer
 {
-    private const API_FORGOT_PASSWORD = '/api/forgot-password';
+    private const string RESET_PASSWORD = '/?dialog=reset-password&token=';
 
     public function __construct(
         private readonly MailerInterface $mailer,
@@ -31,7 +31,7 @@ final class UserResetPasswordMailer
             ->htmlTemplate('mail/user/reset_password.html.twig')
             ->context(
                 [
-                    'reset_password_url' => sprintf('%s%s/%s', $this->domainUrl, self::API_FORGOT_PASSWORD, $passwordToken->getToken()),
+                    'reset_password_url' => sprintf('%s%s%s', $this->domainUrl, self::RESET_PASSWORD, $passwordToken->getToken()),
                     'user' => $user,
                 ]
             );

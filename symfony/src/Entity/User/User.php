@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
 use App\Entity\MediaObject;
 use App\Entity\Project;
+use App\Entity\Trait\Timestampable\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\UserRepository;
@@ -58,6 +59,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ValidateableEntity;
+    use TimestampableEntity;
+
     public const GROUP_GETME = 'user:get_me';
     public const GROUP_READ = 'user:read';
     public const GROUP_WRITE = 'user:write';

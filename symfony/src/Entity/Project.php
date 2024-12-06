@@ -15,7 +15,7 @@ use App\Controller\Project\SimilarProjectsAction;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
-use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\Timestampable\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\AdministrativeScope;
 use App\Enum\BeneficiaryType;
