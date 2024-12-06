@@ -1,10 +1,10 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
-import { ref, type Ref} from 'vue';
-import type { News } from '@/models/interfaces/News';
-import type { Kpi } from '@/models/interfaces/Kpi';
-import { NewsService } from '@/services/news/NewsService';
-import { KpiService } from '@/services/kpi/KpiService';
+import { ref, type Ref } from 'vue'
+import type { News } from '@/models/interfaces/News'
+import type { Kpi } from '@/models/interfaces/Kpi'
+import { NewsService } from '@/services/news/NewsService'
+import { KpiService } from '@/services/kpi/KpiService'
 
 export const useHomeStore = defineStore(StoresList.HOME, () => {
   const news: Ref<News[]> = ref([])
@@ -19,7 +19,9 @@ export const useHomeStore = defineStore(StoresList.HOME, () => {
   }
 
   return {
-    news, globalKpis,
-    getNews, getGlobalKpis
+    news,
+    globalKpis,
+    getNews,
+    getGlobalKpis
   }
 })

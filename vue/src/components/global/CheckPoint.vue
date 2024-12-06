@@ -1,15 +1,18 @@
 <template>
-    <div class="CheckPoint" :highlighted="highlighted" :has-description="description ? true : false">
-        <v-icon
-            class="CheckPoint__icon"
-            icon="mdi:mdi-check-circle"
-            :style="highlighted ? ('background:' + (highlightColor ?? 'rgb(var(--v-theme-light-yellow)')) : ''"
-            color="main-green" />
-        <div class="CheckPoint__labelCtn">
-            <span class="CheckPoint__label" >{{ label }}</span>
-            <span class="CheckPoint__description" v-if="description">{{ description }}</span>
-        </div>
+  <div class="CheckPoint" :highlighted="highlighted" :has-description="description ? true : false">
+    <v-icon
+      class="CheckPoint__icon"
+      icon="mdi:mdi-check-circle"
+      :style="
+        highlighted ? 'background:' + (highlightColor ?? 'rgb(var(--v-theme-light-yellow)') : ''
+      "
+      color="main-green"
+    />
+    <div class="CheckPoint__labelCtn">
+      <span class="CheckPoint__label">{{ label }}</span>
+      <span class="CheckPoint__description" v-if="description">{{ description }}</span>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -23,55 +26,55 @@ defineProps<{
 
 <style lang="scss">
 .CheckPoint {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    gap: 1.75rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 1.75rem;
 
-    &[highlighted="true"] {
-        gap: 1.25rem;
-        .CheckPoint__icon {
-            position: relative;
-            background-color: rgb(var(--v-theme-light-yellow));
-            padding: 1.25rem;
-            border-radius: 50%;
-        }
+  &[highlighted='true'] {
+    gap: 1.25rem;
+    .CheckPoint__icon {
+      position: relative;
+      background-color: rgb(var(--v-theme-light-yellow));
+      padding: 1.25rem;
+      border-radius: 50%;
     }
-    
-    &[has-description="true"] {
-        align-items: flex-start;
-        .CheckPoint__icon {
-            transform: translateY(-.5rem)
-        }
-        
-        .CheckPoint__labelCtn {
-            align-items: flex-start;
-            
-            .CheckPoint__label {
-                font-weight: bold;
-            }
-            .CheckPoint__description {
-            }
-        }
+  }
+
+  &[has-description='true'] {
+    align-items: flex-start;
+    .CheckPoint__icon {
+      transform: translateY(-0.5rem);
     }
 
     .CheckPoint__labelCtn {
-        display: flex;
-        flex-flow: column nowrap;
-        align-items: center;
-        .CheckPoint__label {
-            white-space: pre-line
-        }
-        .CheckPoint__description {
-        }
+      align-items: flex-start;
+
+      .CheckPoint__label {
+        font-weight: bold;
+      }
+      .CheckPoint__description {
+      }
     }
+  }
+
+  .CheckPoint__labelCtn {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    .CheckPoint__label {
+      white-space: pre-line;
+    }
+    .CheckPoint__description {
+    }
+  }
 }
 
 @media (max-width: $bp-xl) {
-    .CheckPoint {
-        &[highlighted="true"] {
-            gap: 1rem;
-        }
+  .CheckPoint {
+    &[highlighted='true'] {
+      gap: 1rem;
     }
+  }
 }
 </style>

@@ -16,14 +16,14 @@
 </template>
 
 <script setup lang="ts">
-import { useApplicationStore } from '@/stores/applicationStore';
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useApplicationStore } from '@/stores/applicationStore'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
-const applicationStore = useApplicationStore();
-const showDialog = computed(() => applicationStore.activeDialog != null);
-const closeDialog = () => router.replace({ query: { dialog: undefined }});
+const router = useRouter()
+const applicationStore = useApplicationStore()
+const showDialog = computed(() => applicationStore.activeDialog != null)
+const closeDialog = () => router.replace({ query: { dialog: undefined } })
 </script>
 
 <style lang="scss">
@@ -32,7 +32,7 @@ const closeDialog = () => router.replace({ query: { dialog: undefined }});
   --dialog-padding-top: 5.5rem;
   $dim-dialog-h: calc(100vh - 4rem);
 
-  background: #fff url(@/assets/images/Frise.svg)  no-repeat top center;
+  background: #fff url(@/assets/images/Frise.svg) no-repeat top center;
   background-attachment: local;
   padding: var(--dialog-padding-top) var(--dialog-padding-x) 3rem var(--dialog-padding-x);
   width: $dim-dialog-w;
@@ -41,7 +41,7 @@ const closeDialog = () => router.replace({ query: { dialog: undefined }});
   max-width: 100%;
   overflow-y: auto;
   display: flex;
-  flex-flow: column nowrap; 
+  flex-flow: column nowrap;
   align-items: center;
   border-radius: 3px;
   box-shadow: $mixin-shadow;
@@ -49,18 +49,18 @@ const closeDialog = () => router.replace({ query: { dialog: undefined }});
 
   .Dialog__header {
     display: flex;
-    flex-flow: column nowrap; 
+    flex-flow: column nowrap;
     align-items: center;
-    gap: .125rem;
+    gap: 0.125rem;
     margin-bottom: 1.5rem;
     text-align: center;
-    
+
     .Dialog__title {
       color: rgb(var(--v-theme-main-red));
     }
-  
+
     .Dialog__subtitle {
-      text-align: center
+      text-align: center;
     }
   }
 
@@ -68,7 +68,7 @@ const closeDialog = () => router.replace({ query: { dialog: undefined }});
     width: 100%;
     margin-bottom: 2rem;
     display: flex;
-    flex-flow: column nowrap; 
+    flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
 
@@ -82,7 +82,7 @@ const closeDialog = () => router.replace({ query: { dialog: undefined }});
     flex-flow: row wrap;
     text-align: center;
     justify-content: center;
-    gap: .5rem;
+    gap: 0.5rem;
   }
 }
 

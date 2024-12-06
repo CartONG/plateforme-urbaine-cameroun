@@ -7,13 +7,12 @@ import JwtCookie from '@/services/userAndAuth/JWTCookie'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/browser'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ImageLoader } from '@/services/files/ImageLoader'
 import type { MediaObject } from '@/models/interfaces/MediaObject'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
-
 
 export const useUserStore = defineStore(StoresList.USER, () => {
   const router = useRouter()
@@ -22,12 +21,13 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const errorWhileSignInOrSignUp = ref(false)
   const userIsLogged = computed(() => currentUser.value !== null)
   const userIsAdmin = () => userIsLogged.value && currentUser.value?.roles.includes(UserRoles.ADMIN)
-  const userIsEditor = () => userIsLogged.value && 
-    currentUser.value?.roles.includes(UserRoles.EDITOR_PROJECTS) ||
+  const userIsEditor = () =>
+    (userIsLogged.value && currentUser.value?.roles.includes(UserRoles.EDITOR_PROJECTS)) ||
     currentUser.value?.roles.includes(UserRoles.EDITOR_ACTORS) ||
     currentUser.value?.roles.includes(UserRoles.EDITOR_RESSOURCES) ||
     currentUser.value?.roles.includes(UserRoles.EDITOR_DATA)
-  const userHasRole = (role: UserRoles) => userIsLogged.value && currentUser.value?.roles.includes(role)
+  const userHasRole = (role: UserRoles) =>
+    userIsLogged.value && currentUser.value?.roles.includes(role)
 
   const signIn = async (values: SignInValues, hideDialog = true) => {
     try {
@@ -38,8 +38,8 @@ export const useUserStore = defineStore(StoresList.USER, () => {
         router.replace({ query: { ...route.query, dialog: undefined } })
       }
     } catch (err) {
-        Sentry.captureException(err);
-        errorWhileSignInOrSignUp.value = true
+      Sentry.captureException(err)
+      errorWhileSignInOrSignUp.value = true
     }
   }
 
@@ -52,15 +52,17 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const signUp = async (values: SignUpValues) => {
     try {
       await UserService.createUser(values)
-      signIn({
+      signIn(
+        {
           email: values.email,
           password: values.plainPassword
-        }, false
+        },
+        false
       )
       router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_THANKS } })
     } catch (err) {
-        errorWhileSignInOrSignUp.value = true
-        Sentry.captureException(err);
+      errorWhileSignInOrSignUp.value = true
+      Sentry.captureException(err)
     }
   }
 
@@ -77,7 +79,11 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     }
   }
 
-  const patchUser = async (values: Partial<UserSubmission>, updateLogo = false, logo: File | null = null) => {
+  const patchUser = async (
+    values: Partial<UserSubmission>,
+    updateLogo = false,
+    logo: File | null = null
+  ) => {
     if (values.logo && (values.logo as MediaObject)['@id']) {
       values.logo = (values.logo as MediaObject)['@id']
     }
@@ -85,9 +91,21 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       const newLogo = await ImageLoader.loadImage(logo)
       values.logo = newLogo['@id']
     }
-    await UserService.patchUser((values as User), currentUser.value!.id)
+    await UserService.patchUser(values as User, currentUser.value!.id)
     setCurrentUser()
     router.replace({ query: { ...route.query, dialog: undefined } })
   }
-  return { userIsLogged, userIsAdmin, userIsEditor, userHasRole, currentUser, errorWhileSignInOrSignUp, signIn, signUp, signOut, checkAuthenticated, patchUser }
+  return {
+    userIsLogged,
+    userIsAdmin,
+    userIsEditor,
+    userHasRole,
+    currentUser,
+    errorWhileSignInOrSignUp,
+    signIn,
+    signUp,
+    signOut,
+    checkAuthenticated,
+    patchUser
+  }
 })

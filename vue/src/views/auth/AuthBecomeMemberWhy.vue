@@ -2,24 +2,32 @@
   <AuthDialog class="AuthBecomeMemberWhy">
     <template #title>{{ $t('auth.becomeMemberWhy.title') }}</template>
     <template #content>
-      <img class="AuthBecomeMemberWhy__image" src="@/assets/images/auth/become-member-why.png" alt="" />
+      <img
+        class="AuthBecomeMemberWhy__image"
+        src="@/assets/images/auth/become-member-why.png"
+        alt=""
+      />
       <div class="AuthBecomeMemberWhy__reasonsCtn">
-        <CheckPoint
-          v-for="reason in reasons" :key="reason"
-          :label="reason" />
+        <CheckPoint v-for="reason in reasons" :key="reason" :label="reason" />
       </div>
-      <router-link append :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }" class="Link--withoutUnderline">
-        <v-btn color="main-red" type="submit" block>{{ $t('auth.becomeMemberWhy.form.submit') }}</v-btn>
+      <router-link
+        append
+        :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
+        class="Link--withoutUnderline"
+      >
+        <v-btn color="main-red" type="submit" block>{{
+          $t('auth.becomeMemberWhy.form.submit')
+        }}</v-btn>
       </router-link>
     </template>
   </AuthDialog>
 </template>
 
 <script setup lang="ts">
-import { i18n } from '@/assets/plugins/i18n';
-import CheckPoint from '@/components/global/CheckPoint.vue';
-import AuthDialog from '@/views/auth/AuthDialog.vue';
-import { DialogKey } from '@/models/enums/app/DialogKey';
+import { i18n } from '@/assets/plugins/i18n'
+import CheckPoint from '@/components/global/CheckPoint.vue'
+import AuthDialog from '@/views/auth/AuthDialog.vue'
+import { DialogKey } from '@/models/enums/app/DialogKey'
 
 const reasons = [
   i18n.t('auth.becomeMemberWhy.form.reasons.urbanTransformation'),

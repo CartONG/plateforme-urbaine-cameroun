@@ -1,5 +1,5 @@
 
-@import '@/assets/styles/global/_variables';
+@import '../global/_variables';
 
 .Header{
     &__container__mobile{
@@ -72,9 +72,9 @@
             padding: 20px;
             background-color: white;
             height: 200px;
-        
+
             img {
-               height: 160px; 
+               height: 160px;
             }
         }
 

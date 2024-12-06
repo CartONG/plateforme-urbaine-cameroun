@@ -1,8 +1,8 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode'
 
 export default class JwtCookie {
   public static isValid = (): boolean => {
-    const cookieName = "jwt_hp"
+    const cookieName = 'jwt_hp'
     const cookieValue = JwtCookie.getCookieValue(cookieName)
     if (cookieValue === undefined) {
       return false
@@ -13,8 +13,8 @@ export default class JwtCookie {
 
   public static getCookieValue = (name: string): string | undefined => {
     return JwtCookie._allCookie()
-      .find(row => row.startsWith(name + "="))
-      ?.split("=")[1]
+      .find((row) => row.startsWith(name + '='))
+      ?.split('=')[1]
   }
 
   public static getJwtExpirationDate = (cookieValue: string): string => {
@@ -28,19 +28,21 @@ export default class JwtCookie {
   }
 
   public static isExpired = (cookieValue: any): boolean => {
-    if (!Object.prototype.hasOwnProperty.call(cookieValue, "exp")) {
+    if (!Object.prototype.hasOwnProperty.call(cookieValue, 'exp')) {
       return false
     }
     return new Date().valueOf() < cookieValue.exp
   }
 
   public static clearCookies(): void {
-    document.cookie.split(";").forEach(function(c) {
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/")
+    document.cookie.split(';').forEach(function (c) {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
     })
   }
 
   private static _allCookie = () => {
-    return document.cookie.split("; ")
+    return document.cookie.split('; ')
   }
 }

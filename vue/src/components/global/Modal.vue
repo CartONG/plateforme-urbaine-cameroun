@@ -3,14 +3,20 @@
     <div class="Modal">
       <div class="Modal__header">
         <span class="Modal__title">{{ title }}</span>
-        <div class="Modal__closeBtn"><v-icon icon="mdi mdi-close" @click="$emit('close')"></v-icon></div>
+        <div class="Modal__closeBtn">
+          <v-icon icon="mdi mdi-close" @click="$emit('close')"></v-icon>
+        </div>
       </div>
       <div class="Modal__content">
         <slot name="content"></slot>
       </div>
       <div class="Modal__footer">
-        <div class="Modal__footerBlock Modal__footerBlock--left"><slot name="footer-left"></slot></div>
-        <div class="Modal__footerBlock Modal__footerBlock--right"><slot name="footer-right"></slot></div>
+        <div class="Modal__footerBlock Modal__footerBlock--left">
+          <slot name="footer-left"></slot>
+        </div>
+        <div class="Modal__footerBlock Modal__footerBlock--right">
+          <slot name="footer-right"></slot>
+        </div>
       </div>
     </div>
   </v-dialog>
@@ -18,8 +24,8 @@
 
 <script setup lang="ts">
 defineProps<{
-    title: string,
-    show?: boolean
+  title: string
+  show?: boolean
 }>()
 </script>
 
@@ -40,7 +46,7 @@ defineProps<{
   white-space: pre-line;
 
   > * {
-    padding: .675rem 1.25rem;
+    padding: 0.675rem 1.25rem;
   }
 
   .Modal__header {
@@ -53,8 +59,8 @@ defineProps<{
 
   .Modal__content {
     display: flex;
-    flex-flow: column nowrap; 
-    border: solid #CFCFCF;
+    flex-flow: column nowrap;
+    border: solid #cfcfcf;
     border-width: 1px 0 1px 0;
     gap: 1rem;
     padding: 1.25rem;
@@ -62,12 +68,12 @@ defineProps<{
 
     .Modal__block {
       display: flex;
-      flex-flow: column nowrap; 
-      gap: .5rem;
+      flex-flow: column nowrap;
+      gap: 0.5rem;
     }
     .Modal__chipGroup {
       .v-chip {
-        border-color: rgba(black, .4);
+        border-color: rgba(black, 0.4);
 
         &.v-chip--selected {
           background-color: rgb(var(--v-theme-main-blue));
@@ -90,7 +96,7 @@ defineProps<{
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-    gap: .5rem;
+    gap: 0.5rem;
   }
 }
 </style>

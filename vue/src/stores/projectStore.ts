@@ -1,23 +1,22 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
-import { computed, reactive, ref, type Ref, type Reactive, watch } from 'vue';
+import { computed, reactive, ref, type Ref, type Reactive, watch, type ComputedRef } from 'vue'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
 import { ProjectService } from '@/services/projects/ProjectService'
-import maplibregl from 'maplibre-gl';
+import maplibregl from 'maplibre-gl'
 import { SortKey } from '@/models/enums/SortKey'
-import type { Status } from '@/models/enums/contents/Status';
-import type { Thematic } from '@/models/interfaces/Thematic';
-import type { AdministrativeScope } from '@/models/enums/AdministrativeScope';
-import { useApplicationStore } from './applicationStore';
-import { ContentPagesList } from '@/models/enums/app/ContentPagesList';
-import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType';
-import { FormType } from '@/models/enums/app/FormType';
-import type { Organisation } from '@/models/interfaces/Organisation';
-import { OrganisationService } from '@/services/organisations/OrganisationService';
-import { i18n } from '@/assets/plugins/i18n';
-import { addNotification } from '@/services/notifications/NotificationService';
-import { NotificationType } from '@/models/enums/app/NotificationType';
-import type { ComputedRef } from 'vue';
+import type { Status } from '@/models/enums/contents/Status'
+import type { Thematic } from '@/models/interfaces/Thematic'
+import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
+import { useApplicationStore } from './applicationStore'
+import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
+import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { FormType } from '@/models/enums/app/FormType'
+import type { Organisation } from '@/models/interfaces/Organisation'
+import { OrganisationService } from '@/services/organisations/OrganisationService'
+import { i18n } from '@/assets/plugins/i18n'
+import { addNotification } from '@/services/notifications/NotificationService'
+import { NotificationType } from '@/models/enums/app/NotificationType'
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const projects: Ref<Project[]> = ref([])
@@ -34,13 +33,13 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const contractingOrganisations: Ref<Organisation[]> = ref([])
 
   const filters: Reactive<{
-    searchValue: string,
-    thematics: Thematic['id'][],
-    statuses: Status[],
-    interventionZones: AdministrativeScope[],
-    beneficiaryTypes: BeneficiaryType[],
-    contractingOrganisations: Organisation['id'][],
-    donors: Organisation['id'][],
+    searchValue: string
+    thematics: Thematic['id'][]
+    statuses: Status[]
+    interventionZones: AdministrativeScope[]
+    beneficiaryTypes: BeneficiaryType[]
+    contractingOrganisations: Organisation['id'][]
+    donors: Organisation['id'][]
   }> = reactive({
     searchValue: '',
     thematics: [],
@@ -48,7 +47,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     interventionZones: [],
     beneficiaryTypes: [],
     contractingOrganisations: [],
-    donors: [],
+    donors: []
   })
 
   async function getAllDonors(): Promise<void> {
@@ -68,7 +67,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     }
   }
 
-  async function loadProjectBySlug(slug: string | string []): Promise<void> {
+  async function loadProjectBySlug(slug: string | string[]): Promise<void> {
     if (project.value?.slug !== slug && typeof slug === 'string') {
       const appStore = useApplicationStore()
       appStore.currentContentPage = ContentPagesList.PROJECT
@@ -81,12 +80,15 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       similarProjects.value = await ProjectService.getSimilarProjects(project.value)
     }
   }
-  
-  watch(() => project, () => {
-    if (project.value == null) {
-      similarProjects.value = []
+
+  watch(
+    () => project,
+    () => {
+      if (project.value == null) {
+        similarProjects.value = []
+      }
     }
-  })
+  )
 
   const hoveredProject = computed(() => {
     if (hoveredProjectId.value) {
@@ -108,53 +110,83 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       const projectDonorIds = project.donors.map((donor) => donor.id)
 
       return (
-        (filters.searchValue === '' || valuesToSearchOn(project).some((value) => value.includes(filters.searchValue.toLowerCase()))) &&
-        (filters.thematics.length === 0 || filters.thematics.some((thematic) => projectThematicIds.includes(thematic))) &&
-        (filters.statuses.length === 0  || filters.statuses.some((status) => project.status === status)) &&
-        (filters.interventionZones.length === 0 || filters.interventionZones.some((interventionZone) => project.interventionZone === interventionZone)) &&
-        (filters.contractingOrganisations.length === 0 || filters.contractingOrganisations.some((contractingOrganisation) => project.contractingOrganisation.id ===contractingOrganisation)) &&
-        (filters.donors.length === 0   || filters.donors.some((donor) => projectDonorIds.includes(donor))) &&
-        (filters.beneficiaryTypes.length === 0  || filters.beneficiaryTypes.some((beneficiaryType) => project.beneficiaryTypes.includes(beneficiaryType)))
+        (filters.searchValue === '' ||
+          valuesToSearchOn(project).some((value) =>
+            value.includes(filters.searchValue.toLowerCase())
+          )) &&
+        (filters.thematics.length === 0 ||
+          filters.thematics.some((thematic) => projectThematicIds.includes(thematic))) &&
+        (filters.statuses.length === 0 ||
+          filters.statuses.some((status) => project.status === status)) &&
+        (filters.interventionZones.length === 0 ||
+          filters.interventionZones.some(
+            (interventionZone) => project.interventionZone === interventionZone
+          )) &&
+        (filters.contractingOrganisations.length === 0 ||
+          filters.contractingOrganisations.some(
+            (contractingOrganisation) =>
+              project.contractingOrganisation.id === contractingOrganisation
+          )) &&
+        (filters.donors.length === 0 ||
+          filters.donors.some((donor) => projectDonorIds.includes(donor))) &&
+        (filters.beneficiaryTypes.length === 0 ||
+          filters.beneficiaryTypes.some((beneficiaryType) =>
+            project.beneficiaryTypes.includes(beneficiaryType)
+          ))
       )
     })
   })
 
   const valuesToSearchOn = (project: Project) => {
-    return ([...new Set([
-      project.name,
-      project.actor.name,
-      project.geoData.name,
-      project.contractingOrganisation.name,
-      project.interventionZone,
-      i18n.t(`projects.status.${project.status}`),
-      project.focalPointName,
-      ...project.thematics.map((thematic) => thematic.name),
-      ...project.donors.map((donor) => donor.name),
-      ...project.beneficiaryTypes.map((beneficiaryType) => i18n.t(`beneficiaryType.${beneficiaryType}`)),
-    ])].filter(v => v) as any[]).map((value) => value.toLowerCase())
+    return (
+      [
+        ...new Set([
+          project.name,
+          project.actor.name,
+          project.geoData.name,
+          project.contractingOrganisation.name,
+          project.interventionZone,
+          i18n.t(`projects.status.${project.status}`),
+          project.focalPointName,
+          ...project.thematics.map((thematic) => thematic.name),
+          ...project.donors.map((donor) => donor.name),
+          ...project.beneficiaryTypes.map((beneficiaryType) =>
+            i18n.t(`beneficiaryType.${beneficiaryType}`)
+          )
+        ])
+      ].filter((v) => v) as any[]
+    ).map((value) => value.toLowerCase())
   }
 
   const orderedProjects: ComputedRef<Project[]> = computed(() => {
-    const sortedProjects = [...filteredProjects.value]; 
+    const sortedProjects = [...filteredProjects.value]
     switch (sortingProjectsSelectedMethod.value) {
       case SortKey.PROJECTS_AZ:
-        return sortedProjects.sort((a, b) => a.name.localeCompare(b.name));
+        return sortedProjects.sort((a, b) => a.name.localeCompare(b.name))
       case SortKey.PROJECTS_ZA:
-        return sortedProjects.sort((a, b) => b.name.localeCompare(a.name));
+        return sortedProjects.sort((a, b) => b.name.localeCompare(a.name))
       case SortKey.UPDATED_AT_AZ:
-        return sortedProjects.sort((a, b) => (new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()));
+        return sortedProjects.sort(
+          (a, b) => new Date(b.updatedAt).valueOf() - new Date(a.updatedAt).valueOf()
+        )
       case SortKey.ACTORS_AZ:
-        return sortedProjects.sort((a, b) => (a.actor.name as string).localeCompare(b.actor.name as string));
+        return sortedProjects.sort((a, b) =>
+          (a.actor.name as string).localeCompare(b.actor.name as string)
+        )
       case SortKey.ACTORS_ZA:
-        return sortedProjects.sort((a, b) => (b.actor.name as string).localeCompare(a.actor.name as string));
+        return sortedProjects.sort((a, b) =>
+          (b.actor.name as string).localeCompare(a.actor.name as string)
+        )
       default:
         return sortedProjects
     }
   })
 
-
   const submitProject = async (project: ProjectSubmission, type: FormType) => {
-    const submittedProject = type === FormType.CREATE ? await ProjectService.post(project) : await ProjectService.patch(project)
+    const submittedProject =
+      type === FormType.CREATE
+        ? await ProjectService.post(project)
+        : await ProjectService.patch(project)
     if (type === FormType.CREATE) {
       projects.value.push(submittedProject)
     } else if (type === FormType.EDIT || type === FormType.VALIDATE) {
@@ -189,7 +221,30 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   }
 
   return {
-    projects, project, donors, contractingOrganisations, similarProjects,filters, isProjectMapFullWidth, isProjectFormShown, isFilterModalShown, sortingProjectsSelectedMethod, hoveredProjectId, hoveredProject, activeProjectId, activeProject, filteredProjects, orderedProjects, map,
-    getAll, getAllDonors, getAllContractingOrganisations, resetFilters, loadProjectBySlug, loadSimilarProjects, submitProject, deleteProject
+    projects,
+    project,
+    donors,
+    contractingOrganisations,
+    similarProjects,
+    filters,
+    isProjectMapFullWidth,
+    isProjectFormShown,
+    isFilterModalShown,
+    sortingProjectsSelectedMethod,
+    hoveredProjectId,
+    hoveredProject,
+    activeProjectId,
+    activeProject,
+    filteredProjects,
+    orderedProjects,
+    map,
+    getAll,
+    getAllDonors,
+    getAllContractingOrganisations,
+    resetFilters,
+    loadProjectBySlug,
+    loadSimilarProjects,
+    submitProject,
+    deleteProject
   }
 })

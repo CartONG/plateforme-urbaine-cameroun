@@ -1,10 +1,10 @@
 // Imported in app.vue
-@import '@/assets/styles/global/_variables';
-@import '@/assets/styles/global/vuetifyOverrides';
-@import '@/assets/styles/global/utils';
-@import '@/assets/styles/views/header';
-@import '@/assets/styles/views/Form';
-@import '@/assets/styles/views/ContentForm';
+@import 'variables';
+@import 'vuetifyOverrides';
+@import 'utils';
+@import '../views/header';
+@import '../views/Form';
+@import '../views/ContentForm';
 
 #app {
     display: flex;
@@ -24,7 +24,7 @@ a {
 * {
     font-family: $font-secondary;
 }
-    
+
 h1 {
     font-size: $font-size-h1;
 }
@@ -65,7 +65,7 @@ h4 {
             padding: 0 0 9rem 0;
             background-size: 45% auto;
         }
-    
+
         &--mobile{
             // padding: 0 20px;
             background-size: 100% auto;

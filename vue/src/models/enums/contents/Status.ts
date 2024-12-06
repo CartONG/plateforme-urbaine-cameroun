@@ -1,4 +1,4 @@
 export enum Status {
-    ONGOING = 'ongoing',
-    FINALIZED = 'finalized',
+  ONGOING = 'ongoing',
+  FINALIZED = 'finalized'
 }
