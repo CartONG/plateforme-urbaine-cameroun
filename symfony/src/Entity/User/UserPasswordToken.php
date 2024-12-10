@@ -2,13 +2,14 @@
 
 namespace App\Entity\User;
 
+use App\Repository\User\UserPasswordTokenRepository;
 use CoopTilleuls\ForgotPasswordBundle\Entity\AbstractPasswordToken;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: UserPasswordTokenRepository::class)]
 class UserPasswordToken extends AbstractPasswordToken
 {
     public const string GROUP_READ = 'user_password_token:read';

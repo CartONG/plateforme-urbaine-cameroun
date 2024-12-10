@@ -6,6 +6,7 @@
       <Form @submit.prevent="onSubmit">
         <v-text-field
           v-model="email"
+          autocomplete="email"
           :label="$t('auth.forgotPassword.form.email')"
           :error-messages="errorMessage"
           @blur="handleChange"

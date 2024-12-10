@@ -15,7 +15,7 @@ use App\Entity\Project;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
 use App\Services\State\Provider\CurrentUserProvider;
 use Doctrine\Common\Collections\ArrayCollection;

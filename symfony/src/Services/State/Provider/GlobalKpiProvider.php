@@ -8,7 +8,7 @@ use App\ApiResource\Kpi;
 use App\Enum\KpiKey;
 use App\Repository\ActorRepository;
 use App\Repository\ProjectRepository;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 
 class GlobalKpiProvider implements ProviderInterface
 {

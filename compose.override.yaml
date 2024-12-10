@@ -17,7 +17,7 @@ services:
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
       XDEBUG_CONFIG: ${XDEBUG_CONFIG}
       MAIL_UI_PORT: ${MAIL_UI_PORT:-8025}
-      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG:-}
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway
