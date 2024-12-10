@@ -17,7 +17,7 @@ class UserPasswordTokenRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
+     * @return UserPasswordToken[]
      */
     public function findExpiredTokens(): array
     {
