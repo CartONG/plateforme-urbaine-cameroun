@@ -53,6 +53,10 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     appStore.getLikesList()
   }
 
+  const getAuthenticatedUser = async () => {
+    currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
+  }
+
   const signUp = async (values: SignUpValues) => {
     try {
       await UserService.createUser(values)
@@ -77,11 +81,14 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   }
 
   const verifyEmail = async (emailVerifierValues: EmailVerifierValues) => {
-    return await AuthenticationService.verifyEmail(emailVerifierValues)
+    await AuthenticationService.verifyEmail(emailVerifierValues)
+    if (userIsLogged.value) {
+      await getAuthenticatedUser()
+    }
   }
 
   const resendEmailVerifier = async () => {
-    return await AuthenticationService.resendEmailVerifier()
+    await AuthenticationService.resendEmailVerifier()
   }
 
   const checkAuthenticated = async () => {
