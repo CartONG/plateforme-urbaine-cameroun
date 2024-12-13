@@ -15,7 +15,9 @@
 }
 
 {$CADDY_PROTOCOL}://qgis.{$DOMAIN} {
-	reverse_proxy http://qgis:{$QGIS_SERVER_PORT}
+	reverse_proxy http://qgis:9993 {
+		transport fastcgi
+	}
 }
 
 {$CADDY_EXTRA_CONFIG}
