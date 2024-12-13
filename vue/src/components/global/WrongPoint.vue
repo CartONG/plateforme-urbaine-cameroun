@@ -1,5 +1,5 @@
 <template>
-  <div class="WrongPoint" :highlighted="highlighted" :has-description="description ? true : false">
+  <div class="WrongPoint" :highlighted="highlighted" :has-description="!!description">
     <v-icon class="WrongPoint__icon" icon="mdi:mdi-close-circle-outline" color="main-red" />
     <div class="WrongPoint__labelCtn">
       <span class="WrongPoint__label">{{ label }}</span>
