@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Services\Service\:
+    resource: '../../../src/Services/Service/'
+    exclude:
+      - '../../../src/Services/Service/EmailVerifier'
+

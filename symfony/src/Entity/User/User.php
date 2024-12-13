@@ -18,6 +18,7 @@ use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
 use App\Services\State\Provider\CurrentUserProvider;
+use App\Services\State\Provider\User\UserVerifyEmailProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -39,6 +40,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/users/me',
             provider: CurrentUserProvider::class,
             normalizationContext: ['groups' => self::GROUP_GETME]
+        ),
+        new Get(
+            uriTemplate: '/users/verify-email',
+            read: false,
+            provider: UserVerifyEmailProvider::class,
+            status: 204
         ),
         new GetCollection(
             // provider: UserProvider::class // To use if we need to open to every logged user if we need to see user names associated to likes
@@ -298,7 +305,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[Groups([Project::PROJECT_READ, Project::PROJECT_READ_ALL, Actor::ACTOR_READ_ITEM])]
-    public function getFullName(): ?string
+    public function getFullName(): string
     {
         return $this->firstName.' '.$this->lastName;
     }

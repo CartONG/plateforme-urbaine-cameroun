@@ -15,6 +15,7 @@ import AuthForgotPasswordOk from '@/views/auth/AuthForgotPasswordOk.vue'
 import AuthResetPassword from '@/views/auth/AuthResetPassword.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import AuthResetPasswordOk from '@/views/auth/AuthResetPasswordOk.vue'
+import MemberEmailVerifier from '@/views/member/MemberEmailVerifier.vue'
 
 const DEFAULT_TRANSITION = VScaleTransition
 
@@ -48,6 +49,8 @@ const dialogComponent = computed(() => {
       return AuthResetPassword
     case DialogKey.AUTH_RESET_PASSWORD_OK:
       return AuthResetPasswordOk
+    case DialogKey.ACCOUNT_EMAIL_VERIFIER:
+      return MemberEmailVerifier
     default:
       return null
   }

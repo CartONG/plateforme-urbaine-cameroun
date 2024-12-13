@@ -7,7 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Repository\User\UserLikeRepository;
-use App\Services\State\Provider\UserLikeProvider;
+use App\Services\State\Provider\User\UserLikeProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 

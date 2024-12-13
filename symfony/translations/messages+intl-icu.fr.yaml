@@ -14,3 +14,17 @@ mail:
       Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail en toute sécurité.<br><br>
 
       Cordialement,
+
+  verify_email:
+    subject: Plateforme Urbaine - Vérification de l'adresse e-mail
+    content: |-
+      Chér⋅e {user_fullname},<br><br>
+      
+      Merci de vous être inscrit⋅e sur la Plateforme Urbaine !<br><br>
+      
+      Veuillez cliquer <a href="{link}" target="_blank">ici</a> pour vérifier votre adresse e-mail et activer votre compte, ou copiez et collez le lien suivant dans votre navigateur :<br>
+      <a href="{link}" target="_blank">{link}</a><br><br>
+      
+      Si vous n'avez pas crée de compte sur la Plateforme Urbaine, vous pouvez ignorer cet e-mail en toute sécurité.<br><br>
+
+      Cordialement,
