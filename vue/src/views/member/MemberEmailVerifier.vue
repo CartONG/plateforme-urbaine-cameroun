@@ -2,21 +2,38 @@
   <AuthDialog>
     <template #title>
       <template v-if="isVerified">
-        {{ $t('account.email_verifier.title.success') }}
-      </template>
-      <template v-if="!isVerified">
-        {{ $t('account.email_verifier.title.wrong') }}
+        {{ $t('account.email_verifier.title') }}
       </template>
     </template>
     <template #subtitle>
-      <CheckPoint class="mb-4" :label="$t('auth.resetPasswordOk.subtitle')" :highlighted="true" />
+      <CheckPoint
+        class="mb-4"
+        :label="$t('account.email_verifier.subtitle.success')"
+        :highlighted="true"
+        v-if="isVerified === VerificationStatus.SUCCESS"
+      />
+      <WrongPoint
+        class="mb-4"
+        :label="$t('account.email_verifier.subtitle.wrong')"
+        :highlighted="true"
+        v-if="isVerified === VerificationStatus.WRONG"
+      />
+      <WrongPoint
+        class="mb-4"
+        :label="$t('account.email_verifier.subtitle.expired')"
+        :highlighted="true"
+        v-if="isVerified === VerificationStatus.EXPIRED"
+      />
     </template>
     <template #content>
-      <v-btn color="main-red" @click="closeDialog" block>{{
-        $t('auth.resetPasswordOk.form.close')
+      <template v-if="isVerified === VerificationStatus.EXPIRED">
+        {{ $t('account.email_verifier.content.expired') }}
+      </template>
+      <v-btn class="mt-8" color="main-red" @click="closeDialog" block>{{
+        $t('account.email_verifier.close')
       }}</v-btn>
     </template>
-    <template #bottom-content> </template>
+    <template #bottom-content />
   </AuthDialog>
 </template>
 
@@ -24,26 +41,49 @@
 import CheckPoint from '@/components/global/CheckPoint.vue'
 import AuthDialog from '@/views/auth/AuthDialog.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
+import WrongPoint from '@/components/global/WrongPoint.vue'
+import { useUserStore } from '@/stores/userStore'
+import type { AxiosError } from 'axios'
 
 enum VerificationStatus {
   SUCCESS,
   FAIL,
-  WRONG
+  WRONG,
+  EXPIRED
 }
 
 const router = useRouter()
 const route = useRoute()
-// get query Params
-const query = route.query
 
-const isVerified = ref()
+const isVerified = ref<VerificationStatus>()
 
-// check if keys are present in query: _hash, email, expiresAt, token
-if (!query._hash || !query.email || !query.expiresAt || !query.token) {
-  isVerified.value = VerificationStatus.WRONG
-  router.replace({ query: { dialog: undefined } })
-}
+onBeforeMount(async () => {
+  await router.isReady()
+  const query = route.query
+  console.log(query)
+  if (!query._hash || !query.email || !query.expiresAt || !query.token) {
+    isVerified.value = VerificationStatus.WRONG
+  } else {
+    try {
+      await useUserStore().verifyEmail({
+        email: query.email as string,
+        token: query.token as string,
+        expiresAt: query.expiresAt as string,
+        _hash: query._hash as string
+      })
+      isVerified.value = VerificationStatus.SUCCESS
+    } catch (error: unknown) {
+      const response = (error as AxiosError).response
+
+      if (response && response.status === 410) {
+        isVerified.value = VerificationStatus.EXPIRED
+      } else {
+        isVerified.value = VerificationStatus.FAIL
+      }
+    }
+  }
+})
 
 const closeDialog = () => router.replace({ query: { dialog: undefined } })
 </script>

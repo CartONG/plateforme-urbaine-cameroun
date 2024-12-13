@@ -2,83 +2,89 @@
 
 namespace App\Services\Service\EmailVerifier;
 
+use App\Entity\User\User;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Security\Core\Signature\SignatureHasher;
 
 class EmailVerifierSignature
 {
     private const string QUERY_PARAM_TOKEN = 'token';
     private const string QUERY_PARAM_EXPIRES_AT = 'expiresAt';
     private const string QUERY_PARAM_USER_EMAIL = 'email';
-    private ?string $token = null;
+    private const string QUERY_PARAM_HASH = '_hash';
     private ?int $expiresAt = null;
-    private ?string $email;
+    private SignatureHasher $signature;
 
     public function __construct(
         private readonly UriSigner $uriSigner,
+        PropertyAccessorInterface $propertyAccessor,
+        private readonly int $lifetime,
+        array $userSignatureProperties,
+        #[\SensitiveParameter] string $secret,
+
     ) {
-    }
-
-    public function set(string $token, int $expiresAt, string $email): void
-    {
-        $this->token = $token;
-        $this->expiresAt = $expiresAt;
-        $this->email = $email;
+        $this->signature = new SignatureHasher($propertyAccessor, $userSignatureProperties, $secret);
     }
 
     /**
      * @throws SignatureParamsException
      */
-    public function generateQueryParams(): string
+    public function generateQueryParams(User $user): string
     {
-        return $this->uriSigner->sign('?'.$this->getHttpQueryParams());
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
-    }
-
-    public function getExpiresAt(): int
-    {
-        return $this->expiresAt;
+        return $this->uriSigner->sign($this->getHttpQueryParams($this->getQueryParams($user)));
     }
 
     /**
      * @throws SignatureParamsException
      */
-    public function getQueryParams(): array
+    private function getQueryParams(User $user): array
     {
-        if (null === $this->token) {
-            throw new SignatureParamsException(self::QUERY_PARAM_TOKEN);
-        }
-
-        if (null === $this->expiresAt) {
-            throw new SignatureParamsException(self::QUERY_PARAM_EXPIRES_AT);
-        }
-
-        if (null === $this->email) {
+        if (null !== $user->getEmail()) {
             throw new SignatureParamsException(self::QUERY_PARAM_USER_EMAIL);
         }
 
         return [
-            self::QUERY_PARAM_TOKEN => $this->token,
-            self::QUERY_PARAM_EXPIRES_AT => $this->expiresAt,
-            self::QUERY_PARAM_USER_EMAIL => $this->email,
+            self::QUERY_PARAM_TOKEN => $this->signature->computeSignatureHash($user, $this->expiresAt),
+            self::QUERY_PARAM_EXPIRES_AT => $this->getExpiresAt(),
+            self::QUERY_PARAM_USER_EMAIL => $user->getEmail(),
         ];
     }
 
-    /**
-     * @throws SignatureParamsException
-     */
-    private function getHttpQueryParams(): string
+    private function getHttpQueryParams(array $queryParams): string
     {
-        return http_build_query($this->getQueryParams(), '', '&');
+        return '?'.http_build_query($queryParams, '', '&');
     }
 
-    public function isExpired(Request $request): bool
+    private function getExpiresAt(): int
     {
-        return $request->query->getInt(self::QUERY_PARAM_EXPIRES_AT) <= time();
+        $now = time();
+
+        return $now + $this->lifetime;
+    }
+
+    public function acceptSignatureHash(string $email, int $expiresAt, string $token): void
+    {
+        $this->signature->acceptSignatureHash($email, $expiresAt, $token);
+    }
+
+    public function verifySignatureHash(User $user, int $expires, string $hash): void
+    {
+        $this->signature->verifySignatureHash($user, $expires, $hash);
+    }
+
+    public function acceptEmailVerifierDto(EmailVerifierDto $emailVerifierDto): void
+    {
+        $queryParams = [
+            self::QUERY_PARAM_TOKEN => $emailVerifierDto->token,
+            self::QUERY_PARAM_EXPIRES_AT => $emailVerifierDto->expiresAt,
+            self::QUERY_PARAM_USER_EMAIL => $emailVerifierDto->email,
+            self::QUERY_PARAM_HASH => $emailVerifierDto->_hash,
+        ];
+
+        if (!$this->uriSigner->check($this->getHttpQueryParams($queryParams))) {
+            throw new SignatureParamsException(self::QUERY_PARAM_HASH);
+        }
     }
 }

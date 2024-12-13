@@ -1,6 +1,10 @@
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import { StoresList } from '@/models/enums/app/StoresList'
-import type { SignInValues, SignUpValues } from '@/models/interfaces/auth/AuthenticationsValues'
+import type {
+  EmailVerifierValues,
+  SignInValues,
+  SignUpValues
+} from '@/models/interfaces/auth/AuthenticationsValues'
 import type { User, UserSubmission } from '@/models/interfaces/auth/User'
 import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import JwtCookie from '@/services/userAndAuth/JWTCookie'
@@ -72,6 +76,10 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     router.push({ name: 'home' })
   }
 
+  const verifyEmail = async (emailVerifierValues: EmailVerifierValues) => {
+    return await AuthenticationService.verifyEmail(emailVerifierValues)
+  }
+
   const checkAuthenticated = async () => {
     const jwtCookieIsValid = JwtCookie.isValid()
     if (jwtCookieIsValid) {
@@ -105,6 +113,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     signIn,
     signUp,
     signOut,
+    verifyEmail,
     checkAuthenticated,
     patchUser
   }

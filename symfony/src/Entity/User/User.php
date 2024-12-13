@@ -17,6 +17,8 @@ use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
+use App\Services\Service\EmailVerifier\EmailVerifierDto;
+use App\Services\State\Processor\User\UserVerifyEmailProcessor;
 use App\Services\State\Provider\CurrentUserProvider;
 use App\Services\State\Provider\User\UserVerifyEmailProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,6 +26,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Signature\Exception\ExpiredSignatureException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -37,15 +40,28 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new Get(
             security: 'is_granted(\'IS_AUTHENTICATED_FULLY\')',
+            uriTemplate: '/users/verify_email',
+            provider: UserVerifyEmailProvider::class,
+            status: 204
+        ),
+        new Post(
+            uriTemplate: '/users/verify_email',
+            input: EmailVerifierDto::class,
+            processor: UserVerifyEmailProcessor::class,
+            status: 204,
+            exceptionToStatus: [
+                ExpiredSignatureException::class => 410,
+            ]
+        ),
+    ]
+)]
+#[ApiResource(
+    operations: [
+        new Get(
+            security: 'is_granted(\'IS_AUTHENTICATED_FULLY\')',
             uriTemplate: '/users/me',
             provider: CurrentUserProvider::class,
             normalizationContext: ['groups' => self::GROUP_GETME]
-        ),
-        new Get(
-            uriTemplate: '/users/verify-email',
-            read: false,
-            provider: UserVerifyEmailProvider::class,
-            status: 204
         ),
         new GetCollection(
             // provider: UserProvider::class // To use if we need to open to every logged user if we need to see user names associated to likes

@@ -1,19 +1,9 @@
 <template>
-  <div class="CheckPoint" :highlighted="highlighted" :has-description="description ? true : false">
-    <v-icon
-      class="CheckPoint__icon"
-      :class="{
-        'CheckPoint__icon--highlighted': highlighted
-      }"
-      icon="mdi:mdi-close-circle-outline"
-      :style="
-        highlighted ? 'background:' + (highlightColor ?? 'rgb(var(--v-theme-light-yellow)') : ''
-      "
-      color="main-green"
-    />
-    <div class="CheckPoint__labelCtn">
-      <span class="CheckPoint__label">{{ label }}</span>
-      <span class="CheckPoint__description" v-if="description">{{ description }}</span>
+  <div class="WrongPoint" :highlighted="highlighted" :has-description="description ? true : false">
+    <v-icon class="WrongPoint__icon" icon="mdi:mdi-close-circle-outline" color="main-red" />
+    <div class="WrongPoint__labelCtn">
+      <span class="WrongPoint__label">{{ label }}</span>
+      <span class="WrongPoint__description" v-if="description">{{ description }}</span>
     </div>
   </div>
 </template>
@@ -28,7 +18,7 @@ defineProps<{
 </script>
 
 <style lang="scss">
-.CheckPoint {
+.WrongPoint {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -36,7 +26,7 @@ defineProps<{
 
   &[highlighted='true'] {
     gap: 1.25rem;
-    .CheckPoint__icon {
+    .WrongPoint__icon {
       position: relative;
       background-color: rgb(var(--v-theme-light-yellow));
       padding: 1.25rem;
@@ -46,35 +36,35 @@ defineProps<{
 
   &[has-description='true'] {
     align-items: flex-start;
-    .CheckPoint__icon {
+    .WrongPoint__icon {
       transform: translateY(-0.5rem);
     }
 
-    .CheckPoint__labelCtn {
+    .WrongPoint__labelCtn {
       align-items: flex-start;
 
-      .CheckPoint__label {
+      .WrongPoint__label {
         font-weight: bold;
       }
-      .CheckPoint__description {
+      .WrongPoint__description {
       }
     }
   }
 
-  .CheckPoint__labelCtn {
+  .WrongPoint__labelCtn {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    .CheckPoint__label {
+    .WrongPoint__label {
       white-space: pre-line;
     }
-    .CheckPoint__description {
+    .WrongPoint__description {
     }
   }
 }
 
 @media (max-width: $bp-xl) {
-  .CheckPoint {
+  .WrongPoint {
     &[highlighted='true'] {
       gap: 1rem;
     }

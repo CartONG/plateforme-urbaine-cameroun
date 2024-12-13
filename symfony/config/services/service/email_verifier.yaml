@@ -6,11 +6,9 @@ services:
   App\Services\Service\EmailVerifier\:
     resource: '../../../src/Services/Service/EmailVerifier/'
 
-  App\Services\Service\EmailVerifier\EmailVerifierService:
-      bind:
-          int $lifetime: '%email_verifier.lifetime%'
-
-  App\Services\Service\EmailVerifier\EmailVerifierTokenGenerator:
-    bind:
-      string $secret: '%env(APP_SECRET)%'
+  App\Services\Service\EmailVerifier\EmailVerifierSignature:
+    arguments:
+      $lifetime: '%email_verifier.lifetime%'
+      $userSignatureProperties: ['id', 'email']
+      $secret: '%env(APP_SECRET)%'
 

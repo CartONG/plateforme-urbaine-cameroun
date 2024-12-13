@@ -9,3 +9,10 @@ export interface SignUpValues {
   email: string
   plainPassword: string
 }
+
+export interface EmailVerifierValues {
+  token: string
+  _hash: string
+  email: string
+  expiresAt: string
+}

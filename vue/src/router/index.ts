@@ -156,9 +156,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const applicationStore = useApplicationStore()
   if (
+    to.query.dialog !== undefined &&
     typeof to.query.dialog === 'string' &&
-    Object.values(DialogKey).includes(to.query.dialog as any) &&
-    to.query.dialog != undefined
+    Object.values(DialogKey).includes(to.query.dialog as unknown as DialogKey)
   ) {
     applicationStore.activeDialog = to.query.dialog as DialogKey
   } else {

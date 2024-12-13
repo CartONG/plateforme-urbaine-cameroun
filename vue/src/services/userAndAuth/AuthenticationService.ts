@@ -1,4 +1,7 @@
-import type { SignInValues } from '@/models/interfaces/auth/AuthenticationsValues'
+import type {
+  EmailVerifierValues,
+  SignInValues
+} from '@/models/interfaces/auth/AuthenticationsValues'
 import type { User } from '@/models/interfaces/auth/User'
 import { apiClient } from '@/assets/plugins/axios/api'
 import type { AxiosResponse } from 'axios'
@@ -22,5 +25,9 @@ export class AuthenticationService {
 
   static async resetPassword(token: string, password: string): Promise<AxiosResponse> {
     return apiClient.post(`/api/forgot_password/${token}`, { password: password })
+  }
+
+  static async verifyEmail(emailVerifierValues: EmailVerifierValues): Promise<AxiosResponse> {
+    return apiClient.post('/api/users/verify_email', emailVerifierValues)
   }
 }

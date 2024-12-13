@@ -2,43 +2,45 @@
 
 namespace App\Services\Service\EmailVerifier;
 
-use App\Entity\User\User;
+use App\Repository\User\UserRepository;
+use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EmailVerifierService
 {
     public function __construct(
-        private readonly EmailVerifierTokenGenerator $tokenGenerator,
         private readonly EmailVerifierSignature $signature,
-        private readonly int $lifetime,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
     /**
      * @throws \JsonException
      */
-    public function getSignature(User $user): EmailVerifierSignature
+    public function getSignature(): EmailVerifierSignature
     {
-        $this->signature->set(
-            $this->createToken($user),
-            $this->getExpiryTime(),
-            $user->getEmail()
-        );
-
         return $this->signature;
     }
 
     /**
-     * @throws \JsonException
+     * @throws SignatureParamsException
      */
-    private function createToken(User $user): string
+    public function validSignatureAndUser(EmailVerifierDto $emailVerifierDto): void
     {
-        return $this->tokenGenerator->createToken($user->getId(), $user->getEmail());
-    }
+        $this->signature->acceptEmailVerifierDto($emailVerifierDto);
 
-    private function getExpiryTime(): int
-    {
-        $generatedAt = time();
+        $this->signature->acceptSignatureHash($emailVerifierDto->email, $emailVerifierDto->expiresAt, $emailVerifierDto->token);
 
-        return $generatedAt + $this->lifetime;
+        $user = $this->userRepository->findOneBy(['email' => $emailVerifierDto->email]);
+
+        if (!$user) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->signature->verifySignatureHash($user, $emailVerifierDto->expiresAt, $emailVerifierDto->token);
+
+        $user->setIsValidated(true);
+
+        $this->userRepository->save($user);
     }
 }
