@@ -63,6 +63,14 @@
             :label="$t('auth.becomeMemberThanks.form.telephone')"
             @submit="form.phone.handleChange"
           />
+          <v-btn
+            v-if="!userStore.currentUser?.isValidated"
+            class="text-start"
+            variant="text"
+            @click="resendEmailVerifier()"
+          >
+            {{ $t('account.email_verifier.resend') }}
+          </v-btn>
           <a href="#">{{ $t('account.changePassword') }}</a>
           <div class="UserAccount__rolesBlock">
             <span>{{ $t('account.roles') }}</span>
@@ -265,6 +273,10 @@ const submitForm = handleSubmit(
     console.error('Form validation failed:', errors)
   }
 )
+
+const resendEmailVerifier = async () => {
+  await userStore.resendEmailVerifier()
+}
 </script>
 <style lang="scss">
 .UserAccount {

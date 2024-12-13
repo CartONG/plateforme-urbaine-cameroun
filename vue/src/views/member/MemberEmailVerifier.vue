@@ -24,6 +24,12 @@
         :highlighted="true"
         v-if="isVerified === VerificationStatus.EXPIRED"
       />
+      <WrongPoint
+        class="mb-4"
+        :label="$t('notifications.common.error.500')"
+        :highlighted="true"
+        v-if="isVerified === VerificationStatus.FAIL"
+      />
     </template>
     <template #content>
       <template v-if="isVerified === VerificationStatus.EXPIRED">
@@ -78,6 +84,8 @@ onBeforeMount(async () => {
 
       if (response && response.status === 410) {
         isVerified.value = VerificationStatus.EXPIRED
+      } else if (response && response.status === 400) {
+        isVerified.value = VerificationStatus.WRONG
       } else {
         isVerified.value = VerificationStatus.FAIL
       }

@@ -30,4 +30,8 @@ export class AuthenticationService {
   static async verifyEmail(emailVerifierValues: EmailVerifierValues): Promise<AxiosResponse> {
     return apiClient.post('/api/users/verify_email', emailVerifierValues)
   }
+
+  static async resendEmailVerifier(): Promise<AxiosResponse> {
+    return apiClient.get('/api/users/verify_email')
+  }
 }

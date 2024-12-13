@@ -31,7 +31,7 @@ final class UserEmailVerifierMailer extends AbstractUserMailer
      */
     public function send(User $user): void
     {
-        $signature = $this->verifyEmail->getSignature($user);
+        $signature = $this->verifyEmail->getSignature();
 
         $email = (new TemplatedEmail())
             ->to(new Address($user->getEmail(), $user->getFullName()))
@@ -39,7 +39,7 @@ final class UserEmailVerifierMailer extends AbstractUserMailer
             ->htmlTemplate('mail/user/verify_email.html.twig')
             ->context(
                 [
-                    'verify_email_url' => sprintf('%s/%s&%s', $this->domainUrl, $signature->generateQueryParams(), self::VERIFY_EMAIL_DIALOG),
+                    'verify_email_url' => sprintf('%s/%s&%s', $this->domainUrl, $signature->generateQueryParams($user), self::VERIFY_EMAIL_DIALOG),
                     'user' => $user,
                 ]
             );

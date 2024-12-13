@@ -18,6 +18,7 @@ use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
 use App\Services\Service\EmailVerifier\EmailVerifierDto;
+use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
 use App\Services\State\Processor\User\UserVerifyEmailProcessor;
 use App\Services\State\Provider\CurrentUserProvider;
 use App\Services\State\Provider\User\UserVerifyEmailProvider;
@@ -27,6 +28,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Signature\Exception\ExpiredSignatureException;
+use Symfony\Component\Security\Core\Signature\Exception\InvalidSignatureException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -51,6 +53,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             status: 204,
             exceptionToStatus: [
                 ExpiredSignatureException::class => 410,
+                InvalidSignatureException::class => 400,
+                SignatureParamsException::class => 400,
             ]
         ),
     ]

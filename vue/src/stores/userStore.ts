@@ -80,6 +80,10 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     return await AuthenticationService.verifyEmail(emailVerifierValues)
   }
 
+  const resendEmailVerifier = async () => {
+    return await AuthenticationService.resendEmailVerifier()
+  }
+
   const checkAuthenticated = async () => {
     const jwtCookieIsValid = JwtCookie.isValid()
     if (jwtCookieIsValid) {
@@ -114,6 +118,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     signUp,
     signOut,
     verifyEmail,
+    resendEmailVerifier,
     checkAuthenticated,
     patchUser
   }

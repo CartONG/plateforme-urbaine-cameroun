@@ -14,7 +14,6 @@ class EmailVerifierSignature
     private const string QUERY_PARAM_EXPIRES_AT = 'expiresAt';
     private const string QUERY_PARAM_USER_EMAIL = 'email';
     private const string QUERY_PARAM_HASH = '_hash';
-    private ?int $expiresAt = null;
     private SignatureHasher $signature;
 
     public function __construct(
@@ -40,13 +39,15 @@ class EmailVerifierSignature
      */
     private function getQueryParams(User $user): array
     {
-        if (null !== $user->getEmail()) {
+        if (null === $user->getEmail()) {
             throw new SignatureParamsException(self::QUERY_PARAM_USER_EMAIL);
         }
 
+        $expiresAt = $this->getExpiresAt();
+
         return [
-            self::QUERY_PARAM_TOKEN => $this->signature->computeSignatureHash($user, $this->expiresAt),
-            self::QUERY_PARAM_EXPIRES_AT => $this->getExpiresAt(),
+            self::QUERY_PARAM_TOKEN => $this->signature->computeSignatureHash($user, $expiresAt),
+            self::QUERY_PARAM_EXPIRES_AT => $expiresAt,
             self::QUERY_PARAM_USER_EMAIL => $user->getEmail(),
         ];
     }
@@ -73,6 +74,9 @@ class EmailVerifierSignature
         $this->signature->verifySignatureHash($user, $expires, $hash);
     }
 
+    /**
+     * @throws SignatureParamsException
+     */
     public function acceptEmailVerifierDto(EmailVerifierDto $emailVerifierDto): void
     {
         $queryParams = [
