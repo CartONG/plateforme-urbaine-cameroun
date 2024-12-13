@@ -23,7 +23,6 @@ class EmailVerifierSignature
         private readonly int $lifetime,
         array $userSignatureProperties,
         #[\SensitiveParameter] string $secret,
-
     ) {
         $this->signature = new SignatureHasher($propertyAccessor, $userSignatureProperties, $secret);
     }
