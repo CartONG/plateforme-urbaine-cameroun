@@ -1,9 +1,7 @@
 <template>
   <AuthDialog>
     <template #title>
-      <template v-if="isVerified">
-        {{ $t('account.email_verifier.title') }}
-      </template>
+      {{ $t('account.email_verifier.title') }}
     </template>
     <template #subtitle>
       <CheckPoint
