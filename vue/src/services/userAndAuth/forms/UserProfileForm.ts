@@ -97,7 +97,7 @@ export class UserProfileForm {
       acceptTerms: true
     })
 
-    const signUpSchema = UserValidator.refinePasswordMatch(baseSchema)
+    const signUpSchema = UserValidator.refinePasswordMatch<typeof baseSchema>(baseSchema)
 
     const { errors, handleSubmit, isSubmitting } = useForm({
       validationSchema: toTypedSchema(signUpSchema)

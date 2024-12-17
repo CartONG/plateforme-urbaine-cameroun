@@ -1,4 +1,4 @@
-import { z, ZodString, ZodObject } from 'zod'
+import { z, ZodString, ZodObject, ZodEffects } from 'zod'
 import { i18n } from '@/plugins/i18n'
 
 export class UserValidator {
@@ -20,9 +20,9 @@ export class UserValidator {
     }
   }
 
-  public static refinePasswordMatch(
-    zodObject: ZodObject<{ plainPassword: ZodString; confirmPassword: ZodString }>
-  ) {
+  public static refinePasswordMatch<
+    T extends ZodObject<{ plainPassword: ZodString; confirmPassword: ZodString }>
+  >(zodObject: T): ZodEffects<T> {
     return zodObject.refine(
       (data: { plainPassword: string; confirmPassword: string }) =>
         data.plainPassword === data.confirmPassword,
