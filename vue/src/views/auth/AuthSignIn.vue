@@ -27,6 +27,9 @@
         <div class="AuthDialog__error" v-if="userStore.errorWhileSignInOrSignUp">
           {{ $t('auth.signIn.error') }}
         </div>
+        <div class="AuthDialog__error" v-if="userStore.invalidAccount">
+          {{ $t('auth.signIn.invalidAccount') }}
+        </div>
         <v-btn color="main-red" type="submit">{{ $t('auth.signIn.form.submit') }}</v-btn>
       </Form>
     </template>

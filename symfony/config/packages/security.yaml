@@ -28,7 +28,7 @@ security:
                 check_path: /auth
                 username_path: email
                 password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
+                success_handler: App\Security\Authenticator\AuthenticationSuccessHandler
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             # activate different ways to authenticate

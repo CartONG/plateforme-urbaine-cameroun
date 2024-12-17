@@ -17,12 +17,14 @@ import { ImageLoader } from '@/services/files/ImageLoader'
 import type { MediaObject } from '@/models/interfaces/MediaObject'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
+import { AxiosError } from 'axios'
 
 export const useUserStore = defineStore(StoresList.USER, () => {
   const router = useRouter()
   const route = useRoute()
   const currentUser = ref<User | null>(null)
   const errorWhileSignInOrSignUp = ref(false)
+  const invalidAccount = ref(false)
   const userIsLogged = computed(() => currentUser.value !== null)
   const userIsAdmin = () => userIsLogged.value && currentUser.value?.roles.includes(UserRoles.ADMIN)
   const userIsEditor = () =>
@@ -43,6 +45,10 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       }
     } catch (err) {
       Sentry.captureException(err)
+      if (err instanceof AxiosError && err.response?.status === 401) {
+        invalidAccount.value = true
+        return
+      }
       errorWhileSignInOrSignUp.value = true
     }
   }
@@ -121,6 +127,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     userHasRole,
     currentUser,
     errorWhileSignInOrSignUp,
+    invalidAccount,
     signIn,
     signUp,
     signOut,
