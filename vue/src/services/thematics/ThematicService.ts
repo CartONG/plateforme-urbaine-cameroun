@@ -1,4 +1,4 @@
-import { apiClient } from '@/assets/plugins/axios/api'
+import { apiClient } from '@/plugins/axios/api'
 import type { Thematic } from '@/models/interfaces/Thematic'
 
 export class ThematicService {

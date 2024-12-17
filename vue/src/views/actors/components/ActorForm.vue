@@ -234,7 +234,7 @@ import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import { useThematicStore } from '@/stores/thematicStore'
 import { onInvalidSubmit } from '@/services/forms/FormService'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 
 const appStore = useApplicationStore()
 const actorsStore = useActorsStore()

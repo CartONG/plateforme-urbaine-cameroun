@@ -2,7 +2,7 @@ import type { Resource, ResourceSubmission } from '@/models/interfaces/Resource'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useField, useForm } from 'vee-validate'
 import { z } from 'zod'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import { CommonZodSchema } from '@/services/forms/CommonZodSchema'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
 

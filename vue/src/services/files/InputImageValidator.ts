@@ -1,4 +1,4 @@
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 
 export class InputImageValidator {

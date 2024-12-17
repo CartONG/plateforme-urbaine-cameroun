@@ -1,4 +1,4 @@
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import { z, ZodType } from 'zod'

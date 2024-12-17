@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { User } from '@sentry/vue'
 import { computed, ref, watch } from 'vue'

@@ -4,7 +4,7 @@ import { ref, type Ref, computed, watch } from 'vue'
 import type { Resource, ResourceSubmission } from '@/models/interfaces/Resource'
 import { ResourceService } from '@/services/resources/ResourceService'
 import { FormType } from '@/models/enums/app/FormType'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 

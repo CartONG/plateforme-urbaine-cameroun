@@ -1,5 +1,5 @@
 import type { Actor, ActorSubmission } from '@/models/interfaces/Actor'
-import { apiClient } from '@/assets/plugins/axios/api'
+import { apiClient } from '@/plugins/axios/api'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'

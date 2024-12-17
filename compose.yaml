@@ -88,39 +88,29 @@ services:
       - nominatim-data:/var/lib/postgresql/14/main
     shm_size: 1gb
 
-  # qgis:
-  #   image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
-  #   restart: on-failure
-  #   volumes:
-  #     - ./docker/qgis/data:/data:ro
-  #   ports:
-  #     - 9993:9993
-  #   environment:
-  #     - LANG=en_EN.UTF-8
-  #     - QGIS_PROJECT_FILE=/data/osm.qgs
-  #     - QGIS_SERVER_LOG_LEVEL=0
-  #     - DEBUG=1
-
   qgis:
     image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
     environment:
       # Do not run the embedded copy of nginx
-      SKIP_NGINX: "true"
+      # SKIP_NGINX: "true"
       # Improve rendering performance
       QGIS_SERVER_PARALLEL_RENDERING: "true"
       QGIS_SERVER_MAX_THREADS: 4
       # Limit the maximum size returned by a GetMap
       QGIS_SERVER_WMS_MAX_HEIGHT: 5000
       QGIS_SERVER_WMS_MAX_WIDTH: 5000
+      # Enable logging
+      # QGIS_SERVER_LOG_LEVEL: 0
+      # QGIS_SERVER_LOG_PROFILE: "true"
     ports:
-      - ${QGIS_SERVER_PORT:-6000}:9993
+      - ${QGIS_SERVER_PORT:-6000}:80
     volumes:
      # Data should be mount RO when working
      # with GeoPackages and more than one QGIS container
       - ./docker/qgis/data:/io/data:ro
       - ./docker/qgis/plugins:/io/plugins
-      - ./docker/qgis/fonts:/usr/share/fonts
       - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
+      # - ./docker/qgis/fonts:/usr/share/fonts # Causing nginx 404 issues
       # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
     restart: on-failure
 

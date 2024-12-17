@@ -115,7 +115,7 @@ import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useAdminStore } from '@/stores/adminStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { onInvalidSubmit } from '@/services/forms/FormService'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import { computed } from 'vue'
 const appStore = useApplicationStore()
 const adminStore = useAdminStore()

@@ -1,4 +1,4 @@
-import { nominatimClient } from '@/assets/plugins/axios/nominatim'
+import { nominatimClient } from '@/plugins/axios/nominatim'
 import type { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import { OsmPlaceType } from '@/models/enums/geo/OsmPlaceType'
 import type { GeocodingItem } from '@/models/interfaces/geo/GeocodingItem'
