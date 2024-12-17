@@ -65,13 +65,27 @@
           />
           <v-btn
             v-if="!userStore.currentUser?.isValidated"
-            class="text-start"
+            class="justify-start"
             variant="text"
             @click="resendEmailVerifier()"
           >
             {{ $t('account.email_verifier.resend') }}
           </v-btn>
           <a href="#">{{ $t('account.changePassword') }}</a>
+          <v-btn
+            class="justify-start"
+            variant="text"
+            @click="sendEmailResetPassword()"
+            :disabled="isResetPasswordSent !== undefined"
+          >
+            <span v-if="isResetPasswordSent === true">{{
+              $t('account.changePassword.success')
+            }}</span>
+            <span v-else-if="isResetPasswordSent === false">
+              {{ $t('account.changePassword.failure') }}
+            </span>
+            <span v-else>{{ $t('account.changePassword.message') }}</span>
+          </v-btn>
           <div class="UserAccount__rolesBlock">
             <span>{{ $t('account.roles') }}</span>
             <div
@@ -172,6 +186,7 @@ import { InputImageValidator } from '@/services/files/InputImageValidator'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted, ref, watch, type Ref } from 'vue'
+import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
 let requestedRoles = UserProfileForm.getRolesList()
@@ -227,6 +242,8 @@ onMounted(() => {
 const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
 const fileInput = ref<HTMLInputElement | null>(null)
 const avatarErrorMessage = ref('')
+const isResetPasswordSent = ref()
+
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
@@ -252,6 +269,17 @@ const handleFileChange = (event: Event) => {
     }
   } else {
     selectedProfileImage.value = []
+  }
+}
+
+const sendEmailResetPassword = async () => {
+  if (userStore.currentUser) {
+    try {
+      await AuthenticationService.forgotPassword(userStore.currentUser.email)
+      isResetPasswordSent.value = true
+    } catch {
+      isResetPasswordSent.value = false
+    }
   }
 }
 
