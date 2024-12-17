@@ -52,6 +52,6 @@ import { SignInForm } from '@/services/userAndAuth/forms/SignInForm'
 const userStore = useUserStore()
 const { form, handleSubmit } = SignInForm.getSignInForm()
 const onSubmit = handleSubmit(async (values) => {
-  userStore.signIn(values)
+  await userStore.signIn(values)
 })
 </script>

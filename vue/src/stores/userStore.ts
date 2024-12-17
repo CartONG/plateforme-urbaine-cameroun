@@ -36,10 +36,10 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const signIn = async (values: SignInValues, hideDialog = true) => {
     try {
       await AuthenticationService.signIn(values)
-      setCurrentUser()
+      await setCurrentUser()
       errorWhileSignInOrSignUp.value = false
       if (hideDialog) {
-        router.replace({ query: { ...route.query, dialog: undefined } })
+        await router.replace({ query: { ...route.query, dialog: undefined } })
       }
     } catch (err) {
       Sentry.captureException(err)
