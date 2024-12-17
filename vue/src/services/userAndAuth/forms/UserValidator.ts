@@ -1,5 +1,5 @@
 import { z, ZodString, ZodObject } from 'zod'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 
 export class UserValidator {
   public static get emailSchema() {
