@@ -1,4 +1,4 @@
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'

@@ -1,7 +1,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, useField } from 'vee-validate'
 import { z } from 'zod'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import type { User } from '@/models/interfaces/auth/User'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ref } from 'vue'

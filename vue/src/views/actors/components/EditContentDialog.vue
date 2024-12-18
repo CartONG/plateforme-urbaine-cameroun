@@ -15,7 +15,13 @@
       v-if="resourceStore.isResourceFormShown"
       :resource="resourceStore.editedResource ?? null"
       :isShown="resourceStore.isResourceFormShown"
-      :type="resourceStore.editedResource ? FormType.EDIT : FormType.CREATE"
+      :type="
+        resourceStore.editedResource
+          ? resourceStore.editedResource.isValidated
+            ? FormType.EDIT
+            : FormType.VALIDATE
+          : FormType.CREATE
+      "
       :key="0"
       @close="resourceStore.isResourceFormShown = false"
       @submitted="resourceStore.isResourceFormShown = false"

@@ -8,13 +8,13 @@
       {{ $t('header.login') }}
     </v-btn>
   </router-link>
-
-  <v-menu v-else class="cursor-pointer">
+  <v-menu location="bottom right" class="AuthMenu" v-else>
     <template v-slot:activator="{ props }">
       <v-btn
         base-color="white"
         class="text-main-blue"
         prepend-icon="mdi-account-circle"
+        append-icon="mdi-chevron-down"
         v-bind="props"
         flat
       >
@@ -22,13 +22,13 @@
       </v-btn>
     </template>
 
-    <v-list>
+    <v-list class="mt-2">
       <v-list-item
         v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS) || userStore.userIsAdmin()"
         @click="projectStore.isProjectFormShown = true"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-pencil-outline"></v-icon>
+          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addProject') }}</v-list-item-title>
       </v-list-item>
@@ -37,7 +37,7 @@
         @click="actorsStore.setActorEditionMode(null)"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-pencil-outline"></v-icon>
+          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addActor') }}</v-list-item-title>
       </v-list-item>
@@ -46,22 +46,24 @@
         @click="resourceStore.isResourceFormShown = true"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-pencil-outline"></v-icon>
+          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addResource') }}</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="userStore.userHasRole(UserRoles.EDITOR_DATA) || userStore.userIsAdmin()">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-pencil-outline"></v-icon>
+          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addData') }}</v-list-item-title>
       </v-list-item>
-      <v-divider v-if="userStore.userIsEditor()" />
+      <v-divider class="my-2" v-if="userStore.userIsAdmin()" />
       <v-list-item :to="{ name: 'userAccount' }">
         <template v-slot:prepend>
           <v-icon color="main-blue" icon="mdi-account-circle"></v-icon>
         </template>
-        <v-list-item-title>{{ $t('header.account') }}</v-list-item-title>
+        <v-list-item-title color="main-blue" class="text-weight-bold">{{
+          $t('header.account')
+        }}</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="userStore.userIsEditor()">
         <template v-slot:prepend>
@@ -97,3 +99,25 @@ const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
 </script>
+
+<style lang="scss">
+.AuthMenu {
+  .v-menu > .v-overlay__content {
+    border-radius: 6px;
+  }
+
+  .v-list-item-title {
+    color: rgb(var(--v-theme-main-blue));
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .v-list-item__prepend {
+    width: 2.25rem;
+  }
+
+  .v-icon {
+    --v-icon-size-multiplier: 0.875;
+  }
+}
+</style>

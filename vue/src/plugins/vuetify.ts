@@ -7,6 +7,7 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import { VDateInput } from 'vuetify/labs/VDateInput'
 
 // Composables
 import { createVuetify, type ThemeDefinition } from 'vuetify'
@@ -26,6 +27,9 @@ const pucCustomTheme: ThemeDefinition = {
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  components: {
+    VDateInput
+  },
   display: {
     mobileBreakpoint: 'lg',
     thresholds: {

@@ -38,10 +38,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/projects/all',
-            normalizationContext: ['groups' => [self::PROJECT_READ_ALL]]
+            normalizationContext: ['groups' => [self::GET_PARTIAL]]
         ),
         new GetCollection(
-            normalizationContext: ['groups' => [self::PROJECT_READ]],
+            normalizationContext: ['groups' => [self::GET_FULL]],
             parameters: [
                 'slug' => new QueryParameter(),
             ]
@@ -49,7 +49,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/projects/{id}/similar',
             controller: SimilarProjectsAction::class,
-            normalizationContext: ['groups' => [self::PROJECT_READ_ALL]]
+            normalizationContext: ['groups' => [self::GET_PARTIAL]]
         ),
     ]
 )]
@@ -67,8 +67,8 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN")',
         ),
     ],
-    normalizationContext: ['groups' => [self::PROJECT_READ, self::PROJECT_READ_ALL]],
-    denormalizationContext: ['groups' => [self::PROJECT_WRITE]],
+    normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL]],
+    denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Project
 {
@@ -78,27 +78,27 @@ class Project
     use LocalizableEntity;
     use ValidateableEntity;
 
-    public const PROJECT_READ = 'project:read';
-    public const PROJECT_READ_ALL = 'project:read:all';
-    public const PROJECT_WRITE = 'project:write';
+    public const GET_FULL = 'project:get:full';
+    public const GET_PARTIAL = 'project:get:partial';
+    public const WRITE = 'project:write';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE, Actor::ACTOR_READ_ITEM])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE, Actor::ACTOR_READ_ITEM])]
     private ?string $name = null;
 
     #[ORM\Column(enumType: Status::class)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Status $status = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Length(max: 500)]
     private ?string $description = null;
 
@@ -106,80 +106,80 @@ class Project
     private ?array $images = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    #[Groups([self::PROJECT_READ])]
+    #[Groups([self::GET_FULL])]
     private ?array $partners = null;
 
     #[ORM\Column(enumType: AdministrativeScope::class)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?AdministrativeScope $interventionZone = null;
 
     /**
      * @var Collection<int, Thematic>
      */
     #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'projects')]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private Collection $thematics;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     #[Assert\Length(max: 100)]
     private ?string $focalPointName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Length(max: 100)]
     private ?string $focalPointPosition = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Email]
     private ?string $focalPointEmail = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Regex(pattern: '/^[0-9]{4,15}$/')]
     private ?string $focalPointTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $focalPointPhoto = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Url(protocols: ['https'])]
     private ?string $website = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
     private ?string $logo = null;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Actor $actor = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Length(max: 500)]
     private ?string $deliverables = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Length(max: 500)]
     private ?string $calendar = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?array $beneficiaryTypes = null;
 
     #[ORM\JoinTable(name: 'projects_donors')]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     #[ORM\ManyToMany(targetEntity: Organisation::class)]
     private Collection $donors;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups([self::PROJECT_READ, self::PROJECT_READ_ALL, self::PROJECT_WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Organisation $contractingOrganisation = null;
 
     public function __construct()

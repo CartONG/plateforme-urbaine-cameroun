@@ -1,12 +1,4 @@
 {
-  "beneficiaryType": {
-    "associations_ngos": "Associations / ONG",
-    "communities_of_communes": "Communautés de communes",
-    "local_communities": "Communautés locales",
-    "local_institutions": "Institutions locales",
-    "population": "Population",
-    "regions": "Régions"
-  },
   "breadcrumbs": {
     "actors": "Acteurs",
     "administration": "Administration",
@@ -22,155 +14,173 @@
     "resources": "Ressources",
     "services": "Services"
   },
-  "buttons": {
-    "print": "Imprimer"
-  },
-  "content": {
-    "createAMap": "Créer une carte",
-    "edit": "Modifier",
-    "mail": "Contacter par mail",
-    "website": "Visiter le site internet"
-  },
-  "filters": {
-    "search": "Rechercher...",
-    "sortBy": {
-      "options": {
-        "actors_az": "Acteurs A > Z",
-        "actors_za": "Acteurs Z > A",
-        "projects_az": "Projets A > Z",
-        "projects_za": "Projets Z > A",
-        "updated_at_az": "Date de dernière mise à jour"
-      },
-      "placeholder": "Trier par"
-    }
-  },
-  "footer": {
-    "cgu": "CGU",
-    "contact": "Contact",
-    "cookies": "Cookies",
-    "email": "Contactez-nous par mail",
-    "legal": "Mentions légales",
-    "partners": "Partenaires",
-    "plan": "Plan du site",
-    "privacy": "Politique de confidentialité"
-  },
-  "forms": {
-    "cancel": "Annuler",
-    "create": "Créer",
-    "delete": "Supprimer",
-    "edit": "Modifier",
-    "errorMessages": {
-      "email": "Veuillez renseigner une adresse email valide",
-      "https": "Veuillez renseigner un site en https://",
-      "latLng": "Les coordonnées doivent être au format 'latitude, longitude', avec des valeurs valides.",
-      "maxlength": "Ce champs est limité à {max} caractères",
-      "minlength": "Ce champs doit avoir au moins {min} caractères",
-      "phone": "Veuillez renseigner un numéro de téléphone valide",
-      "required": "Ce champs est requis",
-      "url": "Veuillez renseigner une URL valide"
-    },
-    "modify": "Modifier",
-    "submit": "Valider",
-    "validate": "Valider"
-  },
-  "geocoding": {
-    "noData": "Aucun résultats",
-    "placeholder": "Rechercher un lieu"
-  },
   "header": {
-    "account": "Mon compte",
-    "actors": "Acteurs",
-    "addActor": "Ajouter un acteur",
-    "addData": "Ajouter une donnée",
-    "addProject": "Ajouter un projet",
-    "addResource": "Ajouter une ressource",
-    "administration": "Espace d'administration",
-    "contact": "Contact",
-    "content": "Mes contributions",
+    "title": "Plateforme",
+    "title2": "Urbaine",
     "help": "Aide",
+    "contact": "Contact",
     "home": "Accueil",
-    "login": "Connectez-vous",
-    "logout": "Déconnexion",
-    "map": "Ma carte",
+    "actors": "Acteurs",
     "projects": "Projets",
     "resources": "Ressources",
     "services": "Services",
-    "title": "Plateforme",
-    "title2": "Urbaine"
+    "map": "Ma carte",
+    "login": "Connectez-vous",
+    "account": "Mon compte",
+    "addProject": "Ajouter un projet",
+    "addActor": "Ajouter un acteur",
+    "addResource": "Ajouter une ressource",
+    "addData": "Ajouter une donnée",
+    "administration": "Espace d'administration",
+    "content": "Mes contributions",
+    "logout": "Déconnexion"
   },
   "inputs": {
     "fileUncorrect": "Fichier incorrect",
+    "date": {
+      "label": "Sélectionner une date"
+    },
     "images": {
-      "duplicate": "Une image avec ce nom est déjà sélectionnée",
       "generic": "Une ou plusieurs images n'ont pas pu être chargées: ",
       "wrongFormat": "Format d'image incorrect, sont acceptés uniquement les images au format .png, .jpg, .jpeg, .bmp, .gif, .svg, .webp",
-      "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo"
+      "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo",
+      "duplicate": "Une image avec ce nom est déjà sélectionnée"
     }
   },
-  "itemType": {
-    "actor": "Acteur",
-    "project": "Projet",
-    "resource": "Ressource"
+  "forms": {
+    "modify": "Modifier",
+    "edit": "Modifier",
+    "submit": "Valider",
+    "validate": "Valider",
+    "cancel": "Annuler",
+    "create": "Créer",
+    "delete": "Supprimer",
+    "errorMessages": {
+      "required": "Ce champs est requis",
+      "minlength": "Ce champs doit avoir au moins {min} caractères",
+      "maxlength": "Ce champs est limité à {max} caractères",
+      "email": "Veuillez renseigner une adresse email valide",
+      "url": "Veuillez renseigner une URL valide",
+      "https": "Veuillez renseigner un site en https://",
+      "phone": "Veuillez renseigner un numéro de téléphone valide",
+      "latLng": "Les coordonnées doivent être au format 'latitude, longitude', avec des valeurs valides.",
+      "file": {
+        "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
+        "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"
+      }
+    }
+  },
+  "filters": {
+    "sortBy": {
+      "placeholder": "Trier par",
+      "options": {
+        "projects_az": "Projets A > Z",
+        "projects_za": "Projets Z > A",
+        "updated_at_az": "Date de dernière mise à jour",
+        "actors_az": "Acteurs A > Z",
+        "actors_za": "Acteurs Z > A"
+      }
+    },
+    "search": "Rechercher..."
+  },
+  "labels": {
+    "updatedAt": "Mis à jour le",
+    "lastUpdatedAt": "Dernière mise à jour le",
+    "reset": "Réinitialiser"
+  },
+  "buttons": {
+    "print": "Imprimer"
+  },
+  "placeholders": {
+    "all": "Tous",
+    "sortBy": "Trier par"
+  },
+  "content": {
+    "createAMap": "Créer une carte",
+    "website": "Visiter le site internet",
+    "mail": "Contacter par mail",
+    "edit": "Modifier"
+  },
+  "date": {
+    "dateRangeLabel": "du {startAt} au {endAt}"
   },
   "kpi": {
     "actor": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "label": "acteur | acteur | acteurs",
       "icon": "contacts",
-      "label": "acteur | acteur | acteurs"
-    },
-    "data": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "icon": "database-arrow-down",
-      "label": "donnée | donnée | données"
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     },
     "member": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "label": "membre | membre | membres",
       "icon": "account-group",
-      "label": "membre | membre | membres"
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     },
     "project": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "label": "projet | projet | projets",
       "icon": "rocket-launch",
-      "label": "projet | projet | projets"
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     },
     "resource": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "label": "ressource | ressource | ressources",
       "icon": "database-arrow-down",
-      "label": "ressource | ressource | ressources"
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "data": {
+      "label": "donnée | donnée | données",
+      "icon": "database-arrow-down",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
     }
   },
-  "labels": {
-    "lastUpdatedAt": "Dernière mise à jour le",
-    "reset": "Réinitialiser",
-    "updatedAt": "Mis à jour le"
+  "itemType": {
+    "project": "Projet",
+    "actor": "Acteur",
+    "resource": "Ressource"
   },
-  "list": {
-    "filtersTitle": "Affinez votre recherche",
-    "resetFilters": "Réinitialiser les filtres"
+  "beneficiaryType": {
+    "population": "Population",
+    "local_communities": "Communautés locales",
+    "communities_of_communes": "Communautés de communes",
+    "regions": "Régions",
+    "local_institutions": "Institutions locales",
+    "associations_ngos": "Associations / ONG"
+  },
+  "geocoding": {
+    "placeholder": "Rechercher un lieu",
+    "noData": "Aucun résultats"
+  },
+  "footer": {
+    "contact": "Contact",
+    "email": "Contactez-nous par mail",
+    "partners": "Partenaires",
+    "legal": "Mentions légales",
+    "cgu": "CGU",
+    "privacy": "Politique de confidentialité",
+    "plan": "Plan du site",
+    "cookies": "Cookies"
   },
   "notifications": {
+    "project": {
+      "create": "Le projet a été créé",
+      "edit": "Le projet a été modifié",
+      "validate": "Le projet a été validé",
+      "delete": "Le projet a été supprimé"
+    },
+    "resource": {
+      "create": "La ressource a été créé",
+      "edit": "La ressource a été modifié",
+      "validate": "La ressource a été validé",
+      "delete": "La ressource a été supprimé"
+    },
     "common": {
       "error": {
         "411": "Une erreur est survenue lors de la validation du formulaire",
         "500": "Une erreur est survenue, un rapport a été envoyé",
         "moreDetails": "Détails :"
       }
-    },
-    "project": {
-      "create": "Le projet a été créé",
-      "delete": "Le projet a été supprimé",
-      "edit": "Le projet a été modifié",
-      "validate": "Le projet a été validé"
-    },
-    "resource": {
-      "create": "La ressource a été créé",
-      "delete": "La ressource a été supprimé",
-      "edit": "La ressource a été modifié",
-      "validate": "La ressource a été validé"
     }
   },
-  "placeholders": {
-    "all": "Tous",
-    "sortBy": "Trier par"
+  "list": {
+    "resetFilters": "Réinitialiser les filtres",
+    "filtersTitle": "Affinez votre recherche"
   }
 }

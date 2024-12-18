@@ -1,49 +1,95 @@
 {
   "resources": {
-    "add": "Ajouter une ressource",
+    "resources": "ressource | ressource | ressources",
+    "title": "Centre de\nressources",
     "desc": "Le centre de ressources est au coeur de la vie de la Plateforme Urbaine du Cameroun. Elle vous propose...",
+    "search": "Rechercher une ressource",
+    "thematic": "Thématique d'intervention",
+    "format": "Format",
+    "type": "Type",
+    "name": "Nom",
+    "date": "Date de l'événement",
+    "updatedAt": "Date de dernière mise à jour",
+    "showPassedEvents": "Afficher les événenements passées",
+    "hidePassedEvents": "Cacher les événenements passées",
+    "add": "Ajouter une ressource",
+    "resourceType": {
+      "guides": "Tutoriels",
+      "rapports": "Rapports projet",
+      "regulations": "Réglementations",
+      "events": "Événements"
+    },
+    "resourceFormat": {
+      "pdf": "PDF",
+      "web": "Page web",
+      "xlsx": "Excel",
+      "video": "Vidéo",
+      "image": "Image"
+    },
     "form": {
-      "fields": {
-        "description": {
-          "label": "Description",
-          "placeholder": "Description"
-        },
-        "file": {
-          "browse": "Parcourir...",
-          "label": "Joindre un fichier",
-          "maxSize": "Fichier {maxSize} Mo maximum"
-        },
-        "link": {
-          "label": "Lien",
-          "placeholder": "https://"
-        },
-        "name": {
-          "label": "Nom de la ressource",
-          "placeholder": "Nom de la ressource"
-        },
-        "type": {
-          "label": "Type de ressource",
-          "placeholder": "Type de ressource"
-        }
+      "errorMessages": {
+        "atLeastOneField": "Vous devez ajouter au moins un lien ou un fichier"
       },
       "title": {
         "create": "Ajouter une ressource",
         "edit": "Modifier une ressource",
         "validate": "Valider une ressource"
+      },
+      "or": "OU",
+      "fields": {
+        "name": {
+          "label": "Nom de la ressource",
+          "placeholder": "Nom de la ressource"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Description"
+        },
+        "type": {
+          "label": "Type de ressource",
+          "placeholder": "Type de ressource"
+        },
+        "date": {
+          "label": "Date",
+          "placeholder": "Date"
+        },
+        "format": {
+          "label": "Format de la ressource",
+          "placeholder": "Format de la ressource"
+        },
+        "thematics": {
+          "label": "Thématiques",
+          "placeholder": "Thématiques"
+        },
+        "author": {
+          "label": "Auteur",
+          "placeholder": "Prénom Nom"
+        },
+        "file": {
+          "label": "Joindre un fichier",
+          "maxSize": "Fichier {maxSize} Mo maximum",
+          "browse": "Parcourir..."
+        },
+        "link": {
+          "label": "Ajouter un lien",
+          "placeholder": "https://"
+        }
+      },
+      "section": {
+        "thematics": "Thématiques",
+        "resource": "Ressource",
+        "location": "Localisation"
       }
     },
-    "name": "Nom",
-    "resourceType": {
-      "image": "Image",
-      "pdf": "PDF",
-      "video": "Vidéo",
-      "web": "Page web",
-      "xlsx": "Excel"
-    },
-    "resources": "ressource | ressource | ressources",
-    "search": "Rechercher une ressource",
-    "thematic": "Thématique d'intervention",
-    "title": "Centre de\nressources",
-    "type": "Type"
+    "admin": {
+      "sort": {
+        "sortBy": "Trier par",
+        "options": {
+          "resourceToValidate": "Ressources en attente de validation",
+          "resourceName": "Nom de la ressource"
+        }
+      },
+      "delete": "Supprimer"
+    }
   }
 }

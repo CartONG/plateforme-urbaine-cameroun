@@ -1,4 +1,4 @@
-import { nominatimClient } from '@/assets/plugins/axios/nominatim'
+import { nominatimClient } from '@/plugins/axios/nominatim'
 import type { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import { OsmPlaceType } from '@/models/enums/geo/OsmPlaceType'
 import type { GeocodingItem } from '@/models/interfaces/geo/GeocodingItem'
@@ -57,5 +57,10 @@ export default class GeocodingService {
       osmType: geoData.osmType,
       osmName: geoData.name
     }
+  }
+
+  static getLocationName(geoData: GeoData): string {
+    if (!geoData) return ''
+    return geoData.name.split(', ').splice(0, 2).join(', ')
   }
 }

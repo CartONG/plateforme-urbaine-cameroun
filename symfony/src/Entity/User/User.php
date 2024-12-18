@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
 use App\Entity\MediaObject;
 use App\Entity\Project;
+use App\Entity\Resource;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
@@ -70,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, Actor::ACTOR_READ_ITEM, Project::PROJECT_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, Actor::ACTOR_READ_ITEM, Project::GET_FULL])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -297,7 +298,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups([Project::PROJECT_READ, Project::PROJECT_READ_ALL, Actor::ACTOR_READ_ITEM])]
+    #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Resource::GET_FULL])]
     public function getFullName(): ?string
     {
         return $this->firstName.' '.$this->lastName;

@@ -14,7 +14,7 @@ import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { FormType } from '@/models/enums/app/FormType'
 import type { Organisation } from '@/models/interfaces/Organisation'
 import { OrganisationService } from '@/services/organisations/OrganisationService'
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 

@@ -1,4 +1,4 @@
-import { apiClient } from '@/assets/plugins/axios/api'
+import { apiClient } from '@/plugins/axios/api'
 import type { Kpi } from '@/models/interfaces/Kpi'
 
 export class KpiService {

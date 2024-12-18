@@ -1,3 +1,5 @@
 import type { SymfonyRelation } from './SymfonyRelation'
 
-export interface ActorExpertise extends SymfonyRelation {}
+export interface ActorExpertise extends SymfonyRelation {
+  name: string
+}

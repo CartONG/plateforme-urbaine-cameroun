@@ -51,6 +51,55 @@ defineProps<{
       font-size: 14px;
       font-weight: 700;
       color: rgb(var(--v-theme-light-blue));
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 0.125rem;
+
+      > * {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.25rem;
+        align-items: center;
+      }
+    }
+
+    .InfoCard__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgb(var(--v-theme-main-blue));
+    }
+  }
+
+  .InfoCard__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+
+    .InfoCard__footerBlock {
+      display: flex;
+      align-items: center;
+      flex-flow: row nowrap;
+    }
+  }
+
+  &:hover,
+  &[active='true'] {
+    .InfoCard__actionIcon {
+      background-color: rgb(var(--v-theme-main-blue));
+      color: white !important;
+    }
+  }
+
+  .InfoCard__content {
+    display: flex;
+    flex-flow: column nowrap;
+    flex-grow: 1;
+
+    .InfoCard__subTitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: rgb(var(--v-theme-light-blue));
     }
 
     .InfoCard__title {

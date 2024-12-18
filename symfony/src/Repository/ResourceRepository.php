@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Resource;
+use App\Enum\ResourceType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,20 @@ class ResourceRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Resource::class);
+    }
+
+    public function findNearestEvents(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r')
+            ->where("r.type = '".ResourceType::EVENTS->value."'")
+            ->andWhere('r.startAt >= :today')
+            ->setParameter('today', new \DateTime())
+            ->orderBy('r.startAt', 'ASC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     //    /**

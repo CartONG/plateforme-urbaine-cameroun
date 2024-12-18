@@ -1,4 +1,4 @@
-import { apiClient } from '@/assets/plugins/axios/api'
+import { apiClient } from '@/plugins/axios/api'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
 
 export class ProjectService {

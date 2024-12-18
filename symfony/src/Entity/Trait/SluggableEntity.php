@@ -12,7 +12,7 @@ trait SluggableEntity
 {
     #[ORM\Column(length: 128, unique: true, nullable: true)]
     #[Gedmo\Slug(fields: ['name'])]
-    #[Groups([Project::PROJECT_READ_ALL, Project::PROJECT_READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM])]
+    #[Groups([Project::GET_PARTIAL, Project::GET_FULL, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM])]
     private ?string $slug;
 
     public function getSlug(): ?string

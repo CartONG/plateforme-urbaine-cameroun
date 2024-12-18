@@ -1,6 +1,6 @@
 import type { SignInValues } from '@/models/interfaces/auth/AuthenticationsValues'
 import type { User } from '@/models/interfaces/auth/User'
-import { apiClient } from '@/assets/plugins/axios/api'
+import { apiClient } from '@/plugins/axios/api'
 import type { AxiosResponse } from 'axios'
 
 export class AuthenticationService {

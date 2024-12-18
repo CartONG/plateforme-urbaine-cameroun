@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { i18n } from '@/assets/plugins/i18n'
+import { i18n } from '@/plugins/i18n'
 import CheckPoint from '@/components/global/CheckPoint.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 

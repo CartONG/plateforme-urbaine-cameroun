@@ -9,7 +9,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import * as Sentry from '@sentry/browser'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
-import { ImageLoader } from '@/services/files/ImageLoader'
+import FileUploader from '@/services/files/FileUploader'
 import type { MediaObject } from '@/models/interfaces/MediaObject'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
@@ -88,7 +88,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       values.logo = (values.logo as MediaObject)['@id']
     }
     if (updateLogo && logo) {
-      const newLogo = await ImageLoader.loadImage(logo)
+      const newLogo = await FileUploader.uploadFile(logo)
       values.logo = newLogo['@id']
     }
     await UserService.patchUser(values as User, currentUser.value!.id)
