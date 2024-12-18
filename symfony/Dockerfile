@@ -40,6 +40,11 @@ COPY --link --chmod=755 docker/frankenphp/docker-entrypoint.sh /usr/local/bin/do
 COPY --link ./docker/caddy/Caddyfile.base /etc/caddy/Caddyfile.base
 # COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
+# CRONS ARE SET HERE
+COPY --link docker/crons/crontabs /etc/crontabs/root
+COPY --link docker/crons/daily /etc/periodic/daily
+RUN chmod -R +x /etc/periodic/
+
 ENTRYPOINT ["docker-entrypoint"]
 
 HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1

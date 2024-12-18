@@ -5,7 +5,7 @@ namespace App\Services\State\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Model\Enums\UserRoles;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final class UserProvider implements ProviderInterface

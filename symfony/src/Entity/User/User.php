@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -9,9 +9,14 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Entity\Actor;
+use App\Entity\MediaObject;
+use App\Entity\Project;
+use App\Entity\Resource;
+use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
 use App\Services\State\Provider\CurrentUserProvider;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -55,6 +60,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ValidateableEntity;
+    use TimestampableEntity;
+
     public const GROUP_GETME = 'user:get_me';
     public const GROUP_READ = 'user:read';
     public const GROUP_WRITE = 'user:write';
@@ -80,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ])]
     private ?string $email = null;
 
     /**
@@ -92,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var ?string The hashed password
      */
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $password = null;

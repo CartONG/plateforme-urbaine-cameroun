@@ -1,50 +1,56 @@
 {
-    "home": {
-        "main": {
-            "title": "L'urbanisme\nau Cameroun",
-            "desc": "La Plateforme Urbaine est une source incontournable pour explorer, télécharger et exploiter des données géographiques et ouvertes sur les projets urbains du Cameroun. Elle présente une vision claire des acteurs et des initiatives qui façonnent nos villes.",
-            "action": "Découvrir les projets"
+  "home": {
+    "agenda": {
+      "title": "Agenda",
+      "action": "Toutes les actualités"
+    },
+    "becomeMember": {
+      "action": "Créer un compte",
+      "title": "Pourquoi adhérer ?"
+    },
+    "main": {
+      "action": "Découvrir les projets",
+      "desc": "La Plateforme Urbaine est une source incontournable pour explorer, télécharger et exploiter des données géographiques et ouvertes sur les projets urbains du Cameroun. Elle présente une vision claire des acteurs et des initiatives qui façonnent nos villes.",
+      "title": "L'urbanisme\nau Cameroun"
+    },
+    "map": {
+      "action": "Accéder au Géoportail",
+      "availableOnDesktop": "Disponible sur ordinateur",
+      "bullets": {
+        "geodata": {
+          "description": "Les images satellites, limites administratives, réseaux routiers et bien plus encore sont à portée de main.",
+          "label": "Accédez aux informations géographiques de base"
+        },
+        "overview": {
+          "description": "Localisez les projets d’infrastructure et de développement urbain pour faciliter la collaboration et la coordination au Cameroun.",
+          "label": "Bénéficiez d’une vue d’ensemble des projets et des acteurs"
         },
         "news": {
-            "title": "À la une",
-            "action": "Toutes les actualités"
+          "title": "À la une"
         },
-        "map": {
-            "title": "La carte interactive\ndu Cameroun",
-            "bullets": {
-                "overview": {
-                    "label": "Bénéficiez d’une vue d’ensemble des projets et des acteurs",
-                    "description": "Localisez les projets d’infrastructure et de développement urbain pour faciliter la collaboration et la coordination au Cameroun."
-                },
-                "simpleMaps": {
-                    "label": "Construisez votre carte facilement",
-                    "description": "Mesurez avec précision, dessinez des polygones, des lignes et des points directement sur la carte."
-                },
-                "geodata": {
-                    "label": "Accédez aux informations géographiques de base",
-                    "description": "Les images satellites, limites administratives, réseaux routiers et bien plus encore sont à portée de main."
-                },
-                "thematics": {
-                    "label": "Accèdez à des données thématiques riches",
-                    "description": "Obtenez des informations couvrant diverses thématiques comme l'urbanisme, l'environnement, les infrastructures par exemple."
-                },
-                "way": {
-                    "label": "Calculez des itinéraires de manière optimale",
-                    "description": "Planifiez vos déplacements de manière efficace grâce à notre fonctionnalité de calcul d'itinéraires !"
-                }
-            },
-            "action": "Accéder au Géoportail",
-            "availableOnDesktop": "Disponible sur ordinateur",
-            "welcome": "Bienvenue",
-            "welcomeDescription": "Composez votre carte thématique grâce aux différents données mises à disposition sur la Plateforme Urbaine du Cameroun."
+        "simpleMaps": {
+          "description": "Mesurez avec précision, dessinez des polygones, des lignes et des points directement sur la carte.",
+          "label": "Construisez votre carte facilement"
+        },
+        "thematics": {
+          "description": "Obtenez des informations couvrant diverses thématiques comme l'urbanisme, l'environnement, les infrastructures par exemple.",
+          "label": "Accèdez à des données thématiques riches"
         },
         "agenda": {
-            "title": "Agenda",
-            "action": "Tous les événements"
+          "title": "Agenda"
         },
-        "becomeMember": {
-            "title": "Pourquoi adhérer ?",
-            "action": "Créer un compte"
+        "way": {
+          "description": "Planifiez vos déplacements de manière efficace grâce à notre fonctionnalité de calcul d'itinéraires !",
+          "label": "Calculez des itinéraires de manière optimale"
         }
+      },
+      "title": "La carte interactive\ndu Cameroun",
+      "welcome": "Bienvenue",
+      "welcomeDescription": "Composez votre carte thématique grâce aux différents données mises à disposition sur la Plateforme Urbaine du Cameroun."
+    },
+    "news": {
+      "title": "À la une",
+      "action": "Tous les événements"
     }
+  }
 }

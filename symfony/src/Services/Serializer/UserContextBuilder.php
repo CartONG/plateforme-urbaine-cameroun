@@ -3,7 +3,7 @@
 namespace App\Services\Serializer;
 
 use ApiPlatform\Serializer\SerializerContextBuilderInterface;
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Model\Enums\UserRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
