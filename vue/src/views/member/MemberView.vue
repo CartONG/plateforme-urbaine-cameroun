@@ -38,105 +38,12 @@
               />
             </div>
           </div>
-          <div class="UserAccount__avatar--rightInputs">
-            <v-text-field
-              v-model="form.firstName.value.value"
-              :error-messages="form.firstName.errorMessage.value"
-              :label="$t('auth.becomeMember.form.firstName')"
-              @submit="form.firstName.handleChange"
-            />
-            <v-text-field
-              v-model="form.lastName.value.value"
-              :error-messages="form.lastName.errorMessage.value"
-              :label="$t('auth.becomeMember.form.lastName')"
-              @submit="form.lastName.handleChange"
-            />
-          </div>
-        </div>
-        <span class="UserAccount--avatarErrorMessage"> {{ avatarErrorMessage }} </span>
-        <v-text-field
-          v-model="form.email.value.value"
-          :error-messages="form.email.errorMessage.value"
-          :label="$t('auth.becomeMember.form.email')"
-          @submit="form.email.handleChange"
-        />
-        <v-text-field
-          v-model="form.organisation.value.value"
-          :error-messages="form.organisation.errorMessage.value"
-          :label="$t('auth.becomeMemberThanks.form.organization')"
-          @submit="form.organisation.handleChange"
-        />
-        <v-text-field
-          v-model="form.position.value.value"
-          :error-messages="form.position.errorMessage.value"
-          :label="$t('auth.becomeMemberThanks.form.functions')"
-          @submit="form.position.handleChange"
-        />
-        <v-text-field
-          v-model="form.phone.value.value"
-          :error-messages="form.phone.errorMessage.value"
-          :label="$t('auth.becomeMemberThanks.form.telephone')"
-          @submit="form.phone.handleChange"
-        />
-        <v-btn
-          class="justify-start"
-          variant="text"
-          @click="sendEmailResetPassword()"
-          :disabled="isResetPasswordSent !== undefined"
-        >
-          <span v-if="isResetPasswordSent === true">{{
-            $t('account.changePassword.success')
-          }}</span>
-          <span v-else-if="isResetPasswordSent === false">
-            {{ $t('account.changePassword.failure') }}
-          </span>
-          <span v-else>{{ $t('account.changePassword.message') }}</span>
-        </v-btn>
-        <div class="UserAccount__rolesBlock">
-          <span>{{ $t('account.roles') }}</span>
-          <div class="UserAccount__rolesItem" v-for="(role, index) in requestedRoles" :key="index">
-            <v-checkbox
-              v-model="role.selected.value"
-              :label="role.label"
-              hide-details="auto"
-              :disabled="role.givenByAdmin.value"
-            />
-            <Chip
-              bg-color="main-green"
-              :text="$t('auth.editForm.validated')"
-              v-if="role.givenByAdmin.value"
-              class="ml-2"
-            />
-            <Chip
-              bg-color="main-blue"
-              :text="$t('auth.editForm.newRequest')"
-              v-if="role.newlyRequested.value"
-              class="ml-2"
-            />
-            <Chip
-              bg-color="main-yellow"
-              :text="$t('auth.editForm.waitingValidation')"
-              v-if="role.requested.value && role.selected.value"
-              class="ml-2"
-            />
-          </div>
-        </div>
-        <a href="#" class="hide-sm">{{ $t('account.deleteAccount') }}</a>
-        <v-btn type="submit" color="main-red hide-sm" :loading="isSubmitting" class="w-100">{{
-          $t('account.save')
-        }}</v-btn>
-      </div>
-      <div class="UserBlock UserBlock--right">
-        <div class="UserAccount__description">
-          <v-textarea
-            hide-details
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            :label="$t('auth.becomeMemberThanks.form.description')"
-            @submit="form.description.handleChange"
-            auto-grow
-            row-height="30"
-            rows="13"
+          <span class="UserAccount--avatarErrorMessage"> {{ avatarErrorMessage }} </span>
+          <v-text-field
+            v-model="form.email.value.value"
+            :error-messages="form.email.errorMessage.value"
+            :label="$t('auth.becomeMember.form.email')"
+            @submit="form.email.handleChange"
           />
           <v-text-field
             v-model="form.organisation.value.value"
@@ -156,7 +63,21 @@
             :label="$t('auth.becomeMemberThanks.form.telephone')"
             @submit="form.phone.handleChange"
           />
-          <a href="#">{{ $t('account.changePassword') }}</a>
+
+          <v-btn
+            class="justify-start"
+            variant="text"
+            @click="sendEmailResetPassword()"
+            :disabled="isResetPasswordSent !== undefined"
+          >
+            <span v-if="isResetPasswordSent === true">{{
+              $t('account.changePassword.success')
+            }}</span>
+            <span v-else-if="isResetPasswordSent === false">
+              {{ $t('account.changePassword.failure') }}
+            </span>
+            <span v-else>{{ $t('account.changePassword.message') }}</span>
+          </v-btn>
           <div class="UserAccount__rolesBlock">
             <span>{{ $t('account.roles') }}</span>
             <div
@@ -264,14 +185,19 @@ import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { InputImageValidator } from '@/services/files/InputImageValidator'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useUserStore } from '@/stores/userStore'
-import { ref, watch, type Ref } from 'vue'
-import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
-import { useResourceStore } from '@/stores/resourceStore'
+import { onMounted, ref, watch, type Ref } from 'vue'
 import { useProjectStore } from '@/stores/projectStore'
+import { useResourceStore } from '@/stores/resourceStore'
+import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
+
+const isResetPasswordSent = ref()
+const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
+const fileInput = ref<HTMLInputElement | null>(null)
+const avatarErrorMessage = ref('')
 
 let requestedRoles = UserProfileForm.getRolesList()
 const { form, handleSubmit, isSubmitting } = UserProfileForm.getUserEditionForm(
@@ -287,10 +213,41 @@ watch(
   { deep: true }
 )
 
-const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
-const fileInput = ref<HTMLInputElement | null>(null)
-const avatarErrorMessage = ref('')
-const isResetPasswordSent = ref()
+function setRolesStatus() {
+  requestedRoles.map((x) => {
+    if (userStore.currentUser && userStore.currentUser.roles.includes(x.value)) {
+      x.selected.value = true
+      x.givenByAdmin.value = true
+    }
+    if (
+      userStore.currentUser &&
+      userStore.currentUser.requestedRoles &&
+      userStore.currentUser.requestedRoles.includes(x.value)
+    ) {
+      x.selected.value = true
+      x.requested.value = true
+    }
+  })
+}
+
+onMounted(() => {
+  setRolesStatus()
+  watch(
+    () => requestedRoles,
+    () => {
+      requestedRoles.map((x) => {
+        if (x.selected.value) {
+          if (!x.requested.value && !x.givenByAdmin.value) {
+            x.newlyRequested.value = true
+          }
+        } else {
+          x.newlyRequested.value = false
+        }
+      })
+    },
+    { deep: true }
+  )
+})
 
 const triggerFileInput = () => {
   fileInput.value?.click()
@@ -320,33 +277,6 @@ const handleFileChange = (event: Event) => {
   }
 }
 
-const setRolesStatus = () => {
-  requestedRoles.map((x) => {
-    if (userStore.currentUser && userStore.currentUser.roles.includes(x.value)) {
-      x.selected.value = true
-      x.givenByAdmin.value = true
-    }
-    if (
-      userStore.currentUser &&
-      userStore.currentUser.requestedRoles &&
-      userStore.currentUser.requestedRoles.includes(x.value)
-    ) {
-      x.selected.value = true
-      x.requested.value = true
-    }
-  })
-}
-const sendEmailResetPassword = async () => {
-  if (userStore.currentUser) {
-    try {
-      await AuthenticationService.forgotPassword(userStore.currentUser.email)
-      isResetPasswordSent.value = true
-    } catch {
-      isResetPasswordSent.value = false
-    }
-  }
-}
-
 const submitForm = handleSubmit(
   (values) => {
     const userSubmission: Partial<UserSubmission> = {
@@ -365,111 +295,103 @@ const submitForm = handleSubmit(
     console.error('Form validation failed:', errors)
   }
 )
+
+const sendEmailResetPassword = async () => {
+  if (userStore.currentUser) {
+    try {
+      await AuthenticationService.forgotPassword(userStore.currentUser.email)
+      isResetPasswordSent.value = true
+    } catch {
+      isResetPasswordSent.value = false
+    }
+  }
+}
 </script>
 <style lang="scss">
 .UserAccount {
   display: flex;
   flex-flow: column wrap;
   width: 100%;
-
   &__ctn {
     display: flex;
     flex-flow: row wrap;
   }
 }
-
 .UserBlock {
   display: flex;
   flex-flow: column wrap;
   gap: 1rem;
-
   &--left {
     width: 70%;
     padding-right: 10%;
-
     @media (max-width: $bp-sm) {
       width: 100%;
       padding-right: 0%;
     }
   }
-
   &--right {
     width: 30%;
-
     @media (max-width: $bp-sm) {
       width: 100%;
     }
   }
 }
-
 .UserAccount {
   &__avatarBlock {
     display: flex;
     flex-direction: row;
     align-items: center;
-
     @media (max-width: $bp-sm) {
       flex-direction: column;
       align-items: center;
     }
   }
-
   &__avatarCtn {
     position: relative;
   }
-
   &__avatar {
     height: 8rem;
     width: 8rem;
     border-radius: 50%;
     overflow: hidden;
-
     @media (max-width: $bp-sm) {
       width: 8rem;
       margin-bottom: 1rem;
     }
-
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-
     &--rightInputs {
       display: flex;
       flex-direction: column;
       margin-left: 3rem;
       flex-grow: 1;
-
       @media (max-width: $bp-sm) {
         margin-left: 0;
         width: 100%;
       }
     }
   }
-
   &--avatarErrorMessage {
     color: rgb(var(--v-theme-main-red));
     font-size: $font-size-xs;
   }
-
   &__avatarEdit {
     position: absolute;
     bottom: 0rem;
     right: 0rem;
     z-index: 1000;
   }
-
   &__rolesBlock {
     background-color: rgb(var(--v-theme-light-yellow));
     padding: 1rem;
   }
-
   &__rolesItem {
     display: flex;
     align-items: center;
   }
-
   &__description {
     background-color: white;
     border: 1px solid black;
