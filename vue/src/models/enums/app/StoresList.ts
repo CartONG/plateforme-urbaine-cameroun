@@ -6,5 +6,6 @@ export enum StoresList {
   PROJECTS = 'projects',
   RESOURCES = 'resources',
   THEMATICS = 'thematics',
-  HOME = 'home'
+  HOME = 'home',
+  MY_MAP = 'myMap'
 }

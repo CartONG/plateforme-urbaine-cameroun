@@ -34,6 +34,7 @@ export default class GeocodingService {
         .then((response) => {
           const geojson = response.data
           for (const feature of geojson.features) {
+            console.log('feature.properties.geocoding', feature)
             const point: OsmData = {
               osmId: feature.properties.geocoding.osm_id,
               osmType: feature.properties.geocoding.osm_type,
@@ -57,6 +58,27 @@ export default class GeocodingService {
       osmType: geoData.osmType,
       osmName: geoData.name
     }
+  }
+
+  static async getBbox(osmData: OsmData): Promise<OsmData> {
+    return await nominatimClient
+      .get('/lookup?=', {
+        params: {
+          osm_ids: this.getOsmIdentifier(osmData),
+          format: 'geojson'
+        }
+      })
+      .then((response) => {
+        const geojson = response.data
+        const feature = geojson.features[0]
+        osmData.bbox = feature.bbox
+        osmData.coords = feature.geometry.coordinates
+        return osmData
+      })
+  }
+
+  static getOsmIdentifier(osmData: OsmData): string {
+    return `${osmData.osmType[0].toUpperCase()}${osmData.osmId}`
   }
 
   static getLocationName(geoData: GeoData): string {

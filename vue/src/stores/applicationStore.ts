@@ -33,8 +33,13 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     return useProjectStore().isProjectMapFullWidth
   })
 
+  const isFullViewport = computed(() => {
+    const fullViewportRoutes: string[] = ['map']
+    return route.name && typeof route.name === 'string' && fullViewportRoutes.includes(route.name)
+  })
+
   const isLightHeader = computed(() => {
-    const lightUiRoutes: string[] = ['projects']
+    const lightUiRoutes: string[] = ['projects', 'map']
     return route.name && typeof route.name === 'string' && lightUiRoutes.includes(route.name)
   })
 
@@ -59,6 +64,7 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     activeDialog,
     breadcrumbs,
     is100vh,
+    isFullViewport,
     isLightHeader,
     triggerZoomReset,
     showEditContentDialog,

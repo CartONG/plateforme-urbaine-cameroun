@@ -35,7 +35,7 @@ class Thematic
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::THEMATIC_READ, Resource::GET_FULL, Project::GET_FULL, Project::GET_PARTIAL])]
+    #[Groups([self::THEMATIC_READ, Resource::GET_FULL, Actor::ACTOR_READ_COLLECTION, Project::GET_FULL, Project::GET_PARTIAL])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

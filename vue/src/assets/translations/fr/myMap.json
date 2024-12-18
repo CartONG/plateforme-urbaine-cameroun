@@ -1,0 +1,37 @@
+{
+  "myMap": {
+    "header": {
+      "share": "Partager",
+      "search": {
+        "placeholder": "Rechercher un lieu ou une donnée"
+      }
+    },
+    "components": {
+      "opacity": "Transparence"
+    },
+    "leftSidebar": {
+      "welcome": {
+        "title": "Bienvenue",
+        "description": "Composez votre carte grâce aux données mises à disposition sur la Plateforme Urbaine du Cameroun.",
+        "moreAccess": "Vous souhaitez avoir accès à plus de données et d’outils ?",
+        "close": "Fermer"
+      }
+    
+    },
+    "rightSidebar": {
+      "actions": {
+        "about": "À propos",
+        "share": "Partager",
+        "downloadLayer": "Télécharger la couche",
+        "opacity": "Ajuster la transparence"
+      },
+      "layers": {
+        "itemType": {
+          "project": "Projets",
+          "actor": "Acteurs",
+          "resource": "Ressources"
+        }
+      }
+    }
+  }
+}

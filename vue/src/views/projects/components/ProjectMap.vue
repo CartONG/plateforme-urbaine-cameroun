@@ -19,6 +19,10 @@
       v-if="projectStore.projects != null"
     />
     <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" />
+    <ToggleSidebarControl
+      v-model="projectStore.isProjectMapFullWidth"
+      ref="toggle-sidebar-control"
+    />
   </div>
 </template>
 
@@ -34,12 +38,14 @@ import ProjectFilterModal from '@/views/projects/components/ProjectFilterModal.v
 import { type ResolvedImageSpecification } from 'maplibre-gl'
 import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
 import router from '@/router'
+import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
 
 type MapType = InstanceType<typeof Map>
 type ProjectCard = InstanceType<typeof ProjectCard>
 
 const projectStore = useProjectStore()
 const projectMap = useTemplateRef<MapType>('project-map')
+const toggleSidebarControl = useTemplateRef('toggle-sidebar-control')
 const activeProjectCard = useTemplateRef<ProjectCard>('active-project-card')
 const showProjectFiltersModalControl = useTemplateRef('show-project-filters-modal-control')
 const geojson = computed(() => MapService.getGeojson(projectStore.filteredProjects))
@@ -106,6 +112,7 @@ const showPopupOnInit = () => {
 onMounted(() => {
   if (map.value != null) {
     map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
+    map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
     map.value.on('load', async () => {
       await setProjectLayer()
       showPopupOnInit()

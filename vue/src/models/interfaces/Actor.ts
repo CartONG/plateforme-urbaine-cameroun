@@ -2,21 +2,20 @@ import type { ActorsCategories } from '../enums/contents/actors/ActorsCategories
 import type { ActorExpertise } from './ActorExpertise'
 import type { AdministrativeScope } from './AdministrativeScope'
 import type { Blameable } from './common/Blameable'
+import type { ThematicItem } from './common/ThematicItem'
 import type { Timestampable } from './common/Timestampable'
 import type { Validateable } from './common/Validateable'
 import type { ContentImageFromUserFile } from './ContentImage'
 import type { MediaObject } from './MediaObject'
 import type { Project } from './Project'
-import type { Thematic } from './Thematic'
 
-export interface Actor extends Timestampable, Validateable, Blameable {
+export interface Actor extends Timestampable, Validateable, Blameable, ThematicItem {
   id: string
   '@id': string
   name: string
   acronym: string
   category: ActorsCategories
   expertises: ActorExpertise[]
-  thematics: Thematic[]
   description: string
   administrativeScopes: AdministrativeScope[]
   officeName: string

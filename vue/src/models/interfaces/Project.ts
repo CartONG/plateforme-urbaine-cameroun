@@ -1,5 +1,4 @@
 import type { Actor } from '@/models/interfaces/Actor'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Status } from '@/models/enums/contents/Status'
@@ -11,8 +10,9 @@ import type { Organisation } from '@/models/interfaces/Organisation'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { Blameable } from '@/models/interfaces/common/Blameable'
 import type { Localizable } from '@/models/interfaces/common/Localizable'
+import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 
-export interface Project extends Timestampable, Validateable, Blameable, Localizable {
+export interface Project extends Timestampable, Validateable, Blameable, Localizable, ThematicItem {
   id: string
   name: string
   slug: string
@@ -25,7 +25,6 @@ export interface Project extends Timestampable, Validateable, Blameable, Localiz
   partners: string[]
   interventionZone: AdministrativeScope
   beneficiaryTypes: BeneficiaryType[]
-  thematics: Thematic[]
   focalPointName: string
   focalPointPosition: string
   focalPointEmail: string

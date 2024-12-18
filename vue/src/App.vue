@@ -1,25 +1,26 @@
 <template>
   <div class="App" :is-100-vh="appStore.is100vh" :is-light-header="appStore.isLightHeader">
-    <Header />
-    <KeepAlive>
-      <DialogController />
-    </KeepAlive>
-    <EditContentDialog />
-    <NotificationBox />
+    <Header v-if="!appStore.isFullViewport" />
     <div
       :class="
-        'App__content container ' +
+        'App__content ' +
+        (!appStore.isFullViewport ? 'container ' : '') +
         (appStore.mobile ? 'App__content--mobile' : 'App__content--desktop')
       "
     >
       <v-breadcrumbs
-        v-if="!appStore.mobile"
+        v-if="!appStore.mobile && !appStore.isFullViewport"
         class="Breadcrumbs"
         :items="appStore.breadcrumbs"
       ></v-breadcrumbs>
       <RouterView />
     </div>
-    <Footer />
+    <Footer v-if="!appStore.isFullViewport" />
+    <KeepAlive>
+      <DialogController />
+    </KeepAlive>
+    <EditContentDialog />
+    <NotificationBox />
   </div>
 </template>
 

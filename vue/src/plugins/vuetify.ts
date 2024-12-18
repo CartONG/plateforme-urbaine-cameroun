@@ -21,6 +21,7 @@ const pucCustomTheme: ThemeDefinition = {
     'main-yellow': '#F6CC47',
     'light-yellow': '#fdf5da',
     'main-grey': '#E0E0E0',
+    'dark-grey': '#999999',
     'main-green': '#2D6438'
   }
 }

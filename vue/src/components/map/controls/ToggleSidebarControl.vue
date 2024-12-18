@@ -1,31 +1,54 @@
 <template>
-  <div class="maplibregl-ctrl maplibregl-ctrl-group">
-    <button
-      class="maplibregl-ctrl-toggle-sidebar"
-      :active="projectStore.isProjectMapFullWidth"
-      @click="projectStore.isProjectMapFullWidth = !projectStore.isProjectMapFullWidth"
-    >
-      <span class="maplibregl-ctrl-icon"></span>
-    </button>
-  </div>
+  <v-btn
+    class="ToggleSidebarControl"
+    variant="elevated"
+    :is-active="isToggled"
+    elevation="1"
+    density="comfortable"
+    :size="'2.5rem'"
+    icon="mdi-arrow-left"
+    :color="isHiglighted ? 'bright-blue' : 'white'"
+    @click="isToggled = !isToggled"
+  >
+    <v-icon
+      icon="mdi-chevron-left"
+      class="maplibregl-ctrl-icon"
+      :inversed-direction="inversedDirection"
+      :size="'1.5rem'"
+      :color="isHiglighted ? 'white' : 'main-blue'"
+    ></v-icon>
+  </v-btn>
 </template>
 
 <script setup lang="ts">
-import { useProjectStore } from '@/stores/projectStore'
-const projectStore = useProjectStore()
+import { computed } from 'vue'
+const isToggled = defineModel<boolean>({ default: false })
+const props = withDefaults(
+  defineProps<{
+    inversedDirection?: boolean
+    isHiglightedWhenOff?: boolean
+  }>(),
+  {
+    inversedDirection: false,
+    isHiglightedWhenOff: false
+  }
+)
+const isHiglighted = computed(() => !isToggled.value && props.isHiglightedWhenOff)
 </script>
 
 <style lang="scss">
-.maplibregl-ctrl-toggle-sidebar {
-  transition: all 0.3s ease-in-out;
-
-  &[active='true'] {
-    transform: rotate(180deg);
-    box-shadow: 0 -0.25rem 0.25rem -0.125rem rgba(0, 0, 0, 0.15);
+.ToggleSidebarControl {
+  pointer-events: all;
+  &[is-active='true'] {
+    .v-icon {
+      rotate: 180deg;
+    }
   }
-
-  .maplibregl-ctrl-icon {
-    background-image: url(@/assets/images/icons/map/mdi-toggle.svg);
+  .v-icon {
+    transition: all 0.3s ease-in-out;
+    &[inversed-direction='true'] {
+      transform: scaleX(-1);
+    }
   }
 }
 </style>
