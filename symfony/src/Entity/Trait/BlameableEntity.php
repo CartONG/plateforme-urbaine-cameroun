@@ -4,8 +4,8 @@ namespace App\Entity\Trait;
 
 use App\Entity\Actor;
 use App\Entity\Project;
-use App\Entity\User\User;
 use App\Entity\Resource;
+use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
