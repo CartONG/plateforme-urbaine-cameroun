@@ -14,6 +14,7 @@ export interface User extends Validateable {
   email: string
   roles: UserRoles[]
   requestedRoles: UserRoles[]
+  hasSeenRequestedRoles: boolean
 }
 
 export interface UserSubmission extends Omit<User, 'logo'> {

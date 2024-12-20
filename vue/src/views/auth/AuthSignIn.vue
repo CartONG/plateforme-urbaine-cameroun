@@ -65,7 +65,7 @@ const onSubmit = handleSubmit(async (values) => {
 })
 
 const goToResendActivationEmail = () => {
-  router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_ASK_EMAIL_VERIFIER } })
+  router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_EMAIL_VERIFIER_ASK } })
 }
 </script>
 

@@ -17,6 +17,7 @@ import AuthResetPassword from '@/views/auth/AuthResetPassword.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import AuthResetPasswordOk from '@/views/auth/AuthResetPasswordOk.vue'
 import AuthEmailVerifier from '@/views/auth/AuthEmailVerifier.vue'
+import AuthBecomeMemberRoles from '@/views/auth/AuthBecomeMemberRoles.vue'
 
 const DEFAULT_TRANSITION = VScaleTransition
 
@@ -42,6 +43,8 @@ const dialogComponent = computed(() => {
       return AuthBecomeMemberWhy
     case DialogKey.AUTH_BECOME_MEMBER_THANKS:
       return AuthBecomeMemberThanks
+    case DialogKey.AUTH_BECOME_MEMBER_ROLES:
+      return AuthBecomeMemberRoles
     case DialogKey.AUTH_FORGOT_PASSWORD:
       return AuthForgotPassword
     case DialogKey.AUTH_FORGOT_PASSWORD_OK:
@@ -50,9 +53,9 @@ const dialogComponent = computed(() => {
       return AuthResetPassword
     case DialogKey.AUTH_RESET_PASSWORD_OK:
       return AuthResetPasswordOk
-    case DialogKey.ACCOUNT_EMAIL_VERIFIER:
+    case DialogKey.AUTH_EMAIL_VERIFIER:
       return AuthEmailVerifier
-    case DialogKey.AUTH_ASK_EMAIL_VERIFIER:
+    case DialogKey.AUTH_EMAIL_VERIFIER_ASK:
       return AuthAskEmailVerifier
     default:
       return null

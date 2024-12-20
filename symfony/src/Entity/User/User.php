@@ -347,6 +347,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function hasSeenRequestedRoles(): ?bool
+    {
+        return $this->hasSeenRequestedRoles;
+    }
+
+    public function setHasSeenRequestedRoles(bool $hasSeenRequestedRoles): static
+    {
+        $this->hasSeenRequestedRoles = $hasSeenRequestedRoles;
+
+        return $this;
+    }
+
     public function getOrganisation(): ?string
     {
         return $this->organisation;
@@ -383,12 +395,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getsignUpMessage(): ?string
+    public function getSignUpMessage(): ?string
     {
         return $this->signUpMessage;
     }
 
-    public function setsignUpMessage(?string $signUpMessage): static
+    public function setSignUpMessage(?string $signUpMessage): static
     {
         $this->signUpMessage = $signUpMessage;
 
