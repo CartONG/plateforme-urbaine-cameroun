@@ -63,7 +63,6 @@
             :label="$t('auth.becomeMemberThanks.form.telephone')"
             @submit="form.phone.handleChange"
           />
-
           <v-btn
             class="justify-start"
             variant="text"

@@ -14,6 +14,10 @@
     "resources": "Ressources",
     "services": "Services"
   },
+  "dialog": {
+    "close": "Fermer",
+    "submit": "Envoyer"
+  },
   "header": {
     "title": "Plateforme",
     "title2": "Urbaine",
@@ -56,7 +60,7 @@
     "create": "Créer",
     "delete": "Supprimer",
     "errorMessages": {
-      "required": "Ce champs est requis",
+        "required": "Ce champs est requis",
       "minlength": "Ce champs doit avoir au moins {min} caractères",
       "maxlength": "Ce champs est limité à {max} caractères",
       "email": "Veuillez renseigner une adresse email valide",

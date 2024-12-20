@@ -18,12 +18,18 @@ use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierSendDto;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
+use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
+use App\Services\State\Processor\User\UserVerifyEmailProcessor;
 use App\Services\State\Provider\CurrentUserProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Signature\Exception\ExpiredSignatureException;
+use Symfony\Component\Security\Core\Signature\Exception\InvalidSignatureException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -33,6 +39,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/users/verify_email/send',
+            processor: UserVerifyEmailProcessor::class,
+            input: EmailVerifierSendDto::class,
+            status: 204
+        ),
+        new Post(
+            uriTemplate: '/users/verify_email/verify',
+            input: EmailVerifierVerifyDto::class,
+            processor: UserVerifyEmailProcessor::class,
+            status: 204,
+            exceptionToStatus: [
+                ExpiredSignatureException::class => 410,
+                InvalidSignatureException::class => 400,
+                SignatureParamsException::class => 400,
+            ]
+        ),
+    ]
+)]
 #[ApiResource(
     operations: [
         new Get(
@@ -109,16 +136,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName('password')]
     private ?string $plainPassword = null;
 
-    /**
-     * @var Collection<int, Actor>
-     */
-    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy', orphanRemoval: true)]
-    private Collection $actorsCreated;
-
     #[ORM\Column(nullable: true)]
     #[Assert\Choice(choices: self::ACCEPTED_ROLES, multiple: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?array $requestedRoles = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups([self::GROUP_GETME, self::GROUP_WRITE])]
+    private bool $hasSeenRequestedRoles = false;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
@@ -143,6 +168,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?string $description = null;
+
+    /**
+     * @var Collection<int, Actor>
+     */
+    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $actorsCreated;
 
     /**
      * @var Collection<int, UserLike>
@@ -299,7 +330,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Resource::GET_FULL])]
-    public function getFullName(): ?string
+    public function getFullName(): string
     {
         return $this->firstName.' '.$this->lastName;
     }
@@ -312,6 +343,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRequestedRoles(?array $requestedRoles): static
     {
         $this->requestedRoles = $requestedRoles;
+
+        return $this;
+    }
+
+    public function hasSeenRequestedRoles(): ?bool
+    {
+        return $this->hasSeenRequestedRoles;
+    }
+
+    public function setHasSeenRequestedRoles(bool $hasSeenRequestedRoles): static
+    {
+        $this->hasSeenRequestedRoles = $hasSeenRequestedRoles;
 
         return $this;
     }
@@ -352,12 +395,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getsignUpMessage(): ?string
+    public function getSignUpMessage(): ?string
     {
         return $this->signUpMessage;
     }
 
-    public function setsignUpMessage(?string $signUpMessage): static
+    public function setSignUpMessage(?string $signUpMessage): static
     {
         $this->signUpMessage = $signUpMessage;
 

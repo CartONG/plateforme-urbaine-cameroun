@@ -27,6 +27,12 @@
         <div class="AuthDialog__error" v-if="userStore.errorWhileSignInOrSignUp">
           {{ $t('auth.signIn.error') }}
         </div>
+        <div class="AuthDialog__error text-center" v-if="userStore.invalidAccount">
+          {{ $t('auth.signIn.invalidAccount.message') }}
+          <v-btn class="mt-4" color="main-green" @click="goToResendActivationEmail()">
+            {{ $t('auth.signIn.invalidAccount.resendActivationEmail') }}
+          </v-btn>
+        </div>
         <v-btn color="main-red" type="submit">{{ $t('auth.signIn.form.submit') }}</v-btn>
       </Form>
     </template>
@@ -48,10 +54,25 @@ import { DialogKey } from '@/models/enums/app/DialogKey'
 import Form from '@/components/forms/Form.vue'
 import { useUserStore } from '@/stores/userStore'
 import { SignInForm } from '@/services/userAndAuth/forms/SignInForm'
+import { useRoute, useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
 const { form, handleSubmit } = SignInForm.getSignInForm()
 const onSubmit = handleSubmit(async (values) => {
-  userStore.signIn(values)
+  await userStore.signIn(values)
 })
+
+const goToResendActivationEmail = () => {
+  router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_EMAIL_VERIFIER_ASK } })
+}
 </script>
+
+<style lang="scss">
+.AuthDialog {
+  &__error {
+    flex-direction: column;
+  }
+}
+</style>
