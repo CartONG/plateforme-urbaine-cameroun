@@ -53,6 +53,16 @@
       <h4>Geocoding</h4>
       <Geocoding :search-type="NominatimSearchType.FREE" />
     </div>
+
+    <div class="UiView__componentCtn">
+      <h4>DateInput</h4>
+      <DateInput v-model:start-at="startAt" v-model:end-at="endAt" />
+    </div>
+
+    <div class="UiView__componentCtn">
+      <h4>FileInput</h4>
+      <FileInput v-model="file" />
+    </div>
   </div>
 </template>
 
@@ -65,11 +75,16 @@ import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import Pagination from '@/components/global/Pagination.vue'
 import { useActorsStore } from '@/stores/actorsStore'
 import { computed, ref } from 'vue'
+import DateInput from '@/components/forms/DateInput.vue'
+import FileInput from '@/components/forms/FileInput.vue'
 const actorsStore = useActorsStore()
 
 /* Pagination.vue */
 const items = computed(() => actorsStore.actors)
 const paginatedItems = ref([])
+const file = ref()
+const startAt = ref()
+const endAt = ref()
 </script>
 
 <style lang="scss">

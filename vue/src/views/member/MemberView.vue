@@ -71,7 +71,6 @@
           >
             {{ $t('account.email_verifier.resend') }}
           </v-btn>
-          <a href="#">{{ $t('account.changePassword') }}</a>
           <v-btn
             class="justify-start"
             variant="text"
@@ -152,13 +151,21 @@
           >
             <span class="ml-2">{{ $t('header.addActor') }}</span>
           </BasicCard>
-          <BasicCard icon="mdi-plus" v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS)">
+          <BasicCard
+            icon="mdi-plus"
+            v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS)"
+            @click="projectStore.isProjectFormShown = true"
+          >
             <span class="ml-2">{{ $t('header.addProject') }}</span>
           </BasicCard>
           <BasicCard icon="mdi-plus" v-if="userStore.userHasRole(UserRoles.EDITOR_DATA)">
             <span class="ml-2">{{ $t('header.addData') }}</span>
           </BasicCard>
-          <BasicCard icon="mdi-plus" v-if="userStore.userHasRole(UserRoles.EDITOR_RESSOURCES)">
+          <BasicCard
+            icon="mdi-plus"
+            v-if="userStore.userHasRole(UserRoles.EDITOR_RESSOURCES)"
+            @click="resourceStore.isResourceFormShown = true"
+          >
             <span class="ml-2">{{ $t('header.addResource') }}</span>
           </BasicCard>
         </div>
@@ -186,9 +193,19 @@ import { InputImageValidator } from '@/services/files/InputImageValidator'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted, ref, watch, type Ref } from 'vue'
+import { useProjectStore } from '@/stores/projectStore'
+import { useResourceStore } from '@/stores/resourceStore'
 import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
+const projectStore = useProjectStore()
+const resourceStore = useResourceStore()
+
+const isResetPasswordSent = ref()
+const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
+const fileInput = ref<HTMLInputElement | null>(null)
+const avatarErrorMessage = ref('')
+
 let requestedRoles = UserProfileForm.getRolesList()
 const { form, handleSubmit, isSubmitting } = UserProfileForm.getUserEditionForm(
   userStore.currentUser
@@ -239,11 +256,6 @@ onMounted(() => {
   )
 })
 
-const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
-const fileInput = ref<HTMLInputElement | null>(null)
-const avatarErrorMessage = ref('')
-const isResetPasswordSent = ref()
-
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
@@ -272,17 +284,6 @@ const handleFileChange = (event: Event) => {
   }
 }
 
-const sendEmailResetPassword = async () => {
-  if (userStore.currentUser) {
-    try {
-      await AuthenticationService.forgotPassword(userStore.currentUser.email)
-      isResetPasswordSent.value = true
-    } catch {
-      isResetPasswordSent.value = false
-    }
-  }
-}
-
 const submitForm = handleSubmit(
   (values) => {
     const userSubmission: Partial<UserSubmission> = {
@@ -304,6 +305,17 @@ const submitForm = handleSubmit(
 
 const resendEmailVerifier = async () => {
   await userStore.resendEmailVerifier()
+}
+
+const sendEmailResetPassword = async () => {
+  if (userStore.currentUser) {
+    try {
+      await AuthenticationService.forgotPassword(userStore.currentUser.email)
+      isResetPasswordSent.value = true
+    } catch {
+      isResetPasswordSent.value = false
+    }
+  }
 }
 </script>
 <style lang="scss">

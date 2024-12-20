@@ -17,7 +17,7 @@ import { useUserStore } from '@/stores/userStore'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
-    return savedPosition ? savedPosition : { el: '#app', top: 0, behavior: 'smooth' }
+    return savedPosition ? savedPosition : { el: '#app', top: 0 }
   },
   routes: [
     {
@@ -140,6 +140,12 @@ const router = createRouter({
               path: 'projects',
               component: () =>
                 import('@/views/admin/components/admin-content/AdminProjectsPanel.vue')
+            },
+            {
+              name: 'adminResources',
+              path: 'resources',
+              component: () =>
+                import('@/views/admin/components/admin-content/AdminResourcesPanel.vue')
             }
           ]
         },

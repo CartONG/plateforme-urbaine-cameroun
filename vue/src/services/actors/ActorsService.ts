@@ -4,7 +4,7 @@ import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'
 import type { AdministrativeScope } from '@/models/interfaces/AdministrativeScope'
-import { ImageLoader } from '../files/ImageLoader'
+import FileUploader from '@/services/files/FileUploader'
 
 export class ActorsService {
   static async getActors(): Promise<Actor[]> {
@@ -31,11 +31,11 @@ export class ActorsService {
     id?: string | undefined
   ): Promise<Actor> {
     if (actor.logoToUpload) {
-      const newLogo = await ImageLoader.loadImage(actor.logoToUpload.file)
+      const newLogo = await FileUploader.uploadFile(actor.logoToUpload.file)
       actor.logo = newLogo['@id']
     }
     const newImagesLoaded = await Promise.all(
-      actor.imagesToUpload.map(async (img) => await ImageLoader.loadImage(img.file))
+      actor.imagesToUpload.map(async (img) => await FileUploader.uploadFile(img.file))
     )
     if (actor.images && actor.images.length > 0) {
       actor.images.push(...newImagesLoaded)

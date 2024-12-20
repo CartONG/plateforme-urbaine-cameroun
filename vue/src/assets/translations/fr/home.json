@@ -1,7 +1,8 @@
 {
   "home": {
     "agenda": {
-      "title": "Agenda"
+      "title": "Agenda",
+      "action": "Toutes les actualités"
     },
     "becomeMember": {
       "action": "Créer un compte",
@@ -24,6 +25,9 @@
           "description": "Localisez les projets d’infrastructure et de développement urbain pour faciliter la collaboration et la coordination au Cameroun.",
           "label": "Bénéficiez d’une vue d’ensemble des projets et des acteurs"
         },
+        "news": {
+          "title": "À la une"
+        },
         "simpleMaps": {
           "description": "Mesurez avec précision, dessinez des polygones, des lignes et des points directement sur la carte.",
           "label": "Construisez votre carte facilement"
@@ -31,6 +35,9 @@
         "thematics": {
           "description": "Obtenez des informations couvrant diverses thématiques comme l'urbanisme, l'environnement, les infrastructures par exemple.",
           "label": "Accèdez à des données thématiques riches"
+        },
+        "agenda": {
+          "title": "Agenda"
         },
         "way": {
           "description": "Planifiez vos déplacements de manière efficace grâce à notre fonctionnalité de calcul d'itinéraires !",
@@ -42,7 +49,8 @@
       "welcomeDescription": "Composez votre carte thématique grâce aux différents données mises à disposition sur la Plateforme Urbaine du Cameroun."
     },
     "news": {
-      "title": "À la une"
+      "title": "À la une",
+      "action": "Tous les événements"
     }
   }
 }

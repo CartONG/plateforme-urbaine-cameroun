@@ -18,7 +18,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[Vich\Uploadable]
 #[ORM\Entity]
 #[ApiResource(
-    normalizationContext: ['groups' => ['media_object:read']],
+    normalizationContext: ['groups' => [self::READ]],
     types: ['https://schema.org/MediaObject'],
     outputFormats: ['jsonld' => ['application/ld+json']],
     operations: [
@@ -48,15 +48,22 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
+    private const READ = 'media_object:read';
+
     #[ORM\Id, ORM\Column, ORM\GeneratedValue]
     private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
-    #[Groups(['media_object:read', Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME])]
+    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME, Resource::GET_FULL])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
     #[Assert\NotNull]
+    #[Assert\File(
+        maxSize: '5000k',
+        extensions: ['pdf', 'xlsx', 'jpg', 'jpeg', 'png', 'webp'],
+        extensionsMessage: 'Please upload a valid file (pdf, xlsx, jpg, jpeg, png, webp)',
+    )]
     public ?File $file = null;
 
     #[ApiProperty(writable: false)]

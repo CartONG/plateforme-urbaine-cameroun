@@ -2,10 +2,38 @@
   <Modal :title="$t('resources.form.title.' + type)" :show="isShown" @close="$emit('close')">
     <template #content>
       <v-form @submit.prevent="submitForm" id="resource-form" class="Form Form--resource">
-        <!--<NewSubmission
-                    v-if="type === FormType.VALIDATE && resource"
-                    :created-by="resource.createdBy"
-                    :created-at="resource.createdAt" />-->
+        <NewSubmission
+          v-if="!isResourceValidated && resource"
+          :created-by="resource.createdBy"
+          :created-at="resource.createdAt"
+        />
+
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('resources.form.fields.type.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            chips
+            v-model="form.type.value.value as ResourceType"
+            :items="Object.values(ResourceType)"
+            :placeholder="$t('resources.form.fields.type.label')"
+            :item-title="(item) => $t('resources.resourceType.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.type.errorMessage.value"
+            @blur="form.type.handleChange(form.type.value.value)"
+          />
+        </div>
+
+        <div class="Form__fieldCtn" v-if="form.type.value.value === ResourceType.EVENTS">
+          <label class="Form__label required">{{ $t('resources.form.fields.date.label') }}</label>
+          <DateInput
+            v-model:start-at="form.startAt.value.value"
+            v-model:end-at="form.endAt.value.value"
+            :error-messages="form.startAt.errorMessage.value || form.endAt.errorMessage.value"
+            @change="handleDateChange"
+          />
+        </div>
+
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('resources.form.fields.name.label') }}</label>
           <v-text-field
@@ -17,6 +45,7 @@
             @blur="form.name.handleChange"
           />
         </div>
+
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{
             $t('resources.form.fields.description.label')
@@ -30,34 +59,35 @@
           />
         </div>
 
-        <!--<FormSectionTitle :text="$t('resources.form.section.thematics')" />
-                <v-select density="compact" variant="outlined" multiple
-                    v-model="(form.thematics.value.value as Thematic[])" :items="thematics"
-                    :placeholder="$t('resources.form.section.thematics')"
-                    item-title="name" item-value="@id" :error-messages="form.thematics.errorMessage.value"
-                    @blur="form.thematics.handleChange(form.thematics.value.value)" return-object />-->
-
         <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('resources.form.fields.type.label') }}</label>
-          <v-select
+          <label class="Form__label required">{{ $t('resources.form.fields.author.label') }}</label>
+          <v-text-field
             density="compact"
             variant="outlined"
-            v-model="form.type.value.value as ResourceType"
-            :items="Object.values(ResourceType)"
-            :placeholder="$t('resources.form.fields.type.label')"
-            :item-title="(item) => $t('resources.resourceType.' + item)"
-            :item-value="(item) => item"
-            :error-messages="form.type.errorMessage.value"
-            @blur="form.type.handleChange(form.type.value.value)"
+            v-model="form.author.value.value"
+            :placeholder="$t('resources.form.fields.author.placeholder')"
+            :error-messages="form.author.errorMessage.value"
+            @blur="form.author.handleChange"
           />
         </div>
 
-        <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('resources.form.fields.file.label') }}</label>
-          <FileUploader />
-        </div>
+        <FormSectionTitle :text="$t('resources.form.section.resource')" />
 
         <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('resources.form.fields.format.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            v-model="form.format.value.value as ResourceFormat"
+            :items="resourceFormats"
+            :placeholder="$t('resources.form.fields.format.label')"
+            :item-title="(item) => $t('resources.resourceFormat.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.format.errorMessage.value"
+            @blur="form.format.handleChange(form.format.value.value)"
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="form.format.value.value">
           <label class="Form__label">{{ $t('resources.form.fields.link.label') }}</label>
           <v-text-field
             density="compact"
@@ -68,6 +98,40 @@
             @blur="form.link.handleChange"
           />
         </div>
+        <v-divider v-if="!hideFileInput && form.format.value.value">{{
+          $t('resources.form.or')
+        }}</v-divider>
+        <div class="Form__fieldCtn" v-if="!hideFileInput && form.format.value.value">
+          <label class="Form__label">{{ $t('resources.form.fields.file.label') }}</label>
+          <FileInput
+            v-model="form.file.value.value"
+            :error-messages="form.file.errorMessage.value"
+            @update:model-value="form.file.handleChange(form.file.value.value)"
+          />
+        </div>
+
+        <FormSectionTitle :text="$t('resources.form.section.location')" />
+        <Geocoding
+          :search-type="NominatimSearchType.FREE"
+          :osm-type="OsmType.NODE"
+          @change="form.osmData.handleChange(form.osmData.value.value)"
+          v-model="form.osmData.value.value"
+        />
+
+        <FormSectionTitle :text="$t('resources.form.section.thematics')" />
+        <v-select
+          density="compact"
+          variant="outlined"
+          multiple
+          v-model="form.thematics.value.value as Thematic[]"
+          :items="thematics"
+          :placeholder="$t('resources.form.section.thematics')"
+          item-title="name"
+          item-value="@id"
+          :error-messages="form.thematics.errorMessage.value"
+          @blur="form.thematics.handleChange(form.thematics.value.value)"
+          return-object
+        />
       </v-form>
     </template>
     <template #footer-left>
@@ -85,15 +149,25 @@
 import { type Resource, type ResourceSubmission } from '@/models/interfaces/Resource'
 import { ResourceFormService } from '@/services/resources/ResourceFormService'
 import { useResourceStore } from '@/stores/resourceStore'
-import { onMounted } from 'vue'
+import { useThematicStore } from '@/stores/thematicStore'
+import { computed, onMounted, watch } from 'vue'
 import Modal from '@/components/global/Modal.vue'
 import { FormType } from '@/models/enums/app/FormType'
 import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { onInvalidSubmit } from '@/services/forms/FormService'
+import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
+import FileInput from '@/components/forms/FileInput.vue'
+import type { Thematic } from '@/models/interfaces/Thematic'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
-import FileUploader from '@/components/forms/FileUploader.vue'
+import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
+import Geocoding from '@/components/forms/Geocoding.vue'
+import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
+import { OsmType } from '@/models/enums/geo/OsmType'
+import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
+import DateInput from '@/components/forms/DateInput.vue'
 
 const resourceStore = useResourceStore()
+const thematicsStore = useThematicStore()
 
 const props = defineProps<{
   type: FormType
@@ -101,12 +175,50 @@ const props = defineProps<{
   isShown: boolean
 }>()
 
-const emit = defineEmits(['submitted', 'close'])
+const isResourceValidated = computed(() => props.resource?.isValidated)
 
+const hideFileInput = computed(() => {
+  if (!form.format.value.value) return false
+  return [ResourceFormat.VIDEO, ResourceFormat.WEB].includes(form.format.value.value)
+})
+
+const handleDateChange = () => {
+  form.startAt.handleChange(form.startAt.value.value)
+  form.endAt.handleChange(form.endAt.value.value)
+}
+
+const emit = defineEmits(['submitted', 'close'])
 const { form, handleSubmit, isSubmitting } = ResourceFormService.getForm(props.resource)
+const thematics = computed(() => thematicsStore.thematics)
+watch(
+  () => form.type.value.value,
+  () => {
+    if (!resourceFormats.value.includes(form.format.value.value)) {
+      form.format.value.value = null
+    }
+  }
+)
+const resourceFormats = computed(() => {
+  switch (form.type.value.value) {
+    case ResourceType.EVENTS:
+      return [ResourceFormat.WEB, ResourceFormat.PDF, ResourceFormat.IMAGE, ResourceFormat.VIDEO]
+    case ResourceType.GUIDES:
+      return [
+        ResourceFormat.WEB,
+        ResourceFormat.PDF,
+        ResourceFormat.IMAGE,
+        ResourceFormat.VIDEO,
+        ResourceFormat.XLSX
+      ]
+    case ResourceType.RAPPORTS:
+    case ResourceType.REGULATIONS:
+    default:
+      return [ResourceFormat.WEB, ResourceFormat.PDF, ResourceFormat.IMAGE]
+  }
+})
 
 onMounted(async () => {
-  // await thematicsStore.getAll()
+  await thematicsStore.getAll()
 })
 
 const submitForm = handleSubmit(

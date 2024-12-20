@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="HomeView__ctn HomeView__ctn--news">
-      <SectionBanner :text="$t('home.news.title')" />
+      <SectionBanner :text="$t('home.news.title')" :action-label="$t('home.news.action')" />
       <HomeNews />
     </div>
     <div class="HomeView__ctn HomeView__ctn--map container-fluid">
@@ -25,8 +25,12 @@
       </div>
     </div>
     <div class="HomeView__ctn HomeView__ctn--agenda">
-      <SectionBanner :text="$t('home.agenda.title')" />
-      <HomeNews />
+      <SectionBanner
+        :text="$t('home.agenda.title')"
+        :action-label="$t('home.agenda.action')"
+        :action-link="{ name: 'resources', query: { type: 'events' } }"
+      />
+      <HomeAgenda />
     </div>
     <div class="HomeView__ctn HomeView__ctn--why-subscribe">
       <HomeBecomeMember />
@@ -42,6 +46,7 @@ import HomeMapDescription from '@/views/home/components/HomeMapDescription.vue'
 import HomeBecomeMember from '@/views/home/components/HomeBecomeMember.vue'
 import { useHomeStore } from '@/stores/homeStore'
 import { onMounted } from 'vue'
+import HomeAgenda from '@/views/home/components/HomeAgenda.vue'
 
 const homeStore = useHomeStore()
 

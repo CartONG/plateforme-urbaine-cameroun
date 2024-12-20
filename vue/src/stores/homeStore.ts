@@ -13,6 +13,7 @@ export const useHomeStore = defineStore(StoresList.HOME, () => {
     if (news.value.length > 0) return
     news.value = await NewsService.getLatest()
   }
+
   const getGlobalKpis = async () => {
     if (globalKpis.value.length > 0) return
     globalKpis.value = await KpiService.getGlobal()

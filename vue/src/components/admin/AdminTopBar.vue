@@ -40,7 +40,7 @@ import type { User } from '@sentry/vue'
 import { computed, ref, watch } from 'vue'
 import SectionTitle from '@/components/text-elements/SectionTitle.vue'
 
-type AdminPages = 'Actors' | 'Projects' | 'Members'
+type AdminPages = 'Actors' | 'Projects' | 'Members' | 'Resources'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
@@ -62,6 +62,8 @@ const title = computed(() => {
       return `${props.items.length} ${i18n.t('projects.projects', props.items.length)}`
     case 'Members':
       return `${props.items.length} ${i18n.t('admin.member', props.items.length)}`
+    case 'Resources':
+      return `${props.items.length} ${i18n.t('resources.resources', props.items.length)}`
     case 'Actors':
     default:
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`

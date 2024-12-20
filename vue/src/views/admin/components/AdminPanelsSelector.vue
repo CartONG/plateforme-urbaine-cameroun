@@ -36,17 +36,11 @@
             {{ $t('admin.panelContentProjects') }}
             <div class="Admin__itemToValidateCounter">{{ projectsToValidate }}</div>
           </router-link>
-          <div
-            class="Admin__itemSelector"
-            :class="{
-              Admin__itemSelected:
-                adminStore.selectedAdminItem === AdministrationPanels.CONTENT_RESOURCES
-            }"
-            @click="adminStore.selectedAdminItem = AdministrationPanels.CONTENT_RESOURCES"
-          >
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminResources' }">
             <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
             {{ $t('admin.panelContentResources') }}
-          </div>
+            <div class="Admin__itemToValidateCounter">{{ resourcesToValidate }}</div>
+          </router-link>
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel
@@ -73,11 +67,13 @@ import { AdministrationPanels } from '@/models/enums/app/AdministrationPanels'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminStore } from '@/stores/adminStore'
 import { useProjectStore } from '@/stores/projectStore'
+import { useResourceStore } from '@/stores/resourceStore'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 const adminStore = useAdminStore()
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
+const resourceStore = useResourceStore()
 const router = useRouter()
 watch(
   () => adminStore.selectedAdminPanel,
@@ -97,6 +93,9 @@ watch(
 const actorsToValidate = computed(() => actorsStore.actors.filter((x) => !x.isValidated).length)
 const projectsToValidate = computed(
   () => projectStore.projects.filter((x) => !x.isValidated).length
+)
+const resourcesToValidate = computed(
+  () => resourceStore.resources.filter((x) => !x.isValidated).length
 )
 </script>
 

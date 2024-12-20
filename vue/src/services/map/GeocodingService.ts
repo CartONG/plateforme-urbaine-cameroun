@@ -58,4 +58,9 @@ export default class GeocodingService {
       osmName: geoData.name
     }
   }
+
+  static getLocationName(geoData: GeoData): string {
+    if (!geoData) return ''
+    return geoData.name.split(', ').splice(0, 2).join(', ')
+  }
 }

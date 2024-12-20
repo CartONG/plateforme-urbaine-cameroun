@@ -7,9 +7,8 @@ use App\Enum\Trait\ToArray;
 enum ResourceType: string
 {
     use ToArray;
-    case PDF = 'pdf';
-    case WEB = 'web';
-    case XLSX = 'xlsx';
-    case VIDEO = 'video';
-    case IMAGE = 'image';
+    case GUIDES = 'guides'; // "Formations et guides pratiques"
+    case RAPPORTS = 'rapports'; // "Rapports et présentations"
+    case REGULATIONS = 'regulations'; // "Réglementations et textes officiels"
+    case EVENTS = 'events'; // "Événements"
 }

@@ -32,15 +32,15 @@ class Organisation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::ORGANISATION_READ_ALL, Project::PROJECT_READ, Project::PROJECT_READ_ALL])]
+    #[Groups([self::ORGANISATION_READ_ALL, Project::GET_FULL, Project::GET_PARTIAL])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::ORGANISATION_READ_ALL, Project::PROJECT_READ, Project::PROJECT_READ_ALL])]
+    #[Groups([self::ORGANISATION_READ_ALL, Project::GET_FULL, Project::GET_PARTIAL])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::ORGANISATION_READ_ALL, Project::PROJECT_READ, Project::PROJECT_READ_ALL])]
+    #[Groups([self::ORGANISATION_READ_ALL, Project::GET_FULL, Project::GET_PARTIAL])]
     private ?string $acronym = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
