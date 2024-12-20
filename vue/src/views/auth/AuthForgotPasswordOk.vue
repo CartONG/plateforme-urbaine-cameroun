@@ -6,9 +6,7 @@
     </template>
     <template #content>
       <span class="mb-4 text-center">{{ $t('auth.forgotPasswordOk.form.info') }}</span>
-      <v-btn color="main-red" @click="closeDialog" block>{{
-        $t('auth.forgotPasswordOk.form.submit')
-      }}</v-btn>
+      <v-btn color="main-red" @click="closeDialog" block>{{ $t('dialog.close') }}</v-btn>
     </template>
     <template #bottom-content></template>
   </AuthDialog>

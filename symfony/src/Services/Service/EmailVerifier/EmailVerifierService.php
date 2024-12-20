@@ -3,6 +3,7 @@
 namespace App\Services\Service\EmailVerifier;
 
 use App\Repository\User\UserRepository;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -25,7 +26,7 @@ class EmailVerifierService
     /**
      * @throws SignatureParamsException
      */
-    public function validSignatureAndUser(EmailVerifierDto $emailVerifierDto): void
+    public function validSignatureAndUser(EmailVerifierVerifyDto $emailVerifierDto): void
     {
         $this->signature->acceptEmailVerifierDto($emailVerifierDto);
 

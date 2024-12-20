@@ -7,5 +7,6 @@ export enum DialogKey {
   AUTH_FORGOT_PASSWORD_OK = 'forgot-password-ok',
   AUTH_RESET_PASSWORD = 'reset-password',
   AUTH_RESET_PASSWORD_OK = 'reset-password-ok',
-  ACCOUNT_EMAIL_VERIFIER = 'verify-email'
+  ACCOUNT_EMAIL_VERIFIER = 'verify-email',
+  AUTH_ASK_EMAIL_VERIFIER = 'ask-email-verifier'
 }

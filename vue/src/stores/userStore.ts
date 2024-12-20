@@ -54,7 +54,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   }
 
   const setCurrentUser = async () => {
-    currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
+    await getAuthenticatedUser()
     const appStore = useApplicationStore()
     appStore.getLikesList()
   }
@@ -66,14 +66,9 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const signUp = async (values: SignUpValues) => {
     try {
       await UserService.createUser(values)
-      signIn(
-        {
-          email: values.email,
-          password: values.plainPassword
-        },
-        false
-      )
-      router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_THANKS } })
+      await router.replace({
+        query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_THANKS }
+      })
     } catch (err) {
       errorWhileSignInOrSignUp.value = true
       Sentry.captureException(err)
@@ -91,10 +86,6 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     if (userIsLogged.value) {
       await getAuthenticatedUser()
     }
-  }
-
-  const resendEmailVerifier = async () => {
-    await AuthenticationService.resendEmailVerifier()
   }
 
   const checkAuthenticated = async () => {
@@ -132,7 +123,6 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     signUp,
     signOut,
     verifyEmail,
-    resendEmailVerifier,
     checkAuthenticated,
     patchUser
   }

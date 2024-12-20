@@ -3,6 +3,7 @@
 namespace App\Services\Service\EmailVerifier;
 
 use App\Entity\User\User;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -77,7 +78,7 @@ class EmailVerifierSignature
     /**
      * @throws SignatureParamsException
      */
-    public function acceptEmailVerifierDto(EmailVerifierDto $emailVerifierDto): void
+    public function acceptEmailVerifierDto(EmailVerifierVerifyDto $emailVerifierDto): void
     {
         $queryParams = [
             self::QUERY_PARAM_TOKEN => $emailVerifierDto->token,

@@ -18,11 +18,11 @@ use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
-use App\Services\Service\EmailVerifier\EmailVerifierDto;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierSendDto;
+use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
 use App\Services\State\Processor\User\UserVerifyEmailProcessor;
 use App\Services\State\Provider\CurrentUserProvider;
-use App\Services\State\Provider\User\UserVerifyEmailProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,15 +41,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity('email')]
 #[ApiResource(
     operations: [
-        new Get(
-            security: 'is_granted(\'IS_AUTHENTICATED_FULLY\')',
-            uriTemplate: '/users/verify_email',
-            provider: UserVerifyEmailProvider::class,
+        new Post(
+            uriTemplate: '/users/verify_email/send',
+            processor: UserVerifyEmailProcessor::class,
+            input: EmailVerifierSendDto::class,
             status: 204
         ),
         new Post(
-            uriTemplate: '/users/verify_email',
-            input: EmailVerifierDto::class,
+            uriTemplate: '/users/verify_email/verify',
+            input: EmailVerifierVerifyDto::class,
             processor: UserVerifyEmailProcessor::class,
             status: 204,
             exceptionToStatus: [
@@ -136,16 +136,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName('password')]
     private ?string $plainPassword = null;
 
-    /**
-     * @var Collection<int, Actor>
-     */
-    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy', orphanRemoval: true)]
-    private Collection $actorsCreated;
-
     #[ORM\Column(nullable: true)]
     #[Assert\Choice(choices: self::ACCEPTED_ROLES, multiple: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?array $requestedRoles = null;
+
+    #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups([self::GROUP_GETME, self::GROUP_WRITE])]
+    private bool $hasSeenRequestedRoles = false;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
@@ -170,6 +168,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?string $description = null;
+
+    /**
+     * @var Collection<int, Actor>
+     */
+    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $actorsCreated;
 
     /**
      * @var Collection<int, UserLike>

@@ -1,24 +1,24 @@
 <template>
   <AuthDialog>
     <template #title>
-      {{ $t('account.email_verifier.title') }}
+      {{ $t('auth.emailVerifier.title') }}
     </template>
     <template #subtitle>
       <CheckPoint
         class="mb-4"
-        :label="$t('account.email_verifier.subtitle.success')"
+        :label="$t('auth.emailVerifier.subtitle.success')"
         :highlighted="true"
         v-if="isVerified === VerificationStatus.SUCCESS"
       />
       <WrongPoint
         class="mb-4"
-        :label="$t('account.email_verifier.subtitle.wrong')"
+        :label="$t('auth.emailVerifier.subtitle.wrong')"
         :highlighted="true"
         v-if="isVerified === VerificationStatus.WRONG"
       />
       <WrongPoint
         class="mb-4"
-        :label="$t('account.email_verifier.subtitle.expired')"
+        :label="$t('auth.emailVerifier.subtitle.expired')"
         :highlighted="true"
         v-if="isVerified === VerificationStatus.EXPIRED"
       />
@@ -31,10 +31,10 @@
     </template>
     <template #content>
       <template v-if="isVerified === VerificationStatus.EXPIRED">
-        {{ $t('account.email_verifier.content.expired') }}
+        {{ $t('auth.emailVerifier.content.expired') }}
       </template>
       <v-btn class="mt-8" color="main-red" @click="closeDialog" block>{{
-        $t('account.email_verifier.close')
+        $t('auth.emailVerifier.close')
       }}</v-btn>
     </template>
     <template #bottom-content />
@@ -65,7 +65,6 @@ const isVerified = ref<VerificationStatus>()
 onBeforeMount(async () => {
   await router.isReady()
   const query = route.query
-  console.log(query)
   if (!query._hash || !query.email || !query.expiresAt || !query.token) {
     isVerified.value = VerificationStatus.WRONG
   } else {

@@ -3,7 +3,9 @@ import { i18n } from '@/plugins/i18n'
 
 export class UserValidator {
   public static get emailSchema() {
-    return z.string().email({ message: i18n.t('forms.errorMessages.email') })
+    return z
+      .string({ message: i18n.t('forms.errorMessages.required') })
+      .email({ message: i18n.t('forms.errorMessages.email') })
   }
 
   public static get passwordSchema() {

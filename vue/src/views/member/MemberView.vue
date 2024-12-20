@@ -64,14 +64,6 @@
             @submit="form.phone.handleChange"
           />
           <v-btn
-            v-if="!userStore.currentUser?.isValidated"
-            class="justify-start"
-            variant="text"
-            @click="resendEmailVerifier()"
-          >
-            {{ $t('account.email_verifier.resend') }}
-          </v-btn>
-          <v-btn
             class="justify-start"
             variant="text"
             @click="sendEmailResetPassword()"
@@ -302,10 +294,6 @@ const submitForm = handleSubmit(
     console.error('Form validation failed:', errors)
   }
 )
-
-const resendEmailVerifier = async () => {
-  await userStore.resendEmailVerifier()
-}
 
 const sendEmailResetPassword = async () => {
   if (userStore.currentUser) {

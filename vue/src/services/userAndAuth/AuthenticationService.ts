@@ -28,10 +28,10 @@ export class AuthenticationService {
   }
 
   static async verifyEmail(emailVerifierValues: EmailVerifierValues): Promise<AxiosResponse> {
-    return apiClient.post('/api/users/verify_email', emailVerifierValues)
+    return apiClient.post('/api/users/verify_email/verify', emailVerifierValues)
   }
 
-  static async resendEmailVerifier(): Promise<AxiosResponse> {
-    return apiClient.get('/api/users/verify_email')
+  static async resendEmailVerifier(email: string): Promise<AxiosResponse> {
+    return apiClient.post(`/api/users/verify_email/send`, { email: email })
   }
 }

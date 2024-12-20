@@ -6,6 +6,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { VScaleTransition } from 'vuetify/components'
 import { useApplicationStore } from '@/stores/applicationStore'
+import AuthAskEmailVerifier from '@/views/auth/AuthEmailVerifierSend.vue'
 import AuthSignIn from '@/views/auth/AuthSignIn.vue'
 import AuthBecomeMember from '@/views/auth/AuthBecomeMember.vue'
 import AuthBecomeMemberWhy from '@/views/auth/AuthBecomeMemberWhy.vue'
@@ -15,7 +16,7 @@ import AuthForgotPasswordOk from '@/views/auth/AuthForgotPasswordOk.vue'
 import AuthResetPassword from '@/views/auth/AuthResetPassword.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import AuthResetPasswordOk from '@/views/auth/AuthResetPasswordOk.vue'
-import MemberEmailVerifier from '@/views/member/MemberEmailVerifier.vue'
+import AuthEmailVerifier from '@/views/auth/AuthEmailVerifier.vue'
 
 const DEFAULT_TRANSITION = VScaleTransition
 
@@ -50,7 +51,9 @@ const dialogComponent = computed(() => {
     case DialogKey.AUTH_RESET_PASSWORD_OK:
       return AuthResetPasswordOk
     case DialogKey.ACCOUNT_EMAIL_VERIFIER:
-      return MemberEmailVerifier
+      return AuthEmailVerifier
+    case DialogKey.AUTH_ASK_EMAIL_VERIFIER:
+      return AuthAskEmailVerifier
     default:
       return null
   }
