@@ -1,0 +1,16 @@
+mail:
+  reset_password:
+    subject: Plateforme Urbaine - Réinitialisation de mot de passe
+    content: |-
+      Chér⋅e {user_fullname},<br><br>
+      
+      Nous venons de recevoir une demande de réinitialisation de votre mot de passe.<br><br> 
+      
+      Veuillez cliquer <a href="{link}" target="_blank">ici</a> pour réinitialiser votre mot de passe, ou copiez et collez le lien suivant dans votre navigateur :<br>
+      <a href="{link}" target="_blank">{link}</a><br><br>
+      
+      Le lien expirera dans 1 heure, alors assurez-vous de changer votre mot de passe avant cette date.<br><br>
+      
+      Si vous n'avez pas demandé de réinitialisation de mot de passe, vous pouvez ignorer cet e-mail en toute sécurité.<br><br>
+
+      Cordialement,

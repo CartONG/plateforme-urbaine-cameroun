@@ -2,7 +2,7 @@
 
 namespace App\Event\EventListener;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use App\Security\PasswordHasher;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;

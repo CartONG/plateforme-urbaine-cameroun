@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use App\Repository\UserLikeRepository;
+use App\Repository\User\UserLikeRepository;
 use App\Services\State\Provider\UserLikeProvider;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;

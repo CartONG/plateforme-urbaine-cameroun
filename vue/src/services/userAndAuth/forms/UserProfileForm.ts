@@ -5,6 +5,7 @@ import { i18n } from '@/plugins/i18n'
 import type { User } from '@/models/interfaces/auth/User'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ref } from 'vue'
+import { UserValidator } from '@/services/userAndAuth/forms/UserValidator'
 
 export class UserProfileForm {
   static getSchema() {
@@ -40,14 +41,7 @@ export class UserProfileForm {
         )
         .optional(),
       email: z.string().email({ message: i18n.t('forms.errorMessages.email') }),
-      plainPassword: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
-        .min(8, { message: i18n.t('forms.errorMessages.minlength', { min: 8 }) }),
-      confirmPassword: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
-        .min(8, { message: i18n.t('forms.errorMessages.minlength', { min: 8 }) }),
+      ...UserValidator.passwordsObject(),
       acceptTerms: z.boolean().refine((val) => val === true, {
         message: i18n.t('auth.becomeMember.form.privacyPolicy.error')
       }),
@@ -103,10 +97,7 @@ export class UserProfileForm {
       acceptTerms: true
     })
 
-    const signUpSchema = baseSchema.refine((data) => data.plainPassword === data.confirmPassword, {
-      message: i18n.t('auth.becomeMember.form.passwordMatchError'),
-      path: ['confirmPassword']
-    })
+    const signUpSchema = UserValidator.refinePasswordMatch<typeof baseSchema>(baseSchema)
 
     const { errors, handleSubmit, isSubmitting } = useForm({
       validationSchema: toTypedSchema(signUpSchema)

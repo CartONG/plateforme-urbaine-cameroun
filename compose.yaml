@@ -31,6 +31,7 @@ services:
       CADDY_PROTOCOL: ${CADDY_PROTOCOL:-https}
       HTTP_PORT: ${HTTP_PORT:-80}
       HTTPS_PORT: ${HTTPS_PORT:-443}
+      MAILER_DSN: ${MAILER_DSN:-smtp://mail.puc.local:1025}
     cap_add:
       - NET_ADMIN
     depends_on:

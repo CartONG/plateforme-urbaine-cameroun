@@ -1,4 +1,4 @@
-App\Entity\User:
+App\Entity\User\User:
     user_1:
         firstName: John
         lastName: Admin Doe
