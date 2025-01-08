@@ -1,6 +1,6 @@
 {
     "cachedir": "/srv/imposm/imposm_cache",
-    "connection": "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}",
+    "connection": "postgres://${POSTGRES_GEODATA_USER}:${POSTGRES_GEODATA_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}",
     "mapping": "/srv/imposm/config/mapping.yaml",
     "diffdir": "/srv/imposm/imposm_diff",
     "replication_url": "https://planet.openstreetmap.org/replication/day/",

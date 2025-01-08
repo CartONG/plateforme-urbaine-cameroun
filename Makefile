@@ -16,10 +16,12 @@ DOCKER_COMP = docker compose --env-file .env --env-file .env.${ENV} --env-file .
 
 DOCKER_EXEC_VUE = $(DOCKER_COMP) exec vue
 DOCKER_EXEC_PHP = $(DOCKER_COMP) exec frankenphp
+DOCKER_EXEC_POSTGRES = $(DOCKER_COMP) exec postgres
 
 VUE = $(DOCKER_EXEC_VUE)
 SYMFONY = $(DOCKER_EXEC_PHP) php bin/console
 COMPOSER = $(DOCKER_EXEC_PHP) composer
+POSTGRES = $(DOCKER_EXEC_POSTGRES)
 
 dev: up show-urls
 build-dev: build-and-up show-urls
