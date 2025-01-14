@@ -5,9 +5,7 @@ namespace App\Services\Mailer\User;
 use App\Entity\User\User;
 use CoopTilleuls\ForgotPasswordBundle\Entity\AbstractPasswordToken;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UserResetPasswordMailer extends AbstractUserMailer
 {
