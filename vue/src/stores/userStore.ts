@@ -40,9 +40,9 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       await AuthenticationService.signIn(values)
       await setCurrentUser()
       errorWhileSignInOrSignUp.value = false
-      console.log(currentUser.value?.hasSeenRequestedRoles === false)
       if (currentUser.value?.hasSeenRequestedRoles === false) {
-        await router.replace({
+        await UserService.patchUser({ hasSeenRequestedRoles: true }, currentUser.value.id)
+        return await router.replace({
           query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_ROLES }
         })
       }
@@ -67,7 +67,6 @@ export const useUserStore = defineStore(StoresList.USER, () => {
 
   const getAuthenticatedUser = async () => {
     currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
-    console.log(currentUser.value)
   }
 
   const signUp = async (values: SignUpValues) => {

@@ -48,19 +48,19 @@
           <v-text-field
             v-model="form.organisation.value.value"
             :error-messages="form.organisation.errorMessage.value"
-            :label="$t('auth.becomeMemberThanks.form.organization')"
+            :label="$t('auth.becomeMemberAskRoles.form.organization')"
             @submit="form.organisation.handleChange"
           />
           <v-text-field
             v-model="form.position.value.value"
             :error-messages="form.position.errorMessage.value"
-            :label="$t('auth.becomeMemberThanks.form.functions')"
+            :label="$t('auth.becomeMemberAskRoles.form.functions')"
             @submit="form.position.handleChange"
           />
           <v-text-field
             v-model="form.phone.value.value"
             :error-messages="form.phone.errorMessage.value"
-            :label="$t('auth.becomeMemberThanks.form.telephone')"
+            :label="$t('auth.becomeMemberAskRoles.form.telephone')"
             @submit="form.phone.handleChange"
           />
           <v-btn
@@ -110,7 +110,9 @@
               />
             </div>
           </div>
-          <a href="#" class="hide-sm"v-if="!userStore.userHasRole(UserRoles.ADMIN)">{{ $t('account.deleteAccount') }}</a>
+          <a href="#" class="hide-sm" v-if="!userStore.userHasRole(UserRoles.ADMIN)">{{
+            $t('account.deleteAccount')
+          }}</a>
           <v-btn type="submit" color="main-red hide-sm" :loading="isSubmitting" class="w-100">{{
             $t('account.save')
           }}</v-btn>
@@ -121,7 +123,7 @@
               hide-details
               v-model="form.description.value.value"
               :error-messages="form.description.errorMessage.value"
-              :label="$t('auth.becomeMemberThanks.form.description')"
+              :label="$t('auth.becomeMemberAskRoles.form.description')"
               @submit="form.description.handleChange"
               auto-grow
               row-height="30"

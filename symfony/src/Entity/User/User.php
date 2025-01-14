@@ -2,6 +2,8 @@
 
 namespace App\Entity\User;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -84,6 +86,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
 )]
+#[ApiFilter(BooleanFilter::class, properties: ['isValidated'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use ValidateableEntity;
@@ -347,7 +350,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function hasSeenRequestedRoles(): ?bool
+    public function getHasSeenRequestedRoles(): ?bool
     {
         return $this->hasSeenRequestedRoles;
     }
