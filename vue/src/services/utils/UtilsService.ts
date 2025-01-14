@@ -75,3 +75,11 @@ export function getDateDiff(date1: string | Date, date2: string | Date): number 
 export function isSameDay(date1: string | Date, date2: string | Date) {
   return getDateDiff(date1, date2) === 0
 }
+
+export function downloadJson(data: any, fileName: string) {
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = `${fileName}.geojson`
+  link.click()
+}

@@ -66,7 +66,7 @@
     <ActorRelatedContent :actor="actor" v-if="appStore.mobile" />
     <div class="SheetView__block SheetView__block--bottom">
       <SectionBanner :text="$t('actorPage.images')" />
-      <ImagesMosaic :images="[...actor.images, ...actor.externalImages]" />
+      <ImagesMosaic :images="actorImages" :key="mosaicKey" />
       <ContentDivider />
     </div>
   </div>
@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import type { Actor } from '@/models/interfaces/Actor'
 import { useActorsStore } from '@/stores/actorsStore'
-import { computed, onMounted, watchEffect } from 'vue'
+import { computed, onMounted, watchEffect, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
 import ContentDivider from '@/components/content/ContentDivider.vue'
@@ -92,6 +92,20 @@ const appStore = useApplicationStore()
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
 const actor = computed(() => actorsStore.selectedActor)
+
+const actorImages = computed(() => {
+  const images = actor.value?.images ?? []
+  const externalImages = actor.value?.externalImages ?? []
+  return [...images, ...externalImages]
+})
+
+const mosaicKey = ref(0)
+
+watchEffect(() => {
+  if (actorImages.value) {
+    mosaicKey.value++
+  }
+})
 
 onMounted(() => {
   const route = useRoute()

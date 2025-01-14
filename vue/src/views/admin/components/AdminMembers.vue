@@ -58,6 +58,8 @@
             density="comfortable"
             icon="mdi-pencil-outline"
             @click="editUser(item as User)"
+            :disabled="(item as User).roles.includes(UserRoles.ADMIN)"
+            class="disabled-white"
           ></v-btn>
         </template>
       </template>
@@ -128,7 +130,7 @@ const filteredItems = computed(() => {
 })
 
 const getRoleIconColor = (user: User, role: UserRoles) => {
-  if (user.roles.includes(role)) {
+  if (user.roles.includes(role) || user.roles.includes(UserRoles.ADMIN)) {
     return 'main-green'
   } else if (user.requestedRoles?.includes(role)) {
     return 'main-red'
@@ -136,3 +138,9 @@ const getRoleIconColor = (user: User, role: UserRoles) => {
   return 'main-grey'
 }
 </script>
+
+<style scoped>
+.disabled-white.v-btn--disabled {
+  color: white;
+}
+</style>

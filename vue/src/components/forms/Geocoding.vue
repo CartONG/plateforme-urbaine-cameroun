@@ -4,17 +4,18 @@
     density="compact"
     featureType="city"
     variant="outlined"
-    :placeholder="$t('geocoding.placeholder')"
+    :placeholder="placeholder"
     :no-data-text="$t('geocoding.noData')"
     :items="geocodingItems"
     :clearable="true"
     :item-value="(val) => val"
     :item-title="(val) => val.osmName"
+    v-model="osmData"
     @update:search="(e) => (searchQuery = e)"
     @click:clear="(e) => (searchQuery = '')"
   >
     <template v-slot:prepend-inner>
-      <v-icon icon="mdi-map-marker-outline" color="main-blue" class="opacity-80"></v-icon>
+      <v-icon :icon="icon" color="main-blue" class="opacity-100"></v-icon>
     </template>
     <template v-slot:append-inner>
       <v-fade-transition>
@@ -37,13 +38,34 @@ import GeocodingService from '@/services/map/GeocodingService'
 import { debounce } from '@/services/utils/UtilsService'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import type { GeocodingItem } from '@/models/interfaces/geo/GeocodingItem'
+import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import { i18n } from '@/plugins/i18n'
+
+const osmData = defineModel<OsmData | null>({
+  default: null
+})
 
 const props = withDefaults(
   defineProps<{
     searchType: NominatimSearchType
+    icon?: string
+    geometryDetails?: boolean
+    placeholder?: string
   }>(),
   {
-    searchType: NominatimSearchType.FREE
+    searchType: NominatimSearchType.FREE,
+    icon: 'mdi-map-marker-outline',
+    geometryDetails: false,
+    placeholder: i18n.t('geocoding.placeholder')
+  }
+)
+
+watch(
+  () => osmData.value,
+  async () => {
+    if (osmData.value && props.geometryDetails) {
+      osmData.value = await GeocodingService.getBbox(osmData.value)
+    }
   }
 )
 

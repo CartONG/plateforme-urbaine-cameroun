@@ -67,7 +67,7 @@
             density="compact"
             variant="outlined"
             chips
-            v-model="form.status.value.value as Status"
+            v-model="(form.status.value.value as Status)"
             :items="Object.values(Status)"
             :placeholder="$t('projects.form.fields.status.label')"
             :item-title="(item) => $t('projects.status.' + item)"
@@ -85,7 +85,7 @@
           <v-select
             density="compact"
             variant="outlined"
-            v-model="form.interventionZone.value.value as AdministrativeScope"
+            v-model="(form.interventionZone.value.value as AdministrativeScope)"
             :items="Object.values(AdministrativeScope)"
             :placeholder="$t('projects.form.fields.interventionZone.label')"
             :item-title="(item) => $t('projects.scope.' + item)"
@@ -98,7 +98,7 @@
           :search-type="NominatimSearchType.FREE"
           :osm-type="OsmType.NODE"
           @change="form.osmData.handleChange(form.osmData.value.value)"
-          v-model="form.osmData.value.value"
+          v-model="form.osmData.value.value as OsmData"
         />
 
         <FormSectionTitle :text="$t('projects.form.section.thematics')" />
@@ -262,6 +262,7 @@ import type { Organisation } from '@/models/interfaces/Organisation'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { onInvalidSubmit } from '@/services/forms/FormService'
+import type { OsmData } from '@/models/interfaces/geo/OsmData'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()

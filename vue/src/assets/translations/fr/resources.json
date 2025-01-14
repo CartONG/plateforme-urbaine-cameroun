@@ -35,7 +35,6 @@
         "edit": "Modifier une ressource",
         "validate": "Valider une ressource"
       },
-      "or": "OU",
       "fields": {
         "name": {
           "label": "Nom de la ressource",
