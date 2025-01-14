@@ -63,6 +63,7 @@
             :label="$t('auth.becomeMemberAskRoles.form.telephone')"
             @submit="form.phone.handleChange"
           />
+
           <v-btn
             class="justify-start"
             variant="text"
@@ -110,9 +111,7 @@
               />
             </div>
           </div>
-          <a href="#" class="hide-sm" v-if="!userStore.userHasRole(UserRoles.ADMIN)">{{
-            $t('account.deleteAccount')
-          }}</a>
+          <a href="#" class="hide-sm" v-if="!userStore.userHasRole(UserRoles.ADMIN)">{{ $t('account.deleteAccount') }}</a>
           <v-btn type="submit" color="main-red hide-sm" :loading="isSubmitting" class="w-100">{{
             $t('account.save')
           }}</v-btn>
