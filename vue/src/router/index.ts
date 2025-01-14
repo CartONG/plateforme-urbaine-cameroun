@@ -84,7 +84,7 @@ const router = createRouter({
     {
       path: '/map',
       name: 'map',
-      component: () => import('@/views/map/MapView.vue')
+      component: () => import('@/views/map/MyMapView.vue')
     },
     {
       path: '/myAccount',
@@ -106,7 +106,7 @@ const router = createRouter({
         const adminStore = useAdminStore()
         adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS
         return {
-          name: 'adminMembers'
+          name: 'adminUsers'
         }
       },
       component: () => import('@/views/admin/AdminView.vue'),
@@ -120,8 +120,8 @@ const router = createRouter({
       },
       children: [
         {
-          path: 'membres',
-          name: 'adminMembers',
+          path: 'users',
+          name: 'adminUsers',
           component: AdminMembers
         },
         {

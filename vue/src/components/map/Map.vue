@@ -1,7 +1,6 @@
 <template>
   <div id="map">
     <ResetMapExtentControl ref="reset-map-extent-control" />
-    <ToggleSidebarControl ref="toggle-sidebar-control" />
   </div>
 </template>
 <script setup lang="ts">
@@ -9,7 +8,6 @@ import { onMounted, watch, computed, ref, type Ref, useTemplateRef } from 'vue'
 import maplibregl, { GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
-import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
 
@@ -17,7 +15,6 @@ const applicationStore = useApplicationStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
 const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
-const toggleSidebarControl = useTemplateRef('toggle-sidebar-control')
 const props = withDefaults(
   defineProps<{
     bounds?: maplibregl.LngLatBounds
@@ -32,11 +29,13 @@ const hoveredFeatureId: Ref<string | null> = ref(null)
 const activeFeatureId: Ref<string | null> = ref(null)
 
 onMounted(() => {
+  const apiKey = import.meta.env.VITE_MAPTILER_API_KEY
   map.value = new maplibregl.Map({
     container: 'map',
-    style: 'https://demotiles.maplibre.org/style.json',
+    style: `https://api.maptiler.com/maps/openstreetmap/style.json?key=${apiKey}`,
     center: [0, 0],
-    zoom: 1
+    zoom: 1,
+    attributionControl: false
   })
 
   map.value.dragRotate.disable()
@@ -48,7 +47,7 @@ onMounted(() => {
 
   map.value.addControl(nav, 'top-right')
   map.value.addControl(new IControl(resetMapExtentControl), 'top-right')
-  map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
+  map.value.addControl(new maplibregl.AttributionControl(), 'bottom-left')
   setBBox()
 })
 
@@ -65,8 +64,13 @@ const removeLayer = (layerName: string) => {
 }
 
 const setData = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
-  const source = map.value?.getSource(sourceName) as GeoJSONSource
+  const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
   if (source) source.setData(geojson)
+}
+
+const getData = async (sourceName: string | number) => {
+  const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
+  if (source) return await source.getData()
 }
 
 const addSource = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
@@ -83,6 +87,12 @@ const setLayoutProperty = (layerName: string, property: string, value: any) => {
   }
 }
 
+const setPaintProperty = (layerName: string, property: string, value: any) => {
+  if (map.value?.getLayer(layerName)) {
+    map.value?.setPaintProperty(layerName, property, value)
+  }
+}
+
 const addLayer = async (
   layerName: string,
   options: { layout: maplibregl.LayerSpecification['layout'] }
@@ -92,7 +102,8 @@ const addLayer = async (
     id: layerName,
     type: 'symbol',
     source: layerName,
-    layout: options.layout
+    layout: options.layout,
+    metadata: { isPersistent: true } // used to have persistent layers when switching basemaps
   })
 }
 
@@ -171,7 +182,9 @@ defineExpose({
   removeLayer,
   removeSource,
   setData,
-  setLayoutProperty
+  getData,
+  setLayoutProperty,
+  setPaintProperty
 })
 </script>
 
@@ -246,7 +259,7 @@ defineExpose({
 
   .maplibregl-ctrl-top-left,
   .maplibregl-ctrl-top-right {
-    margin: 3rem 1.5rem;
+    margin: 1.5rem;
     display: flex;
     flex-flow: column nowrap;
     gap: 0.62rem;

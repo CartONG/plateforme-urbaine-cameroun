@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
@@ -67,12 +68,13 @@ class Actor
 {
     use TimestampableEntity;
     use SluggableEntity;
+    use LocalizableEntity;
     use BlameableEntity;
     use ValidateableEntity;
     public const ACTOR_READ_COLLECTION = 'actor:read_collection';
     public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
     public const ACTOR_READ_ITEM = 'actor:read_item';
-    private const ACTOR_WRITE = 'actor:write';
+    public const ACTOR_WRITE = 'actor:write';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]

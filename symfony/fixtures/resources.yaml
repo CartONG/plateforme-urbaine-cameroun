@@ -8,6 +8,7 @@ App\Entity\Resource:
     endAt: '<dateTimeBetween($startAt, $startAt)>'
     thematics: '<numberBetween(1, 3)>x @thematic_*'
     link: https://<domainName()>
+    geoData: '@geoData_<current()>'
     createdBy: '@user_*'
     isValidated: <boolean(70)>
     author: <firstName()> <lastName()>

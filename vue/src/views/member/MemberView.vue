@@ -78,7 +78,7 @@
             </span>
             <span v-else>{{ $t('account.changePassword.message') }}</span>
           </v-btn>
-          <div class="UserAccount__rolesBlock">
+          <div class="UserAccount__rolesBlock" v-if="!userStore.userHasRole(UserRoles.ADMIN)">
             <span>{{ $t('account.roles') }}</span>
             <div
               class="UserAccount__rolesItem"
@@ -111,7 +111,7 @@
               />
             </div>
           </div>
-          <a href="#" class="hide-sm">{{ $t('account.deleteAccount') }}</a>
+          <a href="#" class="hide-sm" v-if="!userStore.userHasRole(UserRoles.ADMIN)">{{ $t('account.deleteAccount') }}</a>
           <v-btn type="submit" color="main-red hide-sm" :loading="isSubmitting" class="w-100">{{
             $t('account.save')
           }}</v-btn>

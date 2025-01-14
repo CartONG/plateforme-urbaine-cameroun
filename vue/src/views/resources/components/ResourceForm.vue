@@ -98,9 +98,7 @@
             @blur="form.link.handleChange"
           />
         </div>
-        <v-divider v-if="!hideFileInput && form.format.value.value">{{
-          $t('resources.form.or')
-        }}</v-divider>
+        <v-divider v-if="!hideFileInput && form.format.value.value">{{ $t('forms.or') }}</v-divider>
         <div class="Form__fieldCtn" v-if="!hideFileInput && form.format.value.value">
           <label class="Form__label">{{ $t('resources.form.fields.file.label') }}</label>
           <FileInput
