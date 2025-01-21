@@ -2,7 +2,7 @@
   <Modal
     :title="actorToEdit ? $t('actors.form.editTitle') : $t('actors.form.createTitle')"
     :show="appStore.showEditContentDialog"
-    @close="actorsStore.actorEdition.active = false"
+    @close="actorsStore.resetActorEditionMode()"
   >
     <template #content>
       <NewSubmission
@@ -204,7 +204,7 @@
       </v-form>
     </template>
     <template #footer-left>
-      <span class="text-action" @click="actorsStore.actorEdition.active = false">{{
+      <span class="text-action" @click="actorsStore.resetActorEditionMode()">{{
         $t('forms.cancel')
       }}</span>
     </template>
@@ -250,7 +250,7 @@ const submitLabel = computed(() => {
   if (actorToEdit) {
     return !actorToEdit.isValidated ? i18n.t('forms.validate') : i18n.t('forms.edit')
   } else {
-    return i18n.t('forms.create')
+    return i18n.t('forms.continue')
   }
 })
 const administrativeScopesItems = actorsStore.actorsAdministrativesScopes

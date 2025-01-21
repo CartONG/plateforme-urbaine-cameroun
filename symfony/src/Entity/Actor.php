@@ -32,7 +32,6 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[UniqueEntity('name')]
 #[ApiResource(
     operations: [
         new GetCollection(
@@ -150,6 +149,11 @@ class Actor
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     #[Assert\Email]
     private ?string $email = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Assert\Length(max: 1000)]
+    private ?string $creatorMessage = null;
 
     /**
      * @var Collection<int, Project>
@@ -396,6 +400,18 @@ class Actor
     public function setEmail(?string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

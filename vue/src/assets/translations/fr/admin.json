@@ -1,17 +1,17 @@
 {
-    "admin": {
-        "title": "Espace d'administration",
-        "panelMembers": "Gérer les utilisateurs",
-        "panelContent": "Gérer le contenu",
-        "panelContentActors": "Acteurs",
-        "panelContentProjects": "Projets",
-        "panelContentResources": "Ressources",
-        "panelComments": "Gérer les commentaires",
-        "member": "Utilisateur | Utilisateurs",
-        "add": "Ajouter",
-        "search": "Rechercher",
-        "form": {
-            "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
-        }
+  "admin": {
+    "title": "Espace d'administration",
+    "panelMembers": "Gérer les utilisateurs",
+    "panelContent": "Gérer le contenu",
+    "panelContentActors": "Acteurs",
+    "panelContentProjects": "Projets",
+    "panelContentResources": "Ressources",
+    "panelComments": "Gérer les commentaires",
+    "member": "Utilisateur | Utilisateurs",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "form": {
+      "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     }
+  }
 }

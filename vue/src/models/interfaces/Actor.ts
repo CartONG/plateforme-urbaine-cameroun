@@ -30,6 +30,7 @@ export interface Actor extends Timestampable, Validateable, Blameable, ThematicI
   website: string
   phone: string
   email: string
+  creatorMessage?: string
   slug: string
 }
 

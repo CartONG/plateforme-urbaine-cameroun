@@ -1,7 +1,7 @@
 YARN = yarn
 
 ## —— Symfony 🎵 ———————————————————————————————————————————————————————————————
-yarn: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about
+yarn: ## Run yarn or pass the parameter "c=" to run a given command, example: make yarn c="add @vee-validate/i18n"
 	@$(eval c ?=)
 	@$(VUE) $(YARN) $(c)
 
