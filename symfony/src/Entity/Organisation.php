@@ -16,10 +16,10 @@ use Symfony\Component\Serializer\Attribute\Groups;
     paginationEnabled: false,
     operations: [
         new GetCollection(
-            parameters: [
-                'contracting' => new QueryParameter(filter: 'organisation.contracting_filter'),
-                'donor' => new QueryParameter(filter: 'organisation.donor_filter'),
-            ],
+            //            parameters: [
+            //                'contracting' => new QueryParameter(filter: 'organisation.contracting_filter'),
+            //                'donor' => new QueryParameter(filter: 'organisation.donor_filter'),
+            //            ],
             normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]
         ),
     ]

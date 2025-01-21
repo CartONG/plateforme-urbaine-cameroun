@@ -67,7 +67,7 @@
             density="compact"
             variant="outlined"
             chips
-            v-model="(form.status.value.value as Status)"
+            v-model="form.status.value.value as Status"
             :items="Object.values(Status)"
             :placeholder="$t('projects.form.fields.status.label')"
             :item-title="(item) => $t('projects.status.' + item)"
@@ -85,7 +85,7 @@
           <v-select
             density="compact"
             variant="outlined"
-            v-model="(form.interventionZone.value.value as AdministrativeScope)"
+            v-model="form.interventionZone.value.value as AdministrativeScope"
             :items="Object.values(AdministrativeScope)"
             :placeholder="$t('projects.form.fields.interventionZone.label')"
             :item-title="(item) => $t('projects.scope.' + item)"
@@ -294,7 +294,7 @@ const submitForm = handleSubmit(
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
     }
-
+    console.log('submitting project', projectSubmission)
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
     emit('submitted', submittedProject)
   },

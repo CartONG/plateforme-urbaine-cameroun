@@ -48,8 +48,11 @@ import { i18n } from '@/plugins/i18n'
 import Dialog from '@/components/global/Dialog.vue'
 import { useActorsStore } from '@/stores/actorsStore'
 import { storeToRefs } from 'pinia'
+import { useProjectStore } from '@/stores/projectStore'
+import { FormType } from '@/models/enums/app/FormType'
 
 const actorsStore = useActorsStore()
+const projetStore = useProjectStore()
 const applicationStore = useApplicationStore()
 const { showEditMessageDialog: showEditMessageType } = storeToRefs(applicationStore)
 
@@ -67,7 +70,22 @@ const form = {
   confidentiality: useField('confidentiality', undefined, { validateOnValueUpdate: false })
 }
 
-const onSubmit = handleSubmit(async (values) => {
+const onSubmit = handleSubmit(
+  async (values: { confidentiality: boolean; message?: string | undefined }) => {
+    switch (showEditMessageType.value) {
+      case ItemType.ACTOR:
+        await saveActor(values)
+        break
+      case ItemType.PROJECT:
+        await saveProject(values)
+        break
+      case ItemType.RESOURCE:
+        break
+    }
+  }
+)
+
+async function saveActor(values: { confidentiality: boolean; message?: string | undefined }) {
   if (actorsStore.actorForSubmission) {
     actorsStore.actorForSubmission.creatorMessage = values.message
     await actorsStore.saveActor(
@@ -76,7 +94,15 @@ const onSubmit = handleSubmit(async (values) => {
     )
     applicationStore.showEditThanksDialog = true
   }
-})
+}
+
+async function saveProject(values: { confidentiality: boolean; message?: string | undefined }) {
+  if (projetStore.projectForSubmission) {
+    projetStore.projectForSubmission.creatorMessage = values.message
+    await projetStore.saveProject(projetStore.projectForSubmission, FormType.CREATE)
+    applicationStore.showEditThanksDialog = true
+  }
+}
 
 const getType = () => {
   switch (showEditMessageType.value) {

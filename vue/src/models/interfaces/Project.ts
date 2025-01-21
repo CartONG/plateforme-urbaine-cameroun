@@ -35,6 +35,7 @@ export interface Project extends Timestampable, Validateable, Blameable, Localiz
   donors: Organisation[]
   contractingOrganisation: Organisation
   actor: Partial<Actor>
+  creatorMessage?: string
 }
 
 export interface ProjectSubmission
