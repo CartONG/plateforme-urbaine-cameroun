@@ -15,13 +15,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     paginationEnabled: false,
     operations: [
-        new GetCollection(
-            parameters: [
-                'contracting' => new QueryParameter(filter: 'organisation.contracting_filter'),
-                'donor' => new QueryParameter(filter: 'organisation.donor_filter'),
-            ],
-            normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]
-        ),
+        new GetCollection(normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]),
     ]
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['donor', 'contracting'])]
