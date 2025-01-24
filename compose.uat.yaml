@@ -10,6 +10,9 @@ services:
   nominatim:
     networks:
       - puc-network
+  qgis:
+    networks:
+      - puc-network
 
 networks:
   puc-network:

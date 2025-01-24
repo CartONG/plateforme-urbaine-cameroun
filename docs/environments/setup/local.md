@@ -1,4 +1,4 @@
-# Local environment
+# 🚀 Setup - Local environment
 
 Here is what you need to setup your local environment.
 ## Requirements
