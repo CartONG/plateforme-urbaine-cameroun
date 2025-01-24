@@ -6,6 +6,7 @@
           v-if="type === FormType.VALIDATE && project"
           :created-by="project.createdBy"
           :created-at="project.createdAt"
+          :message="project.creatorMessage"
         />
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('projects.form.fields.name.label') }}</label>
@@ -234,9 +235,9 @@
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
     </template>
     <template #footer-right>
-      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">{{
-        $t('forms.' + type)
-      }}</v-btn>
+      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
+        {{ submitLabel }}
+      </v-btn>
     </template>
   </Modal>
 </template>
@@ -264,16 +265,28 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { onInvalidSubmit } from '@/services/forms/FormService'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import { useUserStore } from '@/stores/userStore'
+import { useI18n } from 'vue-i18n'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
 const thematicsStore = useThematicStore()
+const userStore = useUserStore()
+
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
   project: Project | null
   isShown: boolean
 }>()
+
+const submitLabel = computed(() => {
+  if (userStore.userIsActorEditor() && props.type === FormType.CREATE) {
+    return t('forms.continue')
+  }
+  return t('forms.' + props.type)
+})
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)

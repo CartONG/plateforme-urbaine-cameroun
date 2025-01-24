@@ -1,13 +1,18 @@
 <template>
   <div class="NewSubmission">
     <img src="@/assets/images/actorToValidate.svg" alt="" />
-    <span class="ml-2">{{
-      $t('admin.form.newSubmission', {
-        fullName: createdBy.fullName,
-        date: localizeDate(createdAt, { year: 'numeric', month: 'long', day: 'numeric' }),
-        time: localizeTime(createdAt, { hour: 'numeric', minute: 'numeric' })
-      })
-    }}</span>
+    <div class="ml-2">
+      {{
+        $t('admin.form.newSubmission', {
+          fullName: createdBy.fullName,
+          date: localizeDate(createdAt, { year: 'numeric', month: 'long', day: 'numeric' }),
+          time: localizeTime(createdAt, { hour: 'numeric', minute: 'numeric' })
+        })
+      }}
+      <p class="mt-2" v-if="message">
+        {{ message }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -18,6 +23,7 @@ import { localizeDate, localizeTime } from '@/services/utils/UtilsService'
 defineProps<{
   createdBy: User
   createdAt: Date
+  message?: string
 }>()
 </script>
 

@@ -19,9 +19,9 @@
           :label="$t('itemType.new.your_message.confidentiality_policy')"
         />
 
-        <v-btn color="main-red" type="submit">{{
-          $t('itemType.new.your_message.form.submit')
-        }}</v-btn>
+        <v-btn color="main-red" type="submit" :loading="isLoading">
+          {{ $t('itemType.new.your_message.form.submit') }}
+        </v-btn>
       </Form>
     </template>
     <template #bottom-content>
@@ -51,12 +51,15 @@ import { storeToRefs } from 'pinia'
 import { useProjectStore } from '@/stores/projectStore'
 import { FormType } from '@/models/enums/app/FormType'
 import { useResourceStore } from '@/stores/resourceStore'
+import { ref } from 'vue'
 
 const actorsStore = useActorsStore()
 const projetStore = useProjectStore()
 const resourceStore = useResourceStore()
 const applicationStore = useApplicationStore()
 const { showEditMessageDialog: showEditMessageType } = storeToRefs(applicationStore)
+
+const isLoading = ref(false)
 
 const schema = z.object({
   message: z.string().max(1000).optional(),
@@ -74,16 +77,23 @@ const form = {
 
 const onSubmit = handleSubmit(
   async (values: { confidentiality: boolean; message?: string | undefined }) => {
-    switch (showEditMessageType.value) {
-      case ItemType.ACTOR:
-        await saveActor(values)
-        break
-      case ItemType.PROJECT:
-        await saveProject(values)
-        break
-      case ItemType.RESOURCE:
-        await saveResource(values)
-        break
+    try {
+      isLoading.value = true
+      switch (showEditMessageType.value) {
+        case ItemType.ACTOR:
+          await saveActor(values)
+          break
+        case ItemType.PROJECT:
+          await saveProject(values)
+          break
+        case ItemType.RESOURCE:
+          await saveResource(values)
+          break
+      }
+      applicationStore.showEditMessageDialog = false
+      applicationStore.showEditThanksDialog = true
+    } finally {
+      isLoading.value = false
     }
   }
 )
@@ -95,7 +105,6 @@ async function saveActor(values: { confidentiality: boolean; message?: string | 
       actorsStore.actorForSubmission,
       actorsStore.actorEdition.actor !== null
     )
-    applicationStore.showEditThanksDialog = true
   }
 }
 
@@ -103,7 +112,6 @@ async function saveProject(values: { confidentiality: boolean; message?: string 
   if (projetStore.projectForSubmission) {
     projetStore.projectForSubmission.creatorMessage = values.message
     await projetStore.saveProject(projetStore.projectForSubmission, FormType.CREATE)
-    applicationStore.showEditThanksDialog = true
   }
 }
 
@@ -111,7 +119,6 @@ async function saveResource(values: { confidentiality: boolean; message?: string
   if (resourceStore.resourceForSubmission) {
     resourceStore.resourceForSubmission.creatorMessage = values.message
     await resourceStore.saveResource(resourceStore.resourceForSubmission, FormType.CREATE)
-    applicationStore.showEditThanksDialog = true
   }
 }
 

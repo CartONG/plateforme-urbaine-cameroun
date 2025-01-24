@@ -9,6 +9,7 @@
         v-if="actorToEdit && !actorToEdit.isValidated"
         :created-by="actorToEdit.createdBy"
         :created-at="actorToEdit.createdAt"
+        :message="actorToEdit.creatorMessage"
       />
       <v-form @submit.prevent="submitForm" id="actor-form" class="Form Form--actor">
         <!-- General infos -->

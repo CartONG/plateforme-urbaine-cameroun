@@ -429,6 +429,18 @@ class Project
         return $this;
     }
 
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Organisation>
      */

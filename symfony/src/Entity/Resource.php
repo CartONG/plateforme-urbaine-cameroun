@@ -189,6 +189,18 @@ class Resource
         return $this;
     }
 
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
+
+        return $this;
+    }
+
     public function getLink(): ?string
     {
         return $this->link;
