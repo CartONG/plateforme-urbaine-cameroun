@@ -30,7 +30,14 @@ export default defineConfig({
         collapsed: false,
         text: 'Environments',
         items: [
-          { text: 'Local environment', link: '/environments/local' },
+          {
+            text: 'Setup',
+            collapsed: true,
+            items: [
+              { text: 'Setup Local', link: '/environments/setup/local' },
+              { text: 'Setup Production', link: '/environments/setup/production' },
+            ]
+          },
           { text: 'Remote environments', link: '/environments/remote' },
           { text: 'Deployement', link: '/environments/deployement' },
           { text: 'Continuous Integration', link: '/environments/ci' },
@@ -47,6 +54,7 @@ export default defineConfig({
         collapsed: false,
         text: 'Development',
         items: [
+          { text: 'Dev commands', link: '/development/commands' },
           { text: 'Request the API', link: '/development/request-the-api' },
           { text: 'Components', link: '/development/components' },
         ]
