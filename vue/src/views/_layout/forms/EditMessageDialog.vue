@@ -50,9 +50,11 @@ import { useActorsStore } from '@/stores/actorsStore'
 import { storeToRefs } from 'pinia'
 import { useProjectStore } from '@/stores/projectStore'
 import { FormType } from '@/models/enums/app/FormType'
+import { useResourceStore } from '@/stores/resourceStore'
 
 const actorsStore = useActorsStore()
 const projetStore = useProjectStore()
+const resourceStore = useResourceStore()
 const applicationStore = useApplicationStore()
 const { showEditMessageDialog: showEditMessageType } = storeToRefs(applicationStore)
 
@@ -80,6 +82,7 @@ const onSubmit = handleSubmit(
         await saveProject(values)
         break
       case ItemType.RESOURCE:
+        await saveResource(values)
         break
     }
   }
@@ -100,6 +103,14 @@ async function saveProject(values: { confidentiality: boolean; message?: string 
   if (projetStore.projectForSubmission) {
     projetStore.projectForSubmission.creatorMessage = values.message
     await projetStore.saveProject(projetStore.projectForSubmission, FormType.CREATE)
+    applicationStore.showEditThanksDialog = true
+  }
+}
+
+async function saveResource(values: { confidentiality: boolean; message?: string | undefined }) {
+  if (resourceStore.resourceForSubmission) {
+    resourceStore.resourceForSubmission.creatorMessage = values.message
+    await resourceStore.saveResource(resourceStore.resourceForSubmission, FormType.CREATE)
     applicationStore.showEditThanksDialog = true
   }
 }

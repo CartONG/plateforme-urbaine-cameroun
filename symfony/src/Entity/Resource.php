@@ -92,6 +92,11 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    #[Assert\Length(max: 1000)]
+    private ?string $creatorMessage = null;
+
     /**
      * @var Collection<int, Thematic>
      */

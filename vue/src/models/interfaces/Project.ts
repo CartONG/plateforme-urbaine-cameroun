@@ -2,7 +2,6 @@ import type { Actor } from '@/models/interfaces/Actor'
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Status } from '@/models/enums/contents/Status'
-import type { User } from '@/models/interfaces/auth/User'
 import type { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { iri } from './SymfonyRelation'
 import type { LocalizableSubmission } from '@/models/interfaces/common/LocalizableSubmission'
@@ -16,7 +15,6 @@ export interface Project extends Timestampable, Validateable, Blameable, Localiz
   id: string
   name: string
   slug: string
-  createdBy: User
   calendar: string
   deliverables: string
   status: Status

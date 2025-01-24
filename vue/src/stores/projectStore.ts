@@ -190,7 +190,6 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     if (type !== FormType.CREATE || useUserStore().userIsAdmin()) {
       return await saveProject(project, type)
     }
-    console.log('submitProject', project, type)
     projectForSubmission.value = project
     isProjectFormShown.value = false
     useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE

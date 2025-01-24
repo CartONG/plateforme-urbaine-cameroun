@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250121153001 extends AbstractMigration
+final class Version20250124083716 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,15 +20,15 @@ final class Version20250121153001 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE actor ADD creator_message TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE project ADD creator_message TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE resource ADD creator_message TEXT DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE actor DROP creator_message');
         $this->addSql('ALTER TABLE project DROP creator_message');
+        $this->addSql('ALTER TABLE resource DROP creator_message');
     }
 }
