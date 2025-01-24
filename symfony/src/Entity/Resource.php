@@ -15,6 +15,7 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ResourceFormat;
 use App\Enum\ResourceType;
+use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
@@ -46,7 +47,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Post(
-            security: 'is_granted("ROLE_ADMIN")',
+            security: UserRoles::IS_GRANTED_EDITOR_RESSOURCES,
             processor: ResourceProcessor::class
         ),
         new Patch(
