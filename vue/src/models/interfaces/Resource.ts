@@ -7,13 +7,15 @@ import type { LocalizableSubmission } from '@/models/interfaces/common/Localizab
 import type { Localizable } from '@/models/interfaces/common/Localizable'
 import type { MediaObject } from '@/models/interfaces/MediaObject'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
+import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 
 export interface Resource
   extends Timestampable,
     Validateable,
     Blameable,
     Localizable,
-    ThematicItem {
+    ThematicItem,
+    SymfonyRelation {
   id: string
   name: string
   description: string

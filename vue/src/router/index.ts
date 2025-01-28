@@ -150,6 +150,12 @@ const router = createRouter({
           ]
         },
         {
+          name: 'adminHighlights',
+          path: 'highlights',
+          component: () =>
+            import('@/views/admin/components/admin-highlights/AdminHighlightsPanel.vue')
+        },
+        {
           name: 'adminComments',
           path: 'comments',
           component: AdminComments

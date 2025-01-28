@@ -25,8 +25,9 @@
           "description": "Localisez les projets d’infrastructure et de développement urbain pour faciliter la collaboration et la coordination au Cameroun.",
           "label": "Bénéficiez d’une vue d’ensemble des projets et des acteurs"
         },
-        "news": {
-          "title": "À la une"
+        "highlights": {
+          "title": "À la une",
+          "action": "Toutes les actualités"
         },
         "simpleMaps": {
           "description": "Mesurez avec précision, dessinez des polygones, des lignes et des points directement sur la carte.",

@@ -86,7 +86,7 @@ class Project
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, Actor::ACTOR_READ_ITEM])]
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]

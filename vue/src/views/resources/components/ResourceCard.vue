@@ -1,5 +1,6 @@
 <template>
   <GenericInfoCard
+    v-if="resource"
     :id="resource.id"
     :href="ResourceService.getLink(resource)"
     :title="resource.name"

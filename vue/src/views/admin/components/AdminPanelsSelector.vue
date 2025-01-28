@@ -44,6 +44,22 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
       <v-expansion-panel
+        :value="AdministrationPanels.HIGHLIGHTS"
+        :class="{
+          Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.HIGHLIGHTS
+        }"
+        class="text-main-blue"
+      >
+        <router-link :to="{ name: 'adminHighlights' }">
+          <v-expansion-panel-title>
+            {{ $t('admin.panelHighlightedItems') }}
+            <template v-slot:actions>
+              <v-icon color="main-blue" icon="mdi-chevron-right"></v-icon>
+            </template>
+          </v-expansion-panel-title>
+        </router-link>
+      </v-expansion-panel>
+      <v-expansion-panel
         :readonly="true"
         :value="AdministrationPanels.COMMENTS"
         @click="adminStore.selectedAdminPanel = AdministrationPanels.COMMENTS"
@@ -103,6 +119,11 @@ const resourcesToValidate = computed(
 .Admin {
   &__panelSelector_container {
     width: 100%;
+
+    a {
+      color: rgb(var(--v-theme-main-blue));
+      text-decoration: none;
+    }
   }
   &__selectedPanel {
     border-left: 4px solid rgb(var(--v-theme-main-blue));

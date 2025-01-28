@@ -17,12 +17,12 @@ class ProjectRepository extends ServiceEntityRepository
         parent::__construct($registry, Project::class);
     }
 
-    public function findLatest(): array
+    public function findHighlightedItems(array $ids): array
     {
         return $this->createQueryBuilder('p')
-            ->select("p.id, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '".ItemType::PROJECT->value."' as type")
-            ->orderBy('p.updatedAt', 'DESC')
-            ->setMaxResults(3)
+            ->select("p.id, p.id as itemId, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '".ItemType::PROJECT->value."' as itemType")
+            ->where('p.id IN (:ids)')
+            ->setParameter('ids', $ids)
             ->getQuery()
             ->getResult()
         ;

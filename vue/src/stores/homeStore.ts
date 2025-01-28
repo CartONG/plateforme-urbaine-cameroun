@@ -1,28 +1,33 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
-import { ref, type Ref } from 'vue'
-import type { News } from '@/models/interfaces/News'
+import { computed, ref, type Ref } from 'vue'
 import type { Kpi } from '@/models/interfaces/Kpi'
-import { NewsService } from '@/services/news/NewsService'
 import { KpiService } from '@/services/kpi/KpiService'
+import { HighlightedItemService } from '@/services/highlight/HighlightedItemService'
+import type { HighlightedItem } from '@/models/interfaces/HighlightedItem'
 
 export const useHomeStore = defineStore(StoresList.HOME, () => {
-  const news: Ref<News[]> = ref([])
+  const mainHighlights: Ref<HighlightedItem[]> = ref([])
   const globalKpis: Ref<Kpi[]> = ref([])
-  const getNews = async () => {
-    if (news.value.length > 0) return
-    news.value = await NewsService.getLatest()
-  }
 
   const getGlobalKpis = async () => {
     if (globalKpis.value.length > 0) return
     globalKpis.value = await KpiService.getGlobal()
   }
 
+  const getMainHighlights = async (): Promise<void> => {
+    mainHighlights.value = await HighlightedItemService.getMainHighlights()
+  }
+
+  const orderedMainHighlights = computed(() => {
+    return mainHighlights.value.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+  })
+
   return {
-    news,
+    mainHighlights,
     globalKpis,
-    getNews,
-    getGlobalKpis
+    orderedMainHighlights,
+    getGlobalKpis,
+    getMainHighlights
   }
 })

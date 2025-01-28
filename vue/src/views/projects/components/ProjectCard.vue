@@ -30,6 +30,7 @@
     </template>
     <template #footer-left>
       <ShareButton />
+      <HighlightButton :item-id="project.id" />
       <LikeButton :id="project.id" />
     </template>
     <template #footer-right>
@@ -45,6 +46,7 @@ import ChipList from '@/components/content/ChipList.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
 import { localizeDate } from '@/services/utils/UtilsService'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 
 defineProps<{
   project: Project | null

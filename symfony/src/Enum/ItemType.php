@@ -6,4 +6,5 @@ enum ItemType: string
 {
     case PROJECT = 'project';
     case ACTOR = 'actor';
+    case RESOURCE = 'resource';
 }

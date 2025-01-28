@@ -190,14 +190,21 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     if (type === FormType.CREATE) {
       projects.value.push(submittedProject)
     } else if (type === FormType.EDIT || type === FormType.VALIDATE) {
-      projects.value.forEach((project, key) => {
-        if (project.id === submittedProject.id) {
-          projects.value[key] = submittedProject
-        }
-      })
+      updateProject(submittedProject)
     }
     addNotification(i18n.t(`notifications.project.${type}`), NotificationType.SUCCESS)
     return submittedProject
+  }
+
+  const updateProject = (updatedProject: Project) => {
+    projects.value.forEach((project, key) => {
+      if (project.id === updatedProject.id) {
+        projects.value[key] = updatedProject
+      }
+    })
+    if (project.value && project.value.id === updatedProject.id) {
+      project.value = updatedProject
+    }
   }
 
   const deleteProject = async (project: Project) => {
@@ -245,6 +252,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     loadProjectBySlug,
     loadSimilarProjects,
     submitProject,
+    updateProject,
     deleteProject
   }
 })

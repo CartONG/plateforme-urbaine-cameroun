@@ -135,9 +135,9 @@
         }
     },
     "itemType": {
-        "project": "Projet",
-        "actor": "Acteur",
-        "resource": "Ressource"
+        "Project": "Projet",
+        "Actor": "Acteur",
+        "Resource": "Ressource"
     },
     "beneficiaryType": {
         "population": "Population",

@@ -1,21 +1,25 @@
 <template>
   <div class="AdminTopBar">
     <div class="AdminTopBar--left">
-      <SectionTitle :title="title" />
-      <v-icon icon="mdi mdi-magnify" class="ml-5" color="main-blue"></v-icon>
+      <SectionTitle :title="title" v-if="title" />
       <v-text-field
+        v-if="searchKey"
         clearable
         density="compact"
         :label="$t('admin.search')"
         variant="solo"
         hide-details
         @update:modelValue="searchQuery = $event"
-      ></v-text-field>
+      >
+        <template v-slot:prepend-inner>
+          <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+        </template>
+      </v-text-field>
     </div>
     <div class="AdminTopBar--right">
-      <v-btn color="white" class="mr-3">
-        <span class="font-weight-regular">{{ $t('placeholders.sortBy') }}</span
-        ><v-icon icon="mdi mdi-menu-down" class="ml-1"></v-icon>
+      <v-btn color="white" class="mr-3" v-if="sortingListItems">
+        <span class="font-weight-regular">{{ $t('placeholders.sortBy') }}</span>
+        <v-icon icon="mdi mdi-menu-down" class="ml-1"></v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item
@@ -28,7 +32,9 @@
           </v-list>
         </v-menu>
       </v-btn>
-      <v-btn @click="createFunction()" color="main-red">{{ $t('admin.add') }}</v-btn>
+      <v-btn v-if="createFunction" @click="createFunction()" color="main-red">{{
+        $t('admin.add')
+      }}</v-btn>
     </div>
   </div>
 </template>
@@ -40,13 +46,13 @@ import type { User } from '@sentry/vue'
 import { computed, ref, watch } from 'vue'
 import SectionTitle from '@/components/text-elements/SectionTitle.vue'
 
-type AdminPages = 'Actors' | 'Projects' | 'Members' | 'Resources'
+type AdminPages = 'Actors' | 'Projects' | 'Members' | 'Resources' | 'Highlights'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
-  sortingListItems: { sortingKey: string; text: string }[]
-  searchKey: string
-  createFunction: () => void
+  sortingListItems?: { sortingKey: string; text: string }[]
+  searchKey?: string
+  createFunction?: () => void
 }>()
 const emit = defineEmits(['updateSortingKey', 'updateSearchQuery'])
 const sortingKey = ref('isValidated')
@@ -65,8 +71,9 @@ const title = computed(() => {
     case 'Resources':
       return `${props.items.length} ${i18n.t('resources.resources', props.items.length)}`
     case 'Actors':
-    default:
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`
+    default:
+      return null
   }
 })
 

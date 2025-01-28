@@ -91,8 +91,8 @@ const initSubLayers = () => {
 }
 
 const setPlatformDataLayers = async () => {
-  Object.values(ItemType).forEach((itemType) => {
-    setPlatformDataLayer(itemType)
+  Object.values(ItemType).forEach(async (itemType) => {
+    await setPlatformDataLayer(itemType)
   })
 }
 

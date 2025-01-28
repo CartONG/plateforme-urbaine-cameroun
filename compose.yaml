@@ -46,6 +46,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - qgis_projects:/app/public/qgis
 
   docs:
     build:
@@ -108,9 +109,10 @@ services:
     volumes:
      # Data should be mount RO when working
      # with GeoPackages and more than one QGIS container
-      - ./docker/qgis/data:/io/data:ro
+      # - ./docker/qgis/data:/io/data:ro
       - ./docker/qgis/plugins:/io/plugins
       - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
+      - qgis_projects:/io/data:ro
       # - ./docker/qgis/fonts:/usr/share/fonts # Causing nginx 404 issues
       # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
     restart: on-failure
@@ -122,3 +124,9 @@ volumes:
   docs_node_modules:
   database_data:
   nominatim-data:
+  qgis_projects:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./docker/qgis/data
