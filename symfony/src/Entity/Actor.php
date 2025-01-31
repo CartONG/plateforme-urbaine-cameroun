@@ -20,7 +20,6 @@ use App\Model\Enums\UserRoles;
 use App\Repository\ActorRepository;
 use App\Security\Voter\ActorVoter;
 use App\Services\State\Processor\ActorProcessor;
-use App\Services\State\Provider\ActorProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -34,7 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
-            provider: ActorProvider::class,
             normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION]
         ),
         new GetCollection(

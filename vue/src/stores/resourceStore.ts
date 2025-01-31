@@ -52,7 +52,7 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
       type === FormType.CREATE
         ? await ResourceService.post(resource)
         : await ResourceService.patch(resource)
-    if (type === FormType.CREATE) {
+    if (type === FormType.CREATE && useUserStore().userIsAdmin()) {
       resources.value.push(submittedResource)
     } else if (type === FormType.EDIT || type === FormType.VALIDATE) {
       resources.value.forEach((resource, key) => {

@@ -201,7 +201,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       type === FormType.CREATE
         ? await ProjectService.post(project)
         : await ProjectService.patch(project)
-    if (type === FormType.CREATE) {
+    if (type === FormType.CREATE && useUserStore().userIsAdmin()) {
       projects.value.push(submittedProject)
     } else if (type === FormType.EDIT || type === FormType.VALIDATE) {
       projects.value.forEach((project, key) => {

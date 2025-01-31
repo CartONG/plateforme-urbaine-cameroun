@@ -308,7 +308,6 @@ const submitForm = handleSubmit(
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
     }
-    console.log('submitting project', projectSubmission)
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
     emit('submitted', submittedProject)
   },
