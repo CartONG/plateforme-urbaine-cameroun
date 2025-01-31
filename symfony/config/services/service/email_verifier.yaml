@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Services\Service\EmailVerifier\:
+    resource: '../../../src/Services/Service/EmailVerifier/'
+
+  App\Services\Service\EmailVerifier\EmailVerifierSignature:
+    arguments:
+      $lifetime: '%email_verifier.lifetime%'
+      $userSignatureProperties: ['id', 'email']
+      $secret: '%env(APP_SECRET)%'
+

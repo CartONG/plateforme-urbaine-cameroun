@@ -16,6 +16,10 @@
         "contentPanel": "Contenu",
         "commentPanel": "Commentaires"
     },
+    "dialog": {
+      "close": "Fermer",
+      "submit": "Envoyer"
+    },
     "header": {
         "title": "Plateforme",
         "title2": "Urbaine",
