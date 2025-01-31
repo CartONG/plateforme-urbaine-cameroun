@@ -65,6 +65,7 @@ const fileSize = computed(() => {
     if (fileSize < 1000000) return `${Math.round(+fileSize / 1024).toFixed(2)}KB`
     return `${(Math.round(+fileSize / 1024) / 1000).toFixed(2)}MB`
   }
+  return ''
 })
 
 const uploader = ref()

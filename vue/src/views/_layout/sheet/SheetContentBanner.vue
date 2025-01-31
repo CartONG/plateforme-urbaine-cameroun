@@ -5,7 +5,7 @@
         <div class="SheetContentBanner__actionsBar mt-1">
           <div class="SheetContentBanner__shareBar">
             <slot name="custom-actions"></slot>
-            <ShareButton />
+            <ShareButton :additionnal-path="slug" />
             <LikeButton :id="id" />
             <v-btn
               variant="elevated"
@@ -45,6 +45,7 @@ import SheetContactActions from './SheetContactActions.vue'
 
 defineProps<{
   id: string
+  slug: string
   title: string
   subtitle: string
   email: string

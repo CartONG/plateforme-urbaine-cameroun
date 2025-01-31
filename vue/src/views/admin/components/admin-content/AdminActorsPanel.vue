@@ -18,7 +18,7 @@
       :column-widths="['15%', '40%', '30%', '15%']"
     >
       <template #editContentCell="{ item }">
-        <template v-if="!item.isValidated">
+        <template v-if="!(item as Actor).isValidated">
           <v-btn
             size="small"
             icon="mdi-arrow-right"

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
@@ -117,7 +116,6 @@ class Resource
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[ApiProperty(types: ['https://schema.org/file'])]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?MediaObject $file = null;
 

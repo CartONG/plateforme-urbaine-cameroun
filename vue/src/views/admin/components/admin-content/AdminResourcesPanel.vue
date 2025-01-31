@@ -16,7 +16,7 @@
       :column-widths="['auto', '10%', '10%', '15%', '15%']"
     >
       <template #editContentCell="{ item }">
-        <template v-if="!item.isValidated">
+        <template v-if="!(item as Resource).isValidated">
           <v-btn
             size="small"
             icon="mdi-arrow-right"

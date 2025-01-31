@@ -26,6 +26,7 @@
           @click="isExpanded = !isExpanded"
         />
         <v-menu
+          v-if="withActions"
           location="bottom"
           @update:modelValue="isLayerOpacityShown = mainLayer?.opacity && mainLayer?.opacity < 100"
         >
@@ -78,7 +79,6 @@
       <div class="MyMapLayerPicker__listBlockWrapper">
         <v-checkbox
           v-for="(subLayer, key) in subLayers"
-          :label="subLayer.name"
           v-model="subLayer.isShown"
           @update:model-value="changeSubLayer"
           color="main-blue"
@@ -86,24 +86,46 @@
           density="compact"
           class="text-body-2"
           :key="key"
-        ></v-checkbox>
+        >
+          <template v-slot:label>
+            <div class="MyMapLayerPicker__iconCtn">
+              <img :src="subLayer.icon" :alt="subLayer.name" v-if="sublayerIcon && subLayer.icon" />
+              <span class="text-capitalize" :class="{ 'ml-1': sublayerIcon && subLayer.icon }">{{
+                subLayer.name
+              }}</span>
+            </div>
+          </template>
+        </v-checkbox>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type Layer from '@/models/interfaces/map/Layer'
+import type { Layer } from '@/models/interfaces/map/Layer'
 import { debounce, downloadJson } from '@/services/utils/UtilsService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, ref, watch, type ModelRef } from 'vue'
 import MyMapLayerOpacityPicker from '@/views/map/components/MyMapLayerOpacityPicker.vue'
+
 const isExpanded = ref(false)
 const isLayerOpacityShown = ref(false)
 const mainLayer: ModelRef<Layer | undefined> = defineModel('mainLayer')
 const subLayers: ModelRef<Layer[] | undefined> = defineModel('subLayers')
 const myMapStore = useMyMapStore()
 const emits = defineEmits(['update'])
+
+withDefaults(
+  defineProps<{
+    sublayerIcon?: boolean
+    withActions?: boolean
+  }>(),
+  {
+    sublayerIcon: false,
+    withActions: true
+  }
+)
+
 const isIndeterminate = computed(() => {
   if (subLayers.value == undefined) return false
   return disabledLayers.value.length !== 0 && disabledLayers.value.length !== subLayers.value.length
@@ -147,6 +169,7 @@ const changeSubLayer = () => {
 }
 
 const editAllSubLayers = (show = true) => {
+  if (myMapStore.deserializedMapState) return
   if (subLayers.value === undefined) return
   subLayers.value.forEach((subLayer, key) => {
     if (subLayers.value) {
@@ -171,6 +194,7 @@ const downloadSourceData = async () => {
 .MyMapLayerPicker {
   display: flex;
   flex-flow: column nowrap;
+  width: 100%;
   .MyMapLayerPicker__parentBlock {
     display: flex;
     flex-flow: row nowrap;
@@ -191,7 +215,7 @@ const downloadSourceData = async () => {
       margin: 0 0.25rem;
       flex: 1 0 auto;
       img {
-        max-width: 2.25rem;
+        max-width: 1.8rem;
       }
       span {
         color: rgb(var(--v-theme-main-blue));
@@ -207,6 +231,15 @@ const downloadSourceData = async () => {
       .MyMapLayerPicker__additionnalMenu {
         margin-right: -0.375rem;
       }
+    }
+  }
+
+  .MyMapLayerPicker__iconCtn {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    img {
+      width: 1rem;
     }
   }
 

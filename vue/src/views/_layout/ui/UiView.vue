@@ -20,7 +20,7 @@
           <span class="InfoCard__title">Title</span>
         </template>
         <template #footer-left>
-          <ShareButton :additionnal-path="'dededed'" />
+          <ShareButton :additionnal-path="'A_shared_link'" />
         </template>
         <template #footer-right>
           <v-icon
@@ -37,7 +37,7 @@
           <span class="InfoCard__title">Title</span>
         </template>
         <template #footer-left>
-          <ShareButton :additionnal-path="'dededed'" />
+          <ShareButton :additionnal-path="'A_shared_link'" />
         </template>
         <template #footer-right>
           <v-icon

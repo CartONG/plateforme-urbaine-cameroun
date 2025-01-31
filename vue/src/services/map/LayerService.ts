@@ -1,15 +1,15 @@
-import type Layer from '@/models/interfaces/map/Layer'
+import type { Layer } from '@/models/interfaces/map/Layer'
 
 export default class LayerService {
-  static initLayer(layer: Layer): Layer {
+  static initLayer(layer: Layer, isShown = true): Layer {
     return {
       ...layer,
-      isShown: true,
+      isShown: isShown,
       opacity: 100
     }
   }
 
   static initSubLayer(data: any[]): Layer[] {
-    return data.map((item) => this.initLayer({ id: item.id, name: item.name }))
+    return data.map((item) => this.initLayer({ id: item.id, name: item.name }, item.isShown))
   }
 }

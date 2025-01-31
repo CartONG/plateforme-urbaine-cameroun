@@ -10,6 +10,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
+import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
 
 const applicationStore = useApplicationStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
@@ -49,6 +50,19 @@ onMounted(() => {
   map.value.addControl(new IControl(resetMapExtentControl), 'top-right')
   map.value.addControl(new maplibregl.AttributionControl(), 'bottom-left')
   setBBox()
+  map.value.on('load', () => {
+    addSource('cameroonMask', cameroonMask as GeoJSON.GeoJSON)
+    map.value?.addLayer({
+      id: 'cameroonMask',
+      type: 'fill',
+      source: 'cameroonMask',
+      paint: {
+        'fill-color': '#000000',
+        'fill-opacity': 0.7
+      },
+      metadata: { isPersistent: true }
+    })
+  })
 })
 
 const removeSource = (sourceName: string) => {
@@ -258,6 +272,7 @@ defineExpose({
   height: 100%;
 
   .maplibregl-ctrl-top-left,
+  .maplibregl-ctrl-bottom-right,
   .maplibregl-ctrl-top-right {
     margin: 1.5rem;
     display: flex;

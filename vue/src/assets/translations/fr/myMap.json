@@ -4,7 +4,9 @@
       "share": "Partager",
       "search": {
         "placeholder": "Rechercher un lieu ou une donnée"
-      }
+      },
+      "urlTooLong": "La carte ne peut pas être partagée en l'état. Veuillez réduire le nombre de couches.",
+      "shareEmailBody": "Cliquez sur le lien ci-dessous pour voir la carte. \n{url}"
     },
     "components": {
       "opacity": "Transparence"
@@ -32,6 +34,15 @@
           "resource": "Ressources"
         }
       }
+    },
+    "atlases": {
+      "thematicData": "Données thématiques",
+      "predefinedData": "Cartes prédéfinies",
+      "data": "Donnée | Données",
+      "map": "Carte | Cartes"
+    },
+    "legend": {
+      "title": "Légende"
     }
   }
 }

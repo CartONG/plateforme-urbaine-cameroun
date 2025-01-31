@@ -2,6 +2,7 @@
   <div class="MyMap">
     <Map class="MyMap__map" ref="my-map" />
     <BasemapPicker ref="basemap-picker" v-model="basemap" />
+    <MyMapLegend ref="map-legend" />
     <ToggleSidebarControl
       v-model="myMapStore.isLeftSidebarShown"
       :inversed-direction="true"
@@ -19,6 +20,7 @@
 
 <script setup lang="ts">
 import BasemapPicker from '@/components/map/controls/BasemapPicker.vue'
+import MyMapLegend from '@/views/map/components/MyMapLegend.vue'
 import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
 import Map from '@/components/map/Map.vue'
 import type Basemap from '@/models/interfaces/map/Basemap'
@@ -33,6 +35,7 @@ const myMap = useTemplateRef<MapType>('my-map')
 const toggleRightSidebarControl = useTemplateRef('toggle-right-sidebar-control')
 const toggleLeftSidebarControl = useTemplateRef('toggle-left-sidebar-control')
 const basemapPicker = useTemplateRef('basemap-picker')
+const mapLegend = useTemplateRef('map-legend')
 const map = computed(() => myMap.value?.map)
 
 onMounted(() => {
@@ -43,6 +46,16 @@ onMounted(() => {
     map.value.addControl(new IControl(basemapPicker), 'bottom-right')
     map.value.addControl(new IControl(toggleRightSidebarControl), 'top-right')
     map.value.addControl(new IControl(toggleLeftSidebarControl), 'top-left')
+    map.value.addControl(new IControl(mapLegend), 'bottom-right')
+    // If map has already been visited, we set the previous bbox
+    if (myMapStore.bbox) {
+      map.value.fitBounds(myMapStore.bbox)
+    }
+    map.value.on('moveend', () => {
+      if (map.value?.getBounds()) {
+        myMapStore.bbox = map.value?.getBounds()
+      }
+    })
   }
 })
 
@@ -73,6 +86,9 @@ watch(
     height: 100%;
 
     .maplibregl-ctrl-top-right {
+      align-items: flex-end;
+    }
+    .maplibregl-ctrl-bottom-right {
       align-items: flex-end;
     }
   }

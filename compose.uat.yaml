@@ -13,6 +13,9 @@ services:
   qgis:
     networks:
       - puc-network
+  osm2pgsql:
+    networks:
+      - puc-network
 
 networks:
   puc-network:

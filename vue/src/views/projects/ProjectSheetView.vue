@@ -6,6 +6,7 @@
       </div>
       <SheetContentBanner
         :id="project.id"
+        :slug="project.slug"
         :title="project.name"
         :subtitle="project.geoData.name"
         :email="project.focalPointEmail"

@@ -21,7 +21,7 @@
       :plainText="true"
     >
       <template #editContentCell="{ item }">
-        <template v-if="!item.isValidated">
+        <template v-if="!(item as User).isValidated">
           <v-btn
             size="small"
             icon="mdi-arrow-right"

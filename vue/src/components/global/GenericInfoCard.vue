@@ -14,7 +14,10 @@
     </template>
     <template #footer-left>
       <v-chip class="mr-2">{{ typeLabel }}</v-chip>
-      <ShareButton />
+      <ShareButton
+        :additionnal-path="additionnalPath as string"
+        :external-link="sharedLinkIsExternalToPlatform"
+      />
       <LikeButton :id="id" />
       <v-btn
         class="GenericInfoCard__editBtn"
@@ -53,7 +56,7 @@ const props = withDefaults(
     image?: string
     typeLabel: string
     type: ItemType
-    slug?: string
+    slug: string
     actionIcon?: string
     isEditable?: boolean
     editFunction?: Function
@@ -72,6 +75,20 @@ const to = computed(() => {
       return { name: 'actorProfile', params: { slug: props.slug } }
     default:
       return undefined
+  }
+})
+
+const sharedLinkIsExternalToPlatform = ItemType.RESOURCE === props.type
+const additionnalPath = computed(() => {
+  switch (props.type) {
+    case ItemType.PROJECT:
+      return 'projects/' + props.slug
+    case ItemType.ACTOR:
+      return 'actors/' + props.slug
+    case ItemType.RESOURCE:
+      return props.href
+    default:
+      return ''
   }
 })
 </script>

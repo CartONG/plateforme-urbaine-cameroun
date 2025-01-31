@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="$props.show">
-    <div class="Modal">
+    <div class="Modal" :fit-to-content="fitToContent">
       <div class="Modal__header">
         <span class="Modal__title">{{ title }}</span>
         <div class="Modal__closeBtn">
@@ -23,10 +23,20 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  title: string
-  show?: boolean
-}>()
+defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  show: {
+    type: Boolean,
+    default: false
+  },
+  fitToContent: {
+    type: Boolean,
+    default: false
+  }
+})
 </script>
 
 <style lang="scss">
@@ -35,7 +45,7 @@ defineProps<{
   $dim-modal-w: 30rem;
   margin: auto;
   background: white;
-  width: $dim-modal-w;
+  min-width: $dim-modal-w;
   max-height: 100vh;
   max-width: 100%;
   overflow-y: auto;
@@ -44,6 +54,11 @@ defineProps<{
   border-radius: $dim-radius;
   box-shadow: $mixin-shadow;
   white-space: pre-line;
+  width: $dim-modal-w;
+
+  &[fit-to-content='true'] {
+    width: fit-content;
+  }
 
   > * {
     padding: 0.675rem 1.25rem;

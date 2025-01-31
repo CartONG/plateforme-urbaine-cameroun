@@ -9,7 +9,7 @@
       </div>
     </template>
     <template #footer-left>
-      <ShareButton :additionnal-path="actor.name" />
+      <ShareButton :additionnal-path="'/' + actor.slug" />
       <LikeButton :id="actor.id" />
     </template>
     <template #footer-right>

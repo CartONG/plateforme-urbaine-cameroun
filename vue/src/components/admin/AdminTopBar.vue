@@ -39,8 +39,16 @@ import type { Actor } from '@/models/interfaces/Actor'
 import type { User } from '@sentry/vue'
 import { computed, ref, watch } from 'vue'
 import SectionTitle from '@/components/text-elements/SectionTitle.vue'
+import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 
-type AdminPages = 'Actors' | 'Projects' | 'Members' | 'Resources'
+type AdminPages =
+  | 'Actors'
+  | 'Projects'
+  | 'Members'
+  | 'Resources'
+  | AtlasGroup.PREDEFINED_MAP
+  | AtlasGroup.THEMATIC_DATA
+  | 'QgisMaps'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
@@ -64,6 +72,12 @@ const title = computed(() => {
       return `${props.items.length} ${i18n.t('admin.member', props.items.length)}`
     case 'Resources':
       return `${props.items.length} ${i18n.t('resources.resources', props.items.length)}`
+    case AtlasGroup.PREDEFINED_MAP:
+      return `${props.items.length} ${i18n.t('atlas.leftMaps', props.items.length)}`
+    case AtlasGroup.THEMATIC_DATA:
+      return `${props.items.length} ${i18n.t('atlas.rightMaps', props.items.length)}`
+    case 'QgisMaps':
+      return `${props.items.length} ${i18n.t('qgisMap.qgisMaps', props.items.length)}`
     case 'Actors':
     default:
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`
@@ -74,6 +88,7 @@ const searchQuery = ref('')
 watch(
   () => searchQuery.value,
   () => {
+    console.log('bloup')
     emit('updateSearchQuery', searchQuery.value)
   }
 )

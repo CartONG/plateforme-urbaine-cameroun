@@ -4,11 +4,31 @@
       class="AdminTable__row"
       v-for="item in paginatedItems"
       :key="item.id"
-      :class="{ 'AdminTable__row--overlay': !item.isValidated }"
+      :class="{ 'AdminTable__row--overlay': (item as any).isValidated === false }"
       :style="{ gridTemplateColumns: columnWidths.join(' ') }"
     >
       <div class="AdminTable__item" v-for="(tableKey, index) in tableKeys" :key="index">
-        {{ getNestedObjectValue(item, tableKey) }}
+        <img
+          v-if="index === 0 && withLogo && getNestedObjectValue(item, logoField)"
+          :src="getNestedObjectValue(item, logoField)"
+          class="AdminTable__item__logo"
+        />
+        <template v-if="isStringDate(getNestedObjectValue(item, tableKey))">
+          <v-tooltip :text="new Date(getNestedObjectValue(item, tableKey)).toLocaleDateString()">
+            <template v-slot:activator="{ props }">
+              <span v-bind="props">{{
+                new Date(getNestedObjectValue(item, tableKey)).toLocaleDateString()
+              }}</span>
+            </template>
+          </v-tooltip>
+        </template>
+        <template v-else>
+          <v-tooltip :text="getNestedObjectValue(item, tableKey)">
+            <template v-slot:activator="{ props }">
+              <span v-bind="props">{{ reduceText(getNestedObjectValue(item, tableKey), 25) }}</span>
+            </template>
+          </v-tooltip>
+        </template>
       </div>
       <div class="AdminTable__item AdminTable__item--last">
         <slot name="editContentCell" :item="item"></slot>
@@ -26,16 +46,25 @@ import Pagination from '@/components/global/Pagination.vue'
 import type { Project } from '@/models/interfaces/Project'
 import type { User } from '@/models/interfaces/auth/User'
 import type { Resource } from '@/models/interfaces/Resource'
+import type { QgisMap } from '@/models/interfaces/QgisMap'
+import { reduceText } from '@/services/utils/UtilsService'
 
 const props = defineProps<{
-  items: Actor[] | User[] | Project[] | Resource[]
+  items: Actor[] | User[] | Project[] | Resource[] | QgisMap[]
   tableKeys: string[]
   columnWidths?: string[]
   plainText?: boolean
+  withLogo?: boolean
+  logoField?: string
 }>()
 const defaultColumnWidths = ['15%', '40%', '25%', '20%']
 const columnWidths = props.columnWidths || defaultColumnWidths
 const paginatedItems: Ref<typeof props.items> = ref([])
+
+function isStringDate(candidate: string): boolean {
+  const date = new Date(candidate)
+  return !isNaN(date.getTime())
+}
 </script>
 
 <style lang="scss">
@@ -56,15 +85,21 @@ const paginatedItems: Ref<typeof props.items> = ref([])
     background-color: rgb(var(--v-theme-light-yellow));
   }
   .AdminTable__item {
+    display: flex;
+    align-items: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     &--last {
-      display: flex;
-      align-items: center;
       justify-content: flex-end;
       padding-right: 10px;
     }
   }
+}
+.AdminTable__item__logo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  margin-right: 10px;
 }
 </style>
