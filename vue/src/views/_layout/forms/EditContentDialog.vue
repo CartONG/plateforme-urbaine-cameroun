@@ -26,6 +26,8 @@
       @close="resourceStore.isResourceFormShown = false"
       @submitted="resourceStore.isResourceFormShown = false"
     />
+    <EditMessageDialog v-if="useApplicationStore().showEditMessageDialog" />
+    <EditThanksDialog v-if="useApplicationStore().showEditThanksDialog" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -38,6 +40,9 @@ import ProjectForm from '@/views/projects/components/ProjectForm.vue'
 import { FormType } from '@/models/enums/app/FormType'
 import ResourceForm from '@/views/resources/components/ResourceForm.vue'
 import { useResourceStore } from '@/stores/resourceStore'
+import EditMessageDialog from '@/views/_layout/forms/EditMessageDialog.vue'
+import { useApplicationStore } from '@/stores/applicationStore'
+import EditThanksDialog from '@/views/_layout/forms/EditThanksDialog.vue'
 
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()

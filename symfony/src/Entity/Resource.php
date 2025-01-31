@@ -15,6 +15,7 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ResourceFormat;
 use App\Enum\ResourceType;
+use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
@@ -46,7 +47,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Post(
-            security: 'is_granted("ROLE_ADMIN")',
+            security: UserRoles::IS_GRANTED_EDITOR_RESSOURCES,
             processor: ResourceProcessor::class
         ),
         new Patch(
@@ -91,6 +92,11 @@ class Resource
     #[ORM\Column(enumType: ResourceFormat::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    #[Assert\Length(max: 1000)]
+    private ?string $creatorMessage = null;
 
     /**
      * @var Collection<int, Thematic>
@@ -179,6 +185,18 @@ class Resource
     public function setFormat(ResourceFormat $format): static
     {
         $this->format = $format;
+
+        return $this;
+    }
+
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

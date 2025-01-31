@@ -7,10 +7,15 @@ import { FormType } from '@/models/enums/app/FormType'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { useUserStore } from '@/stores/userStore'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { DialogKey } from '@/models/enums/app/DialogKey'
+import { ItemType } from '@/models/enums/app/ItemType'
 
 export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   const resources: Ref<Resource[]> = ref([])
   const resource: Ref<Resource | null> = ref(null)
+  const resourceForSubmission: Ref<ResourceSubmission | null> = ref(null)
   const nearestEvents: Ref<ResourceEvent[]> = ref([])
   const editedResourceId: Ref<Resource['id'] | null> = ref(null)
   const isResourceFormShown = ref(false)
@@ -33,6 +38,16 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   }
 
   const submitResource = async (resource: ResourceSubmission, type: FormType) => {
+    if (type !== FormType.CREATE || useUserStore().userIsAdmin()) {
+      return await saveResource(resource, type)
+    }
+    resourceForSubmission.value = resource
+    isResourceFormShown.value = false
+    useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE
+    useApplicationStore().showEditMessageDialog = ItemType.RESOURCE
+  }
+
+  const saveResource = async (resource: ResourceSubmission, type: FormType) => {
     const submittedResource =
       type === FormType.CREATE
         ? await ResourceService.post(resource)
@@ -72,12 +87,14 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   return {
     resources,
     resource,
+    resourceForSubmission,
     isResourceFormShown,
     editedResourceId,
     editedResource,
     nearestEvents,
     getAll,
     submitResource,
+    saveResource,
     deleteResource,
     getNearestEvents
   }

@@ -20,14 +20,19 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const currentUser = ref<User | null>(null)
   const errorWhileSignInOrSignUp = ref(false)
   const userIsLogged = computed(() => currentUser.value !== null)
-  const userIsAdmin = () => userIsLogged.value && currentUser.value?.roles.includes(UserRoles.ADMIN)
-  const userIsEditor = () =>
-    (userIsLogged.value && currentUser.value?.roles.includes(UserRoles.EDITOR_PROJECTS)) ||
-    currentUser.value?.roles.includes(UserRoles.EDITOR_ACTORS) ||
-    currentUser.value?.roles.includes(UserRoles.EDITOR_RESSOURCES) ||
-    currentUser.value?.roles.includes(UserRoles.EDITOR_DATA)
   const userHasRole = (role: UserRoles) =>
     userIsLogged.value && currentUser.value?.roles.includes(role)
+  const userIsAdmin = () => userIsLogged.value && userHasRole(UserRoles.ADMIN)
+  const userIsActorEditor = () => userHasRole(UserRoles.EDITOR_ACTORS)
+  const userIsEditor = () => {
+    return (
+      userIsLogged.value &&
+      (userHasRole(UserRoles.EDITOR_PROJECTS) ||
+        userIsActorEditor() ||
+        userHasRole(UserRoles.EDITOR_RESSOURCES) ||
+        userHasRole(UserRoles.EDITOR_DATA))
+    )
+  }
 
   const signIn = async (values: SignInValues, hideDialog = true) => {
     try {
@@ -100,6 +105,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     userIsAdmin,
     userIsEditor,
     userHasRole,
+    userIsActorEditor,
     currentUser,
     errorWhileSignInOrSignUp,
     signIn,

@@ -13,6 +13,7 @@
     v-model="osmData"
     @update:search="(e) => (searchQuery = e)"
     @click:clear="(e) => (searchQuery = '')"
+    :error-messages="errorMessages"
   >
     <template v-slot:prepend-inner>
       <v-icon :icon="icon" color="main-blue" class="opacity-100"></v-icon>
@@ -51,6 +52,7 @@ const props = withDefaults(
     icon?: string
     geometryDetails?: boolean
     placeholder?: string
+    errorMessages?: string
   }>(),
   {
     searchType: NominatimSearchType.FREE,

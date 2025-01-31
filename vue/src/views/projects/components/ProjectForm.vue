@@ -6,6 +6,7 @@
           v-if="type === FormType.VALIDATE && project"
           :created-by="project.createdBy"
           :created-at="project.createdAt"
+          :message="project.creatorMessage"
         />
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('projects.form.fields.name.label') }}</label>
@@ -67,7 +68,7 @@
             density="compact"
             variant="outlined"
             chips
-            v-model="(form.status.value.value as Status)"
+            v-model="form.status.value.value as Status"
             :items="Object.values(Status)"
             :placeholder="$t('projects.form.fields.status.label')"
             :item-title="(item) => $t('projects.status.' + item)"
@@ -85,7 +86,7 @@
           <v-select
             density="compact"
             variant="outlined"
-            v-model="(form.interventionZone.value.value as AdministrativeScope)"
+            v-model="form.interventionZone.value.value as AdministrativeScope"
             :items="Object.values(AdministrativeScope)"
             :placeholder="$t('projects.form.fields.interventionZone.label')"
             :item-title="(item) => $t('projects.scope.' + item)"
@@ -99,6 +100,7 @@
           :osm-type="OsmType.NODE"
           @change="form.osmData.handleChange(form.osmData.value.value)"
           v-model="form.osmData.value.value as OsmData"
+          :error-messages="form.osmData.errorMessage.value"
         />
 
         <FormSectionTitle :text="$t('projects.form.section.thematics')" />
@@ -233,9 +235,9 @@
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
     </template>
     <template #footer-right>
-      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">{{
-        $t('forms.' + type)
-      }}</v-btn>
+      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
+        {{ submitLabel }}
+      </v-btn>
     </template>
   </Modal>
 </template>
@@ -252,7 +254,7 @@ import { FormType } from '@/models/enums/app/FormType'
 import type { Thematic } from '@/models/interfaces/Thematic'
 import { useActorsStore } from '@/stores/actorsStore'
 import type { Actor } from '@/models/interfaces/Actor'
-import { nestedObjectsToIri } from '../../../services/api/ApiPlatformService'
+import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import Geocoding from '@/components/forms/Geocoding.vue'
 import { OsmType } from '@/models/enums/geo/OsmType'
@@ -263,16 +265,28 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { onInvalidSubmit } from '@/services/forms/FormService'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import { useUserStore } from '@/stores/userStore'
+import { useI18n } from 'vue-i18n'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
 const thematicsStore = useThematicStore()
+const userStore = useUserStore()
+
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
   project: Project | null
   isShown: boolean
 }>()
+
+const submitLabel = computed(() => {
+  if (userStore.userIsActorEditor() && props.type === FormType.CREATE) {
+    return t('forms.continue')
+  }
+  return t('forms.' + props.type)
+})
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
@@ -294,7 +308,7 @@ const submitForm = handleSubmit(
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
     }
-
+    console.log('submitting project', projectSubmission)
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
     emit('submitted', submittedProject)
   },
