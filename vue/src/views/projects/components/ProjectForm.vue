@@ -67,7 +67,7 @@
             density="compact"
             variant="outlined"
             chips
-            v-model="(form.status.value.value as Status)"
+            v-model="form.status.value.value as Status"
             :items="Object.values(Status)"
             :placeholder="$t('projects.form.fields.status.label')"
             :item-title="(item) => $t('projects.status.' + item)"
@@ -85,7 +85,7 @@
           <v-select
             density="compact"
             variant="outlined"
-            v-model="(form.interventionZone.value.value as AdministrativeScope)"
+            v-model="form.interventionZone.value.value as AdministrativeScope"
             :items="Object.values(AdministrativeScope)"
             :placeholder="$t('projects.form.fields.interventionZone.label')"
             :item-title="(item) => $t('projects.scope.' + item)"
@@ -99,6 +99,7 @@
           :osm-type="OsmType.NODE"
           @change="form.osmData.handleChange(form.osmData.value.value)"
           v-model="form.osmData.value.value as OsmData"
+          :error-messages="form.osmData.errorMessage.value"
         />
 
         <FormSectionTitle :text="$t('projects.form.section.thematics')" />
@@ -252,7 +253,7 @@ import { FormType } from '@/models/enums/app/FormType'
 import type { Thematic } from '@/models/interfaces/Thematic'
 import { useActorsStore } from '@/stores/actorsStore'
 import type { Actor } from '@/models/interfaces/Actor'
-import { nestedObjectsToIri } from '../../../services/api/ApiPlatformService'
+import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import Geocoding from '@/components/forms/Geocoding.vue'
 import { OsmType } from '@/models/enums/geo/OsmType'

@@ -98,6 +98,9 @@ export class CommonZodSchema {
         .min(1, { message: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
         .optional(),
+      descriptionRequired: z
+        .string()
+        .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) }),
       maxLabel: z
         .string()
         .max(100, { message: i18n.t('forms.errorMessages.maxlength', { max: 100 }) }),

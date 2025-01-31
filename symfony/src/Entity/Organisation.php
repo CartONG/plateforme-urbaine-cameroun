@@ -6,7 +6,6 @@ use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\OrganisationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -15,13 +14,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     paginationEnabled: false,
     operations: [
-        new GetCollection(
-            parameters: [
-                'contracting' => new QueryParameter(filter: 'organisation.contracting_filter'),
-                'donor' => new QueryParameter(filter: 'organisation.donor_filter'),
-            ],
-            normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]
-        ),
+        new GetCollection(normalizationContext: ['groups' => [self::ORGANISATION_READ_ALL]]),
     ]
 )]
 #[ApiFilter(BooleanFilter::class, properties: ['donor', 'contracting'])]
