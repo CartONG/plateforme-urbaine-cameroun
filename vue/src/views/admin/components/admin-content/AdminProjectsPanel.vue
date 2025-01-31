@@ -43,9 +43,10 @@
             <v-icon icon="mdi-dots-vertical"></v-icon>
             <v-menu activator="parent" location="left">
               <v-list class="AdminPanel__additionnalMenu">
-                <v-list-item :to="`/projects/${(item as Project).slug}`">{{
-                  $t('projects.admin.goToPage')
-                }}</v-list-item>
+                <v-list-item
+                  :to="{ name: 'projectPage', params: { slug: (item as Project).slug } }"
+                  >{{ $t('projects.admin.goToPage') }}</v-list-item
+                >
                 <v-list-item @click="projectStore.deleteProject(item as Project)">{{
                   $t('projects.admin.delete')
                 }}</v-list-item>

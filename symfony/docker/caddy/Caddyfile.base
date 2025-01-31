@@ -14,11 +14,23 @@
 	order reverse_proxy before root
 }
 
-{$CADDY_PROTOCOL}://qgis.{$DOMAIN} {
-	reverse_proxy http://qgis:80
+{$CADDY_EXTRA_CONFIG}
+
+(basic_auth) {
+	@included_basic_auth expression `(!path('/nominatim*'))`
+  basic_auth @included_basic_auth {
+		puc {$BASIC_AUTH_BCRYPT_PASSWORD}
+	}
 }
 
-{$CADDY_EXTRA_CONFIG}
+(no_robots) {
+	header X-Robots-Tag "none"
+}
+
+(hidden_env) {
+	import no_robots
+	import basic_auth
+}
 
 (main_domain) {
 	
@@ -36,6 +48,4 @@
 
 	header ?Permissions-Policy "browsing-topics=()"
 	encode zstd br gzip
-
-	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 }

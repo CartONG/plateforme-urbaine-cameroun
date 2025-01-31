@@ -13,6 +13,7 @@ import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
 import { useActorsStore } from '@/stores/actorsStore'
 import type { Actor } from '@/models/interfaces/Actor'
 import { useUserStore } from '@/stores/userStore'
+import { i18n } from '@/plugins/i18n'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,12 +34,12 @@ const router = createRouter({
       component: () => import('@/views/_layout/ui/UiView.vue')
     },
     {
-      path: '/actors',
+      path: `/${i18n.t('routes.actors')}`,
       name: 'actors',
       component: () => import('@/views/actors/ActorListView.vue')
     },
     {
-      path: '/actors/:slug',
+      path: `/${i18n.t('routes.actors')}/:slug`,
       name: 'actorProfile',
       component: ActorProfile,
       beforeEnter: async (to, from, next) => {
@@ -51,7 +52,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/projects',
+      path: `/${i18n.t('routes.projects')}`,
       name: 'projects',
       component: () => import('@/views/projects/ProjectListView.vue'),
       beforeEnter: (to, from, next) => {
@@ -62,7 +63,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/projects/:slug',
+      path: `/${i18n.t('routes.projects')}/:slug`,
       name: 'projectPage',
       component: () => import('@/views/projects/ProjectSheetView.vue'),
       beforeEnter: async (to, from, next) => {
@@ -72,22 +73,22 @@ const router = createRouter({
       }
     },
     {
-      path: '/resources',
+      path: `/${i18n.t('routes.resources')}`,
       name: 'resources',
       component: () => import('@/views/resources/ResourceListView.vue')
     },
     {
-      path: '/services',
+      path: `/${i18n.t('routes.services')}`,
       name: 'services',
       component: () => import('@/views/services/ServicesView.vue')
     },
     {
-      path: '/map',
+      path: `/${i18n.t('routes.map')}`,
       name: 'map',
       component: () => import('@/views/map/MyMapView.vue')
     },
     {
-      path: '/myAccount',
+      path: `/${i18n.t('routes.myAccount')}`,
       name: 'userAccount',
       component: () => import('@/views/member/MemberView.vue'),
       beforeEnter: (to, from, next) => {
