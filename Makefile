@@ -1,4 +1,5 @@
 include symfony/Makefile
+include docker/osm2pgsql/Makefile
 include vue/Makefile
 
 -include local.mk
@@ -15,10 +16,12 @@ DOCKER_COMP = docker compose --env-file .env --env-file .env.${ENV} --env-file .
 
 DOCKER_EXEC_VUE = $(DOCKER_COMP) exec vue
 DOCKER_EXEC_PHP = $(DOCKER_COMP) exec frankenphp
+DOCKER_EXEC_POSTGRES = $(DOCKER_COMP) exec postgres
 
 VUE = $(DOCKER_EXEC_VUE)
 SYMFONY = $(DOCKER_EXEC_PHP) php bin/console
 COMPOSER = $(DOCKER_EXEC_PHP) composer
+POSTGRES = $(DOCKER_EXEC_POSTGRES)
 
 help:
 	@sed -E -n "/##/s/^(.*:[\s\t]*)?(##\s)(.*)/\1\3/p" $(MAKEFILE_LIST)
@@ -32,7 +35,7 @@ init: build init-jwt-keypair init-hosts		## Init the project
 
 dev: up show-urls		## Up and show urls
 
-build-dev: build-and-up show-urls 	## Build, up and show urls
+build-dev: build-and-up create-osm-db show-urls 	## Build, up and show urls
 
 deploy: build-and-up init-jwt-keypair cc		## Deploys the project 
 

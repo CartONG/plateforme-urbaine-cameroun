@@ -5,7 +5,7 @@
         <div class="SheetContentBanner__actionsBar mt-1">
           <div class="SheetContentBanner__shareBar">
             <slot name="custom-actions"></slot>
-            <ShareButton />
+            <ShareButton :additionnal-path="''" />
             <HighlightButton :item-id="id" />
             <LikeButton :id="id" />
             <v-btn
@@ -47,6 +47,7 @@ import HighlightButton from '@/components/global/HighlightButton.vue'
 
 defineProps<{
   id: string
+  slug: string
   title: string
   subtitle: string
   email: string

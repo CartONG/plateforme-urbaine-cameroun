@@ -29,7 +29,7 @@
       />
     </template>
     <template #footer-left>
-      <ShareButton />
+      <ShareButton :additionnal-path="'/' + project.slug" />
       <HighlightButton :item-id="project.id" />
       <LikeButton :id="project.id" />
     </template>

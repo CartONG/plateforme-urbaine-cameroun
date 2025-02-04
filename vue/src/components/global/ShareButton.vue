@@ -1,23 +1,24 @@
 <template>
-  <v-btn
-    @click.prevent="copyURL"
-    variant="text"
-    density="comfortable"
-    icon="mdi mdi-share-variant"
-    color="main-blue"
-  ></v-btn>
+  <v-btn variant="text" density="comfortable" icon="" color="main-blue" @click.prevent>
+    <v-icon icon="mdi mdi-share-variant"></v-icon>
+    <ShareMenu :url="url" location="right" :body="body" />
+  </v-btn>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  additionnalPath?: string
-}>()
-function copyURL() {
-  if (props.additionnalPath) {
-    navigator.clipboard.writeText(encodeURI(window.location.href + '/' + props.additionnalPath))
-  } else {
-    navigator.clipboard.writeText(window.location.href)
+import ShareMenu from '@/components/global/ShareMenu.vue'
+import { i18n } from '@/plugins/i18n'
+const props = withDefaults(
+  defineProps<{
+    additionnalPath: string
+    externalLink?: boolean
+  }>(),
+  {
+    externalLink: false
   }
-  alert('URL copied to clipboard')
-}
+)
+const url = props.externalLink
+  ? props.additionnalPath
+  : window.location.href + props.additionnalPath
+const body = i18n.t('share.genericBody') + ' ' + url
 </script>

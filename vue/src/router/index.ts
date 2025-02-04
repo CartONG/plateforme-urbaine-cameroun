@@ -13,6 +13,7 @@ import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
 import { useActorsStore } from '@/stores/actorsStore'
 import type { Actor } from '@/models/interfaces/Actor'
 import { useUserStore } from '@/stores/userStore'
+import AdminMaps from '@/views/admin/components/AdminMaps.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -111,12 +112,16 @@ const router = createRouter({
       },
       component: () => import('@/views/admin/AdminView.vue'),
       beforeEnter: (to, from, next) => {
-        // const userStore = useUserStore()
-        // if (!userStore.userIsAdmin()) {
-        //   next({ path: '/' })
-        // } else {
-        next()
-        // }
+        if (import.meta.env.MODE !== 'production') {
+          next()
+        } else {
+          const userStore = useUserStore()
+          if (!userStore.userIsAdmin()) {
+            next({ path: '/' })
+          } else {
+            next()
+          }
+        }
       },
       children: [
         {
@@ -146,6 +151,29 @@ const router = createRouter({
               path: 'resources',
               component: () =>
                 import('@/views/admin/components/admin-content/AdminResourcesPanel.vue')
+            }
+          ]
+        },
+        {
+          path: 'maps',
+          name: 'adminMaps',
+          component: AdminMaps,
+          redirect: () => ({ name: 'adminPredefinedMaps' }),
+          children: [
+            {
+              name: 'adminPredefinedMaps',
+              path: 'observatory',
+              component: () => import('@/views/admin/components/admin-maps/AdminPredefinedMaps.vue')
+            },
+            {
+              name: 'adminThematicMaps',
+              path: 'catalogue',
+              component: () => import('@/views/admin/components/admin-maps/AdminThematicMaps.vue')
+            },
+            {
+              name: 'adminQgisMaps',
+              path: 'data',
+              component: () => import('@/views/admin/components/admin-maps/AdminQgisMaps.vue')
             }
           ]
         },

@@ -14,7 +14,11 @@
         "content": "Contenu",
         "membersPanel": "Membres",
         "contentPanel": "Contenu",
-        "commentPanel": "Commentaires"
+        "commentPanel": "Commentaires",
+        "maps": "Ma carte",
+        "observatory": "Observatoire",
+        "catalog": "Catalogue",
+        "data": "Données"
     },
     "header": {
         "title": "Plateforme",
@@ -135,9 +139,9 @@
         }
     },
     "itemType": {
-        "project": "Projet",
-        "actor": "Acteur",
-        "resource": "Ressource"
+        "Project": "Projet",
+        "Actor": "Acteur",
+        "Resource": "Ressource"
     },
     "beneficiaryType": {
         "population": "Population",
@@ -180,10 +184,31 @@
                 "500": "Une erreur est survenue, un rapport a été envoyé",
                 "moreDetails": "Détails :"
             }
+        },
+        "atlas": {
+            "create": "L'atlas a été créé",
+            "edit": "L'atlas a été modifié",
+            "validate": "L'atlas a été validé",
+            "delete": "L'atlas a été supprimé"
+        },
+        "qgismap": {
+            "create": "La donnée a bien été crée",
+            "edit": "La donnée a bien été modifiée",
+            "validate": "La donnée a bien été validée",
+            "delete": "La donnée a bien été supprimé",
+            "error": "Une erreur est survenue lors du chargement des données"
         }
     },
     "list": {
         "resetFilters": "Réinitialiser les filtres",
         "filtersTitle": "Affinez votre recherche"
+    },
+    "share": {
+        "shareFb": "Partager sur Facebook",
+        "shareEmail": "Partager par email",
+        "copyLink": "Copier le lien",
+        "urlCopied": "Lien copié",
+        "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
+        "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
     }
 }

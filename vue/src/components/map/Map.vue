@@ -10,6 +10,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
+import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
 
 const applicationStore = useApplicationStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
@@ -49,6 +50,19 @@ onMounted(() => {
   map.value.addControl(new IControl(resetMapExtentControl), 'top-right')
   map.value.addControl(new maplibregl.AttributionControl(), 'bottom-left')
   setBBox()
+  map.value.on('load', () => {
+    addSource('cameroonMask', cameroonMask as GeoJSON.GeoJSON)
+    map.value?.addLayer({
+      id: 'cameroonMask',
+      type: 'fill',
+      source: 'cameroonMask',
+      paint: {
+        'fill-color': '#000000',
+        'fill-opacity': 0.7
+      },
+      metadata: { isPersistent: true }
+    })
+  })
 })
 
 const removeSource = (sourceName: string) => {
@@ -115,10 +129,14 @@ const addImage = async (path: string, name: string) => {
   return
 }
 
-const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any) => {
+const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any, isComponent = true) => {
   if (map.value == null) return
   flyTo(coordinates)
-  popup.value.setLngLat(coordinates).setDOMContent(popupHtml.$el).addTo(map.value)
+  console.log('popupHtml', popupHtml)
+  popup.value
+    .setLngLat(coordinates)
+    .setDOMContent(isComponent ? popupHtml.$el : popupHtml)
+    .addTo(map.value)
   popup.value.addClassName('show')
   popup.value._onClose = () => {
     activeFeatureId.value = null
@@ -126,13 +144,13 @@ const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any) => {
   }
 }
 
-const addPopupOnClick = (layerName: string, popupHtml: any) => {
+const addPopupOnClick = (layerName: string, popupHtml: any, isComponent = true) => {
   if (map.value == null) return
   map.value.on('click', layerName, (e: any) => {
-    if (map.value == null) return
     activeFeatureId.value = e.features[0].properties.id
+    if (map.value == null) return
     const coordinates = e.features[0].geometry.coordinates.slice()
-    addPopup(coordinates, popupHtml)
+    addPopup(coordinates, popupHtml, isComponent)
   })
 }
 
@@ -140,7 +158,7 @@ const flyTo = (coordinates: maplibregl.LngLatLike) => {
   if (map.value == null) return
   map.value.flyTo({
     center: coordinates,
-    zoom: 7,
+    zoom: map.value.getZoom() > 7 ? map.value.getZoom() : 7,
     speed: 0.5
   })
 }
@@ -258,6 +276,7 @@ defineExpose({
   height: 100%;
 
   .maplibregl-ctrl-top-left,
+  .maplibregl-ctrl-bottom-right,
   .maplibregl-ctrl-top-right {
     margin: 1.5rem;
     display: flex;

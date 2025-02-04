@@ -5,24 +5,6 @@ import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import { z, ZodType } from 'zod'
 
 export class CommonZodSchema {
-  static MAX_FILE_SIZE = 5000000
-  static ACCEPTED_FILE_TYPES = [
-    'application/pdf',
-    'application/vnd.oasis.opendocument.spreadsheet',
-    'application/vnd.ms-excel',
-    'image/jpeg',
-    'image/png',
-    'image/webp'
-  ]
-
-  static checkFileType(file: File) {
-    if (file?.type) {
-      const fileType = file.type
-      return fileType ? this.ACCEPTED_FILE_TYPES.includes(fileType) : false
-    }
-    return false
-  }
-
   static getDefinitions() {
     const SymfonyRelationSchema = z.object({
       '@id': z.string(),
@@ -40,25 +22,21 @@ export class CommonZodSchema {
       }),
       symfonyRelation: SymfonyRelationSchema,
       osmData: OsmDataSchema,
-      file: z
-        .instanceof(File)
-        .refine((file: File | null) => file != null, i18n.t('forms.errorMessages.required'))
-        .refine(
-          (file) => file.size < this.MAX_FILE_SIZE,
-          i18n.t('forms.errorMessages.file.maxSize', { maxSize: '5' })
-        )
-        .refine(
-          (file) => this.checkFileType(file),
-          i18n.t('forms.errorMessages.file.wrongFormat', {
-            formats: '.pdf, .xlsx, .jpeg, .jpg, .png, .webp'
-          })
-        )
-        .or(
-          z.object({
-            '@id': z.string(),
-            contentUrl: z.string()
-          }) satisfies ZodType<MediaObject>
-        ),
+      file: this.createFileSchema({
+        allowedTypes: [
+          'application/pdf',
+          'application/vnd.oasis.opendocument.spreadsheet',
+          'application/vnd.ms-excel',
+          'image/jpeg',
+          'image/png',
+          'image/webp'
+        ],
+        maxSize: 5000000
+      }),
+      qgisProject: this.createFileSchema({
+        allowedTypes: ['application/zip', 'application/x-zip-compressed'],
+        maxSize: 20000000
+      }),
       website: z
         .string()
         .optional()
@@ -98,6 +76,9 @@ export class CommonZodSchema {
         .min(1, { message: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
         .optional(),
+      descriptionRequired: z
+        .string()
+        .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) }),
       maxLabel: z
         .string()
         .max(100, { message: i18n.t('forms.errorMessages.maxlength', { max: 100 }) }),
@@ -136,5 +117,41 @@ export class CommonZodSchema {
           }
         )
     }
+  }
+
+  static createFileSchema = ({
+    allowedTypes,
+    maxSize
+  }: {
+    allowedTypes: string[]
+    maxSize: number
+  }) => {
+    return z
+      .instanceof(File)
+      .refine((file: File | null) => file != null, i18n.t('forms.errorMessages.required'))
+      .refine(
+        (file) => file.size < maxSize,
+        i18n.t('forms.errorMessages.file.maxSize', { maxSize: maxSize / 1000000 })
+      )
+      .refine(
+        (file) => this.checkFileType(file, allowedTypes),
+        i18n.t('forms.errorMessages.file.wrongFormat', {
+          formats: allowedTypes.join(', ')
+        })
+      )
+      .or(
+        z.object({
+          '@id': z.string(),
+          contentUrl: z.string()
+        }) satisfies ZodType<MediaObject>
+      )
+  }
+
+  static checkFileType(file: File, allowedTypes: string[]) {
+    if (file?.type) {
+      const fileType = file.type
+      return fileType ? allowedTypes.includes(fileType) : false
+    }
+    return false
   }
 }

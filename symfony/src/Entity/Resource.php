@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
@@ -15,6 +14,7 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ResourceFormat;
 use App\Enum\ResourceType;
+use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
@@ -46,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Post(
-            security: 'is_granted("ROLE_ADMIN")',
+            security: UserRoles::IS_GRANTED_EDITOR_RESSOURCES,
             processor: ResourceProcessor::class
         ),
         new Patch(
@@ -117,7 +117,6 @@ class Resource
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[ApiProperty(types: ['https://schema.org/file'])]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?MediaObject $file = null;
 

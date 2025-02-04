@@ -5,6 +5,8 @@ export enum StoresList {
   ACTORS = 'actors',
   HIGHLIGHTS = 'highlights',
   PROJECTS = 'projects',
+  ATLAS = 'atlas',
+  QGIS_MAP = 'qgisMap',
   RESOURCES = 'resources',
   THEMATICS = 'thematics',
   HOME = 'home',

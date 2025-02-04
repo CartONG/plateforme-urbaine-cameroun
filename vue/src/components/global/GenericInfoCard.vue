@@ -14,7 +14,10 @@
     </template>
     <template #footer-left>
       <v-chip class="mr-2">{{ typeLabel }}</v-chip>
-      <ShareButton />
+      <ShareButton
+        :additionnal-path="additionnalPath as string"
+        :external-link="sharedLinkIsExternalToPlatform"
+      />
       <HighlightButton :item-id="id" />
       <LikeButton :id="id" />
       <v-btn
@@ -44,7 +47,7 @@ import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
 import HighlightButton from '@/components/global/HighlightButton.vue'
 import { ItemType } from '@/models/enums/app/ItemType'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import imageDefault from '@/assets/images/Logo.png'
 
 const props = withDefaults(
@@ -74,6 +77,20 @@ const to = computed(() => {
       return { name: 'actorProfile', params: { slug: props.slug } }
     default:
       return undefined
+  }
+})
+
+const sharedLinkIsExternalToPlatform = ItemType.RESOURCE === props.type
+const additionnalPath = computed(() => {
+  switch (props.type) {
+    case ItemType.PROJECT:
+      return 'projects/' + props.slug
+    case ItemType.ACTOR:
+      return 'actors/' + props.slug
+    case ItemType.RESOURCE:
+      return props.href
+    default:
+      return ''
   }
 })
 </script>
