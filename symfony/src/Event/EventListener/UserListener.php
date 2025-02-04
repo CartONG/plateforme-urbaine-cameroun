@@ -22,6 +22,10 @@ class UserListener
 
     public function postPersist(User $user, LifecycleEventArgs $event): void
     {
+        if ($user->getIsValidated()) {
+            return;
+        }
+
         $this->userEmailVerifierMailer->send($user);
     }
 
