@@ -25,6 +25,13 @@ export class ActorsService {
     return data as Actor
   }
 
+  static async getActorBySlug(slug: string): Promise<Actor> {
+    const data = (
+      await apiClient.get(`/api/actors/slug/${id}`, { headers: { accept: 'application/ld+json' } })
+    ).data
+    return data as Actor
+  }
+
   static async createOrEditActor(
     actor: ActorSubmission,
     edit: boolean,
