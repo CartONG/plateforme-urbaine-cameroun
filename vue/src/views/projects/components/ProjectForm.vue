@@ -226,8 +226,10 @@
             type="tel"
           />
         </div>
-        <!--<FormSectionTitle :text="$t('projects.form.images')" />
-                <ImagesLoader @updateFiles="handleImagesUpdate" :existingImages="existingImages"/>-->
+
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
+        <FormSectionTitle :text="$t('actors.form.images')" />
+        <ImagesLoader @updateFiles="handleImagesUpdate" :existingImages="existingImages" />
       </v-form>
     </template>
     <template #footer-left>
@@ -246,7 +248,7 @@ import { type Project, type ProjectSubmission } from '@/models/interfaces/Projec
 import { ProjectFormService } from '@/services/projects/ProjectFormService'
 import { useProjectStore } from '@/stores/projectStore'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, type Ref, ref } from 'vue'
 import Modal from '@/components/global/Modal.vue'
 import { useThematicStore } from '@/stores/thematicStore'
 import { FormType } from '@/models/enums/app/FormType'
@@ -264,6 +266,9 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { onInvalidSubmit } from '@/services/forms/FormService'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import ImagesLoader from '@/components/forms/ImagesLoader.vue'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
@@ -274,6 +279,11 @@ const props = defineProps<{
   project: Project | null
   isShown: boolean
 }>()
+
+const existingImages = ref<(BaseMediaObject | string)[]>([])
+let existingHostedImages: BaseMediaObject[] = []
+let existingExternalImages: string[] = []
+const imagesToUpload: Ref<ContentImageFromUserFile[]> = ref([])
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
@@ -287,13 +297,25 @@ onMounted(async () => {
   await projectStore.getAllDonors()
   await projectStore.getAllContractingOrganisations()
   await actorsStore.getAll()
+  if (props.project) {
+    existingImages.value = [...props.project.images, ...props.project.externalImages]
+    existingHostedImages = props.project.images
+    existingExternalImages = props.project.externalImages
+  }
 })
 
 const submitForm = handleSubmit(
-  async (values) => {
-    const projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
+  async (values: Partial<Project | ProjectSubmission>) => {
+    let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
+    }
+
+    projectSubmission = {
+      ...projectSubmission,
+      images: existingHostedImages,
+      externalImages: existingExternalImages,
+      imagesToUpload: [...imagesToUpload.value]
     }
 
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
@@ -301,4 +323,17 @@ const submitForm = handleSubmit(
   },
   () => onInvalidSubmit
 )
+
+function handleImagesUpdate(lists: any) {
+  imagesToUpload.value = lists.selectedFiles
+  existingExternalImages = []
+  existingHostedImages = []
+  lists.existingImages.forEach((image: BaseMediaObject | string) => {
+    if (typeof image === 'string') {
+      existingExternalImages.push(image)
+    } else {
+      existingHostedImages.push(image)
+    }
+  })
+}
 </script>

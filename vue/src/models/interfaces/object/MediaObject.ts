@@ -5,7 +5,7 @@ export interface MediaObject extends SymfonyRelation {
   contentsFilteredUrl?: object
 }
 
-export interface ActorMediaObject extends MediaObject {
+export interface BaseMediaObject extends MediaObject {
   contentsFilteredUrl: {
     thumbnail: string
   }

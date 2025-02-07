@@ -259,6 +259,7 @@ const existingLogo = ref<(FileObject | string)[]>([])
 const existingImages = ref<(FileObject | string)[]>([])
 let existingHostedImages: FileObject[] = []
 let existingExternalImages: string[] = []
+
 onMounted(async () => {
   await thematicsStore.getAll()
   if (actorToEdit) {

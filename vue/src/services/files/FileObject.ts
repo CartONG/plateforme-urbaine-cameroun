@@ -1,10 +1,10 @@
-import type { ActorMediaObject, MediaObject } from '@/models/interfaces/object/MediaObject'
+import type { BaseMediaObject, MediaObject } from '@/models/interfaces/object/MediaObject'
 
 export class FileObject {
-  static hasThumbnail(mediaObject: MediaObject): mediaObject is ActorMediaObject {
+  static hasThumbnail(mediaObject: MediaObject): mediaObject is BaseMediaObject {
     return (
-      (mediaObject as ActorMediaObject).contentsFilteredUrl !== undefined &&
-      (mediaObject as ActorMediaObject).contentsFilteredUrl.thumbnail !== undefined
+      (mediaObject as BaseMediaObject).contentsFilteredUrl !== undefined &&
+      (mediaObject as BaseMediaObject).contentsFilteredUrl.thumbnail !== undefined
     )
   }
 }

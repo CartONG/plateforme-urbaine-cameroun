@@ -4,6 +4,7 @@ namespace App\Services\Serializer;
 
 use App\Entity\Actor;
 use App\Entity\File\MediaObject;
+use App\Entity\Project;
 use App\Enum\Config\ImagineFilter;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -26,7 +27,7 @@ class MediaObjectNormalizer implements NormalizerInterface
     {
         $context[self::ALREADY_CALLED] = true;
         /* @var MediaObject $object */
-        if ($this->isActor($context)) {
+        if ($this->isActor($context) || $this->isProject($context)) {
             $object->contentsFilteredUrl = [
                 ImagineFilter::THUMBNAIL => $this->imagineCacheManager->getBrowserPath(
                     $this->storage->resolveUri($object, 'file'),
@@ -46,12 +47,20 @@ class MediaObjectNormalizer implements NormalizerInterface
             return false;
         }
 
-        return $data instanceof MediaObject && $this->isActor($context);
+        return $data instanceof MediaObject && (
+            $this->isActor($context)
+            || $this->isProject($context)
+        );
     }
 
     private function isActor(array $context = []): bool
     {
         return $this->hasObjectcontext($context) && $context['object'] instanceof Actor;
+    }
+
+    private function isProject(array $context = []): bool
+    {
+        return $this->hasObjectcontext($context) && $context['object'] instanceof Project;
     }
 
     private function hasObjectContext(array $context = []): bool
