@@ -6,7 +6,7 @@ import type { ThematicItem } from './common/ThematicItem'
 import type { Timestampable } from './common/Timestampable'
 import type { Validateable } from './common/Validateable'
 import type { ContentImageFromUserFile } from './ContentImage'
-import type { MediaObject } from './MediaObject'
+import type { ActorMediaObject } from './object/MediaObject'
 import type { Project } from './Project'
 
 export interface Actor extends Timestampable, Validateable, Blameable, ThematicItem {
@@ -24,8 +24,8 @@ export interface Actor extends Timestampable, Validateable, Blameable, ThematicI
   contactName: string
   contactPosition: string
   projects: Project[]
-  logo: MediaObject
-  images: MediaObject[]
+  logo: ActorMediaObject
+  images: ActorMediaObject[]
   externalImages: string[]
   website: string
   phone: string

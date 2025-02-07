@@ -5,6 +5,7 @@ import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'
 import type { AdministrativeScope } from '@/models/interfaces/AdministrativeScope'
 import FileUploader from '@/services/files/FileUploader'
+import type { ActorMediaObject } from '@/models/interfaces/object/MediaObject'
 
 export class ActorsService {
   static async getActors(): Promise<Actor[]> {
@@ -25,29 +26,22 @@ export class ActorsService {
     return data as Actor
   }
 
-  static async getActorBySlug(slug: string): Promise<Actor> {
-    const data = (
-      await apiClient.get(`/api/actors/slug/${id}`, { headers: { accept: 'application/ld+json' } })
-    ).data
-    return data as Actor
-  }
-
   static async createOrEditActor(
     actor: ActorSubmission,
     edit: boolean,
     id?: string | undefined
   ): Promise<Actor> {
     if (actor.logoToUpload) {
-      const newLogo = await FileUploader.uploadFile(actor.logoToUpload.file)
+      const newLogo = await FileUploader.uploadMedia(actor.logoToUpload.file)
       actor.logo = newLogo['@id']
     }
     const newImagesLoaded = await Promise.all(
-      actor.imagesToUpload.map(async (img) => await FileUploader.uploadFile(img.file))
+      actor.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
     )
     if (actor.images && actor.images.length > 0) {
-      actor.images.push(...newImagesLoaded)
+      actor.images.push(...(newImagesLoaded as ActorMediaObject[]))
     } else {
-      actor.images = newImagesLoaded
+      actor.images = []
     }
     actor = this.transformSymfonyRelationToIRIs(actor)
     let data
