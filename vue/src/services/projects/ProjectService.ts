@@ -46,22 +46,16 @@ export class ProjectService {
       project.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
     )
 
-    console.log('images', images)
-
     if (images.length > 0) {
       submittedProject.images.push(...(images as BaseMediaObject[]))
     } else {
       submittedProject.images = []
     }
 
-    console.log('submittedProject', submittedProject.images)
-
     submittedProject = transformSymfonyRelationToIRIs<Project>(submittedProject)
 
-    console.log('submittedProject', submittedProject)
-
     if (submittedProject.id && images.length > 0) {
-      return await this.patch({ images: submittedProject.images, id: submittedProject.id })
+      return await this.patchImages(submittedProject)
     }
 
     return submittedProject
