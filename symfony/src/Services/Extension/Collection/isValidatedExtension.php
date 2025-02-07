@@ -3,6 +3,7 @@
 namespace App\Services\Extension\Collection;
 
 use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use ApiPlatform\Metadata\Operation;
 use App\Entity\Actor;
@@ -12,7 +13,7 @@ use App\Model\Enums\UserRoles;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 
-final readonly class isValidatedExtension implements QueryCollectionExtensionInterface
+final readonly class isValidatedExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
 {
     public function __construct(
         private Security $security,
@@ -21,16 +22,26 @@ final readonly class isValidatedExtension implements QueryCollectionExtensionInt
 
     public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, ?Operation $operation = null, array $context = []): void
     {
-        if (!$this->isSupport($resourceClass) || $this->security->isGranted(UserRoles::ROLE_ADMIN)) {
-            return;
-        }
+        $this->addValidated($queryBuilder, $resourceClass);
+    }
 
-        $this->addWhere($queryBuilder, $resourceClass);
+    public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, ?Operation $operation = null, array $context = []): void
+    {
+        $this->addValidated($queryBuilder, $resourceClass);
     }
 
     private function isSupport(string $resourceClass): bool
     {
         return in_array($resourceClass, [Actor::class, Resource::class, Project::class]);
+    }
+
+    private function addValidated(QueryBuilder $queryBuilder, string $resourceClass): void
+    {
+        if (!$this->isSupport($resourceClass) || $this->security->isGranted(UserRoles::ROLE_ADMIN)) {
+            return;
+        }
+
+        $this->addWhere($queryBuilder, $resourceClass);
     }
 
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass): void
