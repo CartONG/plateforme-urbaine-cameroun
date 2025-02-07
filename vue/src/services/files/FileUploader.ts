@@ -1,18 +1,30 @@
 import { apiClient } from '@/plugins/axios/api'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
+import type { MediaObject } from '@/models/interfaces/object/MediaObject'
 
 export default class FileUploader {
-  public static async uploadFile(file: File): Promise<MediaObject> {
+  private static _fileUri: string = '/api/file_objects'
+  private static _mediaUri: string = '/api/media_objects'
+
+  public static async uploadFile(file: File): Promise<FileObject> {
+    return this.upload(file, this._fileUri)
+  }
+
+  public static async uploadMedia(file: File): Promise<MediaObject> {
+    return this.upload(file, this._mediaUri)
+  }
+
+  private static async upload(file: File, url: string): Promise<FileObject | MediaObject> {
     const form = new FormData()
     form.append('file', file)
-    const data = (
-      await apiClient.post(`/api/media_objects`, form, {
+
+    return (
+      await apiClient.post(url, form, {
         headers: {
           'Content-Type': 'multipart/form-data',
           accept: 'application/ld+json'
         }
       })
     ).data
-    return data
   }
 }

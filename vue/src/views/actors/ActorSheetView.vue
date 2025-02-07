@@ -30,7 +30,12 @@
         <PrintButton />
       </div>
       <div class="SheetView__logoCtn hide-sm">
-        <img :src="actor.logo.contentUrl" alt="" v-if="actor.logo" class="SheetView__logo" />
+        <img
+          :src="actor.logo?.contentsFilteredUrl?.thumbnail"
+          alt=""
+          v-if="actor.logo?.contentsFilteredUrl?.thumbnail"
+          class="SheetView__logo"
+        />
       </div>
       <ChipList :items="actor.thematics" />
 

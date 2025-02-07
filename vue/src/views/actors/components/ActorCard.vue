@@ -5,7 +5,11 @@
       <span class="InfoCard__title">{{ actor.name }}</span>
       <span style="font-size: 14px">{{ actor.category }}</span>
       <div class="ActorCard__logoCtn">
-        <img class="ActorCard__logo" :src="actor.logo.contentUrl" v-if="actor.logo" />
+        <img
+          class="ActorCard__logo"
+          :src="actor.logo.contentsUrl?.my_thumb"
+          v-if="actor.logo?.contentsUrl?.my_thumb"
+        />
       </div>
     </template>
     <template #footer-left>

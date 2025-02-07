@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\File;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -8,6 +8,10 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
+use App\Entity\Actor;
+use App\Entity\Atlas;
+use App\Entity\QgisMap;
+use App\Entity\Resource;
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -46,32 +50,31 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ),
     ]
 )]
-class MediaObject
+class MediaObject extends AbstractObject
 {
     private const READ = 'media_object:read';
-
-    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME, Resource::GET_FULL, Atlas::GET_FULL, QgisMap::GET_FULL])]
     public ?string $contentUrl = null;
 
-    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
+    #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
+    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME, Resource::GET_FULL, Atlas::GET_FULL, QgisMap::GET_FULL])]
+    public ?array $contentsFilteredUrl = null;
+
+    #[Vich\UploadableField(
+        mapping: 'media_object',
+        fileNameProperty: 'filePath',
+        originalName: 'originalName',
+        mimeType: 'mimeType',
+        dimensions: 'dimensions',
+        size: 'size'
+    )]
     #[Assert\NotNull]
     #[Assert\File(
         maxSize: '5000k',
-        extensions: ['pdf', 'xlsx', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
-        extensionsMessage: 'Please upload a valid file (pdf, xlsx, jpg, jpeg, png, webp, gif, svg)',
+        extensions: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
+        extensionsMessage: 'Please upload a valid file (jpg, jpeg, png, webp, gif, svg)',
     )]
     public ?File $file = null;
-
-    #[ApiProperty(writable: false)]
-    #[ORM\Column(nullable: true)]
-    public ?string $filePath = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 }

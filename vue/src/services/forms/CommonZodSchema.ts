@@ -1,6 +1,6 @@
 import { i18n } from '@/plugins/i18n'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import { z, ZodType } from 'zod'
 
@@ -143,7 +143,7 @@ export class CommonZodSchema {
         z.object({
           '@id': z.string(),
           contentUrl: z.string()
-        }) satisfies ZodType<MediaObject>
+        }) satisfies ZodType<FileObject>
       )
   }
 

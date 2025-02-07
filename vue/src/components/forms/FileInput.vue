@@ -34,10 +34,10 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 
 const isSelecting = ref(false)
-const file = defineModel<File | MediaObject | null>()
+const file = defineModel<File | FileObject | null>()
 
 const fileName = computed(() => {
   if (file.value == null) {

@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\File\FileObject;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\TimestampableEntity;
@@ -116,9 +117,9 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?\DateTimeImmutable $endAt = null;
 
-    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\ManyToOne(targetEntity: FileObject::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
-    private ?MediaObject $file = null;
+    private ?FileObject $file = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
@@ -158,12 +159,12 @@ class Resource
         return $this;
     }
 
-    public function getFile(): ?MediaObject
+    public function getFile(): ?FileObject
     {
         return $this->file;
     }
 
-    public function setFile(?MediaObject $file): static
+    public function setFile(?FileObject $file): static
     {
         $this->file = $file;
 

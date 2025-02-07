@@ -9,7 +9,9 @@
       v-for="(image, index) in images"
       :key="index"
       class="mosaic-item"
-      :style="{ backgroundImage: `url(${typeof image === 'string' ? image : image.contentUrl})` }"
+      :style="{
+        backgroundImage: `url(${typeof image === 'string' ? image : getThumbnailUrl(image)})`
+      }"
       @click="viewImage(image)"
     />
   </div>
@@ -20,22 +22,32 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject as FileObjectType } from '@/models/interfaces/object/FileObject'
+import type { MediaObject } from '@/models/interfaces/object/MediaObject'
+import { FileObject } from '@/services/files/FileObject'
 
 defineProps<{
-  images: (string | MediaObject)[]
+  images: (string | FileObjectType | MediaObject)[]
 }>()
 
 const imageViewerSrc = ref<string>('')
 const showImageViewer = ref<boolean>(false)
 
-function viewImage(image: string | MediaObject) {
+function viewImage(image: string | FileObjectType | MediaObject) {
   if (typeof image === 'string') {
     imageViewerSrc.value = image
   } else {
     imageViewerSrc.value = image.contentUrl
   }
   showImageViewer.value = true
+}
+
+function getThumbnailUrl(image: FileObjectType | MediaObject) {
+  if (FileObject.hasThumbnail(image)) {
+    return image.contentsFilteredUrl.thumbnail
+  }
+
+  return image.contentUrl
 }
 </script>
 
