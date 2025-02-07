@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
+            paginationEnabled: false,
             normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION]
         ),
         new GetCollection(
