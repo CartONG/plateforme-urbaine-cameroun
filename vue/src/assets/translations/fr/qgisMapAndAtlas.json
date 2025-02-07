@@ -1,0 +1,69 @@
+{
+    "qgisMap": {
+        "qgisMaps": "Donnée | Données",
+        "add": "Ajouter un projet QGIS",
+        "form": {
+            "title": {
+                "create": "Ajouter une donnée",
+                "edit": "Modifier une donnée",
+                "validate": "Valider une donnée"
+            },
+            "or": "OU",
+            "fields": {
+                "logo": "Picto",
+                "name": {
+                    "label": "Nom de la donnée",
+                    "placeholder": "Nom de donnée"
+                },
+                "description": {
+                    "label": "Description",
+                    "placeholder": "Description"
+                },
+                "file": {
+                    "label": "Joindre un projet QGIS compressé (.zip)",
+                    "maxSize": "Fichier {maxSize} Mo maximum",
+                    "browse": "Parcourir..."
+                },
+                "loadedFile": {
+                    "label": "Fichier chargé",
+                    "placeholder": "Fichier chargé",
+                    "disclaimer": "Ce fichier ne peut pas être modifié/remplacé"
+                },
+                "needsToBeVisualiseAsPlainImageInsteadOfWMS": {
+                    "label": "Ce projet contient elle une représentation cartographique avancée?",
+                    "yes": "Ce projet sera affiché via une image pleine et non tuilée (affichage plus couteux en performance)",
+                    "no": "Ce projet sera affiché via un flux WMS"
+                }
+            }
+        }
+    },
+    "atlas": {
+        "thematicData": "Données thématiques",
+        "predefinedMap": "Cartes prédefinies",
+        "leftMaps": "Carte | Cartes",
+        "rightMaps": "Donnée thématique | Données thématiques",
+        "dragErrorMessage": "Veuillez trier les données par position pour pouvoir modifier celle ci",
+        "data": "Donnée | Données",
+        "form": {
+            "title": {
+                "create": "Ajouter un groupe",
+                "edit": "Modifier un groupe",
+                "validate": "Valider un groupe"
+            },
+            "fields": {
+                "name": {
+                    "label": "Nom du groupe",
+                    "placeholder": "Nom du groupe"
+                },
+                "atlasGroup": {
+                    "label": "Groupe",
+                    "placeholder": "Groupe"
+                },
+                "maps": {
+                    "label": "Selectionner des données (projets QGIS)",
+                    "placeholder": "Selectionner des données (projets QGIS)"
+                }
+            }
+        }
+    }
+}

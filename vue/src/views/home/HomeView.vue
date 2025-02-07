@@ -15,9 +15,9 @@
         <img src="@/assets/images/home_iconography.svg" alt="" />
       </div>
     </div>
-    <div class="HomeView__ctn HomeView__ctn--news">
-      <SectionBanner :text="$t('home.news.title')" :action-label="$t('home.news.action')" />
-      <HomeNews />
+    <div class="HomeView__ctn HomeView__ctn--highlights">
+      <SectionBanner :text="$t('home.highlights.title')" />
+      <HomeHighlights />
     </div>
     <div class="HomeView__ctn HomeView__ctn--map container-fluid">
       <div class="container">
@@ -41,7 +41,7 @@
 import PageTitle from '@/components/text-elements/PageTitle.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
 import HomeKpis from '@/views/home/components/HomeKpis.vue'
-import HomeNews from '@/views/home/components/HomeNews.vue'
+import HomeHighlights from '@/views/home/components/HomeHighlights.vue'
 import HomeMapDescription from '@/views/home/components/HomeMapDescription.vue'
 import HomeBecomeMember from '@/views/home/components/HomeBecomeMember.vue'
 import { useHomeStore } from '@/stores/homeStore'

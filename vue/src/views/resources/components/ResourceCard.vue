@@ -1,5 +1,6 @@
 <template>
   <GenericInfoCard
+    v-if="resource"
     :id="resource.id"
     :href="ResourceService.getLink(resource)"
     :title="resource.name"
@@ -10,6 +11,7 @@
     :is-editable="isEditable"
     class="ResourceCard"
     :edit-function="editResource"
+    :slug="resource.slug"
   >
     <template #image v-if="isEvent && resource.startAt">
       <div class="ResourceCard__dateBanner">

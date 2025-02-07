@@ -5,7 +5,8 @@
         <div class="SheetContentBanner__actionsBar mt-1">
           <div class="SheetContentBanner__shareBar">
             <slot name="custom-actions"></slot>
-            <ShareButton />
+            <ShareButton :additionnal-path="''" />
+            <HighlightButton :item-id="id" />
             <LikeButton :id="id" />
             <v-btn
               variant="elevated"
@@ -42,9 +43,11 @@ import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
 import SheetContactActions from './SheetContactActions.vue'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 
 defineProps<{
   id: string
+  slug: string
   title: string
   subtitle: string
   email: string

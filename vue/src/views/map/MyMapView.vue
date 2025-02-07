@@ -2,26 +2,56 @@
   <div class="MyMapView">
     <MyMapHeader class="MyMapView__header" />
     <div class="MyMapView__mapCtn">
-      <MyMapWelcomeSideBar
-        class="MyMapView__welcomeSideBar"
-        :shown="myMapStore.isLeftSidebarShown"
-      />
+      <MyMapLeftSideBar class="MyMapView__welcomeSideBar" :shown="myMapStore.isLeftSidebarShown" />
       <MyMap class="MyMapView__myMap" />
-      <MyMapLayersSideBar
-        class="MyMapView__layersSideBar"
-        :shown="myMapStore.isRightSidebarShown"
-      />
+      <MyMapRightSideBar class="MyMapView__layersSideBar" :shown="myMapStore.isRightSidebarShown" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import MyMap from '@/views/map/components/MyMap.vue'
 import MyMapHeader from '@/views/map/components/MyMapHeader.vue'
-import MyMapWelcomeSideBar from '@/views/map/components/MyMapWelcomeSideBar.vue'
-import MyMapLayersSideBar from '@/views/map/components/MyMapLayersSideBar.vue'
+import MyMapLeftSideBar from '@/views/map/components/MyMapLeftSideBar.vue'
+import MyMapRightSideBar from '@/views/map/components/MyMapRightSideBar.vue'
 import { useMyMapStore } from '@/stores/myMapStore'
+import { computed, onMounted } from 'vue'
+import { LayerType } from '@/models/enums/geo/LayerType'
+import { useRoute } from 'vue-router'
+import { AppLayersService } from '@/services/map/AppLayersService'
 
 const myMapStore = useMyMapStore()
+const map = computed(() => myMapStore.myMap?.map)
+const route = useRoute()
+onMounted(() => {
+  if (route.query.mapState) {
+    myMapStore.serializedMapState = route.query.mapState as string
+    myMapStore.deserializeMapState()
+    myMapStore.initMapLayers()
+    return
+  }
+  if (myMapStore.isMapAlreadyBeenMounted) {
+    AppLayersService.initApplicationLayers(useMyMapStore())
+    myMapStore.isLayersReorderingAlreadyTriggering = false
+    if (map.value?.loaded()) {
+      reloadAtlasMaps()
+    } else {
+      map.value?.on('load', async () => {
+        reloadAtlasMaps()
+      })
+    }
+  } else {
+    myMapStore.initMapLayers()
+  }
+})
+
+function reloadAtlasMaps() {
+  for (const item of myMapStore.legendList) {
+    if (item.layerType === LayerType.ATLAS_LAYER) {
+      myMapStore.updateAtlasLayersVisibility(item.id, false)
+    }
+  }
+  myMapStore.setMapLayersOrderOnMapReMount()
+}
 </script>
 
 <style lang="scss">
@@ -31,7 +61,7 @@ const myMapStore = useMyMapStore()
   height: 100vh;
   overflow: hidden;
   .MyMapView__header {
-    // height: 4rem;
+    height: $mymap-header-h;
   }
   .MyMapView__mapCtn {
     display: flex;

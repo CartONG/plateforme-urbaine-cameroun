@@ -48,14 +48,15 @@ security:
         - { path: ^/api/actor_expertises, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/thematics, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/administrative_scopes, roles: PUBLIC_ACCESS, methods: [GET] }
-        - { path: ^/api/news, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/highlighted_items/main, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/kpis, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/user_likes, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/organisations, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/resources, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/atlases, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/qgis, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/forgot_password, role: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        # - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

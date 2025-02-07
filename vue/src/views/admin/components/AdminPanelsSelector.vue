@@ -17,6 +17,7 @@
           </template>
         </v-expansion-panel-title>
       </v-expansion-panel>
+
       <v-expansion-panel
         :title="$t('admin.panelContent')"
         :value="AdministrationPanels.CONTENT"
@@ -42,6 +43,47 @@
             <div class="Admin__itemToValidateCounter">{{ resourcesToValidate }}</div>
           </router-link>
         </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel
+        :title="$t('admin.panelMap')"
+        :value="AdministrationPanels.MAPS"
+        :class="{
+          Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.MAPS
+        }"
+        class="text-main-blue"
+      >
+        <v-expansion-panel-text>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminPredefinedMaps' }">
+            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            {{ $t('admin.panelPredefinedMaps') }}
+          </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminThematicMaps' }">
+            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            {{ $t('admin.panelThematicMaps') }}
+          </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminQgisMaps' }">
+            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            {{ $t('admin.panelMapQGIS') }}
+          </router-link>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel
+        :value="AdministrationPanels.HIGHLIGHTS"
+        :class="{
+          Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.HIGHLIGHTS
+        }"
+        class="text-main-blue"
+      >
+        <router-link :to="{ name: 'adminHighlights' }">
+          <v-expansion-panel-title>
+            {{ $t('admin.panelHighlightedItems') }}
+            <template v-slot:actions>
+              <v-icon color="main-blue" icon="mdi-chevron-right"></v-icon>
+            </template>
+          </v-expansion-panel-title>
+        </router-link>
       </v-expansion-panel>
       <v-expansion-panel
         :readonly="true"
@@ -84,6 +126,9 @@ watch(
     } else if (adminStore.selectedAdminPanel === AdministrationPanels.CONTENT) {
       router.push({ name: 'adminActors' })
       adminStore.selectedAdminItem = AdministrationPanels.CONTENT_ACTORS
+    } else if (adminStore.selectedAdminPanel === AdministrationPanels.MAPS) {
+      router.push({ name: 'adminPredefinedMaps' })
+      adminStore.selectedAdminItem = AdministrationPanels.MAP_ATLAS
     } else {
       router.push({ name: 'adminComments' })
       adminStore.selectedAdminItem = null
@@ -103,6 +148,11 @@ const resourcesToValidate = computed(
 .Admin {
   &__panelSelector_container {
     width: 100%;
+
+    a {
+      color: rgb(var(--v-theme-main-blue));
+      text-decoration: none;
+    }
   }
   &__selectedPanel {
     border-left: 4px solid rgb(var(--v-theme-main-blue));

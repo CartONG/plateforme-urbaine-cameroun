@@ -6,6 +6,7 @@
       </div>
       <SheetContentBanner
         :id="actor.id"
+        :slug="actor.slug"
         :title="actor.name"
         :subtitle="actor.acronym"
         :phone="actor.phone"

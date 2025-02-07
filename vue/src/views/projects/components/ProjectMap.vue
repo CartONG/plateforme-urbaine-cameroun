@@ -12,12 +12,7 @@
       :active="true"
       ref="active-project-card"
     />
-    <Map
-      class="ProjectMap__map"
-      :geojson="geojson"
-      ref="project-map"
-      v-if="projectStore.projects != null"
-    />
+    <Map class="ProjectMap__map" ref="project-map" v-if="projectStore.projects != null" />
     <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" />
     <ToggleSidebarControl
       v-model="projectStore.isProjectMapFullWidth"

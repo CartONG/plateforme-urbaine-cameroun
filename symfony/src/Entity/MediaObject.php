@@ -54,15 +54,15 @@ class MediaObject
     private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
-    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME, Resource::GET_FULL])]
+    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, User::GROUP_GETME, Resource::GET_FULL, Atlas::GET_FULL, QgisMap::GET_FULL])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
     #[Assert\NotNull]
     #[Assert\File(
         maxSize: '5000k',
-        extensions: ['pdf', 'xlsx', 'jpg', 'jpeg', 'png', 'webp'],
-        extensionsMessage: 'Please upload a valid file (pdf, xlsx, jpg, jpeg, png, webp)',
+        extensions: ['pdf', 'xlsx', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
+        extensionsMessage: 'Please upload a valid file (pdf, xlsx, jpg, jpeg, png, webp, gif, svg)',
     )]
     public ?File $file = null;
 

@@ -55,10 +55,9 @@ export default class MapService {
 
     // Filter them all out to keep only your added sources
     Object.keys(sources).forEach((key: string) => {
+      if ((sources[key] as any).url) return // Ignore basemap sources
       const source = sources[key]
-      if ('data' in source && (source.data as PersistentGeoJSON)?.isPersistent) {
-        filteredSources[key] = source
-      }
+      filteredSources[key] = source
     })
 
     axios

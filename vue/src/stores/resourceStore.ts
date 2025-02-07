@@ -55,14 +55,21 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
     if (type === FormType.CREATE && useUserStore().userIsAdmin()) {
       resources.value.push(submittedResource)
     } else if (type === FormType.EDIT || type === FormType.VALIDATE) {
-      resources.value.forEach((resource, key) => {
-        if (resource.id === submittedResource.id) {
-          resources.value[key] = submittedResource
-        }
-      })
+      updateResource(submittedResource)
     }
     addNotification(i18n.t(`notifications.resource.${type}`), NotificationType.SUCCESS)
     return submittedResource
+  }
+
+  const updateResource = (updatedResource: Resource) => {
+    resources.value.forEach((resource, key) => {
+      if (resource.id === updatedResource.id) {
+        resources.value[key] = {
+          ...resource,
+          ...updatedResource
+        }
+      }
+    })
   }
 
   watch(
@@ -96,6 +103,7 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
     submitResource,
     saveResource,
     deleteResource,
+    updateResource,
     getNearestEvents
   }
 })

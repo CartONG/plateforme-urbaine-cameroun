@@ -46,6 +46,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - qgis_projects:/app/public/qgis
 
   docs:
     build:
@@ -90,7 +91,14 @@ services:
     shm_size: 1gb
 
   qgis:
-    image: qgis/qgis-server:${QGIS_SERVER_VERSION:-ltr}
+    build:
+      context: ./docker/qgis
+      args:
+        - POSTGRES_HOST=${POSTGRES_HOST}
+        - POSTGRES_PORT=${POSTGRES_PORT}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_GEODATA_USER=${POSTGRES_GEODATA_USER}
+        - POSTGRES_GEODATA_PASSWORD=${POSTGRES_GEODATA_PASSWORD}
     environment:
       # Do not run the embedded copy of nginx
       # SKIP_NGINX: "true"
@@ -108,12 +116,39 @@ services:
     volumes:
      # Data should be mount RO when working
      # with GeoPackages and more than one QGIS container
-      - ./docker/qgis/data:/io/data:ro
+      # - ./docker/qgis/data:/io/data:ro
       - ./docker/qgis/plugins:/io/plugins
       - ./docker/qgis/svg:/var/lib/qgis/.local/share/QGIS/QGIS3/profiles/default/svg
+      - qgis_projects:/io/data:ro
       # - ./docker/qgis/fonts:/usr/share/fonts # Causing nginx 404 issues
-      # - ./conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro
+      # - ./docker/qgis/conf/pg_service.conf:/etc/postgresql-common/pg_service.conf:ro # Mounted and edited by Dockerfile
+    depends_on:
+      - postgres
     restart: on-failure
+
+
+  osm2pgsql:
+    profiles:
+      - osm
+    image: iboates/osm2pgsql:latest
+    volumes:
+      - ./docker/osm2pgsql/data:/data
+    environment:
+      - PGPASSWORD=${POSTGRES_GEODATA_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      osm2pgsql
+      --create
+      --database=${POSTGRES_DB}
+      --user=${POSTGRES_GEODATA_USER}
+      --host=${POSTGRES_HOST}
+      --port=${POSTGRES_PORT}
+      --hstore
+      --slim
+      --schema=${POSTGRES_GEODATA_SCHEMA}
+      /data/cameroon-latest.osm.pbf
 
 volumes:
   caddy_data:
@@ -122,3 +157,9 @@ volumes:
   docs_node_modules:
   database_data:
   nominatim-data:
+  qgis_projects:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./docker/qgis/data

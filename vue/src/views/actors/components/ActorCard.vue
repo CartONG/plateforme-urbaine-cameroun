@@ -1,5 +1,5 @@
 <template>
-  <InfoCard class="ActorCard" :to="actorProfileRoute">
+  <InfoCard class="ActorCard" :to="actorProfileRoute" v-if="actor">
     <template #content>
       <span class="InfoCard__subTitle">{{ actor.acronym }}</span>
       <span class="InfoCard__title">{{ actor.name }}</span>
@@ -9,7 +9,8 @@
       </div>
     </template>
     <template #footer-left>
-      <ShareButton :additionnal-path="actor.name" />
+      <ShareButton :additionnal-path="'/' + actor.slug" />
+      <HighlightButton :item-id="actor.id" />
       <LikeButton :id="actor.id" />
     </template>
     <template #footer-right>
@@ -25,6 +26,7 @@ import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global//ShareButton.vue'
 import { computed, type ComputedRef } from 'vue'
 import type { RouteLocationAsRelativeGeneric } from 'vue-router'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 const props = defineProps<{
   actor: Actor
 }>()

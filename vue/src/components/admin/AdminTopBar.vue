@@ -1,21 +1,25 @@
 <template>
   <div class="AdminTopBar">
     <div class="AdminTopBar--left">
-      <SectionTitle :title="title" />
-      <v-icon icon="mdi mdi-magnify" class="ml-5" color="main-blue"></v-icon>
+      <SectionTitle :title="title" v-if="title" />
       <v-text-field
+        v-if="searchKey"
         clearable
         density="compact"
         :label="$t('admin.search')"
         variant="solo"
         hide-details
         @update:modelValue="searchQuery = $event"
-      ></v-text-field>
+      >
+        <template v-slot:prepend-inner>
+          <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+        </template>
+      </v-text-field>
     </div>
     <div class="AdminTopBar--right">
-      <v-btn color="white" class="mr-3">
-        <span class="font-weight-regular">{{ $t('placeholders.sortBy') }}</span
-        ><v-icon icon="mdi mdi-menu-down" class="ml-1"></v-icon>
+      <v-btn color="white" class="mr-3" v-if="sortingListItems">
+        <span class="font-weight-regular">{{ $t('placeholders.sortBy') }}</span>
+        <v-icon icon="mdi mdi-menu-down" class="ml-1"></v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item
@@ -28,7 +32,9 @@
           </v-list>
         </v-menu>
       </v-btn>
-      <v-btn @click="createFunction()" color="main-red">{{ $t('admin.add') }}</v-btn>
+      <v-btn v-if="createFunction" @click="createFunction()" color="main-red">{{
+        $t('admin.add')
+      }}</v-btn>
     </div>
   </div>
 </template>
@@ -39,14 +45,23 @@ import type { Actor } from '@/models/interfaces/Actor'
 import type { User } from '@sentry/vue'
 import { computed, ref, watch } from 'vue'
 import SectionTitle from '@/components/text-elements/SectionTitle.vue'
+import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 
-type AdminPages = 'Actors' | 'Projects' | 'Members' | 'Resources'
+type AdminPages =
+  | 'Actors'
+  | 'Projects'
+  | 'Members'
+  | 'Resources'
+  | 'Highlights'
+  | AtlasGroup.PREDEFINED_MAP
+  | AtlasGroup.THEMATIC_DATA
+  | 'QgisMaps'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
-  sortingListItems: { sortingKey: string; text: string }[]
-  searchKey: string
-  createFunction: () => void
+  sortingListItems?: { sortingKey: string; text: string }[]
+  searchKey?: string
+  createFunction?: () => void
 }>()
 const emit = defineEmits(['updateSortingKey', 'updateSearchQuery'])
 const sortingKey = ref('isValidated')
@@ -64,9 +79,16 @@ const title = computed(() => {
       return `${props.items.length} ${i18n.t('admin.member', props.items.length)}`
     case 'Resources':
       return `${props.items.length} ${i18n.t('resources.resources', props.items.length)}`
+    case AtlasGroup.PREDEFINED_MAP:
+      return `${props.items.length} ${i18n.t('atlas.leftMaps', props.items.length)}`
+    case AtlasGroup.THEMATIC_DATA:
+      return `${props.items.length} ${i18n.t('atlas.rightMaps', props.items.length)}`
+    case 'QgisMaps':
+      return `${props.items.length} ${i18n.t('qgisMap.qgisMaps', props.items.length)}`
     case 'Actors':
-    default:
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`
+    default:
+      return null
   }
 })
 
@@ -74,6 +96,7 @@ const searchQuery = ref('')
 watch(
   () => searchQuery.value,
   () => {
+    console.log('bloup')
     emit('updateSearchQuery', searchQuery.value)
   }
 )
