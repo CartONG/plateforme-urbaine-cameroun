@@ -40,16 +40,18 @@ export interface Project
   focalPointTel: string
   focalPointPhoto: string
   website: string
-  logo: string
+  logo?: BaseMediaObject
   donors: Organisation[]
   contractingOrganisation: Organisation
   actor: Partial<Actor>
 }
 
 export interface ProjectSubmission
-  extends Omit<Project, 'actor' | 'thematics'>,
+  extends Omit<Project, 'actor' | 'thematics' | 'logo'>,
     LocalizableSubmission {
   actor: iri
   thematics: iri[]
+  logo: string
+  logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]
 }

@@ -74,7 +74,8 @@ const showPopup = () => {
   height: 100%;
   position: relative;
 
-  .maplibregl-popup, .MyMapItemPopup .v-card {
+  .maplibregl-popup,
+  .MyMapItemPopup .v-card {
     max-width: 22rem !important;
   }
 

@@ -38,30 +38,41 @@ export class ProjectService {
       .then((response) => response.data['hydra:member'])
   }
 
-  static async createOrUpdate(project: ProjectSubmission, type: FormType): Promise<Project> {
-    let submittedProject =
-      type === FormType.CREATE ? await this.post(project) : await this.patch(project)
+  static async createOrUpdate(
+    projectToSubmit: ProjectSubmission,
+    type: FormType
+  ): Promise<Project> {
+    let symfonyProject = transformSymfonyRelationToIRIs<Project>(projectToSubmit)
+
+    const project =
+      type === FormType.CREATE ? await this.post(projectToSubmit) : await this.patch(symfonyProject)
+
+    if (projectToSubmit.logoToUpload) {
+      symfonyProject.logo = (await FileUploader.uploadMedia(
+        projectToSubmit.logoToUpload.file
+      )) as BaseMediaObject
+    }
 
     const images = await Promise.all(
-      project.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
+      projectToSubmit.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
     )
 
     if (images.length > 0) {
-      submittedProject.images.push(...(images as BaseMediaObject[]))
-    } else {
-      submittedProject.images = []
+      symfonyProject.images.push(...(images as BaseMediaObject[]))
+    } else if (projectToSubmit.images.length === 0) {
+      symfonyProject.images = []
     }
 
-    submittedProject = transformSymfonyRelationToIRIs<Project>(submittedProject)
+    symfonyProject = transformSymfonyRelationToIRIs<Project>(symfonyProject)
 
-    if (submittedProject.id && images.length > 0) {
-      return await this.patchImages(submittedProject)
+    if (symfonyProject.id && (images.length > 0 || projectToSubmit.logoToUpload)) {
+      return await this.patchImages(symfonyProject)
     }
 
-    return submittedProject
+    return project
   }
 
   static async patchImages(project: Project): Promise<Project> {
-    return this.patch({ images: project.images, id: project.id })
+    return this.patch({ images: project.images, id: project.id, logo: project.logo })
   }
 }

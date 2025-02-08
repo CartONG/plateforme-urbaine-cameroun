@@ -72,7 +72,6 @@ import { LayerType } from '@/models/enums/geo/LayerType'
 import MyMapLayerAdditionnalMenu from './MyMapLayerAdditionnalMenu.vue'
 
 const isExpanded = ref(false)
-const isLayerOpacityShown = ref(false)
 const mainLayer: ModelRef<Layer | undefined> = defineModel('mainLayer')
 const subLayers: ModelRef<Layer[] | undefined> = defineModel('subLayers')
 const myMapStore = useMyMapStore()

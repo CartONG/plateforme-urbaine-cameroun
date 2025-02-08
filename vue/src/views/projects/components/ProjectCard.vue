@@ -18,7 +18,11 @@
           </div>
         </div>
         <div class="ProjectCard__block ProjectCard__block--right">
-          <img class="ProjectCard__logo" :src="project.logo" />
+          <img
+            v-if="project.logo?.contentsFilteredUrl.thumbnail"
+            class="ProjectCard__logo"
+            :src="project.logo?.contentsFilteredUrl.thumbnail"
+          />
         </div>
       </div>
       <ChipList

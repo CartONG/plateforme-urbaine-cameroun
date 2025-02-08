@@ -148,14 +148,17 @@ class Project
     #[Assert\Url(protocols: ['https'])]
     private ?string $website = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
-    private ?string $logo = null;
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?MediaObject $logo = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?array $externalImages = null;
 
+    /**
+     * @var Collection<int, MediaObject>
+     */
     #[ORM\ManyToMany(targetEntity: MediaObject::class)]
     #[ApiProperty(types: ['https://schema.org/image'])]
     #[Groups([self::GET_FULL, self::WRITE])]
@@ -234,6 +237,18 @@ class Project
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLogo(): ?MediaObject
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?MediaObject $logo): static
+    {
+        $this->logo = $logo;
 
         return $this;
     }
@@ -378,18 +393,6 @@ class Project
     public function setWebsite(?string $website): static
     {
         $this->website = $website;
-
-        return $this;
-    }
-
-    public function getLogo(): ?string
-    {
-        return $this->logo;
-    }
-
-    public function setLogo(?string $logo): static
-    {
-        $this->logo = $logo;
 
         return $this;
     }

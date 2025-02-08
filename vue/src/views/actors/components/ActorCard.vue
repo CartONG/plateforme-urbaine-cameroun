@@ -7,8 +7,8 @@
       <div class="ActorCard__logoCtn">
         <img
           class="ActorCard__logo"
-          :src="actor.logo.contentsUrl?.my_thumb"
-          v-if="actor.logo?.contentsUrl?.my_thumb"
+          :src="actor.logo?.contentsFilteredUrl?.thumbnail"
+          v-if="actor.logo?.contentsFilteredUrl?.thumbnail"
         />
       </div>
     </template>

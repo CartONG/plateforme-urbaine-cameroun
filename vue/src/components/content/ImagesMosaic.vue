@@ -5,10 +5,11 @@
       gridTemplateRows: `repeat(${Math.ceil(images.length / 4)}, 1fr)`
     }"
   >
-    <div
+    <img
       v-for="(image, index) in images"
       :key="index"
       class="mosaic-item"
+      :src="typeof image === 'string' ? image : getThumbnailUrl(image)"
       :style="{
         backgroundImage: `url(${typeof image === 'string' ? image : getThumbnailUrl(image)})`
       }"

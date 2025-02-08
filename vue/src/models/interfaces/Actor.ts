@@ -24,7 +24,7 @@ export interface Actor extends Timestampable, Validateable, Blameable, ThematicI
   contactName: string
   contactPosition: string
   projects: Project[]
-  logo: BaseMediaObject
+  logo?: BaseMediaObject
   images: BaseMediaObject[]
   externalImages: string[]
   website: string

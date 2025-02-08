@@ -76,7 +76,7 @@ import { FileObject } from '@/services/files/FileObject'
 
 const props = defineProps({
   existingImages: {
-    type: Array<BaseMediaObject | string>,
+    type: Array<BaseMediaObject | string | FileObject>,
     default: () => []
   },
   externalImagesLoader: {

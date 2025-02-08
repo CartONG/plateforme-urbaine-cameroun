@@ -29,6 +29,15 @@
           />
         </div>
         <div class="Form__fieldCtn">
+          <label class="Form__label">{{ $t('actors.form.logo') }}</label>
+          <ImagesLoader
+            @updateFiles="handleLogoUpdate"
+            :existingImages="existingLogo"
+            :uniqueImage="true"
+            :externalImagesLoader="false"
+          />
+        </div>
+        <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
           <v-textarea
             variant="outlined"
@@ -280,10 +289,12 @@ const props = defineProps<{
   isShown: boolean
 }>()
 
+const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
 let existingHostedImages: BaseMediaObject[] = []
 let existingExternalImages: string[] = []
 const imagesToUpload: Ref<ContentImageFromUserFile[]> = ref([])
+const newLogo: Ref<ContentImageFromUserFile[]> = ref([])
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
@@ -298,6 +309,7 @@ onMounted(async () => {
   await projectStore.getAllContractingOrganisations()
   await actorsStore.getAll()
   if (props.project) {
+    existingLogo.value = props.project.logo ? [props.project.logo] : []
     existingImages.value = [...props.project.images, ...props.project.externalImages]
     existingHostedImages = props.project.images
     existingExternalImages = props.project.externalImages
@@ -315,6 +327,7 @@ const submitForm = handleSubmit(
       ...projectSubmission,
       images: existingHostedImages,
       externalImages: existingExternalImages,
+      logoToUpload: newLogo.value[0],
       imagesToUpload: [...imagesToUpload.value]
     }
 
@@ -335,5 +348,9 @@ function handleImagesUpdate(lists: any) {
       existingHostedImages.push(image)
     }
   })
+}
+
+function handleLogoUpdate(list: any) {
+  newLogo.value = list.selectedFiles
 }
 </script>
