@@ -10,7 +10,7 @@ import { useRoute, useRouter } from 'vue-router'
 import * as Sentry from '@sentry/browser'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import FileUploader from '@/services/files/FileUploader'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
 
@@ -84,8 +84,8 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     updateLogo = false,
     logo: File | null = null
   ) => {
-    if (values.logo && (values.logo as MediaObject)['@id']) {
-      values.logo = (values.logo as MediaObject)['@id']
+    if (values.logo && (values.logo as FileObject)['@id']) {
+      values.logo = (values.logo as FileObject)['@id']
     }
     if (updateLogo && logo) {
       const newLogo = await FileUploader.uploadFile(logo)

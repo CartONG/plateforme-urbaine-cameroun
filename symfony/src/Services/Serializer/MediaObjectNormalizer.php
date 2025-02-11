@@ -2,7 +2,11 @@
 
 namespace App\Services\Serializer;
 
-use App\Entity\MediaObject;
+use App\Entity\Actor;
+use App\Entity\File\MediaObject;
+use App\Entity\Project;
+use App\Enum\Config\ImagineFilter;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Vich\UploaderBundle\Storage\StorageInterface;
@@ -15,12 +19,22 @@ class MediaObjectNormalizer implements NormalizerInterface
         #[Autowire(service: 'api_platform.jsonld.normalizer.item')]
         private readonly NormalizerInterface $normalizer,
         private readonly StorageInterface $storage,
+        private readonly CacheManager $imagineCacheManager,
     ) {
     }
 
     public function normalize($object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $context[self::ALREADY_CALLED] = true;
+        /* @var MediaObject $object */
+        if ($this->isActor($context) || $this->isProject($context)) {
+            $object->contentsFilteredUrl = [
+                ImagineFilter::THUMBNAIL => $this->imagineCacheManager->getBrowserPath(
+                    $this->storage->resolveUri($object, 'file'),
+                    ImagineFilter::THUMBNAIL
+                ),
+            ];
+        }
 
         $object->contentUrl = $this->storage->resolveUri($object, 'file');
 
@@ -33,7 +47,25 @@ class MediaObjectNormalizer implements NormalizerInterface
             return false;
         }
 
-        return $data instanceof MediaObject;
+        return $data instanceof MediaObject && (
+            $this->isActor($context)
+            || $this->isProject($context)
+        );
+    }
+
+    private function isActor(array $context = []): bool
+    {
+        return $this->hasObjectcontext($context) && $context['object'] instanceof Actor;
+    }
+
+    private function isProject(array $context = []): bool
+    {
+        return $this->hasObjectcontext($context) && $context['object'] instanceof Project;
+    }
+
+    private function hasObjectContext(array $context = []): bool
+    {
+        return isset($context['object']);
     }
 
     public function getSupportedTypes(?string $format): array

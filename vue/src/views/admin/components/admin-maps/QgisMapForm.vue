@@ -105,7 +105,7 @@ import type { QgisMap, QgisMapSubmission } from '@/models/interfaces/QgisMap'
 import { i18n } from '@/plugins/i18n'
 import { computed, onMounted, ref, type Ref } from 'vue'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 import FileUploader from '@/services/files/FileUploader'
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import { QgisMapType } from '@/models/enums/geo/QgisMapType'
@@ -119,7 +119,7 @@ const qgisMapStore = useQgisMapStore()
 const { form, handleSubmit, isSubmitting } = QgisMapFormService.getForm(props.qgisMap)
 const qgisMapTypes = Object.values(QgisMapType)
 
-const existingLogo = ref<(MediaObject | string)[]>([])
+const existingLogo = ref<(FileObject | string)[]>([])
 onMounted(async () => {
   if (props.qgisMap) {
     existingLogo.value = props.qgisMap.logo ? [props.qgisMap.logo] : []

@@ -11,7 +11,7 @@ import GeocodingService from '@/services/map/GeocodingService'
 export class ResourceFormService {
   static getForm(resource: Resource | null) {
     const zodModels = CommonZodSchema.getDefinitions()
-    // @ts-ignore
+    // @ts-expect-error - zod object.
     const resourceSchema: z.ZodType<Partial<Resource>> = z
       .object({
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),

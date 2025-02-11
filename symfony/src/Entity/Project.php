@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
@@ -12,6 +13,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\Project\SimilarProjectsAction;
+use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
@@ -103,9 +105,6 @@ class Project
     private ?string $description = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    private ?array $images = null;
-
-    #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups([self::GET_FULL])]
     private ?array $partners = null;
 
@@ -149,9 +148,21 @@ class Project
     #[Assert\Url(protocols: ['https'])]
     private ?string $website = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
-    private ?string $logo = null;
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?MediaObject $logo = null;
+
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?array $externalImages = null;
+
+    /**
+     * @var Collection<int, MediaObject>
+     */
+    #[ORM\ManyToMany(targetEntity: MediaObject::class)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $images;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
@@ -186,6 +197,7 @@ class Project
     {
         $this->thematics = new ArrayCollection();
         $this->donors = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -229,14 +241,38 @@ class Project
         return $this;
     }
 
-    public function getImages(): ?array
+    public function getLogo(): ?MediaObject
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(?MediaObject $logo): static
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MediaObject>
+     */
+    public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function setImages(?array $images): static
+    public function addImage(MediaObject $image): static
     {
-        $this->images = $images;
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(MediaObject $image): static
+    {
+        $this->images->removeElement($image);
 
         return $this;
     }
@@ -361,14 +397,14 @@ class Project
         return $this;
     }
 
-    public function getLogo(): ?string
+    public function getExternalImages(): ?array
     {
-        return $this->logo;
+        return $this->externalImages;
     }
 
-    public function setLogo(?string $logo): static
+    public function setExternalImages(?array $externalImages): static
     {
-        $this->logo = $logo;
+        $this->externalImages = $externalImages;
 
         return $this;
     }

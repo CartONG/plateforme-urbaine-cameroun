@@ -1,4 +1,5 @@
 import { i18n } from '@/plugins/i18n'
+import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 
 export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
@@ -29,6 +30,24 @@ export function getNestedObjectValue(obj: any, propStr = '') {
       return acc[key]
     }, obj) || null
   )
+}
+
+export function transformSymfonyRelationToIRIs<T>(entity: any): T {
+  for (const key in entity) {
+    if (Array.isArray(entity[key]) && entity[key][0]?.['@id']) {
+      entity[key] = (entity[key] as SymfonyRelation[]).map(
+        (x: SymfonyRelation) => x['@id']
+      ) as never
+    } else if (
+      typeof entity[key] === 'object' &&
+      !Array.isArray(entity[key]) &&
+      entity[key] !== null &&
+      '@id' in entity[key]
+    ) {
+      entity[key] = entity[key]['@id']
+    }
+  }
+  return entity
 }
 
 export function localizeDate(
