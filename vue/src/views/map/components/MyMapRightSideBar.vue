@@ -1,6 +1,9 @@
 <template>
   <div class="MyMapRightSideBar">
-    <div v-show="!mapStore.isMapExportActive" class="MyMapRightSideBar__subCtn">
+    <div
+      v-show="!mapStore.isMapExportActive && !pluginsStore.isPluginsMenuVisible"
+      class="MyMapRightSideBar__subCtn"
+    >
       <MyMapPlatformLayers />
       <MyMapAtlasesList
         :title="$t('atlas.thematicData')"
@@ -16,6 +19,9 @@
     <div v-if="mapStore.isMapExportActive" class="MyMapRightSideBar__subCtn">
       <MyMapExportMenu />
     </div>
+    <div v-if="pluginsStore.isPluginsMenuVisible" class="MyMapRightSideBar__subCtn">
+      <MyMapPluginsMenu />
+    </div>
   </div>
 </template>
 
@@ -26,9 +32,12 @@ import { useAtlasStore } from '@/stores/atlasStore'
 import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 import { useMyMapStore } from '@/stores/myMapStore'
 import MyMapExportMenu from './export/MyMapExportMenu.vue'
+import { useMyMapPluginsStore } from '@/stores/myMapPluginsStore'
+import MyMapPluginsMenu from './plugins/MyMapPluginsMenu.vue'
 
 const atlasStore = useAtlasStore()
 const mapStore = useMyMapStore()
+const pluginsStore = useMyMapPluginsStore()
 </script>
 
 <style lang="scss">

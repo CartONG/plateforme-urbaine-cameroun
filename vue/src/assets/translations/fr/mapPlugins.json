@@ -1,0 +1,11 @@
+{
+    "pluginsMenu": {
+        "title": "Outils",
+        "searchCoords": "Rechercher des coordonnées",
+        "compareBaseMaps": "Comparer les fonds de carte",
+        "calculateItinerary": "Calculer un itinéraire",
+        "measureDistance": "Mesurer une distance / une surface",
+        "draw": "Dessiner sur la carte",
+        "spatialSelection": "Sélection spatiale"
+    }
+}
