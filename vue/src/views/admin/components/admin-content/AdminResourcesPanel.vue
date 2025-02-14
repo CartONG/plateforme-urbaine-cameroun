@@ -80,7 +80,7 @@ const showResourceForm = () => {
   resourceStore.isResourceFormShown = true
 }
 
-const editResource = async (resource: Resource) => {
+const editResource = async (resource: Resource, type: FormType = FormType.EDIT) => {
   resourceStore.editedResourceId = resource.id
   showResourceForm()
 }
