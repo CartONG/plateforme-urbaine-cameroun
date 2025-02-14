@@ -23,8 +23,8 @@
     "header": {
         "title": "Plateforme",
         "title2": "Urbaine",
-        "help": "Aide",
-        "contact": "Contact",
+        "help": "FAQ",
+        "contact": "Hotline",
         "home": "Accueil",
         "actors": "Acteurs",
         "projects": "Projets",
@@ -62,6 +62,7 @@
         "create": "Créer",
         "delete": "Supprimer",
         "or": "OU",
+        "errors": "Le formulaire n'est pas valide",
         "errorMessages": {
             "required": "Ce champs est requis",
             "minlength": "Ce champs doit avoir au moins {min} caractères",
@@ -70,7 +71,7 @@
             "url": "Veuillez renseigner une URL valide",
             "https": "Veuillez renseigner un site en https://",
             "phone": "Veuillez renseigner un numéro de téléphone valide",
-            "latLng": "Les coordonnées doivent être au format 'latitude, longitude', avec des valeurs valides.",
+            "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
             "file": {
                 "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
                 "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"

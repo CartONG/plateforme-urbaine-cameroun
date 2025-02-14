@@ -45,6 +45,20 @@
     },
     "legend": {
       "title": "Légende"
+    },
+    "export": {
+      "title": "Exporter en PDF",
+      "form": {
+        "title": {
+          "label": "Titre",
+          "placeholder": "Nom de la carte"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Description"
+        },
+        "submit": "Exporter"
+      }
     }
   }
 }
