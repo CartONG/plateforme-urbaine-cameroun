@@ -73,6 +73,12 @@
         </div>
       </div>
       <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.partners') }}</div>
+      <ImagesMosaic
+        :images="project.partners"
+        :key="mosaicKey"
+        :nb-columns="2"
+        :has-viewer="false"
+      />
     </div>
     <div class="SheetView__block SheetView__block--bottom">
       <SectionBanner :text="$t('projectPage.inImages')" />

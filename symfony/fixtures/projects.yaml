@@ -20,6 +20,5 @@ App\Entity\Project:
     focalPointTel: <numerify('6########')>
     focalPointPhoto: 'https://randomuser.me/api/portraits/men/<randomNumber(1, 92)>.jpg'
     website: https://<domainName()>
-    logo: <imageUrl(200, 100)>
     createdBy: '@user_*'
     isValidated: <boolean(70)>

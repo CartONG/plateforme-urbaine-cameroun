@@ -31,7 +31,7 @@ export interface Project
   description: string
   images: BaseMediaObject[]
   externalImages: string[]
-  partners: string[]
+  partners: BaseMediaObject[]
   interventionZone: AdministrativeScope
   beneficiaryTypes: BeneficiaryType[]
   focalPointName: string
@@ -54,4 +54,5 @@ export interface ProjectSubmission
   logo: string
   logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]
+  imagesPartnerToUpload: ContentImageFromUserFile[]
 }

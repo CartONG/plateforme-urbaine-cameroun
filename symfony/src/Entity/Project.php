@@ -104,10 +104,6 @@ class Project
     #[Assert\Length(max: 500)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
-    #[Groups([self::GET_FULL])]
-    private ?array $partners = null;
-
     #[ORM\Column(enumType: AdministrativeScope::class)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?AdministrativeScope $interventionZone = null;
@@ -164,6 +160,15 @@ class Project
     #[Groups([self::GET_FULL, self::WRITE])]
     private Collection $images;
 
+    /**
+     * @var Collection<int, MediaObject>
+     */
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
+    #[ORM\JoinTable('projects_partners_media_object')]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $partners;
+
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
@@ -198,6 +203,7 @@ class Project
         $this->thematics = new ArrayCollection();
         $this->donors = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->partners = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -277,14 +283,23 @@ class Project
         return $this;
     }
 
-    public function getPartners(): ?array
+    public function getPartners(): Collection
     {
         return $this->partners;
     }
 
-    public function setPartners(?array $partners): static
+    public function addPartner(MediaObject $image): static
     {
-        $this->partners = $partners;
+        if (!$this->partners->contains($image)) {
+            $this->partners->add($image);
+        }
+
+        return $this;
+    }
+
+    public function removePartner(MediaObject $image): static
+    {
+        $this->partners->removeElement($image);
 
         return $this;
     }

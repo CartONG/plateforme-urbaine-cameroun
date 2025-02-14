@@ -239,6 +239,12 @@
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         <FormSectionTitle :text="$t('actors.form.images')" />
         <ImagesLoader @updateFiles="handleImagesUpdate" :existingImages="existingImages" />
+        <FormSectionTitle :text="$t('actors.form.partnerImages')" />
+        <ImagesLoader
+          @updateFiles="handleImagesPartnerUpdate"
+          :existingImages="existingPartnerImages"
+          :externalImagesLoader="false"
+        />
       </v-form>
     </template>
     <template #footer-left>
@@ -291,9 +297,12 @@ const props = defineProps<{
 
 const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
+const existingPartnerImages = ref<BaseMediaObject[]>([])
 let existingHostedImages: BaseMediaObject[] = []
 let existingExternalImages: string[] = []
+let existingHostedPartnerImages: BaseMediaObject[] = []
 const imagesToUpload: Ref<ContentImageFromUserFile[]> = ref([])
+const imagesPartnerToUpload: Ref<ContentImageFromUserFile[]> = ref([])
 const newLogo: Ref<ContentImageFromUserFile[]> = ref([])
 
 const thematics = computed(() => thematicsStore.thematics)
@@ -313,6 +322,9 @@ onMounted(async () => {
     existingImages.value = [...props.project.images, ...props.project.externalImages]
     existingHostedImages = props.project.images
     existingExternalImages = props.project.externalImages
+
+    existingPartnerImages.value = props.project.partners
+    existingHostedPartnerImages = props.project.partners
   }
 })
 
@@ -326,9 +338,11 @@ const submitForm = handleSubmit(
     projectSubmission = {
       ...projectSubmission,
       images: existingHostedImages,
+      partners: existingHostedPartnerImages,
       externalImages: existingExternalImages,
       logoToUpload: newLogo.value[0],
-      imagesToUpload: [...imagesToUpload.value]
+      imagesToUpload: [...imagesToUpload.value],
+      imagesPartnerToUpload: [...imagesPartnerToUpload.value]
     }
 
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
@@ -347,6 +361,14 @@ function handleImagesUpdate(lists: any) {
     } else {
       existingHostedImages.push(image)
     }
+  })
+}
+
+function handleImagesPartnerUpdate(lists: any) {
+  imagesPartnerToUpload.value = lists.selectedFiles
+  existingHostedPartnerImages = []
+  lists.existingImages.forEach((image: BaseMediaObject) => {
+    existingHostedPartnerImages.push(image)
   })
 }
 

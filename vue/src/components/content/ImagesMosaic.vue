@@ -2,7 +2,8 @@
   <div
     class="image-mosaic"
     :style="{
-      gridTemplateRows: `repeat(${Math.ceil(images.length / 4)}, 1fr)`
+      gridTemplateRows: `repeat(${Math.ceil(images.length / nbColumns)}, 1fr);`,
+      gridTemplateColumns: `repeat(${nbColumns}, 1fr)`
     }"
   >
     <img
@@ -11,12 +12,13 @@
       class="mosaic-item"
       :src="typeof image === 'string' ? image : getThumbnailUrl(image)"
       :style="{
-        backgroundImage: `url(${typeof image === 'string' ? image : getThumbnailUrl(image)})`
+        backgroundImage: `url(${typeof image === 'string' ? image : getThumbnailUrl(image)})`,
+        cursor: `${hasViewer ? 'pointer' : 'default'}`
       }"
-      @click="viewImage(image)"
+      @click="hasViewer && viewImage(image)"
     />
   </div>
-  <v-dialog v-model="showImageViewer" width="auto">
+  <v-dialog v-model="showImageViewer" width="auto" v-if="hasViewer">
     <img :src="imageViewerSrc" class="image-viewer" />
   </v-dialog>
 </template>
@@ -27,9 +29,17 @@ import type { FileObject as FileObjectType } from '@/models/interfaces/object/Fi
 import type { MediaObject } from '@/models/interfaces/object/MediaObject'
 import { FileObject } from '@/services/files/FileObject'
 
-defineProps<{
-  images: (string | FileObjectType | MediaObject)[]
-}>()
+withDefaults(
+  defineProps<{
+    images: (string | FileObjectType | MediaObject)[]
+    hasViewer?: boolean
+    nbColumns?: number
+  }>(),
+  {
+    hasViewer: true,
+    nbColumns: 4
+  }
+)
 
 const imageViewerSrc = ref<string>('')
 const showImageViewer = ref<boolean>(false)
@@ -55,7 +65,6 @@ function getThumbnailUrl(image: FileObjectType | MediaObject) {
 <style scoped>
 .image-mosaic {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   row-gap: 1rem;
   column-gap: 1rem;
 }
@@ -65,7 +74,6 @@ function getThumbnailUrl(image: FileObjectType | MediaObject) {
   background-size: cover;
   border-radius: 0.5rem;
   overflow: hidden;
-  cursor: pointer;
   width: 100%;
   height: 10rem;
 }

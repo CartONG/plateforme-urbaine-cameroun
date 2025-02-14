@@ -1,5 +1,4 @@
 import { i18n } from '@/plugins/i18n'
-import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import { LngLat, LngLatBounds, type LngLatLike } from 'maplibre-gl'
 
 export const uniqueArray = (array: any[], key = 'id') => {
@@ -33,12 +32,11 @@ export function getNestedObjectValue(obj: any, propStr = '') {
   )
 }
 
+// duplicated: src/services/api/ApiPlatformService.ts:1
 export function transformSymfonyRelationToIRIs<T>(entity: any): T {
   for (const key in entity) {
-    if (Array.isArray(entity[key]) && entity[key][0]?.['@id']) {
-      entity[key] = (entity[key] as SymfonyRelation[]).map(
-        (x: SymfonyRelation) => x['@id']
-      ) as never
+    if (Array.isArray(entity[key])) {
+      entity[key] = transformSymfonyRelationToIRIs(entity[key])
     } else if (
       typeof entity[key] === 'object' &&
       !Array.isArray(entity[key]) &&

@@ -47,6 +47,10 @@ export class ProjectService {
     const project =
       type === FormType.CREATE ? await this.post(projectToSubmit) : await this.patch(symfonyProject)
 
+    if (type === FormType.CREATE) {
+      symfonyProject.id = project.id
+    }
+
     if (projectToSubmit.logoToUpload) {
       symfonyProject.logo = (await FileUploader.uploadMedia(
         projectToSubmit.logoToUpload.file
@@ -63,9 +67,23 @@ export class ProjectService {
       symfonyProject.images = []
     }
 
+    const partnerImages = await Promise.all(
+      projectToSubmit.imagesPartnerToUpload.map(
+        async (img) => await FileUploader.uploadMedia(img.file)
+      )
+    )
+    if (partnerImages.length > 0) {
+      symfonyProject.partners.push(...(partnerImages as BaseMediaObject[]))
+    } else if (projectToSubmit.partners.length === 0) {
+      symfonyProject.partners = []
+    }
+    console.log(symfonyProject)
     symfonyProject = transformSymfonyRelationToIRIs<Project>(symfonyProject)
-
-    if (symfonyProject.id && (images.length > 0 || projectToSubmit.logoToUpload)) {
+    console.log(symfonyProject)
+    if (
+      symfonyProject.id &&
+      (images.length > 0 || projectToSubmit.logoToUpload || partnerImages.length > 0)
+    ) {
       return await this.patchImages(symfonyProject)
     }
 
@@ -73,6 +91,17 @@ export class ProjectService {
   }
 
   static async patchImages(project: Project): Promise<Project> {
-    return this.patch({ images: project.images, id: project.id, logo: project.logo })
+    console.log({
+      images: project.images,
+      id: project.id,
+      logo: project.logo,
+      partners: project.partners
+    })
+    return this.patch({
+      images: project.images,
+      id: project.id,
+      logo: project.logo,
+      partners: project.partners
+    })
   }
 }
