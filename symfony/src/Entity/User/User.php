@@ -96,7 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const GROUP_READ = 'user:read';
     public const GROUP_WRITE = 'user:write';
     public const GROUP_ADMIN = 'user:admin';
-    private const ACCEPTED_ROLES = [UserRoles::ROLE_USER, UserRoles::ROLE_EDITOR_ACTORS, UserRoles::ROLE_EDITOR_PROJECTS, UserRoles::ROLE_EDITOR_RESSOURCES];
+    private const ACCEPTED_ROLES = [UserRoles::ROLE_USER, UserRoles::ROLE_EDITOR_ACTORS, UserRoles::ROLE_EDITOR_PROJECTS, UserRoles::ROLE_EDITOR_RESSOURCES, UserRoles::ROLE_ADMIN];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
