@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Plateforme Urbaine du Cameroun - Export de carte</title>
+    <style>
+        @page { 
+            size: A4 landscape; 
+            margin: 0; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 29.7cm;
+            height: 21cm;
+            font-family: Arial, sans-serif;
+        }
+        .logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3cm;
+            height: auto;
+        }
+
+        .header {
+            width: 100%;
+            display: table;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            height: 1cm;
+            background-color: #F3CA46;
+            border-bottom: 1px solid rgb(80, 79, 79);
+        }
+        .header-content {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 22px;
+            font-weight: bold;
+            color: rgb(80, 79, 79);
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .map-container {
+            display: inline-block;
+            width: 84%;
+            vertical-align: top;
+        }
+        
+        .map-container img {
+            width: 100%;
+            height: auto;
+            max-height: 20cm;
+        }
+        
+        .sidebar {
+            display: inline-block;
+            width: 15%;
+            vertical-align: top;
+            padding-left: 5px;
+            box-sizing: border-box;
+        }
+        .description {
+            font-size: 14px;
+        }
+        .legend {
+            font-size: 12px;
+        }
+        .legend-item {
+            display: table;
+            margin-top: 5px;
+        }
+        .legend-icon, .layer-name {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .legend-icon{
+            width: 20px;
+        }
+        .layer-name{
+            padding-left: 15px;
+        }
+        .metadata{
+            font-size: 10px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="{{logo}}" class="logo" alt="Logo">
+        <img src="{{footer}}" class="footer" alt="footer">
+        <div class="header">
+            <div class="header-content">
+                {{ title }}
+            </div>
+        </div>
+        <div class="map-container">
+            <img src="{{ mapUrl }}" alt="Map">
+        </div>
+        <div class="sidebar">
+            <p class="description"> {{ description }}</p>
+            <div class="legend">
+                <strong>Légende :</strong>
+                {% for item in legendList %}
+                    {% if item.layerType == 'APP_LAYER' %}
+                        <div class="legend-item">
+                            <img src="{{ item.icon }}" class="legend-icon">
+                            <span class="layer-name">{{ item.name }}</span>
+                        </div>
+                    {% else %}
+                        {% for legendItem in item.subLayers %}
+                            <div class="legend-item">
+                                <img src="{{ legendItem.icon }}" class="legend-icon">
+                                <span class="layer-name">{{ legendItem.name }}</span>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="metadata">
+                <p>Date de création: {{ "now"|date("d/m/Y") }}</p>
+                <p>Echelle indicative: 1/{{ scaleDenominator }}ème</p>
+                <p>Sources: Plateforme Urbaine du Cameroun | OpenStreetMap | MapTiler</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
