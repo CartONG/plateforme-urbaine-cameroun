@@ -6,6 +6,7 @@ App\Entity\User\User:
         plainPassword: Test1234
         roles: [ 'ROLE_ADMIN' ]
         isValidated: true
+        hasSeenRequestedRoles: true
     user_2:
         firstName: John
         lastName: Editor Doe
@@ -13,6 +14,7 @@ App\Entity\User\User:
         plainPassword: Test1234
         roles: [ 'ROLE_EDITOR_ACTORS', 'ROLE_EDITOR_PROJECTS', "ROLE_EDITOR_RESSOURCES", "ROLE_EDITOR_DATA" ]
         isValidated: true
+        hasSeenRequestedRoles: true
     user_3:
         firstName: Jane
         lastName: Doe
@@ -20,3 +22,4 @@ App\Entity\User\User:
         plainPassword: Test1234
         roles: [ 'ROLE_USER' ]
         isValidated: true
+        hasSeenRequestedRoles: true
