@@ -13,12 +13,16 @@
       @update-search-query="searchQuery = $event"
     />
     <AdminTable
+      :is-overlay-shown-function="(item) => !(item as Actor).isValidated"
       :items="filteredItems"
       :table-keys="['acronym', 'name', 'category']"
-      :column-widths="['15%', '40%', '30%', '15%']"
+      :column-widths="['5%', 'auto', '40%', '30%', '15%']"
     >
+      <template #adminTableItemFirst="{ item }">
+        <HighlightButton :item-id="(item as Actor).id" />
+      </template>
       <template #editContentCell="{ item }">
-        <template v-if="!item.isValidated">
+        <template v-if="!(item as Actor).isValidated">
           <v-btn
             size="small"
             icon="mdi-arrow-right"
@@ -57,6 +61,7 @@ import { useActorsStore } from '@/stores/actorsStore'
 import { computed, ref } from 'vue'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 const actorsStore = useActorsStore()
 const sortingActorsSelectedMethod = ref('isValidated')
 

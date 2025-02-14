@@ -12,12 +12,7 @@
       :active="true"
       ref="active-project-card"
     />
-    <Map
-      class="ProjectMap__map"
-      :geojson="geojson"
-      ref="project-map"
-      v-if="projectStore.projects != null"
-    />
+    <Map class="ProjectMap__map" ref="project-map" v-if="projectStore.projects != null" />
     <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" />
     <ToggleSidebarControl
       v-model="projectStore.isProjectMapFullWidth"
@@ -113,9 +108,13 @@ onMounted(() => {
   if (map.value != null) {
     map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
     map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
+    projectStore.map = map.value
     map.value.on('load', async () => {
       await setProjectLayer()
       showPopupOnInit()
+    })
+    map.value.on('moveend', () => {
+      projectStore.filteredProjects = projectStore.filterProjects('map')
     })
   }
 })

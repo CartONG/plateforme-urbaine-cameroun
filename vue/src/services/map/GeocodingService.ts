@@ -9,13 +9,7 @@ export default class GeocodingService {
   static forwardGeocode = async (
     search: string,
     searchType: NominatimSearchType,
-    osmPlaceTypesFilter: OsmPlaceType[] = [
-      OsmPlaceType.DISTRICT,
-      OsmPlaceType.CITY,
-      OsmPlaceType.COUNTY,
-      OsmPlaceType.COUNTRY,
-      OsmPlaceType.LOCALITY
-    ]
+    osmPlaceTypesFilter: OsmPlaceType[] = Object.values(OsmPlaceType)
   ): Promise<GeocodingItem[]> => {
     const places: GeocodingItem[] = []
     // Nominatim documentation : https://nominatim.org/release-docs/latest/api/Search/

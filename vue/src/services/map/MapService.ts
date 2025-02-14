@@ -44,7 +44,7 @@ export default class MapService {
     return `${basemap.style}?key=${import.meta.env.VITE_MAPTILER_API_KEY}`
   }
 
-  static updateStyle = (map: Map, basemap: Basemap) => {
+  static async updateStyle(map: Map, basemap: Basemap) {
     // This will get all the layers and sources of your current map
     const layers = map.getStyle().layers
     const sources = map.getStyle().sources
@@ -55,10 +55,9 @@ export default class MapService {
 
     // Filter them all out to keep only your added sources
     Object.keys(sources).forEach((key: string) => {
+      if ((sources[key] as any).url) return // Ignore basemap sources
       const source = sources[key]
-      if ('data' in source && (source.data as PersistentGeoJSON)?.isPersistent) {
-        filteredSources[key] = source
-      }
+      filteredSources[key] = source
     })
 
     axios
@@ -71,9 +70,11 @@ export default class MapService {
         newStyle.sources = { ...newStyle.sources, ...filteredSources }
 
         map.setStyle(newStyle)
+        return Promise.resolve()
       })
       .catch((error) => {
         console.log(error)
+        return Promise.reject()
       })
   }
 }

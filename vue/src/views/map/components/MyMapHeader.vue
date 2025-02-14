@@ -11,7 +11,9 @@
       >
         <v-icon icon="mdi-arrow-left" color="main-blue" />
       </v-btn>
-      <img src="@/assets/images/Logo.png" class="MyMapHeader__logo" />
+      <router-link :to="{ name: 'home' }" class="Header__bannerLink">
+        <img src="@/assets/images/Logo.png" alt="Accueil" class="MyMapHeader__logo" />
+      </router-link>
     </div>
     <Geocoding
       :search-type="NominatimSearchType.FREE"
@@ -29,8 +31,12 @@
         prepend-icon="mdi-share-variant"
         variant="elevated"
         elevation="1"
-        >{{ $t('myMap.header.share') }}</v-btn
+        @click="getSharedMapLink()"
       >
+        {{ $t('myMap.header.share') }}
+        <ShareMenu :url="mapUrl" location="bottom" :body="emailBody" />
+      </v-btn>
+
       <LoginButton />
     </div>
   </nav>
@@ -38,11 +44,29 @@
 
 <script setup lang="ts">
 import Geocoding from '@/components/forms/Geocoding.vue'
+import { NotificationType } from '@/models/enums/app/NotificationType'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
+import { i18n } from '@/plugins/i18n'
+import { addNotification } from '@/services/notifications/NotificationService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import LoginButton from '@/views/_layout/header/LoginButton.vue'
+import ShareMenu from '@/components/global/ShareMenu.vue'
+import { ref } from 'vue'
 
 const myMapStore = useMyMapStore()
+const mapUrl = ref('')
+const emailBody = ref('')
+
+function getSharedMapLink() {
+  const serializedMapState = myMapStore.getSerializedMapState()
+  const url = window.location.href + '?mapState=' + serializedMapState
+  if (url.length > 2048) {
+    addNotification(i18n.t('myMap.header.linkTooLong'), NotificationType.ERROR)
+    return
+  }
+  mapUrl.value = url
+  emailBody.value = i18n.t('myMap.header.shareEmailBody', { url })
+}
 </script>
 
 <style lang="scss">

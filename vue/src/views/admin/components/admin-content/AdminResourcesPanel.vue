@@ -11,12 +11,16 @@
       @update-search-query="(e) => (searchQuery = e)"
     />
     <AdminTable
+      :is-overlay-shown-function="(item) => !(item as Resource).isValidated"
       :items="sortedResources"
       :tableKeys="['name', 'type', 'format', 'updatedAt']"
-      :column-widths="['auto', '10%', '10%', '15%', '15%']"
+      :column-widths="['5%', 'auto', '10%', '10%', '15%', '15%']"
     >
+      <template #adminTableItemFirst="{ item }">
+        <HighlightButton :item-id="(item as Resource).id" />
+      </template>
       <template #editContentCell="{ item }">
-        <template v-if="!item.isValidated">
+        <template v-if="!(item as Resource).isValidated">
           <v-btn
             size="small"
             icon="mdi-arrow-right"
@@ -54,6 +58,7 @@ import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import { i18n } from '@/plugins/i18n'
 import { FormType } from '@/models/enums/app/FormType'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 
 const resourceStore = useResourceStore()
 const sortingResourcesSelectedMethod = ref('isValidated')

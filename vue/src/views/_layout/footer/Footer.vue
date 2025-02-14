@@ -49,6 +49,7 @@
             variant="flat"
             prepend-icon="mdi-email-outline"
             append-icon="mdi-arrow-right"
+            onclick="location.href='mailto:plateformeurbaine@gmail.com';"
             >{{ $t('footer.email') }}</v-btn
           >
         </div>
@@ -73,9 +74,7 @@
             <a href="https://cvuc-uccc.com" target="_blank"
               ><img src="@/assets/images/footer/cvuc.png" alt="cvuc"
             /></a>
-            <a href="" target="_blank"
-              ><img src="@/assets/images/footer/asso_cameroun.png" alt="asso_cameroun"
-            /></a>
+            <span><img src="@/assets/images/footer/asso_cameroun.png" alt="asso_cameroun" /></span>
             <a href="https://minepat.gov.cm/fr/accueil" target="_blank"
               ><img src="@/assets/images/footer/minepat.png" alt="minepat"
             /></a>

@@ -4,7 +4,7 @@ import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Status } from '@/models/enums/contents/Status'
 import type { User } from '@/models/interfaces/auth/User'
 import type { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
-import type { iri } from './SymfonyRelation'
+import type { iri, SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import type { LocalizableSubmission } from '@/models/interfaces/common/LocalizableSubmission'
 import type { Organisation } from '@/models/interfaces/Organisation'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
@@ -12,7 +12,13 @@ import type { Blameable } from '@/models/interfaces/common/Blameable'
 import type { Localizable } from '@/models/interfaces/common/Localizable'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 
-export interface Project extends Timestampable, Validateable, Blameable, Localizable, ThematicItem {
+export interface Project
+  extends Timestampable,
+    Validateable,
+    Blameable,
+    Localizable,
+    ThematicItem,
+    SymfonyRelation {
   id: string
   name: string
   slug: string

@@ -13,6 +13,10 @@
       "desc": "La Plateforme Urbaine est une source incontournable pour explorer, télécharger et exploiter des données géographiques et ouvertes sur les projets urbains du Cameroun. Elle présente une vision claire des acteurs et des initiatives qui façonnent nos villes.",
       "title": "L'urbanisme\nau Cameroun"
     },
+    "highlights": {
+      "title": "À la une",
+      "action": "Toutes les actualités"
+    },
     "map": {
       "action": "Accéder au Géoportail",
       "availableOnDesktop": "Disponible sur ordinateur",
@@ -24,9 +28,6 @@
         "overview": {
           "description": "Localisez les projets d’infrastructure et de développement urbain pour faciliter la collaboration et la coordination au Cameroun.",
           "label": "Bénéficiez d’une vue d’ensemble des projets et des acteurs"
-        },
-        "news": {
-          "title": "À la une"
         },
         "simpleMaps": {
           "description": "Mesurez avec précision, dessinez des polygones, des lignes et des points directement sur la carte.",

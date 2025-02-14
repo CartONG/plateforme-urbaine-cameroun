@@ -1,14 +1,15 @@
 <template>
-  <div class="HomeNews">
+  <div class="HomeHighlights">
     <GenericInfoCard
-      v-for="item in homeStore.news"
-      :id="item.id"
+      v-for="item in homeStore.orderedMainHighlights"
+      :id="item.itemId"
       :title="item.name"
       :description="item.description"
       :image="item.image"
-      :type="item.type"
-      :type-label="$t('itemType.' + item.type)"
+      :type="item.itemType"
+      :type-label="$t('itemType.' + item.itemType)"
       :slug="item.slug"
+      :href="item.link"
       :key="item.id"
     />
   </div>
@@ -20,13 +21,13 @@ import { useHomeStore } from '@/stores/homeStore'
 import { onBeforeMount } from 'vue'
 
 const homeStore = useHomeStore()
-onBeforeMount(async () => await homeStore.getNews())
+onBeforeMount(async () => await homeStore.getMainHighlights())
 </script>
 
 <style lang="scss">
-.HomeNews {
+.HomeHighlights {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row-reverse nowrap;
   max-width: 100%;
   gap: 2rem;
   & > * {
@@ -34,8 +35,8 @@ onBeforeMount(async () => await homeStore.getNews())
   }
 }
 @media (max-width: $bp-lg) {
-  .HomeNews {
-    flex-flow: column nowrap;
+  .HomeHighlights {
+    flex-flow: column-reverse nowrap;
   }
 }
 </style>

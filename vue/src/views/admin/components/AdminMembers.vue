@@ -20,7 +20,15 @@
       :plainText="true"
     >
       <template #editContentCell="{ item }">
-        <template>
+        <template v-if="!(item as User).isValidated">
+          <v-btn
+            size="small"
+            icon="mdi-arrow-right"
+            class="text-main-blue"
+            @click="editUser(item as User)"
+          ></v-btn>
+        </template>
+        <template v-else>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_ACTORS)"
             icon="mdi-contacts"

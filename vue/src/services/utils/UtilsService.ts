@@ -1,4 +1,5 @@
 import { i18n } from '@/plugins/i18n'
+import { LngLat, LngLatBounds, type LngLatLike } from 'maplibre-gl'
 
 export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
@@ -23,7 +24,12 @@ export const debounce = (func: any, wait = 500) => {
 
 export function getNestedObjectValue(obj: any, propStr = '') {
   const keys = propStr.split('.')
-  return keys.reduce((acc, key) => acc[key], obj)
+  return (
+    keys.reduce((acc, key) => {
+      if (!acc || !(key in acc)) return null
+      return acc[key]
+    }, obj) || null
+  )
 }
 
 export function localizeDate(
@@ -82,4 +88,43 @@ export function downloadJson(data: any, fileName: string) {
   link.href = URL.createObjectURL(blob)
   link.download = `${fileName}.geojson`
   link.click()
+}
+
+export async function fetchImageAsBase64(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url)
+    if (!response.ok) {
+      return null
+    }
+    const blob = await response.blob()
+
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
+  } catch (error) {
+    console.error('Error fetching image as base64:', error)
+    return null
+  }
+}
+
+export function getBboxFromPointsGroup(pointsGroup: LngLatLike[]): LngLatBounds {
+  if (pointsGroup.length === 0) {
+    return new LngLatBounds()
+  }
+  let minLat = Infinity,
+    maxLat = -Infinity
+  let minLng = Infinity,
+    maxLng = -Infinity
+
+  for (const { lat, lng } of pointsGroup as LngLat[]) {
+    if (lat < minLat) minLat = lat
+    if (lat > maxLat) maxLat = lat
+    if (lng < minLng) minLng = lng
+    if (lng > maxLng) maxLng = lng
+  }
+
+  return new LngLatBounds({ lng: minLng, lat: minLat }, { lng: maxLng, lat: maxLat })
 }

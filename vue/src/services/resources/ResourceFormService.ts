@@ -15,7 +15,7 @@ export class ResourceFormService {
     const resourceSchema: z.ZodType<Partial<Resource>> = z
       .object({
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
-        description: zodModels.description,
+        description: zodModels.descriptionRequired,
         type: z.nativeEnum(ResourceType),
         osmData: zodModels.osmData.nullable(),
         startAt: z.coerce.date().nullable().optional(),

@@ -22,4 +22,4 @@ jobs:
     - name: Deploy to Server depending on environment
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-        "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git reset --hard origin/${{ github.ref_name }} && make deploy && make rerun-database"
+        "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git clean -fd && git reset --hard origin/${{ github.ref_name }} && make deploy && make rerun-database && make create-osm-db"

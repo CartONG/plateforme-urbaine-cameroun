@@ -85,6 +85,25 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     addNotification("L'acteur a bien été supprimé", NotificationType.SUCCESS)
   }
 
+  const updateActor = (updatedActor: Actor) => {
+    actors.forEach((actor, key) => {
+      if (actor.id === updatedActor.id) {
+        actors[key] = {
+          ...actor,
+          ...updatedActor
+        }
+      }
+    })
+    if (selectedActor.value && selectedActor.value.id === updatedActor.id) {
+      console.log('selectedActor.value', JSON.parse(JSON.stringify(selectedActor.value)))
+      selectedActor.value = {
+        ...selectedActor.value,
+        ...updatedActor
+      }
+      console.log('selectedActor.value', JSON.parse(JSON.stringify(selectedActor.value)))
+    }
+  }
+
   return {
     dataLoaded,
     actors,
@@ -100,6 +119,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     setSelectedActor,
     setActorEditionMode,
     createOrEditActor,
-    deleteActor
+    deleteActor,
+    updateActor
   }
 })

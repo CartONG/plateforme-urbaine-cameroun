@@ -17,12 +17,13 @@ class ActorRepository extends ServiceEntityRepository
         parent::__construct($registry, Actor::class);
     }
 
-    public function findLatest(): array
+    public function findHighlightedItems(array $ids): array
     {
         return $this->createQueryBuilder('a')
-            ->select("a.id, a.name, a.updatedAt, a.description, a.slug, 'a.logo' as image, '".ItemType::ACTOR->value."' as type")
-            ->orderBy('a.updatedAt', 'DESC')
-            ->setMaxResults(3)
+            ->select("a.id, a.id as itemId, a.name, a.updatedAt, a.description, a.slug, l.filePath as image, '".ItemType::ACTOR->value."' as itemType")
+            ->where('a.id IN (:ids)')
+            ->leftJoin('a.logo', 'l')
+            ->setParameter('ids', $ids)
             ->getQuery()
             ->getResult()
         ;

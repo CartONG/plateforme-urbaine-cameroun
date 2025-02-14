@@ -4,8 +4,10 @@
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
+/public/qgis/
 /public/bundles/
 /public/media/
+/public/qgis/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###

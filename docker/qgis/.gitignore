@@ -1,0 +1,4 @@
+fonts/
+svg/
+data/*
+!data/.gitkeep
