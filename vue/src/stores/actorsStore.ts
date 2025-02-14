@@ -94,7 +94,9 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     const id = selectedActor.value?.id
     const result = await ActorsService.createOrEditActor(actor, edit, id)
     await getActors()
-    selectedActor.value = await ActorsService.getActor(result.id)
+    if (result.isValidated || useUserStore().userIsAdmin()) {
+      selectedActor.value = await ActorsService.getActor(result.id)
+    }
     resetActorEditionMode()
     addNotification(
       edit ? "L'acteur a bien été modifié" : "L'acteur a bien été ajouté",
