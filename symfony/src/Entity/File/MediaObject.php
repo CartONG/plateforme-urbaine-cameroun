@@ -75,7 +75,7 @@ class MediaObject extends AbstractObject
     #[Assert\File(
         maxSize: '5000k',
         extensions: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-        extensionsMessage: 'Please upload a valid file (jpg, jpeg, png, webp, gif, svg)',
+        extensionsMessage: 'Please upload a valid file (jpg, jpeg, png, webp, gif)',
     )]
     public ?File $file = null;
 }
