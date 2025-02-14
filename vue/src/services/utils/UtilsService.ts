@@ -1,4 +1,5 @@
 import { i18n } from '@/plugins/i18n'
+import { LngLat, LngLatBounds, type LngLatLike } from 'maplibre-gl'
 
 export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
@@ -107,4 +108,23 @@ export async function fetchImageAsBase64(url: string): Promise<string | null> {
     console.error('Error fetching image as base64:', error)
     return null
   }
+}
+
+export function getBboxFromPointsGroup(pointsGroup: LngLatLike[]): LngLatBounds {
+  if (pointsGroup.length === 0) {
+    return new LngLatBounds()
+  }
+  let minLat = Infinity,
+    maxLat = -Infinity
+  let minLng = Infinity,
+    maxLng = -Infinity
+
+  for (const { lat, lng } of pointsGroup as LngLat[]) {
+    if (lat < minLat) minLat = lat
+    if (lat > maxLat) maxLat = lat
+    if (lng < minLng) minLng = lng
+    if (lng > maxLng) maxLng = lng
+  }
+
+  return new LngLatBounds({ lng: minLng, lat: minLat }, { lng: maxLng, lat: maxLat })
 }

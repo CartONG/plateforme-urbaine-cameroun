@@ -10,9 +10,15 @@
         </template>
         <v-app-bar-title>
           <div class="d-flex align-center">
-            <img src="@/assets/images/Logo.png" class="Header__appLogo" />
-            <span class="ml-4 text-main-blue">{{ $t('header.title') }}</span>
-            <span class="ml-2 text-main-blue font-weight-bold">{{ $t('header.title2') }}</span>
+            <router-link
+              :to="{ name: 'home' }"
+              class="Header__bannerLink"
+              @click="appStore.activeTab = 0"
+            >
+              <img src="@/assets/images/Logo.png" class="Header__appLogo" />
+              <span class="ml-4 text-main-blue">{{ $t('header.title') }}</span>
+              <span class="ml-2 text-main-blue font-weight-bold">{{ $t('header.title2') }}</span>
+            </router-link>
           </div>
         </v-app-bar-title>
       </v-app-bar>
@@ -44,7 +50,9 @@
             <span class="Header__tabsText">{{ $t('header.help') }}</span>
           </v-list-item>
           <v-list-item>
-            <span class="Header__tabsText">{{ $t('header.contact') }}</span>
+            <a :href="whatsappLink" target="_blank" class="Header__tabsText">{{
+              $t('header.contact')
+            }}</a>
           </v-list-item>
           <v-list-item>
             <LoginButton />
@@ -62,6 +70,7 @@ import { ref } from 'vue'
 
 const appStore = useApplicationStore()
 const showMobileMenu = ref(false)
+const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
 </script>
 
 <style lang="scss">

@@ -11,7 +11,9 @@
       >
         <v-icon icon="mdi-arrow-left" color="main-blue" />
       </v-btn>
-      <img src="@/assets/images/Logo.png" class="MyMapHeader__logo" />
+      <router-link :to="{ name: 'home' }" class="Header__bannerLink">
+        <img src="@/assets/images/Logo.png" alt="Accueil" class="MyMapHeader__logo" />
+      </router-link>
     </div>
     <Geocoding
       :search-type="NominatimSearchType.FREE"

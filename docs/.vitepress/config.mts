@@ -58,7 +58,15 @@ export default defineConfig({
           { text: 'Request the API', link: '/development/request-the-api' },
           { text: 'Components', link: '/development/components' },
         ]
-      }
+      },
+      {
+        collapsed: false,
+        text: 'Database access',
+        items: [
+          { text: 'PostgreSQL', link: '/database/postgresql' },
+          { text: 'Qgis Desktop', link: '/database/qgis' },
+        ]
+      },
     ],
 
     socialLinks: [

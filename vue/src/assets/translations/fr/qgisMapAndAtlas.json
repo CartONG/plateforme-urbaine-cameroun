@@ -55,9 +55,9 @@
                     "label": "Nom du groupe",
                     "placeholder": "Nom du groupe"
                 },
-                "atlasGroup": {
-                    "label": "Groupe",
-                    "placeholder": "Groupe"
+                "atlasType": {
+                    "label": "Type de données",
+                    "placeholder": "Type de données"
                 },
                 "maps": {
                     "label": "Selectionner des données (projets QGIS)",

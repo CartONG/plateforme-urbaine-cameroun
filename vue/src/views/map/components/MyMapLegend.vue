@@ -4,7 +4,7 @@
       icon="mdi-layers"
       v-if="!legendIsShown"
       @click.stop="legendIsShown = true"
-      icon-color="main-blue"
+      class="text-main-blue"
     ></v-btn>
     <div v-else class="MapLegend__ctn">
       <div class="MapLegend__title">

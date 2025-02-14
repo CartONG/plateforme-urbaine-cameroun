@@ -108,9 +108,13 @@ onMounted(() => {
   if (map.value != null) {
     map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
     map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
+    projectStore.map = map.value
     map.value.on('load', async () => {
       await setProjectLayer()
       showPopupOnInit()
+    })
+    map.value.on('moveend', () => {
+      projectStore.filteredProjects = projectStore.filterProjects('map')
     })
   }
 })

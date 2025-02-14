@@ -195,6 +195,7 @@
             v-model="form.officeLocation.value.value"
             :error-messages="form.officeLocation.errorMessage.value"
             @blur="form.officeLocation.handleChange"
+            :placeholder="$t('actors.form.officeLocationPlaceholder')"
           />
         </div>
 
@@ -235,6 +236,8 @@ import { useThematicStore } from '@/stores/thematicStore'
 import { onInvalidSubmit } from '@/services/forms/FormService'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { i18n } from '@/plugins/i18n'
+import { addNotification } from '@/services/notifications/NotificationService'
+import { NotificationType } from '@/models/enums/app/NotificationType'
 
 const appStore = useApplicationStore()
 const actorsStore = useActorsStore()
@@ -299,6 +302,9 @@ const submitForm = handleSubmit(
     }
     actorsStore.createOrEditActor(actorSubmission, actorToEdit !== null)
   },
-  () => onInvalidSubmit
+  () => {
+    addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
+    onInvalidSubmit()
+  }
 )
 </script>
