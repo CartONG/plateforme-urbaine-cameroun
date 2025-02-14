@@ -12,12 +12,15 @@ import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
 import type { LikesList } from '@/models/interfaces/LikesList'
 import { LikeService } from '@/services/likeSystem/LikeService'
 import type { Notification } from '@/models/interfaces/Notification'
+import { ItemType } from '@/models/enums/app/ItemType'
 
 export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const { mobile } = useDisplay()
   const activeTab = ref(0)
   const activeDialog: Ref<DialogKey | null> = ref(null)
   const showEditContentDialog = ref(false)
+  const showEditMessageDialog = ref<false | ItemType>(false)
+  const showEditThanksDialog = ref(false)
   const route = useRoute()
   const triggerZoomReset = ref(false)
   const notificationPile: Ref<Notification[]> = ref([])
@@ -68,6 +71,8 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
     isLightHeader,
     triggerZoomReset,
     showEditContentDialog,
+    showEditMessageDialog,
+    showEditThanksDialog,
     currentContentPage,
     likesList,
     getLikesList,

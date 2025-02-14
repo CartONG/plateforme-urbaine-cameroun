@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" @click:outside="closeDialog" width="auto">
+  <v-dialog v-model="showDialog" @click:outside="closeOutside && closeDialog()" width="auto">
     <div class="Dialog">
       <div class="Dialog__header">
         <h2 class="Dialog__title"><slot name="title"></slot></h2>
@@ -20,10 +20,25 @@ import { useApplicationStore } from '@/stores/applicationStore'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+interface Props {
+  closeOutside?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  closeOutside: true
+})
+
+const emit = defineEmits<{
+  close: []
+}>()
+
 const router = useRouter()
 const applicationStore = useApplicationStore()
 const showDialog = computed(() => applicationStore.activeDialog != null)
-const closeDialog = () => router.replace({ query: { dialog: undefined } })
+const closeDialog = () => {
+  router.replace({ query: { dialog: undefined } })
+  emit('close')
+}
 </script>
 
 <style lang="scss">

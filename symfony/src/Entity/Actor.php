@@ -20,23 +20,20 @@ use App\Model\Enums\UserRoles;
 use App\Repository\ActorRepository;
 use App\Security\Voter\ActorVoter;
 use App\Services\State\Processor\ActorProcessor;
-use App\Services\State\Provider\ActorProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Jsor\Doctrine\PostGIS\Types\PostGISType;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[UniqueEntity('name')]
 #[ApiResource(
     operations: [
         new GetCollection(
-            provider: ActorProvider::class,
+            paginationEnabled: false,
             normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION]
         ),
         new GetCollection(
@@ -150,6 +147,11 @@ class Actor
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     #[Assert\Email]
     private ?string $email = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Assert\Length(max: 1000)]
+    private ?string $creatorMessage = null;
 
     /**
      * @var Collection<int, Project>
@@ -396,6 +398,18 @@ class Actor
     public function setEmail(?string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

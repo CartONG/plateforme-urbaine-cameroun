@@ -25,6 +25,7 @@ export interface Resource
   startAt: Date
   endAt: Date
   author: string
+  creatorMessage?: string
   [key: string]: any
 }
 
