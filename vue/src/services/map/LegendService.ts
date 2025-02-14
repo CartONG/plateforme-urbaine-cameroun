@@ -94,7 +94,7 @@ export class LegendService {
         legendList.value.push({
           id: layerId,
           layerType: LayerType.APP_LAYER,
-          icon: `/src/assets/images/icons/map/${layerId}_icon.png`,
+          icon: `/img/map/${layerId}_icon.png`,
           name: i18n.t('myMap.rightSidebar.layers.itemType.' + layerId),
           order: legendList.value.length
         })

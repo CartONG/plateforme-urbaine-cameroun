@@ -2,20 +2,22 @@
   <div class="Header Header--desktop">
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
-        <router-link :to="{ name: 'home' }" class="Header__bannerLink">
+        <div class="Header__bannerLink">
           <v-icon icon="mdi-help-circle-outline" />
           <span class="mr-6">{{ $t('header.help') }}</span>
-        </router-link>
-        <router-link :to="{ name: 'home' }" class="Header__bannerLink">
+        </div>
+        <a :href="whatsappLink" target="_blank" class="Header__bannerLink">
           <v-icon icon="mdi-email-outline" />
           <span>{{ $t('header.contact') }}</span>
-        </router-link>
+        </a>
       </div>
     </div>
     <div class="Header__nav">
       <div class="Header__navContent container container--transition">
         <div class="Header__navBlock Header__navBlock--left">
-          <img src="@/assets/images/Logo.png" alt="Accueil" class="Header__appLogo" />
+          <router-link :to="{ name: 'home' }" class="Header__bannerLink">
+            <img src="@/assets/images/Logo.png" alt="Accueil" class="Header__appLogo" />
+          </router-link>
         </div>
         <nav class="Header__navBlock Header__navBlock--right">
           <v-tabs v-model="appStore.activeTab" align-tabs="end" color="main-red">
@@ -48,6 +50,7 @@ import { useApplicationStore } from '@/stores/applicationStore'
 import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
+const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
 </script>
 
 <style lang="scss">
@@ -80,6 +83,7 @@ const appStore = useApplicationStore()
           color: rgb(var(--v-theme-main-blue));
           gap: 0.375rem;
           font-size: $font-size-xs;
+          cursor: pointer;
 
           span {
             margin-top: 0.125rem;

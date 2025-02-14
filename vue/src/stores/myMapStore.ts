@@ -25,11 +25,13 @@ import { ItemType } from '@/models/enums/app/ItemType'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
+  const mapCanvasToDataUrl: Ref<string | null> = ref(null)
   const isRightSidebarShown = ref(true)
   const isLeftSidebarShown = ref(true)
   const mapSearch: Ref<OsmData | null> = ref(null)
   const isMapAlreadyBeenMounted = ref(false)
   const isLayersReorderingAlreadyTriggering = ref(false)
+  const isMapExportActive = ref(false)
 
   const actorLayer: Ref<Layer | null> = ref(null)
   const actorSubLayers: Ref<Layer[]> = ref([])
@@ -56,6 +58,8 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   let alreadyAddedImageSources: string[] = [] //Used to avoid triggering maplibre event as much time as the layer has been added to the map
   const legendList: Ref<(AppLayerLegendItem | AtlasLayerLegendItem)[]> = ref([])
   const bbox: Ref<LngLatBounds | undefined> = ref(undefined)
+  const scaleDenominator = ref(0)
+  const tileSize = ref(512)
   const serializedMapState: Ref<string> = ref('')
   const deserializedMapState: Ref<MapState | null> = ref(null)
   async function initMapLayers() {
@@ -189,7 +193,9 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     isLeftSidebarShown,
     isMapAlreadyBeenMounted,
     isLayersReorderingAlreadyTriggering,
+    isMapExportActive,
     myMap,
+    mapCanvasToDataUrl,
     mapSearch,
     actorLayer,
     actorSubLayers,
@@ -206,6 +212,8 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     updateAtlasSubLayersOrder,
     setMapLayersOrderOnMapReMount,
     bbox,
+    scaleDenominator,
+    tileSize,
     getSerializedMapState,
     serializedMapState,
     deserializedMapState,

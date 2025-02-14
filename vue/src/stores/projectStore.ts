@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, reactive, ref, type Ref, type Reactive, watch, type ComputedRef } from 'vue'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
 import { ProjectService } from '@/services/projects/ProjectService'
-import maplibregl from 'maplibre-gl'
+import maplibregl, { LngLatBounds } from 'maplibre-gl'
 import { SortKey } from '@/models/enums/SortKey'
 import type { Status } from '@/models/enums/contents/Status'
 import type { Thematic } from '@/models/interfaces/Thematic'
@@ -17,6 +17,7 @@ import { OrganisationService } from '@/services/organisations/OrganisationServic
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { getBboxFromPointsGroup } from '@/services/utils/UtilsService'
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const projects: Ref<Project[]> = ref([])
@@ -25,12 +26,14 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const hoveredProjectId: Ref<Project['id'] | null> = ref(null)
   const activeProjectId: Ref<Project['id'] | null> = ref(null)
   const map: Ref<maplibregl.Map | null> = ref(null)
+  const bbox: Ref<LngLatBounds | undefined> = ref(undefined)
   const isFilterModalShown: Ref<boolean> = ref(false)
   const sortingProjectsSelectedMethod = ref(SortKey.PROJECTS_AZ)
   const isProjectMapFullWidth = ref(false)
   const isProjectFormShown = ref(false)
   const donors: Ref<Organisation[]> = ref([])
   const contractingOrganisations: Ref<Organisation[]> = ref([])
+  const filteredProjects: Ref<Project[]> = ref([...projects.value])
 
   const filters: Reactive<{
     searchValue: string
@@ -64,6 +67,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   async function getAll(): Promise<void> {
     if (projects.value.length === 0) {
       projects.value = await ProjectService.getAll()
+      filteredProjects.value = filterProjects()
     }
   }
 
@@ -104,8 +108,17 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     return null
   })
 
-  const filteredProjects = computed(() => {
-    return projects.value.filter((project) => {
+  watch(
+    () => filters,
+    () => {
+      filteredProjects.value = filterProjects()
+    },
+    { deep: true }
+  )
+
+  type filteringTrigger = 'filters' | 'map'
+  const filterProjects = (from: filteringTrigger = 'filters') => {
+    const projectsList = projects.value.filter((project) => {
       const projectThematicIds = project.thematics.map((projectThematic) => projectThematic.id)
       const projectDonorIds = project.donors.map((donor) => donor.id)
 
@@ -135,7 +148,20 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           ))
       )
     })
-  })
+
+    if (from === 'filters') {
+      map.value?.fitBounds(getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords)))
+    }
+    if (from === 'map') {
+      if (!map.value) return projectsList
+      const bounds = map.value.getBounds()
+      return projectsList.filter((proj) => {
+        const { lat, lng } = proj.geoData.coords
+        return bounds.contains([lng, lat])
+      })
+    }
+    return projectsList
+  }
 
   const valuesToSearchOn = (project: Project) => {
     return (
@@ -245,9 +271,11 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filteredProjects,
     orderedProjects,
     map,
+    bbox,
     getAll,
     getAllDonors,
     getAllContractingOrganisations,
+    filterProjects,
     resetFilters,
     loadProjectBySlug,
     loadSimilarProjects,

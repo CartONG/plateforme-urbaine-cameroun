@@ -56,6 +56,7 @@ security:
         - { path: ^/api/atlases, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/qgis, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/forgot_password, role: PUBLIC_ACCESS }
+        - { path: ^/api/export-map, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

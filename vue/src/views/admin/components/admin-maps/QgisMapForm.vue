@@ -56,7 +56,7 @@
           <v-text-field disabled :placeholder="qgisMap?.qgisProject.name"></v-text-field>
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('atlas.form.fields.atlasGroup.label') }}</label>
+          <label class="Form__label required">{{ $t('atlas.form.fields.atlasType.label') }}</label>
           <v-select
             density="compact"
             variant="outlined"

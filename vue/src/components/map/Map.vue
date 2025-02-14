@@ -11,18 +11,22 @@ import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentContr
 import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
 import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
+import { useMyMapStore } from '@/stores/myMapStore'
 
 const applicationStore = useApplicationStore()
+const myMapStore = useMyMapStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
 const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
 const props = withDefaults(
   defineProps<{
     bounds?: maplibregl.LngLatBounds
+    toExport?: boolean
   }>(),
   {
     bounds: () =>
-      new maplibregl.LngLatBounds([8.48881554529, 1.72767263428], [16.0128524106, 12.8593962671])
+      new maplibregl.LngLatBounds([8.48881554529, 1.72767263428], [16.0128524106, 12.8593962671]),
+    toExport: false
   }
 )
 const popup = ref(new maplibregl.Popup({ closeOnClick: false }))
@@ -48,7 +52,7 @@ onMounted(() => {
 
   map.value.addControl(nav, 'top-right')
   map.value.addControl(new IControl(resetMapExtentControl), 'top-right')
-  map.value.addControl(new maplibregl.AttributionControl(), 'bottom-left')
+  map.value.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
   setBBox()
   map.value.on('load', () => {
     addSource('cameroonMask', cameroonMask as GeoJSON.GeoJSON)
@@ -62,6 +66,15 @@ onMounted(() => {
       },
       metadata: { isPersistent: true }
     })
+  })
+
+  // For an unknown reason, if we try to get the canvas to Data url from outside
+  // it returns an empty image. It can be caused by the use of components like the map inside TemplateRef
+  // This is a workaround waiting to refactor the use of template ref elements
+  map.value.on('idle', () => {
+    if (props.toExport) {
+      myMapStore.mapCanvasToDataUrl = map.value?.getCanvas().toDataURL() as string
+    }
   })
 })
 
@@ -277,6 +290,7 @@ defineExpose({
 
   .maplibregl-ctrl-top-left,
   .maplibregl-ctrl-bottom-right,
+  .maplibregl-ctrl-bottom-left,
   .maplibregl-ctrl-top-right {
     margin: 1.5rem;
     display: flex;
