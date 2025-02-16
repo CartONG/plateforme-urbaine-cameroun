@@ -37,7 +37,7 @@ dev: up show-urls		## Up and show urls
 
 build-dev: build-and-up create-osm-db show-urls 	## Build, up and show urls
 
-deploy: build-and-up init-jwt-keypair cc		## Deploys the project 
+deploy: build-and-up update-prod-database create-osm-db init-jwt-keypair cc		## Deploys the project 
 
 YELLOW=\033[1;33m
 GREEN=\033[1;32m

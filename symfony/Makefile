@@ -82,6 +82,8 @@ configure-database: enable-postgis	## Configure the database
 
 create-short-migration: reset-database make-migration run-migration run-fixtures ## Create a small migration
 
+update-prod-database: composer-install composer-dump-env cc run-migration	## Update database without clearing data
+
 ## 
 ## --------------------------------------------------------------------------------
 ##  🛠️  Tools
