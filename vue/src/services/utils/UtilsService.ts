@@ -32,6 +32,23 @@ export function getNestedObjectValue(obj: any, propStr = '') {
   )
 }
 
+// duplicated: src/services/api/ApiPlatformService.ts:1
+export function transformSymfonyRelationToIRIs<T>(entity: any): T {
+  for (const key in entity) {
+    if (Array.isArray(entity[key])) {
+      entity[key] = transformSymfonyRelationToIRIs(entity[key])
+    } else if (
+      typeof entity[key] === 'object' &&
+      !Array.isArray(entity[key]) &&
+      entity[key] !== null &&
+      '@id' in entity[key]
+    ) {
+      entity[key] = entity[key]['@id']
+    }
+  }
+  return entity
+}
+
 export function localizeDate(
   date: string | Date,
   format: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }

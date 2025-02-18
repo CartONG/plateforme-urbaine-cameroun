@@ -20,9 +20,10 @@ class ProjectRepository extends ServiceEntityRepository
     public function findHighlightedItems(array $ids): array
     {
         return $this->createQueryBuilder('p')
-            ->select("p.id, p.id as itemId, p.name, p.updatedAt, p.description, p.slug, p.logo as image, '".ItemType::PROJECT->value."' as itemType")
+            ->select("p.id, p.id as itemId, p.name, p.updatedAt, p.description, p.slug, l.filePath as image, '".ItemType::PROJECT->value."' as itemType")
             ->where('p.id IN (:ids)')
             ->setParameter('ids', $ids)
+            ->leftJoin('p.logo', 'l')
             ->getQuery()
             ->getResult()
         ;

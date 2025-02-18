@@ -47,9 +47,9 @@
         <div @click="removeExistingImage(index)" class="LoadedImages__closer">X</div>
         <img
           :src="
-            (existingImage as MediaObject).contentUrl
-              ? (existingImage as MediaObject).contentUrl
-              : (existingImage as string)
+            FileObject.hasThumbnail(existingImage as BaseMediaObject)
+              ? (existingImage as BaseMediaObject).contentsFilteredUrl.thumbnail
+              : (existingImage as BaseMediaObject).contentUrl
           "
           class="LoadedImages__preview ma-2"
         />
@@ -69,13 +69,14 @@
 <script setup lang="ts">
 import { ContentImageType } from '@/models/enums/app/ContentImageType'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
 import { InputImageValidator } from '@/services/files/InputImageValidator'
 import { type Ref, ref } from 'vue'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import { FileObject } from '@/services/files/FileObject'
 
 const props = defineProps({
   existingImages: {
-    type: Array<MediaObject | string>,
+    type: Array<BaseMediaObject | string | FileObject>,
     default: () => []
   },
   externalImagesLoader: {

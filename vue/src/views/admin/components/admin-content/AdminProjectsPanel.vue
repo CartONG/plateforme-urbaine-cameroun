@@ -4,10 +4,9 @@
       page="Projects"
       :items="projectStore.projects"
       :sortingListItems="sortOptions"
-      :createFunction="showProjectForm"
+      :createFunction="createProject"
       searchKey="name"
       @updateSortingKey="(e) => (sortingProjectsSelectedMethod = e)"
-      @create="createProject()"
       @update-search-query="(e) => (searchQuery = e)"
     />
     <ProjectForm
@@ -99,10 +98,12 @@ const showProjectForm = () => {
 const createProject = () => {
   formType.value = FormType.CREATE
   projectSubmission.value = null
+  console.log('createProject')
   showProjectForm()
 }
 
 const editProject = async (project: Project, type: FormType = FormType.EDIT) => {
+  console.log('editProject')
   formType.value = type
   projectSubmission.value = await ProjectService.get(project)
   showProjectForm()

@@ -2,34 +2,49 @@
   <div
     class="image-mosaic"
     :style="{
-      gridTemplateRows: `repeat(${Math.ceil(images.length / 4)}, 1fr)`
+      gridTemplateRows: `repeat(${Math.ceil(images.length / nbColumns)}, 1fr);`,
+      gridTemplateColumns: `repeat(${nbColumns}, 1fr)`
     }"
   >
-    <div
+    <img
       v-for="(image, index) in images"
       :key="index"
       class="mosaic-item"
-      :style="{ backgroundImage: `url(${typeof image === 'string' ? image : image.contentUrl})` }"
-      @click="viewImage(image)"
+      :src="typeof image === 'string' ? image : getThumbnailUrl(image)"
+      :style="{
+        backgroundImage: `url(${typeof image === 'string' ? image : getThumbnailUrl(image)})`,
+        cursor: `${hasViewer ? 'pointer' : 'default'}`
+      }"
+      @click="hasViewer && viewImage(image)"
     />
   </div>
-  <v-dialog v-model="showImageViewer" width="auto">
+  <v-dialog v-model="showImageViewer" width="auto" v-if="hasViewer">
     <img :src="imageViewerSrc" class="image-viewer" />
   </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject as FileObjectType } from '@/models/interfaces/object/FileObject'
+import type { MediaObject } from '@/models/interfaces/object/MediaObject'
+import { FileObject } from '@/services/files/FileObject'
 
-defineProps<{
-  images: (string | MediaObject)[]
-}>()
+withDefaults(
+  defineProps<{
+    images: (string | FileObjectType | MediaObject)[]
+    hasViewer?: boolean
+    nbColumns?: number
+  }>(),
+  {
+    hasViewer: true,
+    nbColumns: 4
+  }
+)
 
 const imageViewerSrc = ref<string>('')
 const showImageViewer = ref<boolean>(false)
 
-function viewImage(image: string | MediaObject) {
+function viewImage(image: string | FileObjectType | MediaObject) {
   if (typeof image === 'string') {
     imageViewerSrc.value = image
   } else {
@@ -37,12 +52,19 @@ function viewImage(image: string | MediaObject) {
   }
   showImageViewer.value = true
 }
+
+function getThumbnailUrl(image: FileObjectType | MediaObject) {
+  if (FileObject.hasThumbnail(image)) {
+    return image.contentsFilteredUrl.thumbnail
+  }
+
+  return image.contentUrl
+}
 </script>
 
 <style scoped>
 .image-mosaic {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   row-gap: 1rem;
   column-gap: 1rem;
 }
@@ -52,7 +74,6 @@ function viewImage(image: string | MediaObject) {
   background-size: cover;
   border-radius: 0.5rem;
   overflow: hidden;
-  cursor: pointer;
   width: 100%;
   height: 10rem;
 }

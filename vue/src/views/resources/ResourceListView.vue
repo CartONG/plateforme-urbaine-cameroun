@@ -162,21 +162,26 @@ enum SortMethod {
 }
 
 const sortingResourcesSelectedMethod: Ref<SortMethod> = ref(SortMethod.NAME)
+
+function getResourcesByDate() {
+  const eventResources = filteredResources.value.filter((resource: Resource) => {
+    return resource.type === ResourceType.EVENTS
+  })
+  const otherResources = filteredResources.value.filter((resource: Resource) => {
+    return resource.type !== ResourceType.EVENTS
+  })
+  return [
+    ...eventResources.slice().sort((a: Resource, b: Resource) => {
+      return new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
+    }),
+    ...otherResources
+  ]
+}
+
 const sortedResources = computed(() => {
   switch (sortingResourcesSelectedMethod.value) {
     case SortMethod.DATE:
-      const eventResources = filteredResources.value.filter((resource: Resource) => {
-        return resource.type === ResourceType.EVENTS
-      })
-      const otherResources = filteredResources.value.filter((resource: Resource) => {
-        return resource.type !== ResourceType.EVENTS
-      })
-      return [
-        ...eventResources.slice().sort((a: Resource, b: Resource) => {
-          return new Date(a.startAt).getTime() - new Date(b.startAt).getTime()
-        }),
-        ...otherResources
-      ]
+      return getResourcesByDate()
     case SortMethod.NAME:
       return filteredResources.value.slice().sort((a: Resource, b: Resource) => {
         return a.name.localeCompare(b.name)

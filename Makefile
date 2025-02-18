@@ -26,7 +26,7 @@ POSTGRES = $(DOCKER_EXEC_POSTGRES)
 help:
 	@sed -E -n "/##/s/^(.*:[\s\t]*)?(##\s)(.*)/\1\3/p" $(MAKEFILE_LIST)
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🚀 Main commands
 ## --------------------------------------------------------------------------------
@@ -37,7 +37,8 @@ dev: up show-urls		## Up and show urls
 
 build-dev: build-and-up create-osm-db show-urls 	## Build, up and show urls
 
-deploy: build-and-up init-jwt-keypair cc		## Deploys the project 
+deploy: build-and-up init-jwt-keypair cc		## Deploys the project
+deploy-prod: build-and-up update-prod-database create-osm-db init-jwt-keypair cc		## Deploys the project
 
 YELLOW=\033[1;33m
 GREEN=\033[1;32m
@@ -91,7 +92,7 @@ init-hosts:	## Adds the puc.local and local subdomain entries to the hosts file
 		echo "Unsupported OS"; \
 	fi
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🐋  Docker commands
 ## --------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
-use App\Entity\MediaObject;
+use App\Entity\File\FileObject;
 use App\Entity\Project;
 use App\Entity\Resource;
 use App\Entity\Trait\TimestampableEntity;
@@ -166,7 +166,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
-    private ?MediaObject $logo = null;
+    private ?FileObject $logo = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
@@ -410,12 +410,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLogo(): ?MediaObject
+    public function getLogo(): ?FileObject
     {
         return $this->logo;
     }
 
-    public function setLogo(?MediaObject $logo): static
+    public function setLogo(?FileObject $logo): static
     {
         $this->logo = $logo;
 

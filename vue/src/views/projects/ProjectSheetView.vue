@@ -2,7 +2,11 @@
   <div class="ProjectSheetView SheetView" v-if="project != null">
     <div class="SheetView__block SheetView__block--left">
       <div class="SheetView__logoCtn show-sm">
-        <img :src="project.logo" class="SheetView__logo" />
+        <img
+          v-if="project.logo?.contentUrl"
+          :src="project.logo?.contentUrl"
+          class="SheetView__logo"
+        />
       </div>
       <SheetContentBanner
         :id="project.id"
@@ -47,7 +51,11 @@
         <PrintButton />
       </div>
       <div class="SheetView__logoCtn hide-sm">
-        <img :src="project.logo" class="SheetView__logo" />
+        <img
+          v-if="project.logo?.contentUrl"
+          :src="project.logo?.contentUrl"
+          class="SheetView__logo"
+        />
       </div>
       <ChipList :items="project.thematics" />
       <div class="SheetView__infoCard">
@@ -65,9 +73,16 @@
         </div>
       </div>
       <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.partners') }}</div>
+      <ImagesMosaic
+        :images="project.partners"
+        :key="mosaicKey"
+        :nb-columns="2"
+        :has-viewer="false"
+      />
     </div>
     <div class="SheetView__block SheetView__block--bottom">
       <SectionBanner :text="$t('projectPage.inImages')" />
+      <ImagesMosaic :images="images" :key="mosaicKey" />
       <ContentDivider />
       <SectionBanner
         :text="$t('projectPage.otherProjectsWithSameThematics')"
@@ -83,7 +98,7 @@
 <script setup lang="ts">
 import type { Project } from '@/models/interfaces/Project'
 import { useProjectStore } from '@/stores/projectStore'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
 import ContentDivider from '@/components/content/ContentDivider.vue'
 import { useUserStore } from '@/stores/userStore'
@@ -101,11 +116,19 @@ import ProjectForm from '@/views/projects/components/ProjectForm.vue'
 import { FormType } from '@/models/enums/app/FormType'
 import router from '@/router'
 import type { Actor } from '@/models/interfaces/Actor'
+import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
 
 const userStore = useUserStore()
 const projectStore = useProjectStore()
 const project = computed(() => projectStore.project)
 const isFormShown = ref(false)
+const mosaicKey = ref(0)
+
+const images = computed(() => {
+  const images = project.value?.images ?? []
+  const externalImages = project.value?.externalImages ?? []
+  return [...images, ...externalImages]
+})
 
 onBeforeRouteUpdate(async (to) => {
   if (
@@ -129,6 +152,12 @@ watch(
   () => projectStore.project,
   async () => await loadSimilarProjects()
 )
+
+watchEffect(() => {
+  if (images.value) {
+    mosaicKey.value++
+  }
+})
 
 const loadSimilarProjects = async () => {
   if (projectStore.project != null) await projectStore.loadSimilarProjects()
