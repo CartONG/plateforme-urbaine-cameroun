@@ -1,9 +1,0 @@
-App\Entity\AdministrativeScope:
-  administrative_scope_1:
-    name: National
-  administrative_scope_2:
-    name: Régional
-  administrative_scope_3:
-    name: Départemental
-  administrative_scope_4:
-    name: Communal

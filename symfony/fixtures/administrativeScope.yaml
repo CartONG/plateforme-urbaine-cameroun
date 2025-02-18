@@ -1,4 +1,4 @@
-App\Entity\AdministrativeScope:
+App\Entity\Administrative\AdministrativeScope:
   administrative_scope_1:
     name: National
   administrative_scope_2:
