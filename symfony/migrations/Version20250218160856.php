@@ -135,7 +135,6 @@ final class Version20250218160856 extends AbstractMigration
                    VALUES (67, 'Vina', '', 'CM001005', '2018-12-17 00:00:00', '2019-01-04 00:00:00', 3, 1)");
         $this->addSql("INSERT INTO administrative_area (id, name, name_en, code, created_at, validated_at, administrative_scope_id, parent_id)
                    VALUES (68, 'Wouri', '', 'CM005004', '2018-12-17 00:00:00', '2019-01-04 00:00:00', 3, 5)");
-
     }
 
     public function down(Schema $schema): void
