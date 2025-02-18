@@ -8,6 +8,7 @@ imports:
 parameters:
     domain: '%env(DOMAIN)%'
     domain.url: 'https://%env(DOMAIN)%'
+    email_verifier.lifetime: 172800 # 2 days
 
 services:
     # default configuration for services in *this* file
@@ -25,9 +26,9 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-            - '../src/Services/State/'
             - '../src/Services/Serializer/'
-
+            - '../src/Services/Service/'
+            - '../src/Services/State/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

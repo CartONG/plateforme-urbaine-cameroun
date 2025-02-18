@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Services\State\Provider;
+namespace App\Services\State\Provider\User;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Repository\User\UserLikeRepository;
+use App\Services\State\Provider\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

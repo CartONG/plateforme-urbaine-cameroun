@@ -44,35 +44,35 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.organization') }}</label>
+          <label class="Form__label">{{ $t('auth.becomeMemberAskRoles.form.organization') }}</label>
           <v-text-field
             density="compact"
             variant="outlined"
             v-model="form.organisation.value.value"
             :error-messages="form.organisation.errorMessage.value"
-            :placeholder="$t('auth.becomeMemberThanks.form.organization')"
+            :placeholder="$t('auth.becomeMemberAskRoles.form.organization')"
             @blur="form.organisation.handleChange"
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.functions') }}</label>
+          <label class="Form__label">{{ $t('auth.becomeMemberAskRoles.form.functions') }}</label>
           <v-text-field
             density="compact"
             variant="outlined"
             v-model="form.position.value.value"
             :error-messages="form.position.errorMessage.value"
-            :placeholder="$t('auth.becomeMemberThanks.form.functions')"
+            :placeholder="$t('auth.becomeMemberAskRoles.form.functions')"
             @blur="form.position.handleChange"
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('auth.becomeMemberThanks.form.telephone') }}</label>
+          <label class="Form__label">{{ $t('auth.becomeMemberAskRoles.form.telephone') }}</label>
           <v-text-field
             density="compact"
             variant="outlined"
             v-model="form.phone.value.value"
             :error-messages="form.phone.errorMessage.value"
-            :placeholder="$t('auth.becomeMemberThanks.form.telephone')"
+            :placeholder="$t('auth.becomeMemberAskRoles.form.telephone')"
             @blur="form.phone.handleChange"
           />
         </div>

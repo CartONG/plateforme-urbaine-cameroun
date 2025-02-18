@@ -1,6 +1,10 @@
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import { StoresList } from '@/models/enums/app/StoresList'
-import type { SignInValues, SignUpValues } from '@/models/interfaces/auth/AuthenticationsValues'
+import type {
+  EmailVerifierValues,
+  SignInValues,
+  SignUpValues
+} from '@/models/interfaces/auth/AuthenticationsValues'
 import type { User, UserSubmission } from '@/models/interfaces/auth/User'
 import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import JwtCookie from '@/services/userAndAuth/JWTCookie'
@@ -13,12 +17,14 @@ import FileUploader from '@/services/files/FileUploader'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
+import { AxiosError } from 'axios'
 
 export const useUserStore = defineStore(StoresList.USER, () => {
   const router = useRouter()
   const route = useRoute()
   const currentUser = ref<User | null>(null)
   const errorWhileSignInOrSignUp = ref(false)
+  const invalidAccount = ref(false)
   const userIsLogged = computed(() => currentUser.value !== null)
   const userIsAdmin = () => userIsLogged.value && currentUser.value?.roles.includes(UserRoles.ADMIN)
   const userIsEditor = () =>
@@ -32,34 +38,43 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const signIn = async (values: SignInValues, hideDialog = true) => {
     try {
       await AuthenticationService.signIn(values)
-      setCurrentUser()
+      await setCurrentUser()
       errorWhileSignInOrSignUp.value = false
+      if (currentUser.value?.hasSeenRequestedRoles === false) {
+        await UserService.patchUser({ hasSeenRequestedRoles: true }, currentUser.value.id)
+        return await router.replace({
+          query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_ROLES }
+        })
+      }
       if (hideDialog) {
-        router.replace({ query: { ...route.query, dialog: undefined } })
+        await router.replace({ query: { ...route.query, dialog: undefined } })
       }
     } catch (err) {
       Sentry.captureException(err)
+      if (err instanceof AxiosError && err.response?.status === 401) {
+        invalidAccount.value = true
+        return
+      }
       errorWhileSignInOrSignUp.value = true
     }
   }
 
   const setCurrentUser = async () => {
-    currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
+    await getAuthenticatedUser()
     const appStore = useApplicationStore()
     appStore.getLikesList()
+  }
+
+  const getAuthenticatedUser = async () => {
+    currentUser.value = (await AuthenticationService.getAuthenticatedUser()).data
   }
 
   const signUp = async (values: SignUpValues) => {
     try {
       await UserService.createUser(values)
-      signIn(
-        {
-          email: values.email,
-          password: values.plainPassword
-        },
-        false
-      )
-      router.replace({ query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_THANKS } })
+      await router.replace({
+        query: { ...route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_THANKS }
+      })
     } catch (err) {
       errorWhileSignInOrSignUp.value = true
       Sentry.captureException(err)
@@ -70,6 +85,13 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     currentUser.value = null
     JwtCookie.clearCookies()
     router.push({ name: 'home' })
+  }
+
+  const verifyEmail = async (emailVerifierValues: EmailVerifierValues) => {
+    await AuthenticationService.verifyEmail(emailVerifierValues)
+    if (userIsLogged.value) {
+      await getAuthenticatedUser()
+    }
   }
 
   const checkAuthenticated = async () => {
@@ -102,9 +124,11 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     userHasRole,
     currentUser,
     errorWhileSignInOrSignUp,
+    invalidAccount,
     signIn,
     signUp,
     signOut,
+    verifyEmail,
     checkAuthenticated,
     patchUser
   }
