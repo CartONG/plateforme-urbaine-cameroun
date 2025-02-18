@@ -8,7 +8,7 @@ import type { Atlas } from '@/models/interfaces/Atlas'
 export class AtlasFormService {
   static getForm(atlas: Atlas | null) {
     const zodModels = CommonZodSchema.getDefinitions()
-    // @ts-ignore
+    // @ts-expect-error - zod object.
     const atlasSchema: z.ZodType<Partial<Atlas>> = z.object({
       name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
       atlasGroup: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),

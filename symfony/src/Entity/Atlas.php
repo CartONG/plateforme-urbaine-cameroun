@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Entity\File\FileObject;
 use App\Entity\Trait\TimestampableEntity;
 use App\Enum\AtlasGroup;
 use App\Repository\AtlasRepository;
@@ -65,7 +66,7 @@ class Atlas
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups([self::GET_FULL, self::WRITE])]
-    private ?MediaObject $logo = null;
+    private ?FileObject $logo = null;
 
     public function __construct()
     {
@@ -137,12 +138,12 @@ class Atlas
         return $this;
     }
 
-    public function getLogo(): ?MediaObject
+    public function getLogo(): ?FileObject
     {
         return $this->logo;
     }
 
-    public function setLogo(?MediaObject $logo): static
+    public function setLogo(?FileObject $logo): static
     {
         $this->logo = $logo;
 

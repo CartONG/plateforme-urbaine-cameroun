@@ -5,7 +5,7 @@ import type { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import type { ResourceType } from '@/models/enums/contents/ResourceType'
 import type { LocalizableSubmission } from '@/models/interfaces/common/LocalizableSubmission'
 import type { Localizable } from '@/models/interfaces/common/Localizable'
-import type { MediaObject } from '@/models/interfaces/MediaObject'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 
@@ -19,7 +19,7 @@ export interface Resource
   id: string
   name: string
   description: string
-  file: MediaObject
+  file: FileObject
   type: ResourceType
   format: ResourceFormat
   startAt: Date

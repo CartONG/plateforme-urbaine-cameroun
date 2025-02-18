@@ -9,7 +9,6 @@ export class InputImageValidator {
     'image/jpg',
     'image/gif',
     'image/webp',
-    'image/svg+xml',
     'image/bmp'
   ]
   private static message = i18n.t('inputs.images.generic')

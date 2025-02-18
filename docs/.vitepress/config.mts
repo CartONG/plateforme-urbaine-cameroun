@@ -67,6 +67,14 @@ export default defineConfig({
           { text: 'Qgis Desktop', link: '/database/qgis' },
         ]
       },
+      {
+        collapsed: false,
+        text: 'Trainings',
+        items: [
+          { text: 'Symfony & API Platform', link: '/training/symfony' },
+          { text: 'Architecture front', link: '/training/vue' },
+        ]
+      },
     ],
 
     socialLinks: [

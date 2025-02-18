@@ -21,7 +21,7 @@
 {$CADDY_EXTRA_CONFIG}
 
 (main_domain) {
-	
+
 	handle /nominatim* {
 		uri strip_prefix /nominatim
 		reverse_proxy nominatim:8080
@@ -29,7 +29,7 @@
 
 	@pwa expression `(
 			!path(
-				'/nominatim*', '/media*', '/api*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*', '/auth',
+				'/nominatim*', '/media*', '/files*', '/api*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*', '/auth',
 				'*.csv', '*.yml', '*.yaml', '*.xml'
 			)
 		)`

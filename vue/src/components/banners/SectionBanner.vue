@@ -26,37 +26,37 @@ defineProps<{
 </script>
 <style lang="scss">
 .SectionBanner {
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 1.5rem;
-    align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1.5rem;
+  align-items: center;
 
-    .SectionBanner__title {
-        font-size: $font-size-h3;
-        font-weight: 700;
-        color: rgb(var(--v-theme-main-blue));
+  .SectionBanner__title {
+    font-size: $font-size-h3;
+    font-weight: 700;
+    color: rgb(var(--v-theme-main-blue));
 
-        &[hide-half-circle="true"] {
-            padding: 0;
-            margin-top: 0;
-            &::before {
-                content: none;
-            }
-        }
+    &[hide-half-circle='true'] {
+      padding: 0;
+      margin-top: 0;
+      &::before {
+        content: none;
+      }
     }
+  }
 
-    .v-btn {
-        .v-btn__content {
-            font-weight: 400;
-        }
-        .v-icon {
-            $dim-icon-w: 1.5rem;
-            width: $dim-icon-w;
-            height: $dim-icon-w;
-            background: rgb(var(--v-theme-main-green));
-            border-radius: 50%;
-            color: white;
-        }
+  .v-btn {
+    .v-btn__content {
+      font-weight: 400;
     }
+    .v-icon {
+      $dim-icon-w: 1.5rem;
+      width: $dim-icon-w;
+      height: $dim-icon-w;
+      background: rgb(var(--v-theme-main-green));
+      border-radius: 50%;
+      color: white;
+    }
+  }
 }
 </style>

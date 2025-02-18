@@ -141,9 +141,9 @@
     }
   },
   "itemType": {
-    "Project": "Projet",
-    "Actor": "Acteur",
-    "Resource": "Ressource",
+    "project": "Projet",
+    "actor": "Acteur",
+    "resource": "Ressource",
     "new": {
       "your_message": {
         "project": "un nouveau projet",

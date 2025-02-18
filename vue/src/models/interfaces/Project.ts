@@ -10,6 +10,8 @@ import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { Blameable } from '@/models/interfaces/common/Blameable'
 import type { Localizable } from '@/models/interfaces/common/Localizable'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 
 export interface Project
   extends Timestampable,
@@ -25,8 +27,9 @@ export interface Project
   deliverables: string
   status: Status
   description: string
-  images: string[]
-  partners: string[]
+  images: BaseMediaObject[]
+  externalImages: string[]
+  partners: BaseMediaObject[]
   interventionZone: AdministrativeScope
   beneficiaryTypes: BeneficiaryType[]
   focalPointName: string
@@ -35,7 +38,7 @@ export interface Project
   focalPointTel: string
   focalPointPhoto: string
   website: string
-  logo: string
+  logo?: BaseMediaObject
   donors: Organisation[]
   contractingOrganisation: Organisation
   actor: Partial<Actor>
@@ -43,8 +46,12 @@ export interface Project
 }
 
 export interface ProjectSubmission
-  extends Omit<Project, 'actor' | 'thematics'>,
+  extends Omit<Project, 'actor' | 'thematics' | 'logo'>,
     LocalizableSubmission {
   actor: iri
   thematics: iri[]
+  logo: string
+  logoToUpload: ContentImageFromUserFile
+  imagesToUpload: ContentImageFromUserFile[]
+  imagesPartnerToUpload: ContentImageFromUserFile[]
 }

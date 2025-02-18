@@ -1,10 +1,10 @@
 import type { UserRoles } from '@/models/enums/auth/UserRoles'
-import type { MediaObject } from '../MediaObject'
+import type { FileObject } from '../object/FileObject'
 import type { Validateable } from '../common/Validateable'
 
 export interface User extends Validateable {
   id: number
-  logo: MediaObject
+  logo: FileObject
   firstName: string
   lastName: string
   fullName: string
@@ -17,5 +17,5 @@ export interface User extends Validateable {
 }
 
 export interface UserSubmission extends Omit<User, 'logo'> {
-  logo: MediaObject | string
+  logo: FileObject | string
 }

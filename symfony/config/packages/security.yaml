@@ -18,6 +18,9 @@ security:
         dev:
             pattern: ^/_(profiler|wdt) # for Symfony Web Debug Toolbar
             security: false
+        media:
+            pattern: ^/media # for Symfony Web Debug Toolbar
+            security: false
         api:
             pattern: ^/api/
             stateless: true #Don't use session
@@ -56,6 +59,7 @@ security:
         - { path: ^/api/atlases, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/qgis, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/forgot_password, role: PUBLIC_ACCESS }
+        - { path: ^/media, role: PUBLIC_ACCESS }
         - { path: ^/api/export-map, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
