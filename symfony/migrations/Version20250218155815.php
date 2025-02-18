@@ -39,7 +39,6 @@ final class Version20250218155815 extends AbstractMigration
                    VALUES (9, 'Sud-Ouest', 'South-West', 'CM010', '2018-12-17 00:00:00', '2019-01-04 00:00:00', 2)");
         $this->addSql("INSERT INTO administrative_area (id, name, name_en, code, created_at, validated_at, administrative_scope_id)
                    VALUES (10, 'Ouest', 'West', 'CM008', '2018-12-17 00:00:00', '2019-01-04 00:00:00', 2)");
-
     }
 
     public function down(Schema $schema): void
