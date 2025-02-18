@@ -1,15 +1,15 @@
 YARN = yarn
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🧩 Yarn
 ## --------------------------------------------------------------------------------
 
-yarn:	## Yarn commands or pass the parameter "c=" to run a given command, example: make yarn c="add vue"
+yarn: ## Yarn commands or pass the parameter "c=" to run a given command, example: make yarn c="add vue"
 	@$(eval c ?=)
 	@$(VUE) $(YARN) $(c)
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🧹 Eslint
 ## --------------------------------------------------------------------------------

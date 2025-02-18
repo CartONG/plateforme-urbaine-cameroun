@@ -33,7 +33,7 @@ import DialogController from '@/components/global/DialogController.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useUserStore } from '@/stores/userStore'
-import EditContentDialog from '@/views/actors/components/EditContentDialog.vue'
+import EditContentDialog from '@/views/_layout/forms/EditContentDialog.vue'
 import { useThematicStore } from './stores/thematicStore'
 import NotificationBox from '@/views/_layout/notification/NotificationBox.vue'
 
