@@ -61,7 +61,7 @@ defineProps<{
         gap: 0.25rem;
 
         .Kpi__count {
-          font-family: $font-primary;
+          font-family: $font-secondary;
           font-size: 2.75rem;
           line-height: 2rem;
           font-weight: 700;
