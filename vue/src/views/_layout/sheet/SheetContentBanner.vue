@@ -12,6 +12,7 @@
               variant="elevated"
               :to="{ name: 'map' }"
               class="elevation-1 text-main-blue px-3 mx-2 hide-sm"
+              v-if="hasCoordinates"
               ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1" />{{
                 $t('content.createAMap')
               }}</v-btn
@@ -55,6 +56,7 @@ defineProps<{
   website: string
   updatedAt: string | Date
   isEditable?: boolean
+  hasCoordinates?: boolean
 }>()
 </script>
 

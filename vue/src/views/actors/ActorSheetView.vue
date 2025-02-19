@@ -4,6 +4,7 @@
       <div class="SheetView__logoCtn show-sm">
         <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
       </div>
+      {{ actor.officeLocation }}
       <SheetContentBanner
         :id="actor.id"
         :slug="actor.slug"
@@ -14,6 +15,7 @@
         :website="actor.website"
         :isEditable="isEditable"
         :updatedAt="actor.updatedAt"
+        :hasCoordinates="actor.officeLocation?.length > 0"
         @edit="editActor"
       />
       <div class="SheetView__contentCtn my-6" v-if="actor.description">
