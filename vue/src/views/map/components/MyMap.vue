@@ -33,6 +33,7 @@ import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
 import MyMapItemPopup from '@/views/map/components/MyMapItemPopup.vue'
 import MyMapExportButton from '@/views/map/components/export/MyMapExportButton.vue'
 import ScaleControl from '@/components/map/controls/ScaleControl.vue'
+import { useRoute } from 'vue-router'
 
 type MapType = InstanceType<typeof Map>
 const basemap = ref<Basemap>()
@@ -45,6 +46,7 @@ const mapLegend = useTemplateRef('map-legend')
 const mapExportButton = useTemplateRef('map-export-button')
 const scaleControl = useTemplateRef('scale-control')
 const map = computed(() => myMap.value?.map)
+const route = useRoute()
 
 onMounted(() => {
   if (myMap.value) {
@@ -58,7 +60,7 @@ onMounted(() => {
     map.value.addControl(new IControl(mapExportButton), 'bottom-right')
     map.value.addControl(new IControl(scaleControl), 'bottom-left')
     // If map has already been visited, we set the previous bbox
-    if (myMapStore.bbox) {
+    if (myMapStore.bbox && !route.query.zoomTo) {
       map.value.fitBounds(myMapStore.bbox)
     }
     map.value.on('moveend', () => {

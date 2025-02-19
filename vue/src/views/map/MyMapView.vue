@@ -33,7 +33,10 @@ onMounted(() => {
   if (route.query.zoomTo) {
     const coordinates = (route.query.zoomTo as string).split(',').map((str) => parseFloat(str))
     const lnglat = new LngLat(coordinates[0], coordinates[1])
-    myMapStore.coordinatesToZoomToOnMapInit = lnglat
+    map.value?.flyTo({
+      center: lnglat,
+      zoom: 14
+    })
   }
   if (myMapStore.isMapAlreadyBeenMounted) {
     AppLayersService.initApplicationLayers(useMyMapStore())

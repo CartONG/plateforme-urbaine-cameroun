@@ -166,7 +166,6 @@ function searchActors(actors: Actor[]) {
   return actors.filter(
     (actor) =>
       actor.name.toLowerCase().indexOf(searchText) > -1 ||
-      actor.acronym.toLowerCase().indexOf(searchText) > -1 ||
       actor.category.toLowerCase().indexOf(searchText) > -1 ||
       actor.expertises.some((exp: ActorExpertise) => exp.name.toLowerCase().includes(searchText)) ||
       actor.thematics.some((thematic: Thematic) =>
