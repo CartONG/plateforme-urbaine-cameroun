@@ -9,7 +9,7 @@ import { AtlasMapService } from '@/services/map/AtlasMapService'
 import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
 import { LayerType } from '@/models/enums/geo/LayerType'
 import { LegendService } from '@/services/map/LegendService'
-import type { LngLatBounds } from 'maplibre-gl'
+import type { LngLatBounds, LngLatLike } from 'maplibre-gl'
 import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
 import { AppLayersService } from '@/services/map/AppLayersService'
 import type { MapState } from '@/models/interfaces/map/MapState'
@@ -32,6 +32,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const isMapAlreadyBeenMounted = ref(false)
   const isLayersReorderingAlreadyTriggering = ref(false)
   const isMapExportActive = ref(false)
+  const coordinatesToZoomToOnMapInit: Ref<LngLatLike | null> = ref(null)
 
   const actorLayer: Ref<Layer | null> = ref(null)
   const actorSubLayers: Ref<Layer[]> = ref([])
@@ -87,6 +88,13 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
       updateMapLayersOrder()
     }
     deserializedMapState.value = null
+    if (coordinatesToZoomToOnMapInit.value) {
+      console.log('yep')
+      myMap.value?.map?.flyTo({
+        center: coordinatesToZoomToOnMapInit.value,
+        zoom: 14
+      })
+    }
   }
 
   // Activate a watcher for app layers status
@@ -196,6 +204,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     isMapExportActive,
     myMap,
     mapCanvasToDataUrl,
+    coordinatesToZoomToOnMapInit,
     mapSearch,
     actorLayer,
     actorSubLayers,

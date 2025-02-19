@@ -18,6 +18,7 @@ import { computed, onMounted } from 'vue'
 import { LayerType } from '@/models/enums/geo/LayerType'
 import { useRoute } from 'vue-router'
 import { AppLayersService } from '@/services/map/AppLayersService'
+import { LngLat } from 'maplibre-gl'
 
 const myMapStore = useMyMapStore()
 const map = computed(() => myMapStore.myMap?.map)
@@ -28,6 +29,11 @@ onMounted(() => {
     myMapStore.deserializeMapState()
     myMapStore.initMapLayers()
     return
+  }
+  if (route.query.zoomTo) {
+    const coordinates = (route.query.zoomTo as string).split(',').map((str) => parseFloat(str))
+    const lnglat = new LngLat(coordinates[0], coordinates[1])
+    myMapStore.coordinatesToZoomToOnMapInit = lnglat
   }
   if (myMapStore.isMapAlreadyBeenMounted) {
     AppLayersService.initApplicationLayers(useMyMapStore())

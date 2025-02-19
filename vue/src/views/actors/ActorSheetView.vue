@@ -83,7 +83,7 @@
 import type { Actor } from '@/models/interfaces/Actor'
 import { useActorsStore } from '@/stores/actorsStore'
 import { computed, onMounted, watchEffect, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
 import ContentDivider from '@/components/content/ContentDivider.vue'
 import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
@@ -99,6 +99,7 @@ import ChipList from '@/components/content/ChipList.vue'
 const appStore = useApplicationStore()
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
+const router = useRouter()
 const actor = computed(() => actorsStore.selectedActor)
 
 const actorImages = computed(() => {
@@ -138,7 +139,14 @@ function editActor() {
 }
 
 function zoomToActorOnMap() {
-  console.log(actor.value?.officeLocation)
+  if (actor.value && actor.value.officeLocation) {
+    // const officeCoordinates = actor.value?.officeLocation?.split(',').map((str) => parseFloat(str))
+    // const lnglat = new LngLat(officeCoordinates[0], officeCoordinates[1])
+    // mapStore.coordinatesToZoomToOnMapInit = lnglat
+
+    console.log(router)
+    router.push({ name: 'map', query: { zoomTo: actor.value.officeLocation } })
+  }
 }
 </script>
 <style lang="scss">
