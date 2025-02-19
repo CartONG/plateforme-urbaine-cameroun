@@ -59,7 +59,7 @@ defineProps<{
   hasCoordinates?: boolean
 }>()
 
-const emits = defineEmits(['zoomToItemCoordinates'])
+const emits = defineEmits(['zoomToItemCoordinates', 'edit'])
 const zoomToItemCoordinates = () => {
   emits('zoomToItemCoordinates')
 }
