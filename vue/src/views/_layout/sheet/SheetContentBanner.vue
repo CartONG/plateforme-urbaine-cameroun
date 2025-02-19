@@ -10,7 +10,7 @@
             <LikeButton :id="id" />
             <v-btn
               variant="elevated"
-              :to="{ name: 'map' }"
+              @click="zoomToItemCoordinates()"
               class="elevation-1 text-main-blue px-3 mx-2 hide-sm"
               v-if="hasCoordinates"
               ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1" />{{
@@ -58,6 +58,11 @@ defineProps<{
   isEditable?: boolean
   hasCoordinates?: boolean
 }>()
+
+const emits = defineEmits(['zoomToItemCoordinates'])
+const zoomToItemCoordinates = () => {
+  emits('zoomToItemCoordinates')
+}
 </script>
 
 <style lang="scss">

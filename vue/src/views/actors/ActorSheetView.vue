@@ -4,7 +4,6 @@
       <div class="SheetView__logoCtn show-sm">
         <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
       </div>
-      {{ actor.officeLocation }}
       <SheetContentBanner
         :id="actor.id"
         :slug="actor.slug"
@@ -16,6 +15,7 @@
         :isEditable="isEditable"
         :updatedAt="actor.updatedAt"
         :hasCoordinates="actor.officeLocation?.length > 0"
+        @zoomToItemCoordinates="zoomToActorOnMap"
         @edit="editActor"
       />
       <div class="SheetView__contentCtn my-6" v-if="actor.description">
@@ -135,6 +135,10 @@ const isEditable = computed(() => {
 
 function editActor() {
   actorsStore.setActorEditionMode(actor.value)
+}
+
+function zoomToActorOnMap() {
+  console.log(actor.value?.officeLocation)
 }
 </script>
 <style lang="scss">
