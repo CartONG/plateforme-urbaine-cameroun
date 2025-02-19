@@ -12,10 +12,7 @@ export class ActorsFormService {
     const actorSchema = z.object({
       ///////// Main infos \\\\\\\\\
       name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
-      acronym: z
-        .string()
-        .min(2, { message: i18n.t('forms.errorMessages.minlength', { min: 2 }) })
-        .max(8, { message: i18n.t('forms.errorMessages.maxlength', { max: 8 }) }),
+      acronym: z.string().optional(),
       category: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
       expertises: zodModels.symfonyRelations,
       thematics: zodModels.symfonyRelations,
