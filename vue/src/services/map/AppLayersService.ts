@@ -179,9 +179,10 @@ export class AppLayersService {
   }
 
   static getGeojsonPerItemType(itemType: ItemType) {
+    console.log(this.filteredActors.value)
     switch (itemType) {
       case ItemType.ACTOR:
-        return MapService.getGeojson(this.filteredActors.value)
+        return MapService.getGeojson(this.filteredActors.value, 'officeLocation')
       case ItemType.PROJECT:
         return MapService.getGeojson(this.filteredProjects.value)
       case ItemType.RESOURCE:

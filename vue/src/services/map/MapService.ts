@@ -5,21 +5,42 @@ import type { Map } from 'maplibre-gl'
 import type PersistentGeoJSON from '@/models/interfaces/map/PersistentGeoJSON'
 
 export default class MapService {
-  static getGeojson(data: any[]): PersistentGeoJSON {
+  static getGeojson(data: any[], coordsField?: string): PersistentGeoJSON {
+    if (coordsField) {
+      console.log('coordsField', coordsField)
+    }
     const geojson: any = []
     Array.prototype.forEach.call(data, (item: any) => {
-      if (item.geoData?.coords) {
-        geojson.push({
-          id: item.id,
-          properties: {
+      if (!coordsField) {
+        if (item.geoData?.coords) {
+          geojson.push({
             id: item.id,
-            name: item.name
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [item.geoData.coords.lng, item.geoData.coords.lat]
-          }
-        })
+            properties: {
+              id: item.id,
+              name: item.name
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: [item.geoData.coords.lng, item.geoData.coords.lat]
+            }
+          })
+        }
+      } else {
+        if (item[coordsField]) {
+          const coords = item[coordsField].split(',').map((x) => parseFloat(x))
+          console.log(coords)
+          geojson.push({
+            id: item.id,
+            properties: {
+              id: item.id,
+              name: item.name
+            },
+            geometry: {
+              type: 'Point',
+              coordinates: [coords[0], coords[1]]
+            }
+          })
+        }
       }
     })
 

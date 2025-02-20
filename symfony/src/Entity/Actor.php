@@ -127,7 +127,7 @@ class Actor
         options: ['geometry_type' => 'POINT'],
         nullable: true
     )]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?string $officeLocation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
