@@ -28,7 +28,6 @@ export default class MapService {
       } else {
         if (item[coordsField]) {
           const coords = item[coordsField].split(',').map((x: string) => parseFloat(x))
-          console.log(coords)
           geojson.push({
             id: item.id,
             properties: {
