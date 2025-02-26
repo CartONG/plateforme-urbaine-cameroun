@@ -20,6 +20,7 @@ const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
 const props = withDefaults(
   defineProps<{
+    view: 'ProjectView' | 'MyMapView'
     bounds?: maplibregl.LngLatBounds
     toExport?: boolean
   }>(),
