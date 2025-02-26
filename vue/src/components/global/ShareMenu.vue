@@ -1,8 +1,12 @@
 <template>
   <v-menu activator="parent" :location="location">
     <v-list>
+      <v-list-item @click="shareOnWhatsapp()">
+        <v-icon icon="mdi mdi-whatsapp"></v-icon>
+        <span class="ml-4">{{ $t('share.shareWhatsapp') }}</span>
+      </v-list-item>
       <v-list-item @click="shareOnFacebook()">
-        <v-icon icon="mdi mdi-share-variant"></v-icon>
+        <v-icon icon="mdi mdi-facebook"></v-icon>
         <span class="ml-4">{{ $t('share.shareFb') }}</span>
       </v-list-item>
       <v-list-item @click="shareByEmail()">
@@ -35,6 +39,11 @@ async function shareWithLink(url: string) {
 function shareByEmail() {
   const mailto = `mailto:?subject=${encodeURIComponent(i18n.t('share.mailSubject'))}&body=${encodeURIComponent(props.body)}`
   window.location.href = mailto
+}
+
+function shareOnWhatsapp() {
+  const whatsappLink = `https://wa.me/?text=${props.url}`
+  window.open(whatsappLink, '_blank')
 }
 
 function shareOnFacebook() {
