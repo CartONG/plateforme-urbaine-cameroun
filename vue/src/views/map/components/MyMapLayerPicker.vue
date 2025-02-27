@@ -70,6 +70,7 @@ import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, ref, watch, type ModelRef } from 'vue'
 import { LayerType } from '@/models/enums/geo/LayerType'
 import MyMapLayerAdditionnalMenu from './MyMapLayerAdditionnalMenu.vue'
+import MapService from '@/services/map/MapService'
 
 const isExpanded = ref(false)
 const mainLayer: ModelRef<Layer | undefined> = defineModel('mainLayer')
@@ -115,7 +116,14 @@ const changeLayerOpacity = debounce(async (layer: Layer, opacityPercentage: numb
     const opacity = opacityPercentage / 100
     const paintProperty =
       props.loadedLayerType === LayerType.APP_LAYER ? 'icon-opacity' : 'raster-opacity'
-    myMapStore.myMap?.setPaintProperty(layer.id.toString(), paintProperty, opacity)
+    if (myMapStore.mapInstance) {
+      MapService.setPaintProperty(
+        myMapStore.mapInstance,
+        layer.id.toString(),
+        paintProperty,
+        opacity
+      )
+    }
   }
 }, 100)
 

@@ -24,13 +24,14 @@ import MyMapLayerPicker from '@/views/map/components/MyMapLayerPicker.vue'
 import { computed } from 'vue'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { AppLayersService } from '@/services/map/AppLayersService'
+import MapService from '@/services/map/MapService'
 
 const myMapStore = useMyMapStore()
-const myMap = computed(() => myMapStore.myMap)
+const myMap = computed(() => myMapStore.mapInstance)
 
 const refreshLayer = (itemType: ItemType) => {
   if (myMap.value) {
-    myMap.value.setData(itemType, AppLayersService.getGeojsonPerItemType(itemType))
+    MapService.setData(myMap.value, itemType, AppLayersService.getGeojsonPerItemType(itemType))
   }
 }
 

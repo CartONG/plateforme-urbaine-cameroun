@@ -1,7 +1,7 @@
 import type Basemap from '@/models/interfaces/map/Basemap'
 import maplibregl from 'maplibre-gl'
 import axios from 'axios'
-import type { Map } from 'maplibre-gl'
+import type { GeoJSONSource, Map } from 'maplibre-gl'
 import type PersistentGeoJSON from '@/models/interfaces/map/PersistentGeoJSON'
 
 export default class MapService {
@@ -76,6 +76,69 @@ export default class MapService {
         console.log(error)
         return Promise.reject()
       })
+  }
+
+  static setData = (map: maplibregl.Map, sourceName: string, geojson: GeoJSON.GeoJSON) => {
+    const source = map.getSource(sourceName.toString()) as GeoJSONSource
+    if (source) source.setData(geojson)
+  }
+
+  static addSource = (map: maplibregl.Map, sourceName: string, geojson: GeoJSON.GeoJSON) => {
+    if (map.getSource(sourceName)) return
+    map.addSource(sourceName, {
+      type: 'geojson',
+      data: geojson
+    })
+  }
+
+  static addImage = async (map: maplibregl.Map, path: string, name: string) => {
+    if (map.hasImage(name)) return
+    const image = await map.loadImage(path)
+    if (!image) return
+    map.addImage(name, image.data)
+    return
+  }
+
+  static addLayer = async (
+    map: maplibregl.Map,
+    layerName: string,
+    options: { layout: maplibregl.LayerSpecification['layout'] }
+  ) => {
+    if (map.getLayer(layerName)) return
+    map.addLayer({
+      id: layerName,
+      type: 'symbol',
+      source: layerName,
+      layout: options.layout,
+      metadata: { isPersistent: true } // used to have persistent layers when switching basemaps
+    })
+  }
+
+  static setLayoutProperty = (
+    map: maplibregl.Map,
+    layerName: string,
+    property: string,
+    value: any
+  ) => {
+    if (map.getLayer(layerName)) {
+      map.setLayoutProperty(layerName, property, value)
+    }
+  }
+
+  static setPaintProperty = (
+    map: maplibregl.Map,
+    layerName: string,
+    property: string,
+    value: any
+  ) => {
+    if (map.getLayer(layerName)) {
+      map.setPaintProperty(layerName, property, value)
+    }
+  }
+
+  static getData = async (map: maplibregl.Map, sourceName: string | number) => {
+    const source = map.getSource(sourceName.toString()) as GeoJSONSource
+    if (source) return await source.getData()
   }
 }
 

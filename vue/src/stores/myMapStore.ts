@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import { reactive, ref, watch, type Ref } from 'vue'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
 import type { Layer } from '@/models/interfaces/map/Layer'
-import type Map from '@/components/map/Map.vue'
 import type { AtlasActive, AtlasMap } from '@/models/interfaces/map/AtlasMap'
 import { AtlasMapService } from '@/services/map/AtlasMapService'
 import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
@@ -24,7 +23,8 @@ import { ResourceService } from '@/services/resources/ResourceService'
 import { ItemType } from '@/models/enums/app/ItemType'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
-  const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
+  // const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
+  const mapInstance: Ref<maplibregl.Map | null> = ref(null)
   const mapCanvasToDataUrl: Ref<string | null> = ref(null)
   const isRightSidebarShown = ref(true)
   const isLeftSidebarShown = ref(true)
@@ -63,6 +63,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const serializedMapState: Ref<string> = ref('')
   const deserializedMapState: Ref<MapState | null> = ref(null)
   async function initMapLayers() {
+    console.log(mapInstance.value?.loaded())
     await AppLayersService.initApplicationLayers(useMyMapStore())
     await AtlasMapService.initAtlasLayers(useMyMapStore(), useAtlasStore())
     if (deserializedMapState.value) {
@@ -73,7 +74,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
         bbox.value._ne.lng,
         bbox.value._ne.lat
       ]
-      myMap.value?.map?.fitBounds(bounds)
+      mapInstance.value?.fitBounds(bounds)
       for (const thematicMap of atlasMaps.value) {
         if (thematicMap.mainLayer.isShown) {
           updateAtlasLayersVisibility(thematicMap.id)
@@ -112,7 +113,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   function updateAtlasLayersVisibility(qgismapId: string, updateLegend = true) {
     AtlasMapService.handleAtlasLayersVisibility(
       atlasMaps.value,
-      myMap.value?.map,
+      mapInstance.value,
       qgismapId,
       alreadyAddedImageSources
     )
@@ -123,7 +124,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   }
 
   function updateMapLayersOrder() {
-    LegendService.updateLayersOrder(myMap.value?.map as maplibregl.Map, legendList)
+    LegendService.updateLayersOrder(mapInstance.value as maplibregl.Map, legendList)
   }
 
   function updateAtlasSubLayersOrder(atlasMapLayer: AtlasLayerLegendItem) {
@@ -134,16 +135,16 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   // When a user quit the map and come back, we wait for all the sources/layers to be loaded then we
   // reorder the layers according to the legend
   function setMapLayersOrderOnMapReMount() {
-    const map = myMap.value?.map as maplibregl.Map
-    if (!map) return
-    const sources = map.getStyle().sources
+    // const map = myMap.value?.map as maplibregl.Map
+    if (!mapInstance.value) return
+    const sources = mapInstance.value.getStyle().sources
     const numberOfSources = Object.keys(sources).length - 1 //We don't want basemap provider's (Maptiler/Mapbox) source
     const numberOfLegendItems = legendList.value.length
     if (numberOfSources === numberOfLegendItems) {
-      if (map.loaded()) {
+      if (mapInstance.value.loaded()) {
         updateMapLayersOrder()
       } else {
-        map.on('idle', () => {
+        mapInstance.value.on('idle', () => {
           // Avoid an infinite loop as layers ordering triggers 'idle' event
           if (isLayersReorderingAlreadyTriggering.value) return
           updateMapLayersOrder()
@@ -189,12 +190,12 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   )
 
   return {
+    mapInstance,
     isRightSidebarShown,
     isLeftSidebarShown,
     isMapAlreadyBeenMounted,
     isLayersReorderingAlreadyTriggering,
     isMapExportActive,
-    myMap,
     mapCanvasToDataUrl,
     mapSearch,
     actorLayer,

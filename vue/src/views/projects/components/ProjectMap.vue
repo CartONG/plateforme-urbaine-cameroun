@@ -1,7 +1,7 @@
 <template>
   <div class="ProjectMap">
     <ProjectFilterModal
-      v-if="projectStore.projects != null"
+      v-if="projectStore.projects !== null"
       :show="projectStore.isFilterModalShown"
       @close="projectStore.isFilterModalShown = false"
     />
@@ -12,12 +12,7 @@
       :active="true"
       ref="active-project-card"
     />
-    <Map
-      class="ProjectMap__map"
-      ref="project-map"
-      v-if="projectStore.projects != null"
-      view="ProjectView"
-    />
+    <Map class="ProjectMap__map" v-if="projectStore.projects !== null" view="ProjectView" />
     <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" />
     <ToggleSidebarControl
       v-model="projectStore.isProjectMapFullWidth"
@@ -37,19 +32,18 @@ import ProjectCard from '@/views/projects/components/ProjectCard.vue'
 import ProjectFilterModal from '@/views/projects/components/ProjectFilterModal.vue'
 import { type ResolvedImageSpecification } from 'maplibre-gl'
 import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
-import router from '@/router'
 import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
 
-type MapType = InstanceType<typeof Map>
-type ProjectCard = InstanceType<typeof ProjectCard>
+// type MapType = InstanceType<typeof Map>
+// type ProjectCard = InstanceType<typeof ProjectCard>
 
 const projectStore = useProjectStore()
-const projectMap = useTemplateRef<MapType>('project-map')
+// const projectMap = useTemplateRef<MapType>('project-map')
 const toggleSidebarControl = useTemplateRef('toggle-sidebar-control')
-const activeProjectCard = useTemplateRef<ProjectCard>('active-project-card')
+// const activeProjectCard = useTemplateRef<ProjectCard>('active-project-card')
 const showProjectFiltersModalControl = useTemplateRef('show-project-filters-modal-control')
 const geojson = computed(() => MapService.getGeojson(projectStore.filteredProjects))
-const map = computed(() => projectMap.value?.map)
+const map = computed(() => projectStore.mapInstance)
 const sources = {
   projects: 'projects'
 }
@@ -65,58 +59,58 @@ watch(
   }
 )
 
-watch(
-  () => projectMap.value?.hoveredFeatureId,
-  () => {
-    if (projectMap.value == null) return
-    projectStore.hoveredProjectId = projectMap.value?.hoveredFeatureId
-  }
-)
+// watch(
+//   () => projectMap.value?.hoveredFeatureId,
+//   () => {
+//     if (projectMap.value == null) return
+//     projectStore.hoveredProjectId = projectMap.value?.hoveredFeatureId
+//   }
+// )
 
 watch(
   () => projectStore.hoveredProjectId,
   () => {
-    if (projectMap.value == null) return
+    if (map.value == null) return
     updatePin()
   }
 )
 
-watch(
-  () => projectMap.value?.activeFeatureId,
-  (to, from) => {
-    const initializing = from === undefined
-    if (projectMap.value == null || initializing) return
-    projectStore.activeProjectId = projectMap.value?.activeFeatureId
-    router.replace({
-      ...router.currentRoute.value,
-      query: { ...router.currentRoute.value.query, project: projectStore.activeProjectId }
-    })
-  }
-)
+// watch(
+//   () => projectMap.value?.activeFeatureId,
+//   (to, from) => {
+//     const initializing = from === undefined
+//     if (projectMap.value == null || initializing) return
+//     projectStore.activeProjectId = projectMap.value?.activeFeatureId
+//     router.replace({
+//       ...router.currentRoute.value,
+//       query: { ...router.currentRoute.value.query, project: projectStore.activeProjectId }
+//     })
+//   }
+// )
 
 watch(
   () => projectStore.activeProject,
   () => {
-    if (projectMap.value == null) return
+    if (map.value == null) return
     updatePin()
-    showPopupOnInit()
+    // showPopupOnInit()
   }
 )
 
-const showPopupOnInit = () => {
-  if (projectStore.activeProject != null && projectMap.value) {
-    projectMap.value.addPopup(projectStore.activeProject.geoData.coords, activeProjectCard.value)
-  }
-}
+// const showPopupOnInit = () => {
+//   if (projectStore.activeProject != null && projectMap.value) {
+//     projectMap.value.addPopup(projectStore.activeProject.geoData.coords, activeProjectCard.value)
+//   }
+// }
 
 onMounted(() => {
   if (map.value != null) {
     map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
     map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
-    projectStore.map = map.value
+    // projectStore.mapInstance = map.value
     map.value.on('load', async () => {
       await setProjectLayer()
-      showPopupOnInit()
+      // showPopupOnInit()
     })
     map.value.on('moveend', () => {
       projectStore.filteredProjects = projectStore.filterProjects('map')
@@ -130,8 +124,9 @@ onUnmounted(() => {
 })
 
 const updatePin = () => {
-  if (projectMap.value) {
-    projectMap.value.setLayoutProperty(
+  if (map.value) {
+    MapService.setLayoutProperty(
+      map.value,
       sources.projects,
       'icon-image',
       imageHoverFilter(projectsImageName, projectsImageHoverName)
@@ -140,8 +135,8 @@ const updatePin = () => {
 }
 
 const refreshProjectLayer = async () => {
-  if (projectMap.value) {
-    projectMap.value.setData(sources.projects, geojson.value)
+  if (map.value) {
+    MapService.setData(map.value, sources.projects, geojson.value)
   }
 }
 
@@ -159,17 +154,17 @@ const imageHoverFilter = (
 }
 
 const setProjectLayer = async () => {
-  if (projectMap.value) {
-    projectMap.value.addSource(projectsSourceName, geojson.value)
-    await projectMap.value.addImage(projectIcon, projectsImageName)
-    await projectMap.value.addImage(projectHoverIcon, projectsImageHoverName)
+  if (map.value) {
+    MapService.addSource(map.value, projectsSourceName, geojson.value)
+    await MapService.addImage(map.value, projectIcon, projectsImageName)
+    await MapService.addImage(map.value, projectHoverIcon, projectsImageHoverName)
     const layout: maplibregl.LayerSpecification['layout'] = {
       'icon-image': imageHoverFilter(projectsImageName, projectsImageHoverName),
       'icon-size': 0.45
     }
-    projectMap.value.addLayer(projectsLayerName, { layout })
-    projectMap.value.listenToHoveredFeature(projectsLayerName)
-    projectMap.value.addPopupOnClick(projectsLayerName, activeProjectCard.value)
+    MapService.addLayer(map.value, projectsLayerName, { layout })
+    // projectMap.value.listenToHoveredFeature(projectsLayerName)
+    // projectMap.value.addPopupOnClick(projectsLayerName, activeProjectCard.value)
   }
   return
 }

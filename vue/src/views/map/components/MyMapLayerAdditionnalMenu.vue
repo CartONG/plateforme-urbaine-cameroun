@@ -1,7 +1,7 @@
 <template>
   <v-menu
     location="bottom"
-    @update:modelValue="isLayerOpacityShown = mainLayer?.opacity && mainLayer?.opacity < 100"
+    @update:modelValue="isLayerOpacityShown = !!mainLayer?.opacity && mainLayer?.opacity < 100"
   >
     <template v-slot:activator="{ props, isActive }">
       <v-btn
@@ -57,6 +57,7 @@ import { downloadJson } from '@/services/utils/UtilsService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import type { ModelRef } from 'vue'
 import MyMapLayerOpacityPicker from './MyMapLayerOpacityPicker.vue'
+import MapService from '@/services/map/MapService'
 
 const isLayerOpacityShown: ModelRef<boolean | undefined> = defineModel('isLayerOpacityShown')
 const mainLayer: ModelRef<Layer | undefined> = defineModel('mainLayer')
@@ -65,9 +66,9 @@ const props = defineProps<{ loadedLayerType?: LayerType }>()
 
 const downloadSourceData = async () => {
   const layerId = mainLayer.value?.id.toString()
-  if (myMapStore.myMap?.map && layerId) {
+  if (myMapStore.mapInstance && layerId) {
     if (props.loadedLayerType === LayerType.APP_LAYER) {
-      const data = await myMapStore.myMap?.getData(layerId)
+      const data = await MapService.getData(myMapStore.mapInstance, layerId)
       if (data) {
         downloadJson(data, layerId)
       }

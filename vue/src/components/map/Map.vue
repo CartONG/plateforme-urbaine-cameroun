@@ -5,18 +5,20 @@
 </template>
 <script setup lang="ts">
 import { onMounted, watch, computed, ref, type Ref, useTemplateRef } from 'vue'
-import maplibregl, { GeoJSONSource } from 'maplibre-gl'
+import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { IControl } from '@/services/map/MapService'
-import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
 import { useMyMapStore } from '@/stores/myMapStore'
+import { useProjectStore } from '@/stores/projectStore'
+import MapService, { IControl } from '@/services/map/MapService'
+import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
 
 const applicationStore = useApplicationStore()
 const myMapStore = useMyMapStore()
+const projectStore = useProjectStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
-const map: Ref<maplibregl.Map | null> = ref(null)
+// const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
 const props = withDefaults(
   defineProps<{
@@ -33,10 +35,11 @@ const props = withDefaults(
 const popup = ref(new maplibregl.Popup({ closeOnClick: false }))
 const hoveredFeatureId: Ref<string | null> = ref(null)
 const activeFeatureId: Ref<string | null> = ref(null)
+let map: maplibregl.Map | null = null
 
 onMounted(() => {
   const apiKey = import.meta.env.VITE_MAPTILER_API_KEY
-  map.value = new maplibregl.Map({
+  map = new maplibregl.Map({
     container: 'map',
     style: `https://api.maptiler.com/maps/openstreetmap/style.json?key=${apiKey}`,
     center: [0, 0],
@@ -44,20 +47,26 @@ onMounted(() => {
     attributionControl: false
   })
 
-  map.value.dragRotate.disable()
-  map.value.touchZoomRotate.disableRotation()
+  if (props.view === 'MyMapView') {
+    myMapStore.mapInstance = map
+  } else if (props.view === 'ProjectView') {
+    projectStore.mapInstance = map
+  }
+
+  map.dragRotate.disable()
+  map.touchZoomRotate.disableRotation()
 
   const nav = new maplibregl.NavigationControl({
     showCompass: false
   })
 
-  map.value.addControl(nav, 'top-right')
-  map.value.addControl(new IControl(resetMapExtentControl), 'top-right')
-  map.value.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
+  map.addControl(nav, 'top-right')
+  map.addControl(new IControl(resetMapExtentControl), 'top-right')
+  map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right')
   setBBox()
-  map.value.on('load', () => {
-    addSource('cameroonMask', cameroonMask as GeoJSON.GeoJSON)
-    map.value?.addLayer({
+  map.on('load', () => {
+    MapService.addSource(map as maplibregl.Map, 'cameroonMask', cameroonMask as GeoJSON.GeoJSON)
+    map!.addLayer({
       id: 'cameroonMask',
       type: 'fill',
       source: 'cameroonMask',
@@ -67,90 +76,93 @@ onMounted(() => {
       },
       metadata: { isPersistent: true }
     })
+    if (props.view === 'MyMapView') {
+      myMapStore.initMapLayers()
+    }
   })
 
   // For an unknown reason, if we try to get the canvas to Data url from outside
   // it returns an empty image. It can be caused by the use of components like the map inside TemplateRef
   // This is a workaround waiting to refactor the use of template ref elements
-  map.value.on('idle', () => {
+  map.on('idle', () => {
     if (props.toExport) {
-      myMapStore.mapCanvasToDataUrl = map.value?.getCanvas().toDataURL() as string
+      myMapStore.mapCanvasToDataUrl = map!.getCanvas().toDataURL() as string
     }
   })
 })
 
-const removeSource = (sourceName: string) => {
-  if (map.value?.getSource(sourceName)) {
-    map.value.removeSource(sourceName)
-  }
-}
+// const removeSource = (sourceName: string) => {
+//   if (map.value?.getSource(sourceName)) {
+//     map.value.removeSource(sourceName)
+//   }
+// }
 
-const removeLayer = (layerName: string) => {
-  if (map.value && map.value?.getLayer(layerName)) {
-    map.value.removeLayer(layerName)
-  }
-}
+// const removeLayer = (layerName: string) => {
+//   if (map.value && map.value?.getLayer(layerName)) {
+//     map.value.removeLayer(layerName)
+//   }
+// }
 
-const setData = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
-  const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
-  if (source) source.setData(geojson)
-}
+// const setData = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
+//   const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
+//   if (source) source.setData(geojson)
+// }
 
-const getData = async (sourceName: string | number) => {
-  const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
-  if (source) return await source.getData()
-}
+// const getData = async (sourceName: string | number) => {
+//   const source = map.value?.getSource(sourceName.toString()) as GeoJSONSource
+//   if (source) return await source.getData()
+// }
 
-const addSource = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
-  if (map.value?.getSource(sourceName)) return
-  map.value?.addSource(sourceName, {
-    type: 'geojson',
-    data: geojson
-  })
-}
+// const addSource = (sourceName: string, geojson: GeoJSON.GeoJSON) => {
+//   if (map.value?.getSource(sourceName)) return
+//   map.value?.addSource(sourceName, {
+//     type: 'geojson',
+//     data: geojson
+//   })
+// }
 
-const setLayoutProperty = (layerName: string, property: string, value: any) => {
-  if (map.value?.getLayer(layerName)) {
-    map.value?.setLayoutProperty(layerName, property, value)
-  }
-}
+// const setLayoutProperty = (layerName: string, property: string, value: any) => {
+//   if (map.value?.getLayer(layerName)) {
+//     map.value?.setLayoutProperty(layerName, property, value)
+//   }
+// }
 
-const setPaintProperty = (layerName: string, property: string, value: any) => {
-  if (map.value?.getLayer(layerName)) {
-    map.value?.setPaintProperty(layerName, property, value)
-  }
-}
+// const setPaintProperty = (layerName: string, property: string, value: any) => {
+//   if (map.value?.getLayer(layerName)) {
+//     map.value?.setPaintProperty(layerName, property, value)
+//   }
+// }
 
-const addLayer = async (
-  layerName: string,
-  options: { layout: maplibregl.LayerSpecification['layout'] }
-) => {
-  if (map.value && map.value?.getLayer(layerName)) return
-  map.value?.addLayer({
-    id: layerName,
-    type: 'symbol',
-    source: layerName,
-    layout: options.layout,
-    metadata: { isPersistent: true } // used to have persistent layers when switching basemaps
-  })
-}
+// const addLayer = async (
+//   layerName: string,
+//   options: { layout: maplibregl.LayerSpecification['layout'] }
+// ) => {
+//   if (map.value && map.value?.getLayer(layerName)) return
+//   map.value?.addLayer({
+//     id: layerName,
+//     type: 'symbol',
+//     source: layerName,
+//     layout: options.layout,
+//     metadata: { isPersistent: true } // used to have persistent layers when switching basemaps
+//   })
+// }
 
-const addImage = async (path: string, name: string) => {
-  if (map.value?.hasImage(name)) return
-  const image = await map.value?.loadImage(path)
-  if (!image) return
-  map.value?.addImage(name, image.data)
-  return
-}
+// const addImage = async (path: string, name: string) => {
+//   if (map.value?.hasImage(name)) return
+//   const image = await map.value?.loadImage(path)
+//   if (!image) return
+//   map.value?.addImage(name, image.data)
+//   return
+// }
 
 const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any, isComponent = true) => {
-  if (map.value == null) return
+  if (map === null) return
   flyTo(coordinates)
   console.log('popupHtml', popupHtml)
   popup.value
     .setLngLat(coordinates)
     .setDOMContent(isComponent ? popupHtml.$el : popupHtml)
-    .addTo(map.value)
+    .addTo(map)
   popup.value.addClassName('show')
   popup.value._onClose = () => {
     activeFeatureId.value = null
@@ -159,42 +171,42 @@ const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any, isComponen
 }
 
 const addPopupOnClick = (layerName: string, popupHtml: any, isComponent = true) => {
-  if (map.value == null) return
-  map.value.on('click', layerName, (e: any) => {
+  if (map === null) return
+  map.on('click', layerName, (e: any) => {
     activeFeatureId.value = e.features[0].properties.id
-    if (map.value == null) return
+    if (map == null) return
     const coordinates = e.features[0].geometry.coordinates.slice()
     addPopup(coordinates, popupHtml, isComponent)
   })
 }
 
 const flyTo = (coordinates: maplibregl.LngLatLike) => {
-  if (map.value == null) return
-  map.value.flyTo({
+  if (map === null) return
+  map.flyTo({
     center: coordinates,
-    zoom: map.value.getZoom() > 7 ? map.value.getZoom() : 7,
+    zoom: map.getZoom() > 7 ? map.getZoom() : 7,
     speed: 0.5
   })
 }
 
 const listenToHoveredFeature = (layerName: string) => {
-  if (map.value == null) return
-  map.value.on('mouseenter', layerName, (e: any) => {
-    if (map.value == null) return
-    map.value.getCanvas().style.cursor = 'pointer'
+  if (map == null) return
+  map.on('mouseenter', layerName, (e: any) => {
+    if (map === null) return
+    map.getCanvas().style.cursor = 'pointer'
     hoveredFeatureId.value = e.features[0].properties.id
   })
 
-  map.value.on('mouseleave', layerName, () => {
-    if (map.value == null) return
-    map.value.getCanvas().style.cursor = ''
+  map.on('mouseleave', layerName, () => {
+    if (map === null) return
+    map.getCanvas().style.cursor = ''
     hoveredFeatureId.value = null
   })
 }
 
 const setBBox = () => {
-  if (!map.value) return
-  map.value.fitBounds(props.bounds, { padding: 75 })
+  if (!map) return
+  map.fitBounds(props.bounds, { padding: 75 })
 }
 
 watch(triggerZoomReset, () => {
@@ -205,18 +217,14 @@ defineExpose({
   map,
   activeFeatureId,
   hoveredFeatureId,
-  addSource,
   addPopup,
   addPopupOnClick,
-  addImage,
-  addLayer,
-  listenToHoveredFeature,
-  removeLayer,
-  removeSource,
-  setData,
-  getData,
-  setLayoutProperty,
-  setPaintProperty
+  listenToHoveredFeature
+  // removeLayer,
+  // removeSource,
+  // getData,
+  // setLayoutProperty,
+  // setPaintProperty
 })
 </script>
 

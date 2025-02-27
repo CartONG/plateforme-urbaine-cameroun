@@ -5,14 +5,14 @@
 import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, ref, watch, type Ref } from 'vue'
 const mapStore = useMyMapStore()
-const map = computed(() => mapStore.myMap?.map)
+const map = computed(() => mapStore.mapInstance)
 const zoomLevel = ref(0)
 const mapCenter: Ref<maplibregl.LngLat | null> = ref(null)
 watch(
   () => map.value,
   () => {
     if (map.value) {
-      map?.value?.on('zoomend', () => {
+      map.value.on('zoomend', () => {
         zoomLevel.value = map!.value!.getZoom()
         mapCenter.value = map!.value!.getCenter()
       })

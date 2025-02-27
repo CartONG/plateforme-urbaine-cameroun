@@ -20,13 +20,13 @@ import { useRoute } from 'vue-router'
 import { AppLayersService } from '@/services/map/AppLayersService'
 
 const myMapStore = useMyMapStore()
-const map = computed(() => myMapStore.myMap?.map)
+const map = computed(() => myMapStore.mapInstance)
 const route = useRoute()
 onMounted(() => {
   if (route.query.mapState) {
     myMapStore.serializedMapState = route.query.mapState as string
     myMapStore.deserializeMapState()
-    myMapStore.initMapLayers()
+    // myMapStore.initMapLayers()
     return
   }
   if (myMapStore.isMapAlreadyBeenMounted) {
@@ -39,9 +39,10 @@ onMounted(() => {
         reloadAtlasMaps()
       })
     }
-  } else {
-    myMapStore.initMapLayers()
   }
+  // else {
+  //   myMapStore.initMapLayers()
+  // }
 })
 
 function reloadAtlasMaps() {

@@ -25,7 +25,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const similarProjects: Ref<Project[]> = ref([])
   const hoveredProjectId: Ref<Project['id'] | null> = ref(null)
   const activeProjectId: Ref<Project['id'] | null> = ref(null)
-  const map: Ref<maplibregl.Map | null> = ref(null)
+  // const map: Ref<maplibregl.Map | null> = ref(null)
+  const mapInstance: Ref<maplibregl.Map | null> = ref(null)
   const bbox: Ref<LngLatBounds | undefined> = ref(undefined)
   const isFilterModalShown: Ref<boolean> = ref(false)
   const sortingProjectsSelectedMethod = ref(SortKey.PROJECTS_AZ)
@@ -150,11 +151,13 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     })
 
     if (from === 'filters') {
-      map.value?.fitBounds(getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords)))
+      mapInstance.value?.fitBounds(
+        getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords))
+      )
     }
     if (from === 'map') {
-      if (!map.value) return projectsList
-      const bounds = map.value.getBounds()
+      if (!mapInstance.value) return projectsList
+      const bounds = mapInstance.value.getBounds()
       return projectsList.filter((proj) => {
         const { lat, lng } = proj.geoData.coords
         return bounds.contains([lng, lat])
@@ -267,7 +270,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     activeProject,
     filteredProjects,
     orderedProjects,
-    map,
+    mapInstance,
     bbox,
     getAll,
     getAllDonors,
