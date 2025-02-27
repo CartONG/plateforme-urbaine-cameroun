@@ -3,7 +3,7 @@ import { i18n } from '@/plugins/i18n'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { computed, type ComputedRef } from 'vue'
+import { computed } from 'vue'
 import LayerService from './LayerService'
 import projectLayerIcon from '@/assets/images/icons/map/project_icon.png'
 import resourceLayerIcon from '@/assets/images/icons/map/resource_icon.png'
@@ -21,8 +21,6 @@ export class AppLayersService {
   static projectStore = useProjectStore()
   static resourceStore = useResourceStore()
   static thematicStore = useThematicStore()
-  static myMapComponent: ComputedRef<any> | null = null
-  static map: ComputedRef<maplibregl.Map> | null = null
   static filteredProjects = computed(() => {
     return this.filterByThematic(
       this.projectStore.projects,
@@ -43,9 +41,6 @@ export class AppLayersService {
     try {
       this.mapStore = mapStore
       await this.thematicStore.getAll()
-      this.myMapComponent = computed(() => this.mapStore?.myMap)
-      this.map = computed(() => this.mapStore?.myMap?.map as maplibregl.Map)
-
       if (!this.mapStore.isMapAlreadyBeenMounted) {
         this.initMainLayers()
         this.initSubLayers()
@@ -56,25 +51,9 @@ export class AppLayersService {
         this.actorStore.getAll(),
         this.projectStore.getAll()
       ])
-
-      if (this.map?.value == null) return
-      if (this.map.value.loaded()) {
-        await this.setPlatformDataLayers()
-      } else {
-        await new Promise<void>((resolve, reject) => {
-          this.map?.value.on('load', async () => {
-            try {
-              await this.setPlatformDataLayers()
-              resolve()
-            } catch (error) {
-              reject(error)
-            }
-          })
-        })
-      }
+      await this.setPlatformDataLayers()
     } catch (error) {
       console.error('Erreur lors de l’initialisation des couches :', error)
-      return Promise.reject(error)
     }
   }
 
@@ -162,20 +141,15 @@ export class AppLayersService {
   }
 
   static async setPlatformDataLayer(itemType: ItemType) {
-    if (this.myMapComponent?.value) {
-      const geojson = this.getGeojsonPerItemType(itemType)
-      const icon = new URL(`/src/assets/images/icons/map/${itemType}_icon.png`, import.meta.url)
-        .href
-      this.myMapComponent.value.addSource(itemType, geojson)
-      await this.myMapComponent.value.addImage(icon, itemType)
-      const layout: maplibregl.LayerSpecification['layout'] = {
-        'icon-image': itemType,
-        'icon-size': 0.4
-      }
-      this.myMapComponent.value.addLayer(itemType, { layout })
-      this.myMapComponent.value.listenToHoveredFeature(itemType)
+    const geojson = this.getGeojsonPerItemType(itemType)
+    const icon = new URL(`/src/assets/images/icons/map/${itemType}_icon.png`, import.meta.url).href
+    MapService.addSource(this.mapStore!.mapInstance!, itemType, geojson)
+    await MapService.addImage(this.mapStore!.mapInstance!, icon, itemType)
+    const layout: maplibregl.LayerSpecification['layout'] = {
+      'icon-image': itemType,
+      'icon-size': 0.4
     }
-    return
+    MapService.addLayer(this.mapStore!.mapInstance!, itemType, { layout })
   }
 
   static getGeojsonPerItemType(itemType: ItemType) {

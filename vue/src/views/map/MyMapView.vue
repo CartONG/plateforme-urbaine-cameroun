@@ -14,36 +14,38 @@ import MyMapHeader from '@/views/map/components/MyMapHeader.vue'
 import MyMapLeftSideBar from '@/views/map/components/MyMapLeftSideBar.vue'
 import MyMapRightSideBar from '@/views/map/components/MyMapRightSideBar.vue'
 import { useMyMapStore } from '@/stores/myMapStore'
-import { computed, onMounted } from 'vue'
+import { watch } from 'vue'
 import { LayerType } from '@/models/enums/geo/LayerType'
 import { useRoute } from 'vue-router'
 import { AppLayersService } from '@/services/map/AppLayersService'
 
 const myMapStore = useMyMapStore()
-const map = computed(() => myMapStore.mapInstance)
 const route = useRoute()
-onMounted(() => {
+
+watch(
+  () => myMapStore.isMapLoaded,
+  (value: boolean) => {
+    if (value) {
+      initMap()
+    }
+  }
+)
+
+function initMap() {
   if (route.query.mapState) {
     myMapStore.serializedMapState = route.query.mapState as string
     myMapStore.deserializeMapState()
-    // myMapStore.initMapLayers()
+    myMapStore.initMapLayers()
     return
   }
   if (myMapStore.isMapAlreadyBeenMounted) {
     AppLayersService.initApplicationLayers(useMyMapStore())
     myMapStore.isLayersReorderingAlreadyTriggering = false
-    if (map.value?.loaded()) {
-      reloadAtlasMaps()
-    } else {
-      map.value?.on('load', async () => {
-        reloadAtlasMaps()
-      })
-    }
+    reloadAtlasMaps()
+  } else {
+    myMapStore.initMapLayers()
   }
-  // else {
-  //   myMapStore.initMapLayers()
-  // }
-})
+}
 
 function reloadAtlasMaps() {
   for (const item of myMapStore.legendList) {

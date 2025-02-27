@@ -76,10 +76,9 @@ onMounted(() => {
       },
       metadata: { isPersistent: true }
     })
-    if (props.view === 'MyMapView') {
-      myMapStore.initMapLayers()
-    }
   })
+  map.on('idle', setMapAsLoaded)
+  // map.off('idle', setMapAsLoaded)
 
   // For an unknown reason, if we try to get the canvas to Data url from outside
   // it returns an empty image. It can be caused by the use of components like the map inside TemplateRef
@@ -90,6 +89,15 @@ onMounted(() => {
     }
   })
 })
+
+function setMapAsLoaded() {
+  if (props.view === 'MyMapView') {
+    myMapStore.isMapLoaded = true
+    map?.off('idle', setMapAsLoaded)
+  } else if (props.view === 'ProjectView') {
+    // projectStore.isMapLoaded = true
+  }
+}
 
 // const removeSource = (sourceName: string) => {
 //   if (map.value?.getSource(sourceName)) {

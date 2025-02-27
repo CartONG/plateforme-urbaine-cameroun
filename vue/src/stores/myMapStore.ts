@@ -25,6 +25,7 @@ import { ItemType } from '@/models/enums/app/ItemType'
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   // const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
   const mapInstance: Ref<maplibregl.Map | null> = ref(null)
+  const isMapLoaded = ref(false)
   const mapCanvasToDataUrl: Ref<string | null> = ref(null)
   const isRightSidebarShown = ref(true)
   const isLeftSidebarShown = ref(true)
@@ -191,6 +192,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
 
   return {
     mapInstance,
+    isMapLoaded,
     isRightSidebarShown,
     isLeftSidebarShown,
     isMapAlreadyBeenMounted,
