@@ -1,6 +1,6 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
-import { reactive, ref, watch, type Ref } from 'vue'
+import { computed, reactive, ref, watch, type Ref } from 'vue'
 import type { OsmData } from '@/models/interfaces/geo/OsmData'
 import type { Layer } from '@/models/interfaces/map/Layer'
 import type { AtlasActive, AtlasMap } from '@/models/interfaces/map/AtlasMap'
@@ -10,7 +10,6 @@ import { LayerType } from '@/models/enums/geo/LayerType'
 import { LegendService } from '@/services/map/LegendService'
 import type { LngLatBounds } from 'maplibre-gl'
 import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
-import { AppLayersService } from '@/services/map/AppLayersService'
 import type { MapState } from '@/models/interfaces/map/MapState'
 import { useAtlasStore } from './atlasStore'
 import type { Item } from '@/models/interfaces/Item'
@@ -21,6 +20,8 @@ import { ProjectService } from '@/services/projects/ProjectService'
 import { ActorsService } from '@/services/actors/ActorsService'
 import { ResourceService } from '@/services/resources/ResourceService'
 import { ItemType } from '@/models/enums/app/ItemType'
+import { AppLayersService } from '@/services/map/AppLayersService'
+import { useThematicStore } from './thematicStore'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   // const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
@@ -41,6 +42,19 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const projectLayer: Ref<Layer | null> = ref(null)
   const projectSubLayers: Ref<Layer[]> = ref([])
   const activeItemId: Ref<string | null> = ref(null)
+  const projectStore = useProjectStore()
+  const actorStore = useActorsStore()
+  const resourceStore = useResourceStore()
+  const thematicStore = useThematicStore()
+  const filteredProjects = computed(() => {
+    return AppLayersService.filterByThematic(projectStore.projects, projectSubLayers.value)
+  })
+  const filteredActors = computed(() => {
+    return AppLayersService.filterByThematic(actorStore.actors, actorSubLayers.value)
+  })
+  const filteredResources = computed(() => {
+    return AppLayersService.filterByThematic(resourceStore.resources, resourceSubLayers.value)
+  })
 
   const activeItem: Ref<Item | null> = ref(null)
   const activeItemType: Ref<ItemType | null> = ref(null)
@@ -64,8 +78,37 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const serializedMapState: Ref<string> = ref('')
   const deserializedMapState: Ref<MapState | null> = ref(null)
   async function initMapLayers() {
-    console.log(mapInstance.value?.loaded())
-    await AppLayersService.initApplicationLayers(useMyMapStore())
+    // await AppLayersService.initApplicationLayers()
+    await Promise.all([
+      resourceStore.getAll(),
+      actorStore.getAll(),
+      projectStore.getAll(),
+      thematicStore.getAll()
+    ])
+    if (!isMapAlreadyBeenMounted.value) {
+      const mainLayers = AppLayersService.initMainLayers(deserializedMapState.value)
+      projectLayer.value = mainLayers.projectLayer
+      actorLayer.value = mainLayers.actorLayer
+      resourceLayer.value = mainLayers.resourceLayer
+      const subLayers = AppLayersService.initSubLayers(
+        deserializedMapState.value,
+        thematicStore.thematics
+      )
+      projectSubLayers.value = subLayers.projectSubLayers
+      actorSubLayers.value = subLayers.actorSubLayers
+      resourceSubLayers.value = subLayers.resourceSubLayers
+    }
+    AppLayersService.setPlatformDataLayers(
+      mapInstance.value as maplibregl.Map,
+      filteredProjects.value,
+      filteredActors.value,
+      filteredResources.value
+    )
+    if (isMapAlreadyBeenMounted.value) {
+      setMapLayersOrderOnMapReMount()
+    }
+    isMapAlreadyBeenMounted.value = true
+
     await AtlasMapService.initAtlasLayers(useMyMapStore(), useAtlasStore())
     if (deserializedMapState.value) {
       bbox.value = deserializedMapState.value.bbox
@@ -223,6 +266,9 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     deserializeMapState,
     activeItemId,
     activeItemType,
-    activeItem
+    activeItem,
+    filteredProjects,
+    filteredActors,
+    filteredResources
   }
 })

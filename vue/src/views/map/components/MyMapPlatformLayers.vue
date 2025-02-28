@@ -27,12 +27,18 @@ import { AppLayersService } from '@/services/map/AppLayersService'
 import MapService from '@/services/map/MapService'
 
 const myMapStore = useMyMapStore()
-const myMap = computed(() => myMapStore.mapInstance)
 
 const refreshLayer = (itemType: ItemType) => {
-  if (myMap.value) {
-    MapService.setData(myMap.value, itemType, AppLayersService.getGeojsonPerItemType(itemType))
-  }
+  MapService.setData(
+    myMapStore.mapInstance as maplibregl.Map,
+    itemType,
+    AppLayersService.getGeojsonPerItemType(
+      itemType,
+      myMapStore.filteredActors,
+      myMapStore.filteredProjects,
+      myMapStore.filteredResources
+    )
+  )
 }
 
 const isShown = computed(() => !myMapStore.activeAtlas.rightPanel.active)

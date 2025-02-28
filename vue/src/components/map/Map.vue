@@ -92,6 +92,7 @@ onMounted(() => {
 
 function setMapAsLoaded() {
   if (props.view === 'MyMapView') {
+    console.log('setMapAsLoaded')
     myMapStore.isMapLoaded = true
     map?.off('idle', setMapAsLoaded)
   } else if (props.view === 'ProjectView') {
