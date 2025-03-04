@@ -31,7 +31,7 @@ security:
                 check_path: /auth
                 username_path: email
                 password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
+                success_handler: App\Security\Authenticator\AuthenticationSuccessHandler
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             # activate different ways to authenticate
@@ -46,6 +46,7 @@ security:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/auth, roles: PUBLIC_ACCESS }
         - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST]}
+        - { path: ^/api/users/verify_email, roles: PUBLIC_ACCESS, methods: [GET, POST]}
         - { path: ^/api/actors, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/projects, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/actor_expertises, roles: PUBLIC_ACCESS, methods: [GET] }
