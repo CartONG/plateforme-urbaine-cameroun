@@ -5,6 +5,7 @@
     <ScaleControl ref="scale-control" />
     <MyMapLegend ref="map-legend" />
     <MyMapExportButton ref="map-export-button" />
+    <MyMapCommentButton ref="map-comment-button" />
     <ToggleSidebarControl
       v-model="myMapStore.isLeftSidebarShown"
       :inversed-direction="true"
@@ -33,6 +34,7 @@ import { computed, onMounted, ref, useTemplateRef, watch } from 'vue'
 import MyMapItemPopup from '@/views/map/components/MyMapItemPopup.vue'
 import MyMapExportButton from '@/views/map/components/export/MyMapExportButton.vue'
 import ScaleControl from '@/components/map/controls/ScaleControl.vue'
+import MyMapCommentButton from '@/views/map/components/MyMapCommentButton.vue'
 
 type MapType = InstanceType<typeof Map>
 const basemap = ref<Basemap>()
@@ -44,6 +46,7 @@ const basemapPicker = useTemplateRef('basemap-picker')
 const mapLegend = useTemplateRef('map-legend')
 const mapExportButton = useTemplateRef('map-export-button')
 const scaleControl = useTemplateRef('scale-control')
+const mapCommentControl = useTemplateRef('map-comment-button')
 const map = computed(() => myMap.value?.map)
 
 onMounted(() => {
@@ -54,6 +57,7 @@ onMounted(() => {
     map.value.addControl(new IControl(basemapPicker), 'bottom-right')
     map.value.addControl(new IControl(toggleRightSidebarControl), 'top-right')
     map.value.addControl(new IControl(toggleLeftSidebarControl), 'top-left')
+    map.value.addControl(new IControl(mapCommentControl), 'bottom-right')
     map.value.addControl(new IControl(mapLegend), 'bottom-right')
     map.value.addControl(new IControl(mapExportButton), 'bottom-right')
     map.value.addControl(new IControl(scaleControl), 'bottom-left')

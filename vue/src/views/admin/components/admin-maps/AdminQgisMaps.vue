@@ -8,11 +8,14 @@
         { sortingKey: 'name', text: 'Nom A-Z' },
         { sortingKey: 'name', text: 'Nom Z-A' }
       ]"
-      :createFunction="createQgisMap"
       searchKey="name"
       @updateSortingKey="sortingQgisMapsSelectedMethod = $event"
       @update-search-query="searchQuery = $event"
-    />
+      >
+      <template #right-buttons>
+        <v-btn @click="createQgisMap" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <QgisMapsListItem
       v-for="item in filteredItems"
       :key="item.id"

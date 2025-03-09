@@ -16,6 +16,7 @@
       <ShareButton :additionnal-path="'/' + actor.slug" />
       <HighlightButton :item-id="actor.id" />
       <LikeButton :id="actor.id" />
+      <CommentButton position="Card" origin="Actor" :originSlug="actor.slug" />
     </template>
     <template #footer-right>
       <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>
@@ -31,6 +32,7 @@ import ShareButton from '@/components/global//ShareButton.vue'
 import { computed, type ComputedRef } from 'vue'
 import type { RouteLocationAsRelativeGeneric } from 'vue-router'
 import HighlightButton from '@/components/global/HighlightButton.vue'
+import CommentButton from '@/components/comments/CommentButton.vue'
 const props = defineProps<{
   actor: Actor
 }>()

@@ -30,6 +30,7 @@
         @click.prevent="editFunction"
       >
       </v-btn>
+      <slot name="comment"></slot>
     </template>
     <template #footer-right>
       <v-icon

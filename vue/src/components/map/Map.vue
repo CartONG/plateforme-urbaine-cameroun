@@ -12,9 +12,11 @@ import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
 import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
 import { useMyMapStore } from '@/stores/myMapStore'
+import { useCommentStore } from '@/stores/commentStore'
 
 const applicationStore = useApplicationStore()
 const myMapStore = useMyMapStore()
+const commentStore = useCommentStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
 const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
@@ -180,13 +182,17 @@ const listenToHoveredFeature = (layerName: string) => {
   if (map.value == null) return
   map.value.on('mouseenter', layerName, (e: any) => {
     if (map.value == null) return
-    map.value.getCanvas().style.cursor = 'pointer'
+    if (!commentStore.isAppCommentActive) {
+      map.value.getCanvas().style.cursor = 'pointer'
+    }
     hoveredFeatureId.value = e.features[0].properties.id
   })
 
   map.value.on('mouseleave', layerName, () => {
     if (map.value == null) return
-    map.value.getCanvas().style.cursor = ''
+    if (!commentStore.isAppCommentActive) {
+      map.value.getCanvas().style.cursor = ''
+    }
     hoveredFeatureId.value = null
   })
 }

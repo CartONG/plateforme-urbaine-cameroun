@@ -188,7 +188,31 @@ const router = createRouter({
         {
           name: 'adminComments',
           path: 'comments',
-          component: AdminComments
+          component: AdminComments,
+          redirect: () => ({ name: 'actorsComments' }),
+          children: [
+            {
+              name: 'actorsComments',
+              path: 'actorsComments',
+              component: () => import('@/views/admin/components/admin-comments/ActorComments.vue')
+            },
+            {
+              name: 'projectsComments',
+              path: 'projectsComments',
+              component: () => import('@/views/admin/components/admin-comments/ProjectComments.vue')
+            },
+            {
+              name: 'resourcesComments',
+              path: 'resourcesComments',
+              component: () =>
+                import('@/views/admin/components/admin-comments/ResourcesComments.vue')
+            },
+            {
+              name: 'mapComments',
+              path: 'mapComments',
+              component: () => import('@/views/admin/components/admin-comments/MapComments.vue')
+            }
+          ]
         }
       ]
     }

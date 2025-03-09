@@ -10,5 +10,6 @@ export enum StoresList {
   RESOURCES = 'resources',
   THEMATICS = 'thematics',
   HOME = 'home',
-  MY_MAP = 'myMap'
+  MY_MAP = 'myMap',
+  COMMENT = 'comment'
 }

@@ -4,12 +4,15 @@
       page="Resources"
       :items="resourceStore.resources"
       :sortingListItems="sortOptions"
-      :createFunction="showResourceForm"
       searchKey="name"
       @updateSortingKey="(e) => (sortingResourcesSelectedMethod = e)"
       @create="resourceStore.isResourceFormShown = true"
       @update-search-query="(e) => (searchQuery = e)"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="showResourceForm" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <AdminTable
       :is-overlay-shown-function="(item) => !(item as Resource).isValidated"
       :items="sortedResources"

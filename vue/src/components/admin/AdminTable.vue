@@ -57,8 +57,9 @@ import { reduceText } from '@/services/utils/UtilsService'
 import type { HighlightedItem } from '@/models/interfaces/HighlightedItem'
 import { useDraggable } from 'vue-draggable-plus'
 import type { SortableEvent } from 'sortablejs'
+import type { AppComment } from '@/models/interfaces/Comment'
 
-type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap
+type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment
 
 const props = defineProps<{
   items: Item[]

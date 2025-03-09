@@ -36,6 +36,7 @@
       <ShareButton :additionnal-path="'/' + project.slug" />
       <HighlightButton :item-id="project.id" />
       <LikeButton :id="project.id" />
+      <CommentButton position="Card" origin="Project" :originSlug="project.slug" />
     </template>
     <template #footer-right>
       <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>
@@ -51,6 +52,7 @@ import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
 import { localizeDate } from '@/services/utils/UtilsService'
 import HighlightButton from '@/components/global/HighlightButton.vue'
+import CommentButton from '@/components/comments/CommentButton.vue'
 
 defineProps<{
   project: Project | null

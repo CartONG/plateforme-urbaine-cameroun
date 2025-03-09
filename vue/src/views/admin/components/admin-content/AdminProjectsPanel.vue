@@ -4,11 +4,14 @@
       page="Projects"
       :items="projectStore.projects"
       :sortingListItems="sortOptions"
-      :createFunction="createProject"
       searchKey="name"
       @updateSortingKey="(e) => (sortingProjectsSelectedMethod = e)"
       @update-search-query="(e) => (searchQuery = e)"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="createProject" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <ProjectForm
       :type="formType"
       :project="projectSubmission"

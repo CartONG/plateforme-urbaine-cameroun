@@ -27,6 +27,12 @@ services:
             - '../src/Kernel.php'
             - '../src/Services/State/'
             - '../src/Services/Serializer/'
+            
+    App\Controller\Comment\BulkDeleteCommentsController:
+        public: true
+        autowire: true
+        autoconfigure: true
+        tags: ['controller.service_arguments']
 
 
     # add more service definitions when explicit configuration is needed

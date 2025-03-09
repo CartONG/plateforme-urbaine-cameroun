@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
+use App\Entity\AppContentComment;
 use App\Entity\File\FileObject;
 use App\Entity\Project;
 use App\Entity\Resource;
@@ -76,18 +77,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: [self::GROUP_WRITE])]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, AppContentComment::COMMENT_READ])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: [self::GROUP_WRITE])]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, AppContentComment::COMMENT_READ])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ, AppContentComment::COMMENT_READ])]
     private ?string $email = null;
 
     /**

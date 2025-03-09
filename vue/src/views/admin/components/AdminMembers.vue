@@ -9,11 +9,14 @@
         { sortingKey: 'lastName', text: 'Nom' },
         { sortingKey: 'email', text: 'Email' }
       ]"
-      :createFunction="createUser"
       searchKey="email"
       @updateSortingKey="sortingUsersSelectedMethod = $event"
       @update-search-query="searchQuery = $event"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="createUser" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <AdminTable
       :items="filteredItems"
       :tableKeys="['lastName', 'firstName', 'email']"

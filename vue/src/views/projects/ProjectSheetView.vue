@@ -9,6 +9,7 @@
         />
       </div>
       <SheetContentBanner
+        page="Project"
         :id="project.id"
         :slug="project.slug"
         :title="project.name"

@@ -3,6 +3,7 @@
 namespace App\Entity\Trait;
 
 use App\Entity\Actor;
+use App\Entity\AppContentComment;
 use App\Entity\Atlas;
 use App\Entity\Project;
 use App\Entity\QgisMap;
@@ -16,7 +17,7 @@ trait TimestampableEntity
 {
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION, Resource::GET_FULL, Atlas::GET_FULL, QgisMap::GET_FULL])]
+    #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION, Resource::GET_FULL, Atlas::GET_FULL, QgisMap::GET_FULL, AppContentComment::COMMENT_READ])]
     protected ?\DateTimeInterface $createdAt;
 
     #[Gedmo\Timestampable(on: 'update')]

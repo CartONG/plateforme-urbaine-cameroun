@@ -5,6 +5,7 @@
         <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
       </div>
       <SheetContentBanner
+        page="Actor"
         :id="actor.id"
         :slug="actor.slug"
         :title="actor.name"

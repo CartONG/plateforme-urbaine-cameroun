@@ -36,6 +36,13 @@
       </span>
       <span class="InfoCard__description">{{ resource.description }}</span>
     </template>
+    <template #comment>
+      <CommentButton
+        position="Card"
+        origin="Resource"
+        :originSlug="ResourceService.getLink(resource)"
+      />
+    </template>
     <template #footer-right>
       <v-icon class="InfoCard__actionIcon" :icon="icon" color="light-blue"></v-icon>
     </template>
@@ -54,6 +61,7 @@ import { getDateRangeLabel, localizeDate } from '@/services/utils/UtilsService'
 import GeocodingService from '@/services/map/GeocodingService'
 import { ResourceService } from '@/services/resources/ResourceService'
 import { useUserStore } from '@/stores/userStore'
+import CommentButton from '@/components/comments/CommentButton.vue'
 
 const resourceStore = useResourceStore()
 const userStore = useUserStore()

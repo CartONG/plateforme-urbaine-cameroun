@@ -18,7 +18,14 @@
         "maps": "Ma carte",
         "observatory": "Observatoire",
         "catalog": "Catalogue",
-        "data": "Données"
+        "data": "Données",
+        "highlights": "Rubrique à la une",
+        "comments": "Commentaires",
+        "actorsComments": "Acteurs",
+        "projectsComments": "Projets",
+        "resourcesComments": "Ressources",
+        "mapComments": "Ma carte"
+
     },
     "header": {
         "title": "Plateforme",
@@ -181,6 +188,7 @@
         },
         "common": {
             "error": {
+                "400": "Une erreur est survenue, merci de signaler le problème auprès de l'administrateur de la plateforme",
                 "411": "Une erreur est survenue lors de la validation du formulaire",
                 "500": "Une erreur est survenue, un rapport a été envoyé",
                 "moreDetails": "Détails :"
@@ -212,5 +220,14 @@
         "urlCopied": "Lien copié",
         "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
         "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
+    },
+    "comments": {
+        "title": "Ajouter un commentaire",
+        "form": {
+            "message": "Votre commentaire",
+            "location": "Localisation sélectionnée sur la carte",
+            "originURL": "Entité concernée"
+        },
+        "successPost": "Le commentaire a bien été enregistré et sera revu par un administrateur de la plateforme"
     }
 }
