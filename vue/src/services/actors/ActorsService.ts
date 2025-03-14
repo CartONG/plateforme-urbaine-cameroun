@@ -6,6 +6,7 @@ import type { Thematic } from '@/models/interfaces/Thematic'
 import type { AdministrativeScope } from '@/models/interfaces/AdministrativeScope'
 import FileUploader from '@/services/files/FileUploader'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import { transformSymfonyRelationToIRIs } from '@/services/utils/UtilsService'
 
 export class ActorsService {
   static async getActors(): Promise<Actor[]> {
@@ -26,46 +27,56 @@ export class ActorsService {
     return data as Actor
   }
 
-  static async createOrEditActor(
-    actor: ActorSubmission,
-    edit: boolean,
-    id?: string | undefined
-  ): Promise<Actor> {
-    if (actor.logoToUpload) {
-      const newLogo = await FileUploader.uploadMedia(actor.logoToUpload.file)
-      actor.logo = newLogo['@id']
-    }
-    const newImagesLoaded = await Promise.all(
-      actor.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
-    )
-    if (actor.images && actor.images.length > 0) {
-      actor.images.push(...(newImagesLoaded as BaseMediaObject[]))
-    } else {
-      actor.images = []
-    }
-    actor = this.transformSymfonyRelationToIRIs(actor)
-    let data
+  static async post(actors: ActorSubmission): Promise<Actor> {
+    return await apiClient.post('/api/actors', actors).then((response) => response.data)
+  }
+
+  static async patch(actors: Partial<ActorSubmission | Actor>): Promise<Actor> {
+    return await apiClient
+      .patch('/api/actors/' + actors.id, actors)
+      .then((response) => response.data)
+  }
+
+  static async patchImages(actor: Actor): Promise<Actor> {
+    return this.patch({
+      images: actor.images,
+      id: actor.id,
+      logo: actor.logo
+    })
+  }
+
+  static async createOrEditActor(actorToSubmit: ActorSubmission, edit: boolean): Promise<Actor> {
+    let symfonyActor = transformSymfonyRelationToIRIs<Actor>(actorToSubmit)
+
+    const actor = edit ? await this.patch(symfonyActor) : await this.post(actorToSubmit)
+
     if (!edit) {
-      data = (
-        await apiClient.post('/api/actors', actor, {
-          headers: {
-            'Content-Type': 'application/ld+json',
-            Accept: 'application/ld+json'
-          }
-        })
-      ).data
-    } else {
-      data = (
-        await apiClient.patch(`/api/actors/${id}`, actor, {
-          headers: {
-            'Content-Type': 'application/merge-patch+json',
-            Accept: 'application/ld+json'
-          }
-        })
-      ).data
+      symfonyActor.id = actor.id
     }
 
-    return data as Actor
+    if (actorToSubmit.logoToUpload) {
+      symfonyActor.logo = (await FileUploader.uploadMedia(
+        actorToSubmit.logoToUpload.file
+      )) as BaseMediaObject
+    }
+
+    const images = await Promise.all(
+      actorToSubmit.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
+    )
+
+    if (images.length > 0) {
+      symfonyActor.images.push(...(images as BaseMediaObject[]))
+    } else if (actorToSubmit.images.length === 0) {
+      symfonyActor.images = []
+    }
+
+    symfonyActor = transformSymfonyRelationToIRIs<Actor>(symfonyActor)
+
+    if (symfonyActor.id && (images.length > 0 || actorToSubmit.logoToUpload)) {
+      return await this.patchImages(symfonyActor)
+    }
+
+    return actor
   }
 
   static async deleteActor(id: string): Promise<void> {

@@ -67,12 +67,17 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     useApplicationStore().showEditContentDialog = true
   }
 
+  function resetActorEditionMode() {
+    actorEdition.actor = null
+    actorEdition.active = false
+    useApplicationStore().showEditContentDialog = false
+  }
+
   async function createOrEditActor(actor: ActorSubmission, edit: boolean) {
-    const id = selectedActor.value?.id
-    const result = await ActorsService.createOrEditActor(actor, edit, id)
+    const result = await ActorsService.createOrEditActor(actor, edit)
     await getActors()
     selectedActor.value = await ActorsService.getActor(result.id)
-    useApplicationStore().showEditContentDialog = false
+    resetActorEditionMode()
     addNotification(
       edit ? "L'acteur a bien été modifié" : "L'acteur a bien été ajouté",
       NotificationType.SUCCESS
