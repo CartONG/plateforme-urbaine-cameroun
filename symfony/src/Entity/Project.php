@@ -188,6 +188,11 @@ class Project
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?array $beneficiaryTypes = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    #[Assert\Length(max: 1000)]
+    private ?string $creatorMessage = null;
+
     #[ORM\JoinTable(name: 'projects_donors')]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     #[ORM\ManyToMany(targetEntity: Organisation::class)]
@@ -471,6 +476,18 @@ class Project
     public function setBeneficiaryTypes(?array $beneficiaryTypes): static
     {
         $this->beneficiaryTypes = $beneficiaryTypes;
+
+        return $this;
+    }
+
+    public function getCreatorMessage(): ?string
+    {
+        return $this->creatorMessage;
+    }
+
+    public function setCreatorMessage(?string $creatorMessage): static
+    {
+        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

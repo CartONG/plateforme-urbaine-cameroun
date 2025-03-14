@@ -1100,6 +1100,11 @@
     "@typescript-eslint/types" "8.18.1"
     eslint-visitor-keys "^4.2.0"
 
+"@vee-validate/i18n@^4.15.0":
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/@vee-validate/i18n/-/i18n-4.15.0.tgz#4e1636f4c61b4a86446c4048598740538c5f1658"
+  integrity sha512-XAXoIhcgy4//9WBmxK/6Wnv14Bwkrka/0PMHPOxUhbc8y4QfdIRbyFWvxWZw2nzc6suHrFIePt1mBx91aTqIwg==
+
 "@vee-validate/zod@^4.14.7":
   version "4.14.7"
   resolved "https://registry.yarnpkg.com/@vee-validate/zod/-/zod-4.14.7.tgz#f9cd5f39cf0cd3e3382690a8f6c548b1b2ce323f"

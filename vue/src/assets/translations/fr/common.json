@@ -1,191 +1,211 @@
 {
-    "breadcrumbs": {
-        "home": "Accueil",
-        "admin": "Administration",
-        "actors": "Acteurs",
-        "projects": "Projets",
-        "resources": "Ressources",
-        "services": "Services",
-        "map": "Ma carte",
-        "myAccount": "Mon compte",
-        "administration": "Administration",
-        "members": "Membres",
-        "users": "Utilisateurs",
-        "content": "Contenu",
-        "membersPanel": "Membres",
-        "contentPanel": "Contenu",
-        "commentPanel": "Commentaires",
-        "maps": "Ma carte",
-        "observatory": "Observatoire",
-        "catalog": "Catalogue",
-        "data": "Données"
-    },
-    "header": {
-        "title": "Plateforme",
-        "title2": "Urbaine",
-        "help": "FAQ",
-        "contact": "Hotline",
-        "home": "Accueil",
-        "actors": "Acteurs",
-        "projects": "Projets",
-        "resources": "Ressources",
-        "services": "Services",
-        "map": "Ma carte",
-        "login": "Connectez-vous",
-        "account": "Mon compte",
-        "addProject": "Ajouter un projet",
-        "addActor": "Ajouter un acteur",
-        "addResource": "Ajouter une ressource",
-        "addData": "Ajouter une donnée",
-        "administration": "Espace d'administration",
-        "content": "Mes contributions",
-        "logout": "Déconnexion"
-    },
-    "inputs": {
-        "fileUncorrect": "Fichier incorrect",
-        "date": {
-            "label": "Sélectionner une date"
-        },
-        "images": {
-            "generic": "Une ou plusieurs images n'ont pas pu être chargées: ",
-            "wrongFormat": "Format d'image incorrect, sont acceptés uniquement les images au format .png, .jpg, .jpeg, .bmp, .gif, .svg, .webp",
-            "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo",
-            "duplicate": "Une image avec ce nom est déjà sélectionnée"
-        }
-    },
-    "forms": {
-        "modify": "Modifier",
-        "edit": "Modifier",
-        "submit": "Valider",
-        "validate": "Valider",
-        "cancel": "Annuler",
-        "create": "Créer",
-        "delete": "Supprimer",
-        "or": "OU",
-        "errors": "Le formulaire n'est pas valide",
-        "errorMessages": {
-            "required": "Ce champs est requis",
-            "minlength": "Ce champs doit avoir au moins {min} caractères",
-            "maxlength": "Ce champs est limité à {max} caractères",
-            "email": "Veuillez renseigner une adresse email valide",
-            "url": "Veuillez renseigner une URL valide",
-            "https": "Veuillez renseigner un site en https://",
-            "phone": "Veuillez renseigner un numéro de téléphone valide",
-            "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
-            "file": {
-                "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
-                "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"
-            }
-        }
-    },
-    "filters": {
-        "sortBy": {
-            "placeholder": "Trier par",
-            "options": {
-                "projects_az": "Projets A > Z",
-                "projects_za": "Projets Z > A",
-                "updated_at_az": "Date de dernière mise à jour",
-                "actors_az": "Acteurs A > Z",
-                "actors_za": "Acteurs Z > A"
-            }
-        },
-        "search": "Rechercher..."
-    },
-    "labels": {
-        "updatedAt": "Mis à jour le",
-        "lastUpdatedAt": "Dernière mise à jour le",
-        "reset": "Réinitialiser"
-    },
-    "buttons": {
-        "print": "Imprimer"
-    },
-    "placeholders": {
-        "all": "Tous",
-        "sortBy": "Trier par"
-    },
-    "content": {
-        "createAMap": "Créer une carte",
-        "website": "Visiter le site internet",
-        "mail": "Contacter par mail",
-        "edit": "Modifier"
-    },
+  "breadcrumbs": {
+    "home": "Accueil",
+    "admin": "Administration",
+    "actors": "Acteurs",
+    "projects": "Projets",
+    "resources": "Ressources",
+    "services": "Services",
+    "map": "Ma carte",
+    "myAccount": "Mon compte",
+    "administration": "Administration",
+    "members": "Membres",
+    "users": "Utilisateurs",
+    "content": "Contenu",
+    "membersPanel": "Membres",
+    "contentPanel": "Contenu",
+    "commentPanel": "Commentaires",
+    "maps": "Ma carte",
+    "observatory": "Observatoire",
+    "catalog": "Catalogue",
+    "data": "Données"},
+  "header": {
+    "title": "Plateforme",
+    "title2": "Urbaine",
+    "help": "FAQ",
+    "contact": "Hotline",
+    "home": "Accueil",
+    "actors": "Acteurs",
+    "projects": "Projets",
+    "resources": "Ressources",
+    "services": "Services",
+    "map": "Ma carte",
+    "login": "Connectez-vous",
+    "account": "Mon compte",
+    "addProject": "Ajouter un projet",
+    "addActor": "Ajouter un acteur",
+    "addResource": "Ajouter une ressource",
+    "addData": "Ajouter une donnée",
+    "administration": "Espace d'administration",
+    "content": "Mes contributions",
+    "logout": "Déconnexion"
+  },
+  "inputs": {
+    "fileUncorrect": "Fichier incorrect",
     "date": {
-        "dateRangeLabel": "du {startAt} au {endAt}"
+      "label": "Sélectionner une date"
     },
-    "kpi": {
-        "actor": {
-            "label": "acteur | acteur | acteurs",
-            "icon": "contacts",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        },
-        "member": {
-            "label": "membre | membre | membres",
-            "icon": "account-group",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        },
-        "project": {
-            "label": "projet | projet | projets",
-            "icon": "rocket-launch",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        },
-        "resource": {
-            "label": "ressource | ressource | ressources",
-            "icon": "database-arrow-down",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-        },
-        "data": {
-            "label": "donnée | donnée | données",
-            "icon": "database-arrow-down",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    "images": {
+      "generic": "Une ou plusieurs images n'ont pas pu être chargées: ",
+      "wrongFormat": "Format d'image incorrect, sont acceptés uniquement les images au format .png, .jpg, .jpeg, .bmp, .gif, .svg, .webp",
+      "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo",
+      "duplicate": "Une image avec ce nom est déjà sélectionnée"
+    }
+  },
+  "forms": {
+    "modify": "Modifier",
+    "edit": "Modifier",
+    "submit": "Valider",
+    "validate": "Valider",
+    "continue": "Continuer",
+    "return": "Retour",
+    "cancel": "Annuler",
+    "create": "Créer",
+    "delete": "Supprimer",
+    "or": "OU",
+    "errors": "Le formulaire n'est pas valide",
+        "errorMessages": {
+      "required": "Ce champs est requis",
+      "minlength": "Ce champs doit avoir au moins {min} caractères",
+      "maxlength": "Ce champs est limité à {max} caractères",
+      "email": "Veuillez renseigner une adresse email valide",
+      "url": "Veuillez renseigner une URL valide",
+      "https": "Veuillez renseigner un site en https://",
+      "phone": "Veuillez renseigner un numéro de téléphone valide",
+      "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
+      "file": {
+        "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
+        "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"
+      }
+    }
+  },
+  "filters": {
+    "sortBy": {
+      "placeholder": "Trier par",
+      "options": {
+        "projects_az": "Projets A > Z",
+        "projects_za": "Projets Z > A",
+        "updated_at_az": "Date de dernière mise à jour",
+        "actors_az": "Acteurs A > Z",
+        "actors_za": "Acteurs Z > A"
+      }
+    },
+    "search": "Rechercher..."
+  },
+  "labels": {
+    "updatedAt": "Mis à jour le",
+    "lastUpdatedAt": "Dernière mise à jour le",
+    "reset": "Réinitialiser"
+  },
+  "buttons": {
+    "print": "Imprimer"
+  },
+  "placeholders": {
+    "all": "Tous",
+    "sortBy": "Trier par"
+  },
+  "content": {
+    "createAMap": "Créer une carte",
+    "website": "Visiter le site internet",
+    "mail": "Contacter par mail",
+    "edit": "Modifier"
+  },
+  "date": {
+    "dateRangeLabel": "du {startAt} au {endAt}"
+  },
+  "kpi": {
+    "actor": {
+      "label": "acteur | acteur | acteurs",
+      "icon": "contacts",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "member": {
+      "label": "membre | membre | membres",
+      "icon": "account-group",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "project": {
+      "label": "projet | projet | projets",
+      "icon": "rocket-launch",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "resource": {
+      "label": "ressource | ressource | ressources",
+      "icon": "database-arrow-down",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    },
+    "data": {
+      "label": "donnée | donnée | données",
+      "icon": "database-arrow-down",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    }
+  },
+  "itemType": {
+    "project": "Projet",
+    "actor": "Acteur",
+    "resource": "Ressource",
+    "new": {
+      "your_message": {
+        "project": "un nouveau projet",
+        "actor": "un nouvel acteur",
+        "resource": "une nouvelle ressource",
+        "title": "Votre message",
+        "detail": "Vous souhaitez référencer {type} sur la plateforme. Pour se faire, merci de bien vouloir motiver votre demande",
+        "confidentiality_policy": "J'ai lu et j'accepte les politiques de confidentialité.",
+        "form": {
+          "submit": "Envoyer ma demande",
+          "message": "Motivation"
         }
+      },
+      "thanks": {
+        "title": "Merci",
+        "detail": "Votre demande a bien été envoyé.",
+        "message": "Votre demande de référencement va être étudiée par nos équipes. Nous vous recontacterons prochainement.",
+        "close": "Fermer"
+      }
+    }
+  },
+  "beneficiaryType": {
+    "population": "Population",
+    "local_communities": "Communautés locales",
+    "communities_of_communes": "Communautés de communes",
+    "regions": "Régions",
+    "local_institutions": "Institutions locales",
+    "associations_ngos": "Associations / ONG"
+  },
+  "geocoding": {
+    "placeholder": "Rechercher un lieu",
+    "noData": "Aucun résultats"
+  },
+  "footer": {
+    "contact": "Contact",
+    "email": "Contactez-nous par mail",
+    "partners": "Partenaires",
+    "legal": "Mentions légales",
+    "cgu": "CGU",
+    "privacy": "Politique de confidentialité",
+    "plan": "Plan du site",
+    "cookies": "Cookies"
+  },
+  "notifications": {
+    "project": {
+      "create": "Le projet a été créé",
+      "edit": "Le projet a été modifié",
+      "validate": "Le projet a été validé",
+      "delete": "Le projet a été supprimé"
     },
-    "itemType": {
-        "project": "Projet",
-        "actor": "Acteur",
-        "resource": "Ressource"
+    "resource": {
+      "create": "La ressource a été créé",
+      "edit": "La ressource a été modifié",
+      "validate": "La ressource a été validé",
+      "delete": "La ressource a été supprimé"
     },
-    "beneficiaryType": {
-        "population": "Population",
-        "local_communities": "Communautés locales",
-        "communities_of_communes": "Communautés de communes",
-        "regions": "Régions",
-        "local_institutions": "Institutions locales",
-        "associations_ngos": "Associations / ONG"
-    },
-    "geocoding": {
-        "placeholder": "Rechercher un lieu",
-        "noData": "Aucun résultats"
-    },
-    "footer": {
-        "contact": "Contact",
-        "email": "Contactez-nous par mail",
-        "partners": "Partenaires",
-        "legal": "Mentions légales",
-        "cgu": "CGU",
-        "privacy": "Politique de confidentialité",
-        "plan": "Plan du site",
-        "cookies": "Cookies"
-    },
-    "notifications": {
-        "project": {
-            "create": "Le projet a été créé",
-            "edit": "Le projet a été modifié",
-            "validate": "Le projet a été validé",
-            "delete": "Le projet a été supprimé"
-        },
-        "resource": {
-            "create": "La ressource a été créé",
-            "edit": "La ressource a été modifié",
-            "validate": "La ressource a été validé",
-            "delete": "La ressource a été supprimé"
-        },
-        "common": {
-            "error": {
-                "411": "Une erreur est survenue lors de la validation du formulaire",
-                "500": "Une erreur est survenue, un rapport a été envoyé",
-                "moreDetails": "Détails :"
-            }
-        },
+    "common": {
+      "error": {
+        "411": "Une erreur est survenue lors de la validation du formulaire",
+        "500": "Une erreur est survenue, un rapport a été envoyé",
+        "moreDetails": "Détails :"
+      }},
         "atlas": {
             "create": "L'atlas a été créé",
             "edit": "L'atlas a été modifié",
@@ -198,12 +218,12 @@
             "validate": "La donnée a bien été validée",
             "delete": "La donnée a bien été supprimé",
             "error": "Une erreur est survenue lors du chargement des données"
-        }
-    },
-    "list": {
-        "resetFilters": "Réinitialiser les filtres",
-        "filtersTitle": "Affinez votre recherche"
-    },
+    }
+  },
+  "list": {
+    "resetFilters": "Réinitialiser les filtres",
+    "filtersTitle": "Affinez votre recherche"
+  },
     "share": {
         "shareWhatsapp": "Partager sur Whatsapp",
         "shareFb": "Partager sur Facebook",
