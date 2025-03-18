@@ -1,0 +1,10 @@
+{
+    "routes": {
+        "services": "services",
+        "projects": "projets",
+        "actors": "acteurs",
+        "resources": "ressources",
+        "map": "ma-carte",
+        "myAccount": "mon-compte"
+    }
+}

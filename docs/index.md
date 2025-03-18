@@ -9,13 +9,17 @@ hero:
   actions:
     - theme: brand
       text: Documentation
-      link: /docs
+      link: /home
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: System Architecture
+    details: Technical stack and code organisation
+    link: /infrastructure
+  - title: Environments
+    details: Development environments, CI/CD, Setup for local development
+    link: /environments/setup/local
+  - title: Database
+    details: Production Database Connection Guide
+    link: /database/postgresql
 ---
+

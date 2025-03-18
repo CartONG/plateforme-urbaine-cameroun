@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250207162916 extends AbstractMigration
+final class Version20250219140453 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,12 @@ final class Version20250207162916 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE project ADD external_images TEXT DEFAULT NULL');
-        $this->addSql('COMMENT ON COLUMN project.external_images IS \'(DC2Type:simple_array)\'');
+        $this->addSql('ALTER TABLE actor ALTER acronym DROP NOT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE project DROP external_images');
+        $this->addSql('ALTER TABLE actor ALTER acronym SET NOT NULL');
     }
 }

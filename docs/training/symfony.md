@@ -151,15 +151,7 @@ class Book {
     public string $title;
 }
 ```
-💡 **Sans API Platform, il faudrait valider les données manuellement dans un contrôleur !**  
-
 ---
 
-## **3. Conclusion**  
-🎯 **Symfony** = Framework PHP puissant basé sur MVC avec des contrôleurs, routes et Doctrine.  
-🚀 **API Platform** = Extends Symfony en **remplaçant les routes et contrôleurs manuels** pour une génération automatique d’APIs.  
 
-🔥 **Avec API Platform, on peut créer une API REST complète en quelques lignes !**  
-
-💡 **Questions ? Démo live ?**
 

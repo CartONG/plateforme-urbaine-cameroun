@@ -73,7 +73,8 @@ FROM docs:latest AS docs_prod
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
 
-ENV APP_ENV=prod SENTRY_DSN=$SENTRY_DSN
+ARG APP_ENV
+ENV APP_ENV=$APP_ENV SENTRY_DSN=$SENTRY_DSN
 ENV FRANKENPHP_CONFIG="import worker.Caddyfile"
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -82,20 +83,41 @@ COPY --link docker/frankenphp/conf.d/app.prod.ini $PHP_INI_DIR/conf.d/
 
 # prevent the reinstallation of vendors at every changes in the source code
 COPY --link composer.* symfony.* ./
-RUN set -eux; \
-	composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
+
+# if $APP_ENV == "prod" then install prod dependencies
+RUN if [ "$APP_ENV" = "prod" ]; then \
+    set -eux; \
+    composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress; \
+  fi
+
+# if $APP_ENV == "dev" then install dev dependencies
+RUN if [ "$APP_ENV" = "dev" ]; then \
+    set -eux; \
+    composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress; \
+  fi
+
 
 # copy sources
-# COPY --link . ./
 COPY --link . ./
 COPY --from=vue_prod --link /app/dist /var/www/vue
 COPY --from=docs_prod --link /app/.vitepress/dist /var/www/docs
 # RUN rm -Rf docker/frankenphp/
 # RUN rm -Rf frankenphp/
 
-RUN set -eux; \
+RUN if [ "$APP_ENV" = "prod" ]; then \
+    set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	composer dump-env prod; \
 	composer run-script --no-dev post-install-cmd; \
-	chmod +x bin/console; sync;
+	chmod +x bin/console; sync; \
+  fi
+
+RUN if [ "$APP_ENV" = "dev" ]; then \
+    set -eux; \
+    mkdir -p var/cache var/log; \
+    composer dump-autoload; \
+    composer dump-env dev; \
+    composer run-script post-install-cmd; \
+    chmod +x bin/console; sync; \
+  fi

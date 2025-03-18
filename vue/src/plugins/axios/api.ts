@@ -7,7 +7,7 @@ import { NotificationType } from '@/models/enums/app/NotificationType'
 import { i18n } from '@/plugins/i18n'
 
 const axiosInstance = axios.create({
-  baseURL: 'https://' + import.meta.env.VITE_DOMAIN
+  baseURL: 'https://' + window.location.hostname
 })
 
 axiosInstance.interceptors.response.use(undefined, (error: AxiosError) => {

@@ -43,12 +43,34 @@ APP_SECRET=
 MAILER_DSN=
 ```
 
-### *2 : Up*
-Save and run the following command 
+
+### *3 : Setup DNS*
+
+Then set up your DNS records :
+Make sure to add these two `A` entries :
+- `your-domain.org`
+- `*.your-domain.org`
+
+### *4 : Up*
+Run the following command 
 
 ``` bash
 make deploy
 ```
+
+
+### *5 : Init the database*
+Run the following commands
+
+``` bash
+make run-migration
+make run-fixtures # if you want to load fake data
+```
+
+### *6 : Test*
+
+And check everything is accessible when accessing `https://your-domain.org`
+
 
 ## 🎛️ **Option B** : Mutliple applications behind a Reverse Proxy
 
@@ -155,12 +177,3 @@ Once created, simply run :
 ``` bash
 docker compose up -d
 ```
-
-### *4 : Setup DNS*
-
-Then set up your DNS.
-
-
-### *5 : Test*
-
-And check everything is accessible when accessing `https://your-domain.org`

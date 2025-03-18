@@ -23,7 +23,7 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('actors.form.acronym') }}</label>
+          <label class="Form__label">{{ $t('actors.form.acronym') }}</label>
           <v-text-field
             density="compact"
             variant="outlined"

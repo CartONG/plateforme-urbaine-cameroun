@@ -44,7 +44,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     if (redirect) {
       const appStore = useApplicationStore()
       appStore.currentContentPage = ContentPagesList.ACTOR
-      router.push('/actors/' + selectedActor.value.slug)
+      router.push({ name: 'actorProfile', params: { slug: selectedActor.value.slug } })
     }
   }
 

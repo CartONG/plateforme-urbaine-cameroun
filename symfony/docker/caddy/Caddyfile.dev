@@ -1,5 +1,6 @@
 import Caddyfile.base
 
+
 {$CADDY_PROTOCOL}://{$DOMAIN} {
 	@websockets {
 		header Connection *Upgrade*
@@ -7,9 +8,15 @@ import Caddyfile.base
 	}
 	root * /app/public
 	import main_domain
+	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 	reverse_proxy @pwa http://vue:{$VUE_PORT}
 	reverse_proxy @websockets http://vue:{$VUE_PORT}
 	php_server
+	
+}
+
+qgis.{$DOMAIN} {
+	reverse_proxy http://qgis:80
 }
 
 docs.{$DOMAIN} {

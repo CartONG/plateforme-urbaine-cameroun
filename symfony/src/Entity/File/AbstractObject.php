@@ -7,7 +7,7 @@ use App\Entity\Trait\TimestampableEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'file')]
+#[ORM\Table(name: 'media_object')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
 #[ORM\DiscriminatorMap(['file' => FileObject::class, 'media' => MediaObject::class])]
