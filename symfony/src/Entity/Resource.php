@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\File\FileObject;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
@@ -67,6 +68,7 @@ class Resource
     use BlameableEntity;
     use ValidateableEntity;
     use LocalizableEntity;
+    use CreatorMessageEntity;
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
@@ -92,11 +94,6 @@ class Resource
     #[ORM\Column(enumType: ResourceFormat::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Length(max: 1000)]
-    private ?string $creatorMessage = null;
 
     /**
      * @var Collection<int, Thematic>
@@ -184,18 +181,6 @@ class Resource
     public function setFormat(ResourceFormat $format): static
     {
         $this->format = $format;
-
-        return $this;
-    }
-
-    public function getCreatorMessage(): ?string
-    {
-        return $this->creatorMessage;
-    }
-
-    public function setCreatorMessage(?string $creatorMessage): static
-    {
-        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

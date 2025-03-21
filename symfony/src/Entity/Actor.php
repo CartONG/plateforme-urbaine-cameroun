@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
 use App\Entity\Trait\TimestampableEntity;
@@ -69,6 +70,8 @@ class Actor
     use LocalizableEntity;
     use BlameableEntity;
     use ValidateableEntity;
+    use CreatorMessageEntity;
+
     public const ACTOR_READ_COLLECTION = 'actor:read_collection';
     public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
     public const ACTOR_READ_ITEM = 'actor:read_item';
@@ -148,11 +151,6 @@ class Actor
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     #[Assert\Email]
     private ?string $email = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    #[Assert\Length(max: 1000)]
-    private ?string $creatorMessage = null;
 
     /**
      * @var Collection<int, Project>
@@ -399,18 +397,6 @@ class Actor
     public function setEmail(?string $email): static
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getCreatorMessage(): ?string
-    {
-        return $this->creatorMessage;
-    }
-
-    public function setCreatorMessage(?string $creatorMessage): static
-    {
-        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }

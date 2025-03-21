@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\Project\SimilarProjectsAction;
 use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
 use App\Entity\Trait\TimestampableEntity;
@@ -79,6 +80,7 @@ class Project
     use SluggableEntity;
     use LocalizableEntity;
     use ValidateableEntity;
+    use CreatorMessageEntity;
 
     public const GET_FULL = 'project:get:full';
     public const GET_PARTIAL = 'project:get:partial';
@@ -187,11 +189,6 @@ class Project
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?array $beneficiaryTypes = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Length(max: 1000)]
-    private ?string $creatorMessage = null;
 
     #[ORM\JoinTable(name: 'projects_donors')]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
@@ -476,18 +473,6 @@ class Project
     public function setBeneficiaryTypes(?array $beneficiaryTypes): static
     {
         $this->beneficiaryTypes = $beneficiaryTypes;
-
-        return $this;
-    }
-
-    public function getCreatorMessage(): ?string
-    {
-        return $this->creatorMessage;
-    }
-
-    public function setCreatorMessage(?string $creatorMessage): static
-    {
-        $this->creatorMessage = $creatorMessage;
 
         return $this;
     }
