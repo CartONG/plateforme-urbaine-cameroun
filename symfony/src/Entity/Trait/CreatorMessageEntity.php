@@ -6,8 +6,8 @@ use App\Entity\Actor;
 use App\Entity\Project;
 use App\Entity\Resource;
 use Doctrine\DBAL\Types\Types;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait CreatorMessageEntity
@@ -16,7 +16,6 @@ trait CreatorMessageEntity
     #[Groups([Actor::ACTOR_READ_ITEM, Actor::ACTOR_WRITE, Project::GET_FULL, Project::WRITE, Resource::GET_FULL, Resource::WRITE])]
     #[Assert\Length(max: 1000)]
     private ?string $creatorMessage = null;
-
 
     public function getCreatorMessage(): ?string
     {
@@ -29,5 +28,4 @@ trait CreatorMessageEntity
 
         return $this;
     }
-
 }
