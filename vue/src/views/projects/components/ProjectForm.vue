@@ -6,6 +6,7 @@
           v-if="type === FormType.VALIDATE && project"
           :created-by="project.createdBy"
           :created-at="project.createdAt"
+          :message="project.creatorMessage"
         />
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('projects.form.fields.name.label') }}</label>
@@ -251,9 +252,9 @@
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
     </template>
     <template #footer-right>
-      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">{{
-        $t('forms.' + type)
-      }}</v-btn>
+      <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
+        {{ submitLabel }}
+      </v-btn>
     </template>
   </Modal>
 </template>
@@ -284,10 +285,15 @@ import type { OsmData } from '@/models/interfaces/geo/OsmData'
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
+import { useUserStore } from '@/stores/userStore'
+import { useI18n } from 'vue-i18n'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
 const thematicsStore = useThematicStore()
+const userStore = useUserStore()
+
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
@@ -304,6 +310,13 @@ let existingHostedPartnerImages: BaseMediaObject[] = []
 const imagesToUpload: Ref<ContentImageFromUserFile[]> = ref([])
 const imagesPartnerToUpload: Ref<ContentImageFromUserFile[]> = ref([])
 const newLogo: Ref<ContentImageFromUserFile[]> = ref([])
+
+const submitLabel = computed(() => {
+  if (userStore.userIsActorEditor() && props.type === FormType.CREATE) {
+    return t('forms.continue')
+  }
+  return t('forms.' + props.type)
+})
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)

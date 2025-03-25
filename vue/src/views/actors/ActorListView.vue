@@ -51,7 +51,7 @@
             color="main-red"
             prepend-icon="mdi-plus"
             @click="addActor()"
-            v-if="userStore.userIsAdmin() || userStore.userHasRole(UserRoles.EDITOR_ACTORS)"
+            v-if="userStore.userIsAdmin() || userStore.userIsActorEditor()"
             >{{ $t('actors.add') }}</v-btn
           >
         </div>
@@ -75,7 +75,6 @@ import ListFilterSelect from '@/views/_layout/list/ListFilterSelect.vue'
 import ActorCard from '@/views/actors/components/ActorCard.vue'
 import { useUserStore } from '@/stores/userStore'
 import { computed, ref, type Ref } from 'vue'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'

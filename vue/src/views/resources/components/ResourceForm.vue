@@ -6,6 +6,7 @@
           v-if="!isResourceValidated && resource"
           :created-by="resource.createdBy"
           :created-at="resource.createdAt"
+          :message="resource.creatorMessage"
         />
 
         <div class="Form__fieldCtn">
@@ -136,9 +137,9 @@
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
     </template>
     <template #footer-right>
-      <v-btn type="submit" form="resource-form" color="main-red" :loading="isSubmitting">{{
-        $t('forms.' + type)
-      }}</v-btn>
+      <v-btn type="submit" form="resource-form" color="main-red" :loading="isSubmitting">
+        {{ submitLabel }}
+      </v-btn>
     </template>
   </Modal>
 </template>
@@ -163,15 +164,27 @@ import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import { OsmType } from '@/models/enums/geo/OsmType'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import DateInput from '@/components/forms/DateInput.vue'
+import { useUserStore } from '@/stores/userStore'
+import { useI18n } from 'vue-i18n'
 
 const resourceStore = useResourceStore()
 const thematicsStore = useThematicStore()
+const userStore = useUserStore()
+
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
   resource: Resource | null
   isShown: boolean
 }>()
+
+const submitLabel = computed(() => {
+  if (userStore.userIsActorEditor() && props.type === FormType.CREATE) {
+    return t('forms.continue')
+  }
+  return t('forms.' + props.type)
+})
 
 const isResourceValidated = computed(() => props.resource?.isValidated)
 

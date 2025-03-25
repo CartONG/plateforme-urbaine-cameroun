@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\File\FileObject;
 use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
@@ -67,6 +68,7 @@ class Resource
     use BlameableEntity;
     use ValidateableEntity;
     use LocalizableEntity;
+    use CreatorMessageEntity;
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
