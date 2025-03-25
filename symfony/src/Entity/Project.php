@@ -157,7 +157,7 @@ class Project
     /**
      * @var Collection<int, MediaObject>
      */
-    #[ORM\ManyToMany(targetEntity: MediaObject::class)]
+    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
     #[Groups([self::GET_FULL, self::WRITE])]
     private Collection $images;
