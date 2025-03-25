@@ -9,7 +9,7 @@ defineProps<{
 <style lang="scss">
 .PageTitle {
   white-space: pre-line;
-  font-family: $font-primary;
+  font-family: $font-secondary;
   color: rgb(var(--v-theme-main-blue));
   font-size: 60px;
   font-weight: 700;

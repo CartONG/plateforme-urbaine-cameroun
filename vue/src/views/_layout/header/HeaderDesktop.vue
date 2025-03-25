@@ -26,11 +26,12 @@
               :value="tab.value"
               :to="tab.route"
               :key="index"
+              :disabled="tab.disabled"
             >
               <span class="Header__tabsText">{{ tab.name }}</span>
             </v-tab>
           </v-tabs>
-          <v-btn base-color="white" class="text-main-blue mr-3 gap-5" to="/map" flat>
+          <v-btn base-color="white" class="text-main-blue mr-3 gap-5" :to="{ name: 'map' }" flat>
             <img
               src="@/assets/images/icons/add_location_alt.svg"
               alt="Accueil"

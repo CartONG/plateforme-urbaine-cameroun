@@ -47,7 +47,9 @@ export default defineConfig({
         collapsed: false,
         text: 'Infrastructure',
         items: [
-          { text: 'Architecture schema', link: '/infrastructure' },
+          { text: 'Architecture schema', link: '/infrastructure/architecture' },
+          { text: 'Front End architecture', link: '/infrastructure/frontend' },
+          { text: 'Back End architecture', link: '/infrastructure/backend' },
         ]
       },
       {

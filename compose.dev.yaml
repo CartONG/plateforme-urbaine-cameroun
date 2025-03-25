@@ -1,11 +1,18 @@
 services:
   frankenphp:
+    build:
+      context: ./symfony
+      target: frankenphp_prod
+      args:
+        - APP_ENV=dev
     ports: !override
       - ${HTTP_PORT:-80}:80
     volumes:
       - ./symfony/docker/caddy/Caddyfile.uat:/etc/caddy/Caddyfile
       - './symfony/public/media:/app/public/media'
       - './symfony/public/files:/app/public/files'
+    environment:
+      APP_ENV: dev
     networks:
       - puc-network
   postgres:

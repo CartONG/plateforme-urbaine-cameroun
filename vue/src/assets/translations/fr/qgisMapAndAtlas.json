@@ -1,6 +1,6 @@
 {
     "qgisMap": {
-        "qgisMaps": "Donnée | Données",
+        "qgisMaps": "Donnée | Donnée | Données",
         "add": "Ajouter un projet QGIS",
         "form": {
             "title": {
@@ -40,10 +40,10 @@
     "atlas": {
         "thematicData": "Données thématiques",
         "predefinedMap": "Cartes prédefinies",
-        "leftMaps": "Carte | Cartes",
-        "rightMaps": "Donnée thématique | Données thématiques",
+        "leftMaps": "Carte | Carte | Cartes",
+        "rightMaps": "Donnée thématique | Donnée thématique | Données thématiques",
         "dragErrorMessage": "Veuillez trier les données par position pour pouvoir modifier celle ci",
-        "data": "Donnée | Données",
+        "data": "Donnée | Donnée | Données",
         "form": {
             "title": {
                 "create": "Ajouter un groupe",

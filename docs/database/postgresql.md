@@ -13,7 +13,7 @@ ssh-keygen -t rsa -b 4096 -C "email@exemple.com"
 By default the key to be transmitted to the administrator will be in ```C:\Users\UserName\.ssh\id_rsa.pub``` (Windows) or ```/home/username/.ssh/rsa_id.pub``` (Linux)
 
 ## 2. Open an ssh tunnel
-You then need to open an ssh tunnel to redirect your local port to a server port (in our case the PostgreSQL port).
+**Once the server administrator has given you access**, you then need to open an ssh tunnel to redirect your local port to a server port (in our case the PostgreSQL port).
 ``` bash
 ssh -L {PG_PORT}:localhost:{PG_PORT} {USERNAME}@{SERVER_IP}
 ```

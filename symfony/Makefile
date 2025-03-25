@@ -1,5 +1,5 @@
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🎵  Symfony commands
 ## --------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ cc:			## Clear the cache
 init-jwt-keypair:	## Generate a new JWT keypair
 	@$(SYMFONY) lexik:jwt:generate-keypair --overwrite
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🧙  Composer
 ## --------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ vendor:			## Install vendors according to the current composer.lock file
 	@$(COMPOSER) install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🛢️  Database - Doctrine
 ## --------------------------------------------------------------------------------
@@ -82,9 +82,9 @@ configure-database: enable-postgis	## Configure the database
 
 create-short-migration: reset-database make-migration run-migration run-fixtures ## Create a small migration
 
-update-prod-database: composer-install composer-dump-env cc run-migration	## Update database without clearing data
+update-database: composer-install composer-dump-env cc run-migration	## Update database without clearing data
 
-## 
+##
 ## --------------------------------------------------------------------------------
 ##  🛠️  Tools
 ## --------------------------------------------------------------------------------

@@ -15,7 +15,10 @@ services:
       target: frankenphp_prod
     environment:
       APP_SECRET: ${APP_SECRET}
+      OTHER_DOMAIN: ${OTHER_DOMAIN}
       SENTRY_DSN: ${SENTRY_DSN}
     volumes:
       - ./symfony/docker/caddy/Caddyfile.prod:/etc/caddy/Caddyfile
       - ./symfony/docker/caddy/worker.Caddyfile:/etc/caddy/worker.Caddyfile
+      - './symfony/public/media:/app/public/media'
+      - './symfony/public/files:/app/public/files'

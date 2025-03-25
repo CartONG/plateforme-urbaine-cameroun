@@ -7,8 +7,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.ref == 'refs/heads/main' && 'uat' || 'dev' }}
-      url: https://${{ github.ref == 'refs/heads/main' && 'uat' || 'dev' }}.puc.cartong.org
+      name: ${{ github.ref == 'refs/heads/uat' && 'uat' || 'dev' }}
+      url: https://${{ github.ref == 'refs/heads/uat' && 'uat' || 'dev' }}.puc.cartong.org
 
     steps:
     - name: Checkout code
@@ -18,8 +18,15 @@ jobs:
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        
-    - name: Deploy to Server depending on environment
+
+    - name: Deploy to Dev Server
+      if: github.ref != 'refs/heads/uat'
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
         "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git clean -fd && git reset --hard origin/${{ github.ref_name }} && make deploy && make rerun-database && make create-osm-db"
+
+    - name: Deploy to UAT Server
+      if: github.ref == 'refs/heads/uat'
+      run: |
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+        "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git clean -fd && git reset --hard origin/${{ github.ref_name }} && make deploy-prod"

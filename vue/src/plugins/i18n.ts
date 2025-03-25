@@ -6,8 +6,9 @@ import authFR from '@/assets/translations/fr/auth.json'
 import projectsFR from '@/assets/translations/fr/projects.json'
 import resourcesFR from '@/assets/translations/fr/resources.json'
 import homeFR from '@/assets/translations/fr/home.json'
-import mapsFR from '@/assets/translations/fr/qgisMapAndAtlas.json'
 import myMapFR from '@/assets/translations/fr/myMap.json'
+import routesFR from '@/assets/translations/fr/routes.json'
+import qgisFR from '@/assets/translations/fr/qgisMapAndAtlas.json'
 
 export const i18nInstance = createI18n({
   legacy: false,
@@ -22,8 +23,9 @@ export const i18nInstance = createI18n({
       ...projectsFR,
       ...homeFR,
       ...resourcesFR,
-      ...mapsFR,
-      ...myMapFR
+      ...myMapFR,
+      ...routesFR,
+      ...qgisFR
     }
   }
 })

@@ -6,7 +6,7 @@ import Caddyfile.base
 	encode gzip
 }
 
-{$DOMAIN}, {$OTHER_DOMAIN} {
+{$CADDY_PROTOCOL}://{$DOMAIN} {
 	import main_domain
 	{$CADDY_SERVER_EXTRA_DIRECTIVES}
 	import spa
@@ -15,12 +15,12 @@ import Caddyfile.base
 	php_server
 }
 
-docs.{$DOMAIN}, docs.{$OTHER_DOMAIN} {
+{$CADDY_PROTOCOL}://qgis.{$DOMAIN} {
+	reverse_proxy http://qgis:80
+}
+
+{$CADDY_PROTOCOL}://docs.{$DOMAIN} {
 	import no_robots
 	root * /var/www/docs
 	import spa
-}
-
-qgis.{$DOMAIN}, qgis.{$OTHER_DOMAIN} {
-	reverse_proxy http://qgis:80
 }
