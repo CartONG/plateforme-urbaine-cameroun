@@ -1,8 +1,0 @@
-App\Entity\User\User:
-    user_yv:
-        firstName: yoh
-        lastName: val
-        email: y_valentin@cartong.org
-        plainPassword: y_valentin@cartong.org
-        roles: [ 'ROLE_ADMIN' ]
-        isValidated: true

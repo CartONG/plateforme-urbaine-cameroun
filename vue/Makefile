@@ -9,6 +9,9 @@ yarn: ## Yarn commands or pass the parameter "c=" to run a given command, exampl
 	@$(eval c ?=)
 	@$(VUE) $(YARN) $(c)
 
+yarn-install: ## Install all dependencies
+	@$(VUE) $(YARN) install
+
 ##
 ## --------------------------------------------------------------------------------
 ##  🧹 Eslint
