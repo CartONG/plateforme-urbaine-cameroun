@@ -48,12 +48,19 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     userEdition.active = false
   }
 
+  async function deleteUser(user: Partial<User>) {
+    await UserService.deleteUser(user).then(() => {
+      appMembers.value = appMembers.value.filter((u: User) => u.id !== user.id)
+    })
+  }
+
   return {
     selectedAdminPanel,
     selectedAdminItem,
     appMembers,
     getMembers,
     createUser,
+    deleteUser,
     userEdition,
     setUserEditionMode,
     editUser

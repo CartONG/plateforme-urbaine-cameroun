@@ -57,6 +57,10 @@
       "duplicate": "Une image avec ce nom est déjà sélectionnée"
     }
   },
+  "areYouSurePopup": {
+    "title": "Attention ! Cette action est irréversible",
+    "label": "Êtes-vous certain de vouloir faire cette action ?"
+  },
   "forms": {
     "modify": "Modifier",
     "edit": "Modifier",

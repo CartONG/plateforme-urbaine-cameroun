@@ -175,7 +175,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Actor>
      */
-    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Actor::class, mappedBy: 'createdBy')]
     private Collection $actorsCreated;
 
     /**
