@@ -151,7 +151,7 @@ class Project
     private ?string $website = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[Groups([self::GET_FULL, self::WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?MediaObject $logo = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
