@@ -49,7 +49,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const activeItemId: Ref<string | null> = ref(null)
   const activeItem: Ref<Item | FilteredQGISLayerFeatures[] | null> = ref(null)
   const activeItemType: Ref<ItemType | QGISItemType | null> = ref(null)
-  const activeItemCoords: Ref<LngLat | null> = ref(null)
 
   const atlasMaps: Ref<AtlasMap[]> = ref([])
   const activeAtlas: AtlasActive = reactive({
@@ -169,7 +168,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
       atlasMaps.value
     )
     if (features) {
-      activeItemCoords.value = coords
       activeItemType.value = 'QGIS'
       activeItem.value = features
     }
@@ -246,7 +244,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     queryQgisLayer,
     activeItemId,
     activeItemType,
-    activeItem,
-    activeItemCoords
+    activeItem
   }
 })

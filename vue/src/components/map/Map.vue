@@ -137,10 +137,11 @@ const addImage = async (path: string, name: string) => {
 const addPopup = (
   coordinates: maplibregl.LngLatLike | undefined,
   popupHtml: any,
-  isComponent = true
+  isComponent = true,
+  flyToCoords = true
 ) => {
   if (map.value == null || coordinates == null) return
-  flyTo(coordinates)
+  if (flyToCoords) flyTo(coordinates)
   popup.value
     .setLngLat(coordinates)
     .setDOMContent(isComponent ? popupHtml.$el : popupHtml)
@@ -157,8 +158,7 @@ const addPopupOnClick = (layerName: string, popupHtml: any, isComponent = true) 
   map.value.on('click', layerName, (e: any) => {
     if (map.value == null) return
     activeFeatureId.value = e.features[0]?.properties?.id
-    const coordinates = e.features[0].geometry?.coordinates?.slice()
-    addPopup(coordinates, popupHtml, isComponent)
+    addPopup(map.value.getBounds().getNorthWest(), popupHtml, isComponent, false)
     e.preventDefault()
   })
 }
