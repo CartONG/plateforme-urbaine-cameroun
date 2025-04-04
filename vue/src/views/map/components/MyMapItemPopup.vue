@@ -33,7 +33,6 @@ import type { Project } from '@/models/interfaces/Project'
 import type { Resource } from '@/models/interfaces/Resource'
 import ResourceCard from '@/views/resources/components/ResourceCard.vue'
 import type { Actor } from '@/models/interfaces/Actor'
-import type { LngLat } from 'maplibre-gl'
 import QgisCard from './QgisLayersQuery/QgisCard.vue'
 import type { FilteredQGISLayerFeatures } from '@/models/interfaces/map/AtlasMap'
 import MapService from '@/services/map/MapService'
@@ -77,7 +76,12 @@ const addPopupOnClick = () => {
 const showPopup = () => {
   if (myMap.value == null) return
   if (myMapStore.activeItemType === 'QGIS') {
-    myMap.value.addPopup(myMapStore.activeItemCoords as LngLat, activeItemCard.value, false)
+    myMap.value.addPopup(
+      myMap.value.map?.getBounds().getNorthWest(),
+      activeItemCard.value,
+      false,
+      false
+    )
   } else {
     Object.values(ItemType).forEach((itemType) => {
       myMap.value?.addPopupOnClick(itemType, activeItemCard.value, false)

@@ -137,10 +137,11 @@ const addImage = async (path: string, name: string) => {
 const addPopup = (
   coordinates: maplibregl.LngLatLike | undefined,
   popupHtml: any,
-  isComponent = true
+  isComponent = true,
+  flyToCoords = true
 ) => {
   if (map.value == null || coordinates == null) return
-  flyTo(coordinates)
+  if (flyToCoords) flyTo(coordinates)
   popup.value
     .setLngLat(coordinates)
     .setDOMContent(isComponent ? popupHtml.$el : popupHtml)
