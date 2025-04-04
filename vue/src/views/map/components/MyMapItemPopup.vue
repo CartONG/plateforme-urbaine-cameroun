@@ -36,7 +36,6 @@ import type { Actor } from '@/models/interfaces/Actor'
 import QgisCard from './QgisLayersQuery/QgisCard.vue'
 import type { FilteredQGISLayerFeatures } from '@/models/interfaces/map/AtlasMap'
 import MapService from '@/services/map/MapService'
-import type { Item } from '@/models/interfaces/Item'
 
 const myMapStore = useMyMapStore()
 const activeItemCard = useTemplateRef('active-item-card')
@@ -86,17 +85,6 @@ const showPopup = () => {
     Object.values(ItemType).forEach((itemType) => {
       myMap.value?.addPopupOnClick(itemType, activeItemCard.value, false)
     })
-  }
-  if (map.value) {
-    if (myMapStore.activeItem != null && myMap.value && myMapStore.activeItemType !== 'QGIS') {
-      if ((myMapStore.activeItem as Item)?.geoData?.coords) {
-        myMap.value.addPopup(
-          (myMapStore.activeItem as Item)?.geoData?.coords,
-          activeItemCard.value,
-          false
-        )
-      }
-    }
   }
 }
 
