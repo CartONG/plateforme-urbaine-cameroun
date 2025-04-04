@@ -37,7 +37,7 @@ export class CommentService {
       readByAdmin: true
     }
     try {
-      await apiClient.patch('/api/app_content_comments/bulk-update', data, {
+      await apiClient.patch('/api/app_content_comments/bulk_update', data, {
         headers: {
           'Content-Type': 'application/ld+json',
           Accept: 'application/ld+json'
@@ -57,7 +57,7 @@ export class CommentService {
   static async deleteComments(ids: string[]): Promise<void> {
     const data = { ids: ids }
     try {
-      await apiClient.post('/api/app_content_comments/bulk-delete', data, {
+      await apiClient.post('/api/app_content_comments/bulk_delete', data, {
         headers: {
           'Content-Type': 'application/ld+json',
           Accept: 'application/ld+json'

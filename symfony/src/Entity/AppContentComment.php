@@ -21,12 +21,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Entity(repositoryClass: AppContentCommentRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(security: 'is_granted("ROLE_ADMIN")'),
         new Patch(
-            security: 'is_granted("ROLE_ADMIN")'
-        ),
-        new Patch(
-            uriTemplate: '/app_content_comments/bulk-update',
+            uriTemplate: '/app_content_comments/bulk_update',
             name: 'bulk_update_comments',
             input: BulkUpdateCommentDTO::class,
             output: false,
@@ -34,13 +30,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
             denormalizationContext: ['groups' => [self::COMMENT_BULK_UPDATE]],
             security: 'is_granted("ROLE_ADMIN")'
         ),
-        new Post(security: 'is_granted("IS_AUTHENTICATED_FULLY")'),
         new Post(
-            uriTemplate: '/app_content_comments/bulk-delete',
+            uriTemplate: '/app_content_comments/bulk_delete',
             name: 'bulk_delete_comments',
             controller: BulkDeleteCommentsController::class,
             security: 'is_granted("ROLE_ADMIN")'
         ),
+        new Post(security: 'is_granted("IS_AUTHENTICATED_FULLY")'),
+        new GetCollection(security: 'is_granted("ROLE_ADMIN")'),
     ],
     normalizationContext: ['groups' => [self::COMMENT_READ]],
     denormalizationContext: ['groups' => [self::COMMENT_WRITE]],

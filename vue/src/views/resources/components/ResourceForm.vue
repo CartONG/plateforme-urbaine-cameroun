@@ -25,6 +25,20 @@
           />
         </div>
 
+        <div class="Form__fieldCtn" v-if="otherRessourceTypeIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('resources.form.fields.otherType.label')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            :placeholder="$t('resources.form.fields.otherType.placeholder')"
+            v-model="form.otherType.value.value"
+            :error-messages="form.otherType.errorMessage.value"
+            @blur="form.otherType.handleChange"
+          />
+        </div>
+
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('resources.form.fields.imagePreview.label') }}</label>
           <ImagesLoader
@@ -140,6 +154,19 @@
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherThematicIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('resources.form.fields.otherThematics.label')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherThematic.value.value"
+            :placeholder="$t('resources.form.fields.otherThematics.placeholder')"
+            :error-messages="form.otherThematic.errorMessage.value"
+            @blur="form.otherThematic.handleChange"
+          />
+        </div>
       </v-form>
     </template>
     <template #footer-left>
@@ -199,6 +226,19 @@ const submitLabel = computed(() => {
 })
 
 const isResourceValidated = computed(() => props.resource?.isValidated)
+
+const otherRessourceTypeIsSelected = computed(() => {
+  if (form.type.value?.value) {
+    return form.type.value?.value === ResourceType.OTHERS
+  }
+  return false
+})
+const otherThematicIsSelected = computed(() => {
+  if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
+    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
 
 const existingImagePreview = ref<(FileObject | string)[]>([])
 

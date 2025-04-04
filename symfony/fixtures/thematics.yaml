@@ -21,3 +21,5 @@ App\Entity\Thematic:
     name: Infrastructures légères
   thematic_11:
     name: Infrastructures structurantes
+  thematic_12:
+    name: Autre

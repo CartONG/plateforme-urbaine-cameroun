@@ -16,6 +16,7 @@ export class ResourceFormService {
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         description: zodModels.descriptionRequired,
         type: z.nativeEnum(ResourceType),
+        otherType: z.string().optional(),
         geoData: zodModels.geoDataNullable.optional(),
         startAt: z.coerce.date().nullable().optional(),
         endAt: z.coerce.date().nullable().optional(),
@@ -23,7 +24,8 @@ export class ResourceFormService {
         link: zodModels.website.nullable().optional(),
         format: z.nativeEnum(ResourceFormat),
         author: zodModels.maxLabel.optional(),
-        thematics: zodModels.symfonyRelations
+        thematics: zodModels.symfonyRelations,
+        otherThematic: z.string().optional()
       })
       .refine(
         (schema) => {
@@ -53,6 +55,7 @@ export class ResourceFormService {
       name: useField('name'),
       description: useField('description'),
       type: useField('type'),
+      otherType: useField('otherType'),
       file: useField('file'),
       format: useField('format'),
       geoData: useField('geoData'),
@@ -60,6 +63,7 @@ export class ResourceFormService {
       endAt: useField('endAt'),
       author: useField('author'),
       thematics: useField('thematics'),
+      otherThematic: useField('otherThematic'),
       link: useField('link')
     }
 

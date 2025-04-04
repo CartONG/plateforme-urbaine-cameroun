@@ -1,31 +1,41 @@
 App\Entity\Organisation:
   organisation_1:
-    acronym: "GIZ"
-    name: "Deutsche Gesellschaft für Internationale Zusammenarbeit"
-    donor: false
+    acronym: "Others"
+    name: "Autre"
+    donor: true
     contracting: true
   organisation_2:
-    acronym: "CARE"
-    name: "Association Humanitaire de Solidarité Internationale"
-    donor: false
+    acronym: "FP"
+    name: "Fonds propres"
+    donor: true
     contracting: true
   organisation_3:
-    acronym: "ONU-HABITAT"
-    name: "ONU-Habitat"
+    acronym: "SP"
+    name: "Subvention publique"
     donor: true
     contracting: true
   organisation_4:
-    acronym: "BMZ"
-    name: "Bundesministerium für wirtschaftliche Zusammenarbeit und Entwicklung"
+    acronym: "PB"
+    name: "Prêt bancaire"
     donor: true
-    contracting: false
+    contracting: true
   organisation_5:
-    acronym: "CFC"
-    name: "Crédit Foncier du Cameroun"
+    acronym: "IP"
+    name: "Investissement privé"
     donor: true
-    contracting: false
+    contracting: true
   organisation_6:
-    acronym: "UE"
-    name: "Union Européenne"
+    acronym: "CF"
+    name: "Crowdfunding (financement participatif)"
     donor: true
-    contracting: false
+    contracting: true
+  organisation_7:
+    acronym: "PPP"
+    name: "Partenariat public-privé"
+    donor: true
+    contracting: true
+  organisation_8:
+    acronym: "MC"
+    name: "Mécénat"
+    donor: true
+    contracting: true

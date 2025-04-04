@@ -151,7 +151,7 @@ class Project
     private ?string $website = null;
 
     #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[Groups([self::GET_FULL, self::WRITE])]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?MediaObject $logo = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
@@ -176,7 +176,7 @@ class Project
     private Collection $partners;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Actor $actor = null;
 
@@ -203,6 +203,26 @@ class Project
     #[ORM\JoinColumn(nullable: false)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Organisation $contractingOrganisation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherThematic = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherBeneficiary = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherDonor = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherContractingOrganisation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherActor = null;
 
     public function __construct()
     {
@@ -513,6 +533,66 @@ class Project
     public function setContractingOrganisation(?Organisation $contractingOrganisation): static
     {
         $this->contractingOrganisation = $contractingOrganisation;
+
+        return $this;
+    }
+
+    public function getOtherThematic(): ?string
+    {
+        return $this->otherThematic;
+    }
+
+    public function setOtherThematic(?string $otherThematic): static
+    {
+        $this->otherThematic = $otherThematic;
+
+        return $this;
+    }
+
+    public function getOtherBeneficiary(): ?string
+    {
+        return $this->otherBeneficiary;
+    }
+
+    public function setOtherBeneficiary(?string $otherBeneficiary): static
+    {
+        $this->otherBeneficiary = $otherBeneficiary;
+
+        return $this;
+    }
+
+    public function getOtherDonor(): ?string
+    {
+        return $this->otherDonor;
+    }
+
+    public function setOtherDonor(?string $otherDonor): static
+    {
+        $this->otherDonor = $otherDonor;
+
+        return $this;
+    }
+
+    public function getOtherContractingOrganisation(): ?string
+    {
+        return $this->otherContractingOrganisation;
+    }
+
+    public function setOtherContractingOrganisation(?string $otherContractingOrganisation): static
+    {
+        $this->otherContractingOrganisation = $otherContractingOrganisation;
+
+        return $this;
+    }
+
+    public function getOtherActor(): ?string
+    {
+        return $this->otherActor;
+    }
+
+    public function setOtherActor(?string $otherActor): static
+    {
+        $this->otherActor = $otherActor;
 
         return $this;
     }

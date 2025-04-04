@@ -41,6 +41,7 @@ export interface Project
   donors: Organisation[]
   contractingOrganisation: Organisation
   actor: Partial<Actor>
+  otherActor?: string
   creatorMessage?: string
 }
 

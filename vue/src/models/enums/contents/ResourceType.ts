@@ -2,5 +2,6 @@ export enum ResourceType {
   GUIDES = 'guides',
   RAPPORTS = 'rapports',
   REGULATIONS = 'regulations',
-  EVENTS = 'events'
+  EVENTS = 'events',
+  OTHERS = 'others'
 }

@@ -58,6 +58,53 @@
       "buttons": {
         "validate": "Valider",
         "cancel": "Annuler",
+        "create": "Créer",
+        "delete": "Supprimer",
+        "or": "OU",
+        "errors": "Le formulaire n'est pas valide",
+        "select": "Placer sur la carte",
+        "errorMessages": {
+            "required": "Ce champs est obligatoire",
+            "minlength": "Ce champs doit avoir au moins {min} caractères",
+            "maxlength": "Ce champs est limité à {max} caractères",
+            "email": "Veuillez renseigner une adresse email valide",
+            "url": "Veuillez renseigner une URL valide",
+            "https": "Veuillez renseigner un site en https://",
+            "phone": "Veuillez renseigner un numéro de téléphone valide",
+            "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
+            "file": {
+                "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
+                "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"
+            }
+        }
+    },
+    "filters": {
+        "sortBy": {
+            "placeholder": "Trier par",
+            "options": {
+                "projects_az": "Projets A > Z",
+                "projects_za": "Projets Z > A",
+                "updated_at_az": "Date de dernière mise à jour",
+                "actors_az": "Acteurs A > Z",
+                "actors_za": "Acteurs Z > A"
+            }
+        },
+        "search": "Rechercher..."
+    },
+    "labels": {
+        "updatedAt": "Mis à jour le",
+        "lastUpdatedAt": "Dernière mise à jour le",
+        "reset": "Réinitialiser"
+    },
+    "placeholders": {
+        "all": "Tous",
+        "sortBy": "Trier par"
+    },
+    "content": {
+        "createAMap": "Créer une carte",
+        "website": "Visiter le site internet",
+        "mail": "Contacter par mail",
+        "edit": "Modifier",
         "select": "Placer sur la carte"
       },
       "moveMap": "Déplacez et zoomez la carte pour positionner le point"
@@ -72,9 +119,75 @@
       "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo",
       "duplicate": "Une image avec ce nom est déjà sélectionnée"
     },
+    "itemType": {
+        "project": "Projet",
+        "actor": "Acteur",
+        "resource": "Ressource"
+    },
+    "geocoding": {
+        "placeholder": "Rechercher un lieu",
+        "noData": "Aucun résultats"
+    },
+    "footer": {
+        "contact": "Contact",
+        "email": "Contactez-nous par mail",
+        "partners": "Partenaires",
+        "legal": "Mentions légales",
+        "cgu": "CGU",
+        "privacy": "Politique de confidentialité",
+        "plan": "Plan du site",
+        "cookies": "Cookies"
+    },
+    "notifications": {
+        "project": {
+            "create": "Le projet a été créé",
+            "edit": "Le projet a été modifié",
+            "validate": "Le projet a été validé",
+            "delete": "Le projet a été supprimé"
+        },
+        "resource": {
+            "create": "La ressource a été créé",
+            "edit": "La ressource a été modifié",
+            "validate": "La ressource a été validé",
+            "delete": "La ressource a été supprimé"
+        },
+        "common": {
+            "error": {
+                "411": "Une erreur est survenue lors de la validation du formulaire",
+                "500": "Une erreur est survenue, un rapport a été envoyé",
+                "moreDetails": "Détails :"
+            }
+        },
+        "atlas": {
+            "create": "L'atlas a été créé",
+            "edit": "L'atlas a été modifié",
+            "validate": "L'atlas a été validé",
+            "delete": "L'atlas a été supprimé"
+        },
+        "qgismap": {
+            "create": "La donnée a bien été crée",
+            "edit": "La donnée a bien été modifiée",
+            "validate": "La donnée a bien été validée",
+            "delete": "La donnée a bien été supprimé",
+            "error": "Une erreur est survenue lors du chargement des données"
+        }
+    },
     "location": {
       "lat": "Latitude",
       "lng": "Longitude"
+    },
+    "list": {
+        "resetFilters": "Réinitialiser les filtres",
+        "filtersTitle": "Affinez votre recherche"
+    },
+    "share": {
+        "shareWhatsapp": "Partager sur Whatsapp",
+        "shareFb": "Partager sur Facebook",
+        "shareEmail": "Partager par email",
+        "copyLink": "Copier le lien",
+        "urlCopied": "Lien copié",
+        "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
+        "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
     }
   },
   "comments": {
@@ -207,7 +320,8 @@
     "communities_of_communes": "Communautés de communes",
     "regions": "Régions",
     "local_institutions": "Institutions locales",
-    "associations_ngos": "Associations / ONG"
+    "associations_ngos": "Associations / ONG",
+    "others": "Autre"
   },
   "geocoding": {
     "placeholder": "Rechercher un lieu",

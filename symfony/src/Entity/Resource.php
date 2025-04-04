@@ -138,6 +138,14 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?MediaObject $previewImage = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?string $otherType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?string $otherThematic = null;
+
     public function __construct()
     {
         $this->thematics = new ArrayCollection();
@@ -288,6 +296,30 @@ class Resource
     public function setPreviewImage(?MediaObject $previewImage): static
     {
         $this->previewImage = $previewImage;
+
+        return $this;
+    }
+
+    public function getOtherType(): ?string
+    {
+        return $this->otherType;
+    }
+
+    public function setOtherType(?string $otherType): static
+    {
+        $this->otherType = $otherType;
+
+        return $this;
+    }
+
+    public function getOtherThematic(): ?string
+    {
+        return $this->otherThematic;
+    }
+
+    public function setOtherThematic(?string $otherThematic): static
+    {
+        $this->otherThematic = $otherThematic;
 
         return $this;
     }

@@ -5,3 +5,5 @@ App\Entity\ActorExpertise:
     name: Elaboration et mise en œuvre de la politique algorithmique de la nation ainsi que de l’aménagement du territoire
   actorexpertise_3:
     name: Production de l’Information Géospatiale
+  actorexpertise_4:
+    name: Autre

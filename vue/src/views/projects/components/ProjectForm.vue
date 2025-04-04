@@ -20,7 +20,9 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('projects.form.fields.description.label') }}</label>
+          <label class="Form__label required">{{
+            $t('projects.form.fields.description.label')
+          }}</label>
           <v-textarea
             variant="outlined"
             :placeholder="$t('projects.form.fields.description.label')"
@@ -42,7 +44,7 @@
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
           <v-textarea
             variant="outlined"
-            :rows="1"
+            :rows="4"
             :placeholder="$t('projects.form.fields.deliverables.label')"
             v-model="form.deliverables.value.value"
             :error-messages="form.deliverables.errorMessage.value"
@@ -126,9 +128,21 @@
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherThematicIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherThematic')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherThematic.value.value"
+            :error-messages="form.otherThematic.errorMessage.value"
+            @blur="form.otherThematic.handleChange"
+          />
+        </div>
 
         <FormSectionTitle :text="$t('projects.form.section.beneficiaryTypes')" />
-        <v-select
+        <v-autocomplete
           density="compact"
           variant="outlined"
           multiple
@@ -141,6 +155,18 @@
           @blur="form.beneficiaryTypes.handleChange(form.beneficiaryTypes.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherBeneficiaryIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherBeneficiary')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherBeneficiary.value.value"
+            :error-messages="form.otherBeneficiary.errorMessage.value"
+            @blur="form.otherBeneficiary.handleChange"
+          />
+        </div>
 
         <FormSectionTitle :text="$t('projects.form.section.financial')" />
         <v-select
@@ -156,8 +182,30 @@
           @blur="form.donors.handleChange(form.donors.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherDonorIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherDonor')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherDonor.value.value"
+            :error-messages="form.otherDonor.errorMessage.value"
+            @blur="form.otherDonor.handleChange"
+          />
+        </div>
 
-        <FormSectionTitle :text="$t('projects.form.section.contractingOrganisation')" />
+        <v-tooltip
+          location="start"
+          :text="$t('projects.form.section.contractingOrganisationDisclaimer')"
+        >
+          <template v-slot:activator="{ props }">
+            <FormSectionTitle
+              :text="$t('projects.form.section.contractingOrganisation')"
+              v-bind="props"
+            />
+          </template>
+        </v-tooltip>
         <v-select
           density="compact"
           variant="outlined"
@@ -172,9 +220,39 @@
           "
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherContractingOrganisationIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherContractingOrganisation')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherContractingOrganisation.value.value"
+            :error-messages="form.otherContractingOrganisation.errorMessage.value"
+            @blur="form.otherContractingOrganisation.handleChange"
+          />
+        </div>
 
-        <FormSectionTitle :text="$t('projects.form.section.projectOwner')" />
+        <v-tooltip location="start" :text="$t('projects.form.section.projectOwnerDisclaimer')">
+          <template v-slot:activator="{ props }">
+            <div>
+              <FormSectionTitle :text="$t('projects.form.section.projectOwner')" v-bind="props" />
+              <div class="d-flex text-caption">
+                {{ $t('projects.form.section.noProjectOwner') }}
+                <v-checkbox
+                  hide-details
+                  density="compact"
+                  class="ml-1 mt-0 pa-0"
+                  :ripple="false"
+                  v-model="projectHasNoOwner"
+                ></v-checkbox>
+              </div>
+            </div>
+          </template>
+        </v-tooltip>
+
         <v-select
+          v-if="!projectHasNoOwner"
           density="compact"
           variant="outlined"
           v-model="form.actor.value.value as Actor"
@@ -182,9 +260,20 @@
           item-title="name"
           item-value="@id"
           :error-messages="form.actor.errorMessage.value"
+          :placeholder="$t('projects.form.section.projectOwner')"
           @blur="form.actor.handleChange(form.actor.value.value)"
           return-object
         />
+        <v-text-field
+          v-else
+          density="compact"
+          variant="outlined"
+          v-model="form.otherActor.value.value"
+          :placeholder="$t('projects.form.fields.otherActor.label')"
+          :error-messages="form.otherActor.errorMessage.value"
+          @blur="form.otherActor.handleChange"
+        />
+
         <FormSectionTitle :text="$t('projects.form.section.focalPoint')" />
 
         <div class="Form__fieldCtn">
@@ -238,9 +327,9 @@
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
-        <FormSectionTitle :text="$t('actors.form.images')" />
+        <FormSectionTitle :text="$t('projects.form.section.projectImages')" />
         <ImagesLoader @updateFiles="handleImagesUpdate" :existingImages="existingImages" />
-        <FormSectionTitle :text="$t('actors.form.partnerImages')" />
+        <FormSectionTitle :text="$t('projects.form.section.partnerLogos')" />
         <ImagesLoader
           @updateFiles="handleImagesPartnerUpdate"
           :existingImages="existingPartnerImages"
@@ -285,6 +374,9 @@ import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { i18n } from '@/plugins/i18n'
+import { addNotification } from '@/services/notifications/NotificationService'
 import { useUserStore } from '@/stores/userStore'
 import { useI18n } from 'vue-i18n'
 
@@ -300,6 +392,8 @@ const props = defineProps<{
   project: Project | null
   isShown: boolean
 }>()
+
+const projectHasNoOwner = ref(false)
 
 const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
@@ -321,6 +415,33 @@ const submitLabel = computed(() => {
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
 
+const otherThematicIsSelected = computed(() => {
+  if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
+    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
+const otherBeneficiaryIsSelected = computed(() => {
+  if (form.beneficiaryTypes.value?.value && Array.isArray(form.beneficiaryTypes.value?.value)) {
+    return (form.beneficiaryTypes.value?.value as BeneficiaryType[]).includes(
+      BeneficiaryType.OTHERS
+    )
+  }
+  return false
+})
+const otherDonorIsSelected = computed(() => {
+  if (form.donors.value?.value && Array.isArray(form.donors.value?.value)) {
+    return (form.donors.value?.value as Organisation[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
+const otherContractingOrganisationIsSelected = computed(() => {
+  if (form.contractingOrganisation.value?.value) {
+    return (form.contractingOrganisation.value?.value as Organisation).name === 'Autre'
+  }
+  return false
+})
+
 const emit = defineEmits(['submitted', 'close'])
 
 const { form, handleSubmit, isSubmitting } = ProjectFormService.getForm(props.project)
@@ -331,6 +452,9 @@ onMounted(async () => {
   await projectStore.getAllContractingOrganisations()
   await actorsStore.getAll()
   if (props.project) {
+    if (props.project.otherActor) {
+      projectHasNoOwner.value = true
+    }
     existingLogo.value = props.project.logo ? [props.project.logo] : []
     existingImages.value = [...props.project.images, ...props.project.externalImages]
     existingHostedImages = props.project.images
@@ -361,7 +485,10 @@ const submitForm = handleSubmit(
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
     emit('submitted', submittedProject)
   },
-  () => onInvalidSubmit
+  () => {
+    addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
+    onInvalidSubmit()
+  }
 )
 
 function handleImagesUpdate(lists: any) {

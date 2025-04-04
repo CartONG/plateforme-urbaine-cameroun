@@ -42,6 +42,16 @@
             :externalImagesLoader="false"
           />
         </div>
+        <div class="Form__fieldCtn">
+          <label class="Form__label">{{ $t('actors.form.description') }}</label>
+          <v-textarea
+            variant="outlined"
+            v-model="form.description.value.value"
+            :error-messages="form.description.errorMessage.value"
+            @blur="form.description.handleChange"
+          />
+        </div>
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.category') }}</label>
@@ -52,6 +62,16 @@
             :items="categoryItems"
             :error-messages="form.category.errorMessage.value"
             @blur="form.category.handleChange"
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="form.category.value.value === ActorsCategories.OTHERS">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherCategory') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherCategory.value.value"
+            :error-messages="form.otherCategory.errorMessage.value"
+            @blur="form.otherCategory.handleChange"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -69,6 +89,16 @@
             return-object
           />
         </div>
+        <div class="Form__fieldCtn" v-if="otherExpertiseIsSelected">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherExpertise') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherExpertise.value.value"
+            :error-messages="form.otherExpertise.errorMessage.value"
+            @blur="form.otherExpertise.handleChange"
+          />
+        </div>
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.thematic') }}</label>
           <v-select
@@ -82,6 +112,16 @@
             :error-messages="form.thematics.errorMessage.value"
             @blur="form.thematics.handleChange(form.thematics.value.value)"
             return-object
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="otherThematicIsSelected">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherThematic') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherThematic.value.value"
+            :error-messages="form.otherThematic.errorMessage.value"
+            @blur="form.otherThematic.handleChange"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -99,15 +139,14 @@
             return-object
           />
         </div>
-        <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('actors.form.description') }}</label>
-          <v-textarea
-            variant="outlined"
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            @blur="form.description.handleChange"
-          />
-        </div>
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
+
+        <FormSectionTitle :text="$t('actors.form.location')" />
+        <LocationSelector
+          @update:model-value="form.geoData.handleChange"
+          v-model="form.geoData.value.value as GeoData"
+          :error-message="form.geoData.errorMessage.value"
+        />
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <!-- Contact infos -->
@@ -137,6 +176,7 @@
           <v-text-field
             density="compact"
             variant="outlined"
+            placeholder="+237 652 266 618"
             v-model="form.phone.value.value"
             :error-messages="form.phone.errorMessage.value"
             @blur="form.phone.handleChange"
@@ -188,12 +228,6 @@
             @blur="form.officeAddress.handleChange"
           />
         </div>
-        <FormSectionTitle :text="$t('resources.form.section.location')" />
-        <LocationSelector
-          @update:model-value="form.geoData.handleChange"
-          v-model="form.geoData.value.value as GeoData"
-          :error-message="form.geoData.errorMessage.value"
-        />
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         <FormSectionTitle :text="$t('actors.form.images')" />
@@ -256,6 +290,18 @@ const submitLabel = computed(() => {
   }
 })
 const administrativeScopesItems = actorsStore.actorsAdministrativesScopes
+const otherExpertiseIsSelected = computed(() => {
+  if (form.expertises.value?.value && Array.isArray(form.expertises.value?.value)) {
+    return (form.expertises.value?.value as ActorExpertise[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
+const otherThematicIsSelected = computed(() => {
+  if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
+    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
 
 const existingLogo = ref<(FileObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])

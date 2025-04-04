@@ -1,7 +1,7 @@
 {
   "projectPage": {
     "about": "À propos",
-    "focalPoint": "Point de contact",
+    "focalPoint": "Personne de référence",
     "inImages": "En images",
     "keyNumbers": "Chiffres-clés",
     "otherProjectsWithSameThematics": "D’autres projets avec des thématiques communes",
@@ -42,11 +42,11 @@
           "placeholder": "mail@siteinternet.com"
         },
         "focalPointName": {
-          "label": "Nom complet du Point de contact",
+          "label": "Nom du référent",
           "placeholder": "Prénom NOM"
         },
         "focalPointPosition": {
-          "label": "Intitulé du Point de contact",
+          "label": "Fonction du référent",
           "placeholder": ""
         },
         "focalPointTel": {
@@ -54,8 +54,8 @@
           "placeholder": 0
         },
         "interventionZone": {
-          "label": "Zone d'intervention",
-          "placeholder": "Zone d'intervention"
+          "label": "Echelle d'intervention",
+          "placeholder": "Echelle d'intervention"
         },
         "name": {
           "label": "Nom du projet",
@@ -68,21 +68,37 @@
         "website": {
           "label": "Site internet",
           "placeholder": "Site internet"
+        },
+        "otherActor": {
+          "label": "Précisez un autre responsable",
+          "placeholder": "Précisez un autre responsable"
         }
       },
       "section": {
         "beneficiaryTypes": "Bénéficiaires",
-        "contractingOrganisation": "Maîtrise d'ouvrage",
-        "financial": "Financement",
-        "focalPoint": "Point de contact",
+        "contractingOrganisation": "Maîtrise d'ouvrage *",
+        "contractingOrganisationDisclaimer": "Organisation qui commande et finance le projet",
+        "financial": "Financement *",
+        "focalPoint": "Personne de référence",
         "localization": "Localisation",
-        "projectOwner": "Responsable du projet",
-        "thematics": "Thématiques"
+        "projectOwner": "Responsable du projet *",
+        "noProjectOwner": "Le responsable du projet n'est pas un acteur enregistré sur la plateforme",
+        "projectOwnerDisclaimer": "En charge de la gestion et de la coordination du projet",
+        "thematics": "Thématiques *",
+        "otherThematic": "Précisez une autre thematique",
+        "otherBeneficiary": "Entrez un autre bénéficiaire",
+        "otherDonor": "Précisez une autre organisation",
+        "otherContractingOrganisation": "Précisez une autre organisation",
+        "projectImages": "Images du projet",
+        "partnerLogos": "Logos des partenaires"
       },
       "title": {
         "create": "Ajouter un projet",
         "edit": "Modifier un projet",
         "validate": "Valider un projet"
+      },
+      "errorMessages": {
+        "noActor": "Vous devez ajouter au moins un responsable"
       }
     },
     "map": {
@@ -97,7 +113,7 @@
           "label": "Financement"
         },
         "interventionZones": {
-          "label": "Zones d'intervention"
+          "label": "Echelles d'intervention"
         },
         "projectOwner": {
           "label": "Maitre d'ouvrage"
@@ -115,10 +131,11 @@
     "project": "projet",
     "projects": "projet | projet | projets",
     "scope": {
-      "city": "Ville",
-      "national": "National",
-      "regional": "Régional",
-      "state": "Département"
+      "city": "Communale",
+      "international": "Internationale",
+      "national": "Nationale",
+      "regional": "Régionale",
+      "state": "Départementale"
     },
     "status": {
       "finalized": "Finalisé",
