@@ -69,3 +69,9 @@ const onSubmit = handleSubmit(async (values) => {
 
 const close = () => router.replace({ query: { dialog: undefined } })
 </script>
+
+<style lang="scss">
+.Dialog {
+  justify-content: center;
+}
+</style>
