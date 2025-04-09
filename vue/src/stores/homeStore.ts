@@ -8,6 +8,7 @@ import type { HighlightedItem } from '@/models/interfaces/HighlightedItem'
 
 export const useHomeStore = defineStore(StoresList.HOME, () => {
   const mainHighlights: Ref<HighlightedItem[]> = ref([])
+  const highlights: Ref<HighlightedItem[]> = ref([])
   const globalKpis: Ref<Kpi[]> = ref([])
 
   const getGlobalKpis = async () => {
@@ -16,11 +17,17 @@ export const useHomeStore = defineStore(StoresList.HOME, () => {
   }
 
   const getMainHighlights = async (): Promise<void> => {
+    highlights.value = await HighlightedItemService.getAll()
     mainHighlights.value = await HighlightedItemService.getMainHighlights()
   }
 
   const orderedMainHighlights = computed(() => {
-    return mainHighlights.value.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    const mainHighlightsIds = mainHighlights.value.map((e) => e.itemId)
+    const highlightsIds = highlights.value.map((e) => e.itemId)
+    mainHighlightsIds.forEach((e, i) => {
+      mainHighlights.value[i].position = highlights.value[highlightsIds.indexOf(e)].position
+    })
+    return mainHighlights.value.sort((a, b) => (a.position ?? 0) - (b.position ?? 0)).reverse()
   })
 
   return {
