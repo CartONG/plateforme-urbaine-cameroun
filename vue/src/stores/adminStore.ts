@@ -6,6 +6,9 @@ import { defineStore } from 'pinia'
 import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
 import { useApplicationStore } from './applicationStore'
 import { UserService } from '@/services/userAndAuth/UserService'
+import { addNotification } from '@/services/notifications/NotificationService'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { i18n } from '@/plugins/i18n'
 
 export const useAdminStore = defineStore(StoresList.ADMIN, () => {
   // AdminPanel is used for navigation in extension panels component
@@ -15,7 +18,7 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     AdministrationPanels.CONTENT_ACTORS
   )
 
-  const appMembers = ref([])
+  const appMembers: Ref<User[]> = ref([])
   const getMembers = async () => {
     appMembers.value = await UsersService.getMembers()
   }
@@ -50,7 +53,12 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
 
   async function deleteUser(user: Partial<User>) {
     await UserService.deleteUser(user).then(() => {
-      appMembers.value = appMembers.value.filter((u: User) => u.id !== user.id)
+      appMembers.value.forEach((member, key) => {
+        if (member.id === user.id) {
+          appMembers.value.splice(key, 1)
+          addNotification(i18n.t('notifications.user.delete'), NotificationType.SUCCESS)
+        }
+      })
     })
   }
 

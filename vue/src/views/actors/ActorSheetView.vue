@@ -140,7 +140,10 @@ onMounted(() => {
 })
 
 const isEditable = computed(() => {
-  return userStore.userIsAdmin() || actor.value?.createdBy.id === userStore.currentUser?.id
+  return (
+    (userStore.userIsAdmin() || actor.value?.createdBy?.id === userStore.currentUser?.id) &&
+    userStore.currentUser != null
+  )
 })
 
 function editActor() {

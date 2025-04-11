@@ -341,6 +341,12 @@
       "validate": "La donnée a bien été validée",
       "delete": "La donnée a bien été supprimé",
       "error": "Une erreur est survenue lors du chargement des données"
+    },
+    "user": {
+      "create": "L'utilisateur a bien été créé",
+      "edit": "L'utilisateur a bien été modifié",
+      "validate": "L'utilisateur a bien été validé",
+      "delete": "L'utilisateur a bien été supprimé"
     }
   },
   "list": {
