@@ -2,7 +2,7 @@ import { i18n } from '@/plugins/i18n'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 
 export class InputImageValidator {
-  private static readonly MAX_SIZE = 1024 * 1024
+  private static readonly MAX_SIZE = 1024 * 1024 * 5 // 5MB
   private static readonly ALLOWED_TYPES = [
     'image/png',
     'image/jpeg',

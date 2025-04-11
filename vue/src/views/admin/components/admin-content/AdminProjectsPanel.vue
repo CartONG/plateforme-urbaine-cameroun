@@ -4,11 +4,14 @@
       page="Projects"
       :items="projectStore.projects"
       :sortingListItems="sortOptions"
-      :createFunction="createProject"
       searchKey="name"
       @updateSortingKey="(e) => (sortingProjectsSelectedMethod = e)"
       @update-search-query="(e) => (searchQuery = e)"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="createProject" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <ProjectForm
       :type="formType"
       :project="projectSubmission"
@@ -99,12 +102,10 @@ const showProjectForm = () => {
 const createProject = () => {
   formType.value = FormType.CREATE
   projectSubmission.value = null
-  console.log('createProject')
   showProjectForm()
 }
 
 const editProject = async (project: Project, type: FormType = FormType.EDIT) => {
-  console.log('editProject')
   formType.value = type
   projectSubmission.value = await ProjectService.get(project)
   showProjectForm()

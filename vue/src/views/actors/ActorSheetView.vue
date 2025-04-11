@@ -5,6 +5,7 @@
         <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
       </div>
       <SheetContentBanner
+        :page="CommentOrigin.ACTOR"
         :id="actor.id"
         :slug="actor.slug"
         :title="actor.name"
@@ -14,8 +15,13 @@
         :website="actor.website"
         :isEditable="isEditable"
         :updatedAt="actor.updatedAt"
+        :map-route="actorMapRoute"
+        :map-btn-tooltip="$t('actorPage.seeLocation')"
+        :createdBy="actor.createdBy"
         @edit="editActor"
-      />
+      >
+        <template #mapButton></template>
+      </SheetContentBanner>
       <div class="SheetView__contentCtn my-6" v-if="actor.description">
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
@@ -26,7 +32,7 @@
     </div>
     <div class="SheetView__block SheetView__block--right">
       <div class="SheetView__updatedAtCtn hide-sm">
-        <UpdatedAtLabel :date="actor.updatedAt" />
+        <UpdateInfoLabel :user="actor.createdBy" :date="actor.updatedAt" class="justify-end" />
         <PrintButton />
       </div>
       <div class="SheetView__logoCtn hide-sm">
@@ -40,13 +46,10 @@
       <ChipList :items="actor.thematics" />
 
       <div class="SheetView__title SheetView__title--divider mt-lg-12">
-        {{ $t('actorPage.adminScope') }}
+        <span>{{ $t('actorPage.adminScope') }}</span>
       </div>
-      {{ actor.administrativeScopes.map((x) => x.name).join(', ') }}
-      <div class="ActorSheetView__toMap">
-        <span>{{ $t('actorPage.showInMap') }}</span>
-        <v-icon class="ml-2" color="main-green" icon="mdi-arrow-right-circle" size="large"></v-icon>
-      </div>
+      <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
+      <AdminBoundariesButton :entity="actor" />
 
       <div class="SheetView__infoCard">
         <div class="d-flex flex-row">
@@ -86,19 +89,28 @@ import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
 import ContentDivider from '@/components/content/ContentDivider.vue'
 import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
 import PrintButton from '@/components/global/PrintButton.vue'
-import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
 import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
 import ContactCard from '@/components/content/ContactCard.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
 import ChipList from '@/components/content/ChipList.vue'
+import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
+import { CommentOrigin } from '@/models/interfaces/Comment'
 
 const appStore = useApplicationStore()
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
 const actor = computed(() => actorsStore.selectedActor)
-
+const actorMapRoute = computed(() => {
+  return actor.value
+    ? {
+        name: 'map',
+        query: { item: actor.value.id }
+      }
+    : null
+})
 const actorImages = computed(() => {
   const images = actor.value?.images ?? []
   const externalImages = actor.value?.externalImages ?? []
@@ -157,14 +169,6 @@ function editActor() {
     padding: 1.5em;
     width: 100%;
     background-color: rgb(var(--v-theme-light-yellow));
-  }
-  &__toMap {
-    cursor: pointer;
-    width: fit-content;
-    border: 1px solid rgb(var(--v-theme-main-blue));
-    border-radius: 5px;
-    font-weight: 500;
-    padding: 10px 12px 10px 15px;
   }
 }
 

@@ -1,5 +1,5 @@
-import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
 
 export interface LocalizableSubmission {
-  osmData: OsmData | null
+  geoData: GeoData | null
 }

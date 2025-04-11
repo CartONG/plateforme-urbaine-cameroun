@@ -1,3 +1,3 @@
-import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
 
-export interface GeocodingItem extends OsmData {}
+export interface GeocodingItem extends GeoData {}

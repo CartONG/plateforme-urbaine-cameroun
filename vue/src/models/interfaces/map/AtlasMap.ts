@@ -19,3 +19,16 @@ export interface AtlasActive {
     atlasID: string | null
   }
 }
+
+// Used to parse response of QGIS server GetFeatureInfo request
+export interface QGISFeatureAttributes {
+  [key: string]: string
+}
+export interface QGISLayerFeatures {
+  [layerName: string]: QGISFeatureAttributes[]
+}
+
+export interface FilteredQGISLayerFeatures {
+  name: string
+  data: [string, QGISFeatureAttributes[]][]
+}

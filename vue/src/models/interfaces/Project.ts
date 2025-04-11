@@ -4,7 +4,6 @@ import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Status } from '@/models/enums/contents/Status'
 import type { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { iri, SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
-import type { LocalizableSubmission } from '@/models/interfaces/common/LocalizableSubmission'
 import type { Organisation } from '@/models/interfaces/Organisation'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { Blameable } from '@/models/interfaces/common/Blameable'
@@ -12,6 +11,7 @@ import type { Localizable } from '@/models/interfaces/common/Localizable'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
+import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
 
 export interface Project
   extends Timestampable,
@@ -30,7 +30,10 @@ export interface Project
   images: BaseMediaObject[]
   externalImages: string[]
   partners: BaseMediaObject[]
-  interventionZone: AdministrativeScope
+  administrativeScopes: AdministrativeScope[]
+  admin1List?: Admin1Boundary[]
+  admin2List?: Admin2Boundary[]
+  admin3List?: Admin3Boundary[]
   beneficiaryTypes: BeneficiaryType[]
   focalPointName: string
   focalPointPosition: string
@@ -45,9 +48,7 @@ export interface Project
   creatorMessage?: string
 }
 
-export interface ProjectSubmission
-  extends Omit<Project, 'actor' | 'thematics' | 'logo'>,
-    LocalizableSubmission {
+export interface ProjectSubmission extends Omit<Project, 'actor' | 'thematics' | 'logo'> {
   actor: iri
   thematics: iri[]
   logo: string

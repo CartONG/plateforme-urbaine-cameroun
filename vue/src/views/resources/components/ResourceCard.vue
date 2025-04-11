@@ -9,6 +9,8 @@
     :type-label="$t('resources.resourceType.' + resource.type)"
     :action-icon="icon"
     :is-editable="isEditable"
+    :map-route="mapRoute"
+    :image="resource.previewImage"
     class="ResourceCard"
     :edit-function="editResource"
     :slug="resource.slug"
@@ -29,12 +31,22 @@
           <v-icon icon="mdi-calendar" />
           <span>{{ dateRangeLabel }}</span>
         </span>
-        <span class="InfoCard__location" v-if="resource.geoData?.name">
+        <span class="InfoCard__location" v-if="resource.geoData && locationName">
           <v-icon icon="mdi-map-marker-outline" />
           <span>{{ locationName }}</span>
         </span>
       </span>
-      <span class="InfoCard__description">{{ resource.description }}</span>
+      <span class="InfoCard__description">
+        <div>{{ resource.description }}</div>
+        <UpdateInfoLabel :date="resource.updatedAt" :user="resource.createdBy" />
+      </span>
+    </template>
+    <template #comment>
+      <CommentButton
+        position="Card"
+        :origin="CommentOrigin.RESOURCE"
+        :originSlug="ResourceService.getLink(resource)"
+      />
     </template>
     <template #footer-right>
       <v-icon class="InfoCard__actionIcon" :icon="icon" color="light-blue"></v-icon>
@@ -54,13 +66,23 @@ import { getDateRangeLabel, localizeDate } from '@/services/utils/UtilsService'
 import GeocodingService from '@/services/map/GeocodingService'
 import { ResourceService } from '@/services/resources/ResourceService'
 import { useUserStore } from '@/stores/userStore'
+import CommentButton from '@/components/comments/CommentButton.vue'
+import { CommentOrigin } from '@/models/interfaces/Comment'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
 
 const resourceStore = useResourceStore()
 const userStore = useUserStore()
 const props = defineProps<{
   resource: Resource
 }>()
-
+const mapRoute = computed(() => {
+  return props.resource?.geoData
+    ? {
+        name: 'map',
+        query: { item: props.resource.id }
+      }
+    : null
+})
 const icon = computed(() => {
   switch (props.resource.format) {
     case ResourceFormat.VIDEO:
@@ -83,7 +105,9 @@ const isEditable = computed(() => {
       userStore.currentUser?.id != null)
   )
 })
-const locationName = computed(() => GeocodingService.getLocationName(props.resource.geoData))
+const locationName = computed(() =>
+  props.resource?.geoData ? GeocodingService.getLocationName(props.resource.geoData) : null
+)
 const dateRangeLabel = computed(() =>
   getDateRangeLabel(props.resource.startAt, props.resource.endAt)
 )
@@ -101,6 +125,12 @@ const editResource = () => {
 .ResourceCard {
   .InfoCard__subTitle {
     font-weight: 500 !important;
+  }
+  .InfoCard__description {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
   }
   .ResourceCard__dateBanner {
     background: rgb(var(--v-theme-main-yellow));

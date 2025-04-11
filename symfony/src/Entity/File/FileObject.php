@@ -71,7 +71,7 @@ class FileObject extends AbstractObject
     )]
     #[Assert\NotNull]
     #[Assert\File(
-        maxSize: '5000k',
+        maxSize: '20M',
         extensions: ['pdf', 'xlsx', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
         extensionsMessage: 'Please upload a valid file (pdf, xlsx, jpg, jpeg, png, webp, gif, svg)',
     )]

@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\File\FileObject;
+use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
@@ -38,6 +41,9 @@ use Symfony\Component\Validator\Constraints as Assert;
                 'order[:property]' => new QueryParameter(filter: 'offer.order_filter'),
             ]
         ),
+        new Get(
+            normalizationContext: ['groups' => [self::GET_FULL]],
+        ),
         new GetCollection(
             uriTemplate: '/resources/events/nearest',
             provider: NearestEventProvider::class,
@@ -59,7 +65,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN") or object.getCreatedBy() == user',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL]],
+    normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Resource
@@ -127,9 +133,38 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $author = null;
 
+    #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
+    #[ApiProperty(types: ['https://schema.org/image'])]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?MediaObject $previewImage = null;
+
+    /**
+     * @var Collection<int, Admin1Boundary>
+     */
+    #[ORM\ManyToMany(targetEntity: Admin1Boundary::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $admin1List;
+
+    /**
+     * @var Collection<int, Admin2Boundary>
+     */
+    #[ORM\ManyToMany(targetEntity: Admin2Boundary::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $admin2List;
+
+    /**
+     * @var Collection<int, Admin3Boundary>
+     */
+    #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $admin3List;
+
     public function __construct()
     {
         $this->thematics = new ArrayCollection();
+        $this->admin1List = new ArrayCollection();
+        $this->admin2List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -265,6 +300,90 @@ class Resource
     public function setAuthor(?string $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getPreviewImage(): ?MediaObject
+    {
+        return $this->previewImage;
+    }
+
+    public function setPreviewImage(?MediaObject $previewImage): static
+    {
+        $this->previewImage = $previewImage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Admin1Boundary>
+     */
+    public function getAdmin1List(): Collection
+    {
+        return $this->admin1List;
+    }
+
+    public function addAdmin1List(Admin1Boundary $admin1List): static
+    {
+        if (!$this->admin1List->contains($admin1List)) {
+            $this->admin1List->add($admin1List);
+        }
+
+        return $this;
+    }
+
+    public function removeAdmin1List(Admin1Boundary $admin1List): static
+    {
+        $this->admin1List->removeElement($admin1List);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Admin2Boundary>
+     */
+    public function getAdmin2List(): Collection
+    {
+        return $this->admin2List;
+    }
+
+    public function addAdmin2List(Admin2Boundary $admin2List): static
+    {
+        if (!$this->admin2List->contains($admin2List)) {
+            $this->admin2List->add($admin2List);
+        }
+
+        return $this;
+    }
+
+    public function removeAdmin2List(Admin2Boundary $admin2List): static
+    {
+        $this->admin2List->removeElement($admin2List);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Admin3Boundary>
+     */
+    public function getAdmin3List(): Collection
+    {
+        return $this->admin3List;
+    }
+
+    public function addAdmin3List(Admin3Boundary $admin3List): static
+    {
+        if (!$this->admin3List->contains($admin3List)) {
+            $this->admin3List->add($admin3List);
+        }
+
+        return $this;
+    }
+
+    public function removeAdmin3List(Admin3Boundary $admin3List): static
+    {
+        $this->admin3List->removeElement($admin3List);
 
         return $this;
     }

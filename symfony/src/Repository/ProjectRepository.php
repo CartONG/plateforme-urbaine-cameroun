@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\HighlightedItem;
 use App\Entity\Project;
 use App\Enum\ItemType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,14 +20,34 @@ class ProjectRepository extends ServiceEntityRepository
 
     public function findHighlightedItems(array $ids): array
     {
-        return $this->createQueryBuilder('p')
-            ->select("p.id, p.id as itemId, p.name, p.updatedAt, p.description, p.slug, l.filePath as image, '".ItemType::PROJECT->value."' as itemType")
+        $results = $this->createQueryBuilder('p')
+            ->select('p')
             ->where('p.id IN (:ids)')
             ->setParameter('ids', $ids)
-            ->leftJoin('p.logo', 'l')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+
+        return array_map(function ($item) {
+            if ($item instanceof Project) {
+                return $this->projectToHighlightedItem($item);
+            }
+
+            return null;
+        }, $results);
+    }
+
+    private function projectToHighlightedItem(Project $item): HighlightedItem
+    {
+        $highlightedItem = new HighlightedItem();
+
+        return $highlightedItem
+            ->setItemId($item->getId())
+            ->setItemType(ItemType::PROJECT)
+            ->setImage($item->getLogo())
+            ->setName($item->getName())
+            ->setSlug($item->getSlug())
+            ->setDescription($item->getDescription())
+            ->setUpdatedAt($item->getUpdatedAt());
     }
 
     public function findTwoSimilarProjectsByThematics(Project $project): array

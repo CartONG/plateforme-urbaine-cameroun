@@ -1,15 +1,19 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
-import { reactive, ref, watch, type Ref } from 'vue'
-import type { OsmData } from '@/models/interfaces/geo/OsmData'
+import { computed, reactive, ref, watch, type Ref } from 'vue'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { Layer } from '@/models/interfaces/map/Layer'
 import type Map from '@/components/map/Map.vue'
-import type { AtlasActive, AtlasMap } from '@/models/interfaces/map/AtlasMap'
+import type {
+  AtlasActive,
+  AtlasMap,
+  FilteredQGISLayerFeatures
+} from '@/models/interfaces/map/AtlasMap'
 import { AtlasMapService } from '@/services/map/AtlasMapService'
 import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
 import { LayerType } from '@/models/enums/geo/LayerType'
 import { LegendService } from '@/services/map/LegendService'
-import type { LngLatBounds } from 'maplibre-gl'
+import type { LngLat, LngLatBounds } from 'maplibre-gl'
 import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
 import { AppLayersService } from '@/services/map/AppLayersService'
 import type { MapState } from '@/models/interfaces/map/MapState'
@@ -21,17 +25,19 @@ import { useResourceStore } from './resourceStore'
 import { ProjectService } from '@/services/projects/ProjectService'
 import { ActorsService } from '@/services/actors/ActorsService'
 import { ResourceService } from '@/services/resources/ResourceService'
-import { ItemType } from '@/models/enums/app/ItemType'
+import { ItemType, type QGISItemType } from '@/models/enums/app/ItemType'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
+  const map = computed(() => myMap.value?.map)
   const mapCanvasToDataUrl: Ref<string | null> = ref(null)
   const isRightSidebarShown = ref(true)
   const isLeftSidebarShown = ref(true)
-  const mapSearch: Ref<OsmData | null> = ref(null)
+  const mapSearch: Ref<GeoData | null> = ref(null)
   const isMapAlreadyBeenMounted = ref(false)
   const isLayersReorderingAlreadyTriggering = ref(false)
   const isMapExportActive = ref(false)
+  const isQgisLayerQueryActive = ref(false)
 
   const actorLayer: Ref<Layer | null> = ref(null)
   const actorSubLayers: Ref<Layer[]> = ref([])
@@ -39,10 +45,11 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const resourceSubLayers: Ref<Layer[]> = ref([])
   const projectLayer: Ref<Layer | null> = ref(null)
   const projectSubLayers: Ref<Layer[]> = ref([])
-  const activeItemId: Ref<string | null> = ref(null)
 
-  const activeItem: Ref<Item | null> = ref(null)
-  const activeItemType: Ref<ItemType | null> = ref(null)
+  const activeItemId: Ref<string | null> = ref(null)
+  const activeItem: Ref<Item | FilteredQGISLayerFeatures[] | null> = ref(null)
+  const activeItemType: Ref<ItemType | QGISItemType | null> = ref(null)
+  const activeItemCoords: Ref<LngLat | null> = ref(null)
 
   const atlasMaps: Ref<AtlasMap[]> = ref([])
   const activeAtlas: AtlasActive = reactive({
@@ -62,8 +69,9 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const tileSize = ref(512)
   const serializedMapState: Ref<string> = ref('')
   const deserializedMapState: Ref<MapState | null> = ref(null)
+
   async function initMapLayers() {
-    await AppLayersService.initApplicationLayers(useMyMapStore())
+    await AppLayersService.initApplicationLayers()
     await AtlasMapService.initAtlasLayers(useMyMapStore(), useAtlasStore())
     if (deserializedMapState.value) {
       bbox.value = deserializedMapState.value.bbox
@@ -153,6 +161,20 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     }
   }
 
+  async function queryQgisLayer(coords: LngLat) {
+    const features = await AtlasMapService.queryAtlasLayer(
+      myMap.value?.map as maplibregl.Map,
+      coords,
+      legendList.value,
+      atlasMaps.value
+    )
+    if (features) {
+      activeItemCoords.value = coords
+      activeItemType.value = 'QGIS'
+      activeItem.value = features
+    }
+  }
+
   // PopUp Management
   watch(
     () => activeItemId.value,
@@ -163,6 +185,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
       activeItem.value = null
       activeItemType.value = null
 
+      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
       if (activeItemId.value) {
         let item: Item | undefined = projectStore.projects.find(
           (project) => project.id === activeItemId.value
@@ -194,7 +217,9 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     isMapAlreadyBeenMounted,
     isLayersReorderingAlreadyTriggering,
     isMapExportActive,
+    isQgisLayerQueryActive,
     myMap,
+    map,
     mapCanvasToDataUrl,
     mapSearch,
     actorLayer,
@@ -218,8 +243,10 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     serializedMapState,
     deserializedMapState,
     deserializeMapState,
+    queryQgisLayer,
     activeItemId,
     activeItemType,
-    activeItem
+    activeItem,
+    activeItemCoords
   }
 })

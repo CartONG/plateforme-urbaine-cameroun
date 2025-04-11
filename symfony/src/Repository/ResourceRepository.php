@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\HighlightedItem;
 use App\Entity\Resource;
 use App\Enum\ItemType;
 use App\Enum\ResourceType;
@@ -20,14 +21,34 @@ class ResourceRepository extends ServiceEntityRepository
 
     public function findHighlightedItems(array $ids): array
     {
-        return $this->createQueryBuilder('r')
-            ->select("r.id, r.id as itemId, r.name, r.updatedAt, r.description, COALESCE(r.link, f.filePath) as link, '".ItemType::RESOURCE->value."' as itemType")
+        $results = $this->createQueryBuilder('r')
+            ->select('r')
             ->where('r.id IN (:ids)')
-            ->leftJoin('r.file', 'f')
             ->setParameter('ids', $ids)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+
+        return array_map(function ($item) {
+            if ($item instanceof Resource) {
+                return $this->resourceToHighlightedItem($item);
+            }
+
+            return null;
+        }, $results);
+    }
+
+    private function resourceToHighlightedItem(Resource $item): HighlightedItem
+    {
+        $highlightedItem = new HighlightedItem();
+
+        return $highlightedItem
+            ->setItemId($item->getId())
+            ->setItemType(ItemType::RESOURCE)
+            ->setImage($item->getPreviewImage())
+            ->setName($item->getName())
+            ->setLink($item->getLink() ?? $item->getFile()->contentUrl)
+            ->setDescription($item->getDescription())
+            ->setUpdatedAt($item->getUpdatedAt());
     }
 
     public function findNearestEvents(): array

@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
+use App\Entity\AppContentComment;
 use App\Entity\File\FileObject;
 use App\Entity\Project;
 use App\Entity\Resource;
@@ -72,7 +73,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new GetCollection(
             // provider: UserProvider::class // To use if we need to open to every logged user if we need to see user names associated to likes
-            security: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("ROLE_ADMIN")',
+            paginationEnabled: false
         ),
         new Post(),
         new Put(
@@ -106,18 +108,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: [self::GROUP_WRITE])]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, AppContentComment::COMMENT_READ])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: [self::GROUP_WRITE])]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, AppContentComment::COMMENT_READ])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ, AppContentComment::COMMENT_READ])]
     private ?string $email = null;
 
     /**
@@ -144,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE])]
     private ?array $requestedRoles = null;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     #[Groups([self::GROUP_GETME, self::GROUP_WRITE])]
     private bool $hasSeenRequestedRoles = false;
 

@@ -43,7 +43,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     searchValue: string
     thematics: Thematic['id'][]
     statuses: Status[]
-    interventionZones: AdministrativeScope[]
+    administrativeScopes: AdministrativeScope[]
     beneficiaryTypes: BeneficiaryType[]
     contractingOrganisations: Organisation['id'][]
     donors: Organisation['id'][]
@@ -51,7 +51,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     searchValue: '',
     thematics: [],
     statuses: [],
-    interventionZones: [],
+    administrativeScopes: [],
     beneficiaryTypes: [],
     contractingOrganisations: [],
     donors: []
@@ -79,7 +79,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     if (project.value?.slug !== slug && typeof slug === 'string') {
       const appStore = useApplicationStore()
       appStore.currentContentPage = ContentPagesList.PROJECT
-      project.value = await ProjectService.get({ slug })
+      project.value = await ProjectService.getBySlug(slug)
     }
   }
 
@@ -135,9 +135,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           filters.thematics.some((thematic) => projectThematicIds.includes(thematic))) &&
         (filters.statuses.length === 0 ||
           filters.statuses.some((status) => project.status === status)) &&
-        (filters.interventionZones.length === 0 ||
-          filters.interventionZones.some(
-            (interventionZone) => project.interventionZone === interventionZone
+        (filters.administrativeScopes.length === 0 ||
+          filters.administrativeScopes.some((interventionZone) =>
+            project.administrativeScopes.some((scope) => scope === interventionZone)
           )) &&
         (filters.contractingOrganisations.length === 0 ||
           filters.contractingOrganisations.some(
@@ -154,12 +154,15 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     })
 
     if (from === 'filters') {
-      map.value?.fitBounds(getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords)))
+      map.value?.fitBounds(
+        getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords).filter((c) => c != null))
+      )
     }
     if (from === 'map') {
       if (!map.value) return projectsList
       const bounds = map.value.getBounds()
       return projectsList.filter((proj) => {
+        if (!proj.geoData.coords) return false
         const { lat, lng } = proj.geoData.coords
         return bounds.contains([lng, lat])
       })
@@ -175,7 +178,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           project.actor.name,
           project.geoData.name,
           project.contractingOrganisation.name,
-          project.interventionZone,
+          project.administrativeScopes,
           i18n.t(`projects.status.${project.status}`),
           project.focalPointName,
           ...project.thematics.map((thematic) => thematic.name),
@@ -258,7 +261,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.searchValue = ''
     filters.thematics = []
     filters.statuses = []
-    filters.interventionZones = []
+    filters.administrativeScopes = []
     filters.beneficiaryTypes = []
     filters.contractingOrganisations = []
     filters.donors = []

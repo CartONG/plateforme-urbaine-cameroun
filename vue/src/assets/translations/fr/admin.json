@@ -11,12 +11,21 @@
         "panelThematicMaps": "Catalogue",
         "panelMapQGIS": "Données",
         "panelComments": "Gérer les commentaires",
+        "panelCommentsMap": "Ma carte",
         "panelHighlightedItems": "Gérer la rubrique à la une",
     "member": "Utilisateur | Utilisateurs",
     "add": "Ajouter",
     "search": "Rechercher",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
+    },
+    "comments": {
+      "title": "Commentaire | Commentaires",
+      "actionsButton": "Organiser",
+      "markAsRead": "Marquer comme lu",
+      "markAsUnread": "Marquer comme non lu",
+      "delete": "Supprimer",
+      "mapTitle": "Localisation du commentaire"
     }
   }
 }

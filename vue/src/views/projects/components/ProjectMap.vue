@@ -183,7 +183,7 @@ const setProjectLayer = async () => {
     display: flex;
   }
 
-  #map.ProjectMap__map {
+  .ProjectMap__map {
     width: 100%;
     height: 100%;
 

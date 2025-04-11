@@ -3,7 +3,6 @@ import { apiClient } from '@/plugins/axios/api'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'
-import type { AdministrativeScope } from '@/models/interfaces/AdministrativeScope'
 import FileUploader from '@/services/files/FileUploader'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import { transformSymfonyRelationToIRIs } from '@/services/utils/UtilsService'
@@ -92,14 +91,6 @@ export class ActorsService {
   static async getActorsThematicsList(): Promise<Thematic[]> {
     const data = (
       await apiClient.get('/api/thematics', { headers: { accept: 'application/ld+json' } })
-    ).data
-    return data['hydra:member']
-  }
-  static async getActorsAdministrativesScopesList(): Promise<AdministrativeScope[]> {
-    const data = (
-      await apiClient.get('/api/administrative_scopes', {
-        headers: { accept: 'application/ld+json' }
-      })
     ).data
     return data['hydra:member']
   }

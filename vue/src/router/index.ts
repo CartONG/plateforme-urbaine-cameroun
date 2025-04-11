@@ -15,6 +15,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import { useUserStore } from '@/stores/userStore'
 import { i18n } from '@/plugins/i18n'
 import AdminMaps from '@/views/admin/components/AdminMaps.vue'
+import { useMyMapStore } from '@/stores/myMapStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,7 +89,12 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.map')}`,
       name: 'map',
-      component: () => import('@/views/map/MyMapView.vue')
+      component: () => import('@/views/map/MyMapView.vue'),
+      beforeEnter: (to, from, next) => {
+        const myMapStore = useMyMapStore()
+        myMapStore.activeItemId = to.query.item ? to.query.item.toString() : null
+        next()
+      }
     },
     {
       path: `/${i18n.t('routes.myAccount')}`,
@@ -189,7 +195,31 @@ const router = createRouter({
         {
           name: 'adminComments',
           path: 'comments',
-          component: AdminComments
+          component: AdminComments,
+          redirect: () => ({ name: 'actorsComments' }),
+          children: [
+            {
+              name: 'actorsComments',
+              path: 'actorsComments',
+              component: () => import('@/views/admin/components/admin-comments/ActorComments.vue')
+            },
+            {
+              name: 'projectsComments',
+              path: 'projectsComments',
+              component: () => import('@/views/admin/components/admin-comments/ProjectComments.vue')
+            },
+            {
+              name: 'resourcesComments',
+              path: 'resourcesComments',
+              component: () =>
+                import('@/views/admin/components/admin-comments/ResourcesComments.vue')
+            },
+            {
+              name: 'mapComments',
+              path: 'mapComments',
+              component: () => import('@/views/admin/components/admin-comments/MapComments.vue')
+            }
+          ]
         }
       ]
     }

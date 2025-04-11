@@ -3,3 +3,5 @@ export enum ItemType {
   PROJECT = 'project',
   RESOURCE = 'resource'
 }
+
+export type QGISItemType = 'QGIS'

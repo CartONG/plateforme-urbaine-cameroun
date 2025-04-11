@@ -14,9 +14,9 @@ class NominatimService
     ) {
     }
 
-    public function getOsmPlaceByIdandType(int $osmId, string $osmType): ?GeoData
+    public function fetchOsmPlace(GeoData $geoData): ?GeoData
     {
-        $osmPlaceData = $this->fetchOsmPlaceById($osmId, $osmType);
+        $osmPlaceData = $this->fetchOsmPlaceByOsmIdentifier($geoData->getOsmIdentifier());
         if (null !== $osmPlaceData) {
             return $this->jsonToGeoData($osmPlaceData);
         }
@@ -24,10 +24,8 @@ class NominatimService
         return null;
     }
 
-    public function fetchOsmPlaceById(int $osmId, string $osmType): ?array
+    public function fetchOsmPlaceByOsmIdentifier(string $osmIdentifier): ?array
     {
-        $osmIdentifier = strtoupper($osmType)[0].$osmId;
-
         try {
             $url = sprintf('https://'.$this->params->get('domain').'/nominatim/lookup?osm_ids='.$osmIdentifier.'&format=json');
             $response = $this->httpClient->request('GET', $url);
@@ -46,11 +44,20 @@ class NominatimService
         return null;
     }
 
+    public function fetchOsmPlaceByCoords(float $latitude, float $longitude): ?array
+    {
+        $url = sprintf('https://'.$this->params->get('domain').'/nominatim/reverse?format=json&lat=%f&lon=%f', $latitude, $longitude);
+        $response = $this->httpClient->request('GET', $url);
+        $data = $response->toArray();
+
+        return $data;
+    }
+
     public function jsonToGeoData(array $data): ?GeoData
     {
         $geoData = new GeoData();
         $geoData
-          ->setOsmId($data['osm_id'])
+          ->setOsmId((string) $data['osm_id'])
           ->setOsmType($data['osm_type'])
           ->setLatitude($data['lat'])
           ->setLongitude($data['lon'])

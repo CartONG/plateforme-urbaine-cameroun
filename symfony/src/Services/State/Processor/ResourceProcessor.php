@@ -24,7 +24,7 @@ class ResourceProcessor implements ProcessorInterface
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         $this->validatorProcessor->process($data, $operation, $uriVariables, $context);
-        $this->geoDataProcessor->process($data, $operation, $uriVariables, $context);
+        $this->geoDataProcessor->process($data, $operation, $uriVariables, $context, true);
 
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }

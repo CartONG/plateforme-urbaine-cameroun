@@ -40,27 +40,6 @@ services:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
-  
-  osm2pgsql:
-    profiles:
-      - osm
-    image: iboates/osm2pgsql:latest
-    volumes:
-      - ./docker/osm2pgsql/data:/data
-    environment:
-      - PGPASSWORD=${POSTGRES_GEODATA_PASSWORD}
-    command: >
-      osm2pgsql
-      --create
-      --database=${POSTGRES_DB}
-      --user=${POSTGRES_GEODATA_USER}
-      --host=${POSTGRES_HOST}
-      --port=${POSTGRES_PORT}
-      --hstore
-      --slim
-      --schema=${POSTGRES_GEODATA_SCHEMA}
-      /data/cameroon-latest.osm.pbf
-
 volumes:
   vue_node_modules:
     driver: local

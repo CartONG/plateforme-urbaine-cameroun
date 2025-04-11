@@ -1,6 +1,8 @@
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { addNotification } from '../notifications/NotificationService'
 import { i18n } from '@/plugins/i18n'
+import type { LngLat } from 'maplibre-gl'
+import type { QGISFeatureAttributes, QGISLayerFeatures } from '@/models/interfaces/map/AtlasMap'
 
 export class QgisMapMaplibreService {
   static qgisServerURL = import.meta.env.VITE_QGIS_SERVER_URL
@@ -151,5 +153,76 @@ export class QgisMapMaplibreService {
       console.error('Error fetching data', error)
       return null
     }
+  }
+
+  static async getFeatureInfo(
+    map: maplibregl.Map,
+    coords: LngLat,
+    qgisProjectName: string,
+    layers: string[]
+  ): Promise<QGISLayerFeatures | unknown> {
+    try {
+      const width = map.getCanvas().width
+      const height = map.getCanvas().height
+      const bounds = map.getBounds()
+      const southWest = bounds.getSouthWest()
+      const northEast = bounds.getNorthEast()
+      const bbox3857 = [southWest.lat, southWest.lng, northEast.lat, northEast.lng]
+      const x = Math.round(
+        ((coords.lng - bounds.getWest()) / (bounds.getEast() - bounds.getWest())) * width
+      )
+      const y = Math.round(
+        ((bounds.getNorth() - coords.lat) / (bounds.getNorth() - bounds.getSouth())) * height
+      )
+      const url = `${window.location.origin}${this.qgisServerURL}/${qgisProjectName}?service=WMS&VERSION=1.3.0&request=GetFeatureInfo&SRS=EPSG:4326&QUERY_LAYERS=${layers.join(',')}&WIDTH=${width}&HEIGHT=${height}&BBOX=${bbox3857}&I=${x}&J=${y}&FEATURE_COUNT=10&OutputFormat=application/json`
+      const response = await fetch(url)
+      if (!response.ok) throw new Error(`Error ${response.status}`)
+      const result = await response.text()
+      const parsedData: QGISLayerFeatures = this.parseGetFeatureInfo(result)
+      return Promise.resolve(parsedData)
+    } catch (error) {
+      Promise.reject(error)
+    }
+  }
+
+  static parseGetFeatureInfo(responseText: string): QGISLayerFeatures {
+    const layers: QGISLayerFeatures = {}
+    let currentLayer: string | null = null
+    let currentFeature: QGISFeatureAttributes | null = null
+
+    responseText.split('\n').forEach((line) => {
+      line = line.trim()
+
+      const matchLayer = line.match(/^Layer '(.*?)'/)
+      if (matchLayer) {
+        currentLayer = matchLayer[1]
+        layers[currentLayer] = []
+        return
+      }
+
+      const matchFeature = line.match(/^Feature (\d+)/)
+      if (matchFeature) {
+        currentFeature = {}
+        if (currentLayer) {
+          layers[currentLayer].push(currentFeature)
+        }
+        return
+      }
+      const matchAttr = line.match(/^([\w\d_]+)\s*=\s*'?(.*?)'?\s*$/)
+      if (matchAttr && currentFeature) {
+        const [, key, value] = matchAttr
+        if (value !== 'NULL') {
+          currentFeature[key] = value
+        }
+      }
+    })
+
+    Object.keys(layers).forEach((layer) => {
+      if (layers[layer].length === 0) {
+        delete layers[layer]
+      }
+    })
+
+    return layers
   }
 }

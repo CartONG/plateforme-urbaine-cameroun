@@ -32,9 +32,7 @@
           </v-list>
         </v-menu>
       </v-btn>
-      <v-btn v-if="createFunction" @click="createFunction()" color="main-red">{{
-        $t('admin.add')
-      }}</v-btn>
+      <slot name="right-buttons"></slot>
     </div>
   </div>
 </template>
@@ -56,12 +54,12 @@ type AdminPages =
   | AtlasGroup.PREDEFINED_MAP
   | AtlasGroup.THEMATIC_DATA
   | 'QgisMaps'
+  | 'Comments'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
   sortingListItems?: { sortingKey: string; text: string }[]
   searchKey?: string
-  createFunction?: () => void
 }>()
 const emit = defineEmits(['updateSortingKey', 'updateSearchQuery'])
 const sortingKey = ref('isValidated')
@@ -87,6 +85,8 @@ const title = computed(() => {
       return `${props.items.length} ${i18n.t('qgisMap.qgisMaps', props.items.length)}`
     case 'Actors':
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`
+    case 'Comments':
+      return `${props.items.length} ${i18n.t('admin.comments.title', props.items.length)}`
     default:
       return null
   }
@@ -96,7 +96,6 @@ const searchQuery = ref('')
 watch(
   () => searchQuery.value,
   () => {
-    console.log('bloup')
     emit('updateSearchQuery', searchQuery.value)
   }
 )

@@ -11,24 +11,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 trait LocalizableEntity
 {
-    #[Groups([Project::WRITE, Resource::WRITE, Actor::ACTOR_WRITE])]
-    private ?array $osmData = null;
-
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION, Resource::GET_FULL])]
+    #[Groups([Project::WRITE, Resource::WRITE, Actor::ACTOR_WRITE, Project::GET_FULL, Project::GET_PARTIAL, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION, Resource::GET_FULL])]
     private ?GeoData $geoData = null;
-
-    public function getOsmData(): ?array
-    {
-        return $this->osmData;
-    }
-
-    public function setOsmData(?array $osmData): static
-    {
-        $this->osmData = $osmData;
-
-        return $this;
-    }
 
     public function getGeoData(): ?GeoData
     {

@@ -8,7 +8,8 @@
     "partners": "Partenaires",
     "projectCalendar": "Calendrier du projet",
     "projectDeliverables": "Livrables du projet",
-    "projectOwner": "Responsable du projet"
+    "projectOwner": "Responsable du projet",
+    "seeLocation": "Voir sur la carte des projets"
   },
   "projects": {
     "admin": {
@@ -53,8 +54,8 @@
           "placeholder": 0
         },
         "interventionZone": {
-          "label": "Zone d'intervention",
-          "placeholder": "Zone d'intervention"
+          "label": "Echelle d'intervention",
+          "placeholder": "Echelle d'intervention"
         },
         "name": {
           "label": "Nom du projet",
@@ -74,9 +75,10 @@
         "contractingOrganisation": "Maîtrise d'ouvrage",
         "financial": "Financement",
         "focalPoint": "Point de contact",
-        "localization": "Localisation",
+        "localization": "Localisation de zone d'intervention",
         "projectOwner": "Responsable du projet",
-        "thematics": "Thématiques"
+        "thematics": "Thématiques",
+        "location": "Localisation"
       },
       "title": {
         "create": "Ajouter un projet",
@@ -117,7 +119,9 @@
       "city": "Ville",
       "national": "National",
       "regional": "Régional",
-      "state": "Département"
+      "state": "Département",
+      "neighborhood": "Quartier",
+      "borough": "Arrondissement"
     },
     "status": {
       "finalized": "Finalisé",

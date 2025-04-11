@@ -129,7 +129,9 @@ export class LegendService {
   ) {
     legendList.value.forEach((legendItem, i) => {
       const beforeLayer = legendList.value[i + 1]?.id || null
-      map.moveLayer(legendItem.id, beforeLayer as string)
+      if (map.getLayer(legendItem.id)) {
+        map.moveLayer(legendItem.id, beforeLayer as string)
+      }
     })
   }
 

@@ -1,8 +1,10 @@
 <template>
-  <div class="SheetView__contentCtn">
+  <div class="SheetView__contentCtn" v-if="hasOneNonEmptyKpi">
     <SectionBanner :text="$t('projectPage.keyNumbers')" />
     <div class="ProjectSheetView__kpiCtn">
-      <Kpi v-for="kpi in kpis" :kpi="kpi" :key="kpi.key" :showDescription="true" />
+      <template v-for="kpi in kpis" :key="kpi.key">
+        <Kpi :kpi="kpi" :showDescription="true" v-if="kpi.count > 0" />
+      </template>
     </div>
   </div>
   <div class="SheetView__contentCtn" v-if="project.calendar">
@@ -20,9 +22,12 @@ import SectionBanner from '@/components/banners/SectionBanner.vue'
 import Kpi from '@/components/content/Kpi.vue'
 import { KpiKey } from '@/models/enums/app/KpiKey'
 import type { Project } from '@/models/interfaces/Project'
+import { computed } from 'vue'
 defineProps<{
   project: Project
 }>()
+
+const hasOneNonEmptyKpi = computed(() => kpis.some((kpi) => kpi.count > 0))
 
 const kpis = [
   {

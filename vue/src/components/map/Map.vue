@@ -1,6 +1,7 @@
 <template>
-  <div id="map">
+  <div :id="mapId" :small="small" class="Map">
     <ResetMapExtentControl ref="reset-map-extent-control" />
+    <slot></slot>
   </div>
 </template>
 <script setup lang="ts">
@@ -11,22 +12,23 @@ import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentContr
 import { useApplicationStore } from '@/stores/applicationStore'
 import { IControl } from '@/services/map/MapService'
 import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
-import { useMyMapStore } from '@/stores/myMapStore'
+import { debounce } from '@/services/utils/UtilsService'
 
 const applicationStore = useApplicationStore()
-const myMapStore = useMyMapStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)
 const map: Ref<maplibregl.Map | null> = ref(null)
 const resetMapExtentControl = useTemplateRef('reset-map-extent-control')
 const props = withDefaults(
   defineProps<{
     bounds?: maplibregl.LngLatBounds
-    toExport?: boolean
+    small?: boolean
+    mapId?: string
   }>(),
   {
+    mapId: 'map',
     bounds: () =>
       new maplibregl.LngLatBounds([8.48881554529, 1.72767263428], [16.0128524106, 12.8593962671]),
-    toExport: false
+    small: false
   }
 )
 const popup = ref(new maplibregl.Popup({ closeOnClick: false }))
@@ -36,7 +38,7 @@ const activeFeatureId: Ref<string | null> = ref(null)
 onMounted(() => {
   const apiKey = import.meta.env.VITE_MAPTILER_API_KEY
   map.value = new maplibregl.Map({
-    container: 'map',
+    container: props.mapId,
     style: `https://api.maptiler.com/maps/openstreetmap/style.json?key=${apiKey}`,
     center: [0, 0],
     zoom: 1,
@@ -66,15 +68,6 @@ onMounted(() => {
       },
       metadata: { isPersistent: true }
     })
-  })
-
-  // For an unknown reason, if we try to get the canvas to Data url from outside
-  // it returns an empty image. It can be caused by the use of components like the map inside TemplateRef
-  // This is a workaround waiting to refactor the use of template ref elements
-  map.value.on('idle', () => {
-    if (props.toExport) {
-      myMapStore.mapCanvasToDataUrl = map.value?.getCanvas().toDataURL() as string
-    }
   })
 })
 
@@ -142,37 +135,75 @@ const addImage = async (path: string, name: string) => {
   return
 }
 
-const addPopup = (coordinates: maplibregl.LngLatLike, popupHtml: any, isComponent = true) => {
-  if (map.value == null) return
-  flyTo(coordinates)
-  console.log('popupHtml', popupHtml)
-  popup.value
-    .setLngLat(coordinates)
-    .setDOMContent(isComponent ? popupHtml.$el : popupHtml)
-    .addTo(map.value)
-  popup.value.addClassName('show')
-  popup.value._onClose = () => {
-    activeFeatureId.value = null
-    popup.value.removeClassName('show')
+const addPopup = debounce(
+  (coordinates: maplibregl.LngLatLike | undefined, popupHtml: any, isComponent = true) => {
+    if (map.value == null || coordinates == null) return
+
+    const domContent = isComponent ? popupHtml.$el : popupHtml
+
+    popup.value.setLngLat(coordinates).setDOMContent(domContent).addTo(map.value)
+
+    popup.value.addClassName('show')
+    flyTo(coordinates)
+    map.value.once('moveend', ensurePopupInView)
+    popup.value._onClose = () => {
+      activeFeatureId.value = null
+      popup.value.removeClassName('show')
+    }
+  },
+  100
+)
+
+const ensurePopupInView = () => {
+  if (map.value == null || popup.value == null) return
+  const popupAnchor = popup.value.getLngLat()
+  const mapCanvas = map.value.getCanvas()
+  const mapRect = mapCanvas.getBoundingClientRect()
+  const popupElement = popup.value._container
+
+  if (!popupAnchor || !popupElement) return
+
+  const popupRect = popupElement.getBoundingClientRect()
+  const offset = 60
+  // Calculate overflow in pixels
+  const overflow = {
+    top: mapRect.top - popupRect.top + offset,
+    bottom: popupRect.bottom - mapRect.bottom + offset,
+    left: mapRect.left - popupRect.left + offset,
+    right: popupRect.right - mapRect.right + offset
+  }
+
+  // Only move if overflow happens
+  let dx = 0,
+    dy = 0
+  if (overflow.left > 0) dx = -overflow.left
+  else if (overflow.right > 0) dx = overflow.right
+
+  if (overflow.top > 0) dy = -overflow.top
+  else if (overflow.bottom > 0) dy = overflow.bottom
+
+  if (dx !== 0 || dy !== 0) {
+    map.value.panBy([dx, dy], { duration: 300 })
   }
 }
 
 const addPopupOnClick = (layerName: string, popupHtml: any, isComponent = true) => {
-  if (map.value == null) return
+  if (map.value == null || popupHtml == null) return
   map.value.on('click', layerName, (e: any) => {
-    activeFeatureId.value = e.features[0].properties.id
     if (map.value == null) return
-    const coordinates = e.features[0].geometry.coordinates.slice()
+    activeFeatureId.value = e.features[0]?.properties?.id
+    const coordinates = e.features[0].geometry?.coordinates?.slice()
     addPopup(coordinates, popupHtml, isComponent)
+    e.preventDefault()
   })
 }
 
-const flyTo = (coordinates: maplibregl.LngLatLike) => {
+const flyTo = (coordinates: maplibregl.LngLatLike, speed = 0.5) => {
   if (map.value == null) return
   map.value.flyTo({
     center: coordinates,
     zoom: map.value.getZoom() > 7 ? map.value.getZoom() : 7,
-    speed: 0.5
+    speed
   })
 }
 
@@ -209,6 +240,7 @@ defineExpose({
   addPopupOnClick,
   addImage,
   addLayer,
+  flyTo,
   listenToHoveredFeature,
   removeLayer,
   removeSource,
@@ -284,18 +316,40 @@ defineExpose({
   }
 }
 
-#map {
+.Map {
   width: 100%;
   height: 100%;
+  min-height: 10rem;
+  position: relative;
+
+  --map-margin: 1.5rem;
 
   .maplibregl-ctrl-top-left,
   .maplibregl-ctrl-bottom-right,
   .maplibregl-ctrl-bottom-left,
   .maplibregl-ctrl-top-right {
-    margin: 1.5rem;
+    margin: var(--map-margin);
     display: flex;
     flex-flow: column nowrap;
     gap: 0.62rem;
+  }
+
+  &[small='true'] {
+    --map-margin: 0.5rem;
+    min-height: 12rem;
+
+    .maplibregl-ctrl-group button {
+      --dim-btn-h: 2rem;
+      box-sizing: border-box;
+      width: var(--dim-btn-h);
+      height: var(--dim-btn-h);
+      max-height: var(--dim-btn-h);
+      min-height: var(--dim-btn-h);
+    }
+
+    .maplibregl-ctrl-attrib.maplibregl-compact {
+      margin: 0;
+    }
   }
 
   .maplibregl-ctrl-group {
@@ -331,5 +385,9 @@ defineExpose({
       }
     }
   }
+}
+
+.cursor-crosshair {
+  cursor: crosshair !important;
 }
 </style>

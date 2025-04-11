@@ -1,7 +1,7 @@
 <template>
   <v-menu
     location="bottom"
-    @update:modelValue="isLayerOpacityShown = mainLayer?.opacity && mainLayer?.opacity < 100"
+    @update:modelValue="isLayerOpacityShown = !!mainLayer?.opacity && mainLayer?.opacity < 100"
   >
     <template v-slot:activator="{ props, isActive }">
       <v-btn

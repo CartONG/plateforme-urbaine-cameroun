@@ -9,26 +9,32 @@
         />
       </div>
       <SheetContentBanner
+        :page="CommentOrigin.PROJECT"
         :id="project.id"
         :slug="project.slug"
         :title="project.name"
-        :subtitle="project.geoData.name"
+        :subtitle="project.geoData?.name"
         :email="project.focalPointEmail"
         :website="project.website"
         :phone="project.focalPointTel"
         :isEditable="isEditable"
         :updatedAt="project.updatedAt"
+        :map-route="{
+          name: 'projects',
+          query: { type: ProjectListDisplay.MAP, project: project.id }
+        }"
+        :map-btn-tooltip="$t('projectPage.seeLocation')"
+        :createdBy="project.createdBy"
         @edit="editProject"
       >
-        <template #custom-actions>
+        <template #mapButton>
           <v-btn
-            :to="{ name: 'projects', query: { type: ProjectListDisplay.MAP, project: project.id } }"
-            variant="text"
-            density="comfortable"
-            icon="mdi-map-outline"
-            class="hide-sm"
-            color="main-blue"
-          ></v-btn>
+            variant="elevated"
+            :to="{ name: 'map' }"
+            class="elevation-1 text-main-blue px-3 mx-2 hide-sm"
+            ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1" />
+            {{ $t('content.createAMap') }}
+          </v-btn>
         </template>
       </SheetContentBanner>
       <ProjectForm
@@ -47,7 +53,7 @@
     </div>
     <div class="SheetView__block SheetView__block--right">
       <div class="SheetView__updatedAtCtn hide-sm">
-        <UpdatedAtLabel :date="project.updatedAt" />
+        <UpdateInfoLabel :date="project.updatedAt" :user="project.createdBy" />
         <PrintButton />
       </div>
       <div class="SheetView__logoCtn hide-sm">
@@ -58,6 +64,11 @@
         />
       </div>
       <ChipList :items="project.thematics" />
+      <div class="SheetView__title SheetView__title--divider mt-lg-12">
+        <span>{{ $t('actorPage.adminScope') }}</span>
+      </div>
+      <span>{{ project.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
+      <AdminBoundariesButton :entity="project" />
       <div class="SheetView__infoCard">
         <div class="SheetView__infoCardBlock">
           <h5 class="SheetView__title">{{ $t('projectPage.projectOwner') }}</h5>
@@ -109,7 +120,7 @@ import ProjectCard from '@/views/projects/components/ProjectCard.vue'
 import ContactCard from '@/components/content/ContactCard.vue'
 import ActorCard from '@/views/actors/components/ActorCard.vue'
 import PrintButton from '@/components/global/PrintButton.vue'
-import UpdatedAtLabel from '@/views/_layout/sheet/UpdatedAtLabel.vue'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
 import ProjectForm from '@/views/projects/components/ProjectForm.vue'
@@ -117,6 +128,8 @@ import { FormType } from '@/models/enums/app/FormType'
 import router from '@/router'
 import type { Actor } from '@/models/interfaces/Actor'
 import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
+import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
+import { CommentOrigin } from '@/models/interfaces/Comment'
 
 const userStore = useUserStore()
 const projectStore = useProjectStore()

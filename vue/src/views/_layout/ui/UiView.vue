@@ -55,6 +55,11 @@
     </div>
 
     <div class="UiView__componentCtn">
+      <h4>LocationSelector</h4>
+      <LocationSelector />
+    </div>
+
+    <div class="UiView__componentCtn">
       <h4>DateInput</h4>
       <DateInput v-model:start-at="startAt" v-model:end-at="endAt" />
     </div>
@@ -77,6 +82,7 @@ import { useActorsStore } from '@/stores/actorsStore'
 import { computed, ref } from 'vue'
 import DateInput from '@/components/forms/DateInput.vue'
 import FileInput from '@/components/forms/FileInput.vue'
+import LocationSelector from '@/components/forms/LocationSelector.vue';
 const actorsStore = useActorsStore()
 
 /* Pagination.vue */

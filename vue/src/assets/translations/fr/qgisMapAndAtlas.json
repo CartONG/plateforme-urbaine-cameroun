@@ -65,5 +65,11 @@
                 }
             }
         }
+    },
+    "qgisQuery": {
+        "noLayer": "Veuillez afficher des couches issues des données thématiques ou des cartes prédéfinies pour pouvoir effectuer une requête",
+        "noResult": "Aucune donnée détectée sur les coordonnées sélectionnées",
+        "attribute": "Attribut",
+        "value": "Valeur"
     }
 }

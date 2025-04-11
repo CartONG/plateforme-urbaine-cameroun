@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Actor;
+use App\Entity\HighlightedItem;
 use App\Enum\ItemType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,14 +20,34 @@ class ActorRepository extends ServiceEntityRepository
 
     public function findHighlightedItems(array $ids): array
     {
-        return $this->createQueryBuilder('a')
-            ->select("a.id, a.id as itemId, a.name, a.updatedAt, a.description, a.slug, l.filePath as image, '".ItemType::ACTOR->value."' as itemType")
+        $results = $this->createQueryBuilder('a')
+            ->select('a')
             ->where('a.id IN (:ids)')
-            ->leftJoin('a.logo', 'l')
             ->setParameter('ids', $ids)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+
+        return array_map(function ($item) {
+            if ($item instanceof Actor) {
+                return $this->actorToHighlightedItem($item);
+            }
+
+            return null;
+        }, $results);
+    }
+
+    private function actorToHighlightedItem(Actor $item): HighlightedItem
+    {
+        $highlightedItem = new HighlightedItem();
+
+        return $highlightedItem
+            ->setItemId($item->getId())
+            ->setItemType(ItemType::ACTOR)
+            ->setImage($item->getLogo())
+            ->setName($item->getName())
+            ->setSlug($item->getSlug())
+            ->setDescription($item->getDescription())
+            ->setUpdatedAt($item->getUpdatedAt());
     }
     //    /**
     //     * @return Actor[] Returns an array of Actor objects

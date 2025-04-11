@@ -51,7 +51,7 @@
           $t('projects.popup.filters.interventionZones.label')
         }}</label>
         <v-chip-group
-          v-model="projectStore.filters.interventionZones"
+          v-model="projectStore.filters.administrativeScopes"
           column
           multiple
           class="Modal__chipGroup"

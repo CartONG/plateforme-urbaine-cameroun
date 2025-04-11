@@ -23,7 +23,7 @@ jobs:
       if: github.ref != 'refs/heads/uat'
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-        "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git clean -fd && git reset --hard origin/${{ github.ref_name }} && make deploy && make rerun-database && make create-osm-db"
+        "cd ${{ secrets.REMOTE_PATH }} && git fetch origin && git clean -fd && git reset --hard origin/${{ github.ref_name }} && make deploy && make rerun-database && make import-admin-boundaries && make create-osm-db"
 
     - name: Deploy to UAT Server
       if: github.ref == 'refs/heads/uat'

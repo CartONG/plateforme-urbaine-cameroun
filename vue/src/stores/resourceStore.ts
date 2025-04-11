@@ -1,7 +1,7 @@
 import { StoresList } from '@/models/enums/app/StoresList'
 import { defineStore } from 'pinia'
 import { ref, type Ref, computed, watch } from 'vue'
-import type { Resource, ResourceEvent, ResourceSubmission } from '@/models/interfaces/Resource'
+import type { Resource, ResourceEvent } from '@/models/interfaces/Resource'
 import { ResourceService } from '@/services/resources/ResourceService'
 import { FormType } from '@/models/enums/app/FormType'
 import { i18n } from '@/plugins/i18n'
@@ -15,7 +15,7 @@ import { ItemType } from '@/models/enums/app/ItemType'
 export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   const resources: Ref<Resource[]> = ref([])
   const resource: Ref<Resource | null> = ref(null)
-  const resourceForSubmission: Ref<ResourceSubmission | null> = ref(null)
+  const resourceForSubmission: Ref<Resource | null> = ref(null)
   const nearestEvents: Ref<ResourceEvent[]> = ref([])
   const editedResourceId: Ref<Resource['id'] | null> = ref(null)
   const isResourceFormShown = ref(false)
@@ -37,7 +37,7 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
     }
   }
 
-  const submitResource = async (resource: ResourceSubmission, type: FormType) => {
+  const submitResource = async (resource: Resource, type: FormType) => {
     if (type !== FormType.CREATE || useUserStore().userIsAdmin()) {
       return await saveResource(resource, type)
     }
@@ -47,7 +47,7 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
     useApplicationStore().showEditMessageDialog = ItemType.RESOURCE
   }
 
-  const saveResource = async (resource: ResourceSubmission, type: FormType) => {
+  const saveResource = async (resource: Resource, type: FormType) => {
     const submittedResource =
       type === FormType.CREATE
         ? await ResourceService.post(resource)
@@ -64,10 +64,7 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   const updateResource = (updatedResource: Resource) => {
     resources.value.forEach((resource, key) => {
       if (resource.id === updatedResource.id) {
-        resources.value[key] = {
-          ...resource,
-          ...updatedResource
-        }
+        resources.value[key] = updatedResource
       }
     })
   }

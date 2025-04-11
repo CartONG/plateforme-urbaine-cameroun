@@ -100,6 +100,10 @@ export function isSameDay(date1: string | Date, date2: string | Date) {
 }
 
 export function downloadJson(data: any, fileName: string) {
+  if (!data.features || !data.features.length) return
+  for (const feature of data.features) {
+    feature.type = 'Feature'
+  }
   const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)

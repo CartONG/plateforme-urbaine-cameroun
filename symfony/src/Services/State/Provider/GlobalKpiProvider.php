@@ -8,6 +8,7 @@ use App\ApiResource\Kpi;
 use App\Enum\KpiKey;
 use App\Repository\ActorRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ResourceRepository;
 use App\Repository\User\UserRepository;
 
 class GlobalKpiProvider implements ProviderInterface
@@ -15,13 +16,14 @@ class GlobalKpiProvider implements ProviderInterface
     public function __construct(
         private ProjectRepository $projectRepository,
         private ActorRepository $actorRepository,
+        private ResourceRepository $resourceRepository,
         private UserRepository $userRepository,
     ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {
-        $kpiKeys = [KpiKey::ACTOR, KpiKey::PROJECT, KpiKey::DATA, KpiKey::MEMBER];
+        $kpiKeys = [KpiKey::ACTOR, KpiKey::PROJECT, KpiKey::RESOURCE, KpiKey::MEMBER];
         $kpis = [];
         foreach ($kpiKeys as $kpiKey) {
             $kpi = new Kpi();
@@ -37,8 +39,8 @@ class GlobalKpiProvider implements ProviderInterface
                 case KpiKey::MEMBER:
                     $kpi->setCount($this->userRepository->count());
                     break;
-                case KpiKey::DATA:
-                    $kpi->setCount(0); // TODO once data is available
+                case KpiKey::RESOURCE:
+                    $kpi->setCount($this->resourceRepository->count());
                     break;
             }
             $kpis[] = $kpi;

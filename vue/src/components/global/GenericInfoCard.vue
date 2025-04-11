@@ -2,7 +2,11 @@
   <InfoCard class="GenericInfoCard" :to="to" :href="href" :target="href ? '_blank' : undefined">
     <template #content>
       <div class="GenericInfoCard__imgCtn">
-        <img class="GenericInfoCard__img" :src="image" v-if="image" />
+        <img
+          v-if="image?.contentsFilteredUrl?.thumbnail"
+          class="GenericInfoCard__img"
+          :src="image.contentsFilteredUrl.thumbnail"
+        />
         <slot name="image"></slot>
       </div>
       <div class="GenericInfoCard__infoCtn">
@@ -11,9 +15,20 @@
           <span class="InfoCard__description">{{ description }}</span>
         </slot>
       </div>
+      <div class="GenericInfoCard__chips">
+        <v-chip class="mr-2">{{ typeLabel }}</v-chip>
+      </div>
     </template>
     <template #footer-left>
-      <v-chip class="mr-2">{{ typeLabel }}</v-chip>
+      <v-btn
+        v-if="mapRoute"
+        :to="mapRoute"
+        variant="text"
+        density="comfortable"
+        icon="mdi-map-outline"
+        class="hide-sm"
+        color="main-blue"
+      />
       <ShareButton
         :additionnal-path="additionnalPath as string"
         :external-link="sharedLinkIsExternalToPlatform"
@@ -30,6 +45,7 @@
         @click.prevent="editFunction"
       >
       </v-btn>
+      <slot name="comment"></slot>
     </template>
     <template #footer-right>
       <v-icon
@@ -48,26 +64,23 @@ import ShareButton from '@/components/global/ShareButton.vue'
 import HighlightButton from '@/components/global/HighlightButton.vue'
 import { ItemType } from '@/models/enums/app/ItemType'
 import { computed } from 'vue'
-import imageDefault from '@/assets/images/Logo.png'
+import type { RouteLocationAsRelative } from 'vue-router'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 
-const props = withDefaults(
-  defineProps<{
-    id: string
-    title?: string
-    description?: string
-    image?: string
-    typeLabel: string
-    type?: ItemType
-    slug?: string
-    actionIcon?: string
-    isEditable?: boolean
-    editFunction?: () => void
-    href?: string
-  }>(),
-  {
-    image: imageDefault
-  }
-)
+const props = defineProps<{
+  id: string
+  title?: string
+  description?: string
+  image?: BaseMediaObject
+  typeLabel: string
+  type?: ItemType
+  slug?: string
+  actionIcon?: string
+  isEditable?: boolean
+  editFunction?: () => void
+  mapRoute?: RouteLocationAsRelative | null
+  href?: string
+}>()
 
 const to = computed(() => {
   switch (props.type) {
@@ -144,13 +157,23 @@ const additionnalPath = computed(() => {
 
     .GenericInfoCard__img {
       $dim-margin: 1rem;
-      padding: $dim-margin;
       width: 100%;
       height: 100%;
       min-height: calc($dim-img-h);
-      object-fit: contain;
+      object-fit: cover;
       mix-blend-mode: multiply;
+
+      &[empty='true'] {
+        padding: $dim-margin;
+        object-fit: contain;
+        mix-blend-mode: multiply;
+      }
     }
+  }
+  .GenericInfoCard__chips {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0.25rem 1.25rem !important;
   }
   .InfoCard__footer {
     margin: 1rem 1.25rem !important;

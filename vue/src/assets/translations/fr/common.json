@@ -18,7 +18,8 @@
     "maps": "Ma carte",
     "observatory": "Observatoire",
     "catalog": "Catalogue",
-    "data": "Données"
+    "data": "Données",
+    "comments": "Commentaires"
   },
   "dialog": {
     "close": "Fermer",
@@ -46,6 +47,21 @@
     "logout": "Déconnexion"
   },
   "inputs": {
+    "locationSelector": {
+      "searchAddress": "Rechercher l'adresse",
+      "enterGpsCoords": "Entrer les coordonnées GPS",
+      "errors": {
+        "notNull": "Rechercherchez un lieu, ou sélectionnez des coordonnées"
+      }
+    },
+    "coordsSelector": {
+      "buttons": {
+        "validate": "Valider",
+        "cancel": "Annuler",
+        "select": "Placer sur la carte"
+      },
+      "moveMap": "Déplacez et zoomez la carte pour positionner le point"
+    },
     "fileUncorrect": "Fichier incorrect",
     "date": {
       "label": "Sélectionner une date"
@@ -53,15 +69,111 @@
     "images": {
       "generic": "Une ou plusieurs images n'ont pas pu être chargées: ",
       "wrongFormat": "Format d'image incorrect, sont acceptés uniquement les images au format .png, .jpg, .jpeg, .bmp, .gif, .svg, .webp",
-      "wrongSize": "Taille d'image incorrecte, la taille maximale est de 1Mo",
+      "wrongSize": "Taille d'image incorrecte, la taille maximale est de 5Mo",
       "duplicate": "Une image avec ce nom est déjà sélectionnée"
+    },
+    "itemType": {
+        "project": "Projet",
+        "actor": "Acteur",
+        "resource": "Ressource"
+    },
+    "beneficiaryType": {
+        "population": "Population",
+        "local_communities": "Communautés locales",
+        "communities_of_communes": "Communautés de communes",
+        "regions": "Régions",
+        "local_institutions": "Institutions locales",
+        "associations_ngos": "Associations / ONG"
+    },
+    "geocoding": {
+        "placeholder": "Rechercher un lieu",
+        "noData": "Aucun résultats"
+    },
+    "footer": {
+        "contact": "Contact",
+        "email": "Contactez-nous par mail",
+        "partners": "Partenaires",
+        "legal": "Mentions légales",
+        "cgu": "CGU",
+        "privacy": "Politique de confidentialité",
+        "plan": "Plan du site",
+        "cookies": "Cookies"
+    },
+    "notifications": {
+        "project": {
+            "create": "Le projet a été créé",
+            "edit": "Le projet a été modifié",
+            "validate": "Le projet a été validé",
+            "delete": "Le projet a été supprimé"
+        },
+        "resource": {
+            "create": "La ressource a été créé",
+            "edit": "La ressource a été modifié",
+            "validate": "La ressource a été validé",
+            "delete": "La ressource a été supprimé"
+        },
+        "common": {
+            "error": {
+                "411": "Une erreur est survenue lors de la validation du formulaire",
+                "500": "Une erreur est survenue, un rapport a été envoyé",
+                "moreDetails": "Détails :"
+            }
+        },
+        "atlas": {
+            "create": "L'atlas a été créé",
+            "edit": "L'atlas a été modifié",
+            "validate": "L'atlas a été validé",
+            "delete": "L'atlas a été supprimé"
+        },
+        "qgismap": {
+            "create": "La donnée a bien été crée",
+            "edit": "La donnée a bien été modifiée",
+            "validate": "La donnée a bien été validée",
+            "delete": "La donnée a bien été supprimé",
+            "error": "Une erreur est survenue lors du chargement des données"
+        }
+    },
+    "list": {
+        "resetFilters": "Réinitialiser les filtres",
+        "filtersTitle": "Affinez votre recherche"
+    },
+    "share": {
+        "shareWhatsapp": "Partager sur Whatsapp",
+        "shareFb": "Partager sur Facebook",
+        "shareEmail": "Partager par email",
+        "copyLink": "Copier le lien",
+        "urlCopied": "Lien copié",
+        "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
+        "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
+    },
+    "location": {
+      "lat": "Latitude",
+      "lng": "Longitude"
     }
   },
   "areYouSurePopup": {
     "title": "Attention ! Cette action est irréversible",
     "label": "Êtes-vous certain de vouloir faire cette action ?"
   },
+  "adminBoundaries": {
+    "adminScope": "Echelle d'intervention",
+    "showInMap": "Visualiser les zones d'intervention",
+    "mapViewer": "Zones d'interventions",
+    "admin1": "Région",
+    "admin2": "Département",
+    "admin3": "Commune"
+  },
+  "comments": {
+    "title": "Ajouter un commentaire",
+    "form": {
+      "message": "Votre commentaire",
+      "location": "Localisation sélectionnée sur la carte",
+      "originURL": "Entité concernée"
+    },
+    "successPost": "Le commentaire a bien été enregistré et sera revu par un administrateur de la plateforme"
+  },
   "forms": {
+    "test": "Test",
     "modify": "Modifier",
     "edit": "Modifier",
     "submit": "Valider",
@@ -73,7 +185,7 @@
     "delete": "Supprimer",
     "or": "OU",
     "errors": "Le formulaire n'est pas valide",
-        "errorMessages": {
+    "errorMessages": {
       "required": "Ce champs est requis",
       "minlength": "Ce champs doit avoir au moins {min} caractères",
       "maxlength": "Ce champs est limité à {max} caractères",
@@ -103,6 +215,7 @@
   },
   "labels": {
     "updatedAt": "Mis à jour le",
+    "updatedBy": "par",
     "lastUpdatedAt": "Dernière mise à jour le",
     "reset": "Réinitialiser"
   },
@@ -126,27 +239,27 @@
     "actor": {
       "label": "acteur | acteur | acteurs",
       "icon": "contacts",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "description": ""
     },
     "member": {
       "label": "membre | membre | membres",
       "icon": "account-group",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "description": ""
     },
     "project": {
       "label": "projet | projet | projets",
       "icon": "rocket-launch",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "description": ""
     },
     "resource": {
       "label": "ressource | ressource | ressources",
-      "icon": "database-arrow-down",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "icon": "folder",
+      "description": ""
     },
     "data": {
       "label": "donnée | donnée | données",
       "icon": "database-arrow-down",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+      "description": ""
     }
   },
   "itemType": {
@@ -214,32 +327,33 @@
         "411": "Une erreur est survenue lors de la validation du formulaire",
         "500": "Une erreur est survenue, un rapport a été envoyé",
         "moreDetails": "Détails :"
-      }},
-        "atlas": {
-            "create": "L'atlas a été créé",
-            "edit": "L'atlas a été modifié",
-            "validate": "L'atlas a été validé",
-            "delete": "L'atlas a été supprimé"
-        },
-        "qgismap": {
-            "create": "La donnée a bien été crée",
-            "edit": "La donnée a bien été modifiée",
-            "validate": "La donnée a bien été validée",
-            "delete": "La donnée a bien été supprimé",
-            "error": "Une erreur est survenue lors du chargement des données"
+      }
+    },
+    "atlas": {
+      "create": "L'atlas a été créé",
+      "edit": "L'atlas a été modifié",
+      "validate": "L'atlas a été validé",
+      "delete": "L'atlas a été supprimé"
+    },
+    "qgismap": {
+      "create": "La donnée a bien été crée",
+      "edit": "La donnée a bien été modifiée",
+      "validate": "La donnée a bien été validée",
+      "delete": "La donnée a bien été supprimé",
+      "error": "Une erreur est survenue lors du chargement des données"
     }
   },
   "list": {
     "resetFilters": "Réinitialiser les filtres",
     "filtersTitle": "Affinez votre recherche"
   },
-    "share": {
-        "shareWhatsapp": "Partager sur Whatsapp",
-        "shareFb": "Partager sur Facebook",
-        "shareEmail": "Partager par email",
-        "copyLink": "Copier le lien",
-        "urlCopied": "Lien copié",
-        "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
-        "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
-    }
+  "share": {
+    "shareWhatsapp": "Partager sur Whatsapp",
+    "shareFb": "Partager sur Facebook",
+    "shareEmail": "Partager par email",
+    "copyLink": "Copier le lien",
+    "urlCopied": "Lien copié",
+    "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
+    "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
+  }
 }

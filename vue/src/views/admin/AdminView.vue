@@ -22,11 +22,14 @@ import { useUserStore } from '@/stores/userStore'
 import { useProjectStore } from '@/stores/projectStore'
 import PageBanner from '@/components/banners/PageBanner.vue'
 import { onMounted } from 'vue'
+import { useCommentStore } from '@/stores/commentStore'
 const userStore = useUserStore()
 const projectStore = useProjectStore()
+const commentStore = useCommentStore()
 
 onMounted(async () => {
-  await projectStore.getAll()
+  projectStore.getAll()
+  commentStore.getAll()
 })
 </script>
 <style lang="scss">

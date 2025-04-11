@@ -15,7 +15,10 @@
         <img src="@/assets/images/home_iconography.svg" alt="" />
       </div>
     </div>
-    <div class="HomeView__ctn HomeView__ctn--highlights">
+    <div
+      class="HomeView__ctn HomeView__ctn--highlights"
+      v-if="homeStore.orderedMainHighlights.length"
+    >
       <SectionBanner :text="$t('home.highlights.title')" />
       <HomeHighlights />
     </div>
@@ -50,7 +53,7 @@ import HomeAgenda from '@/views/home/components/HomeAgenda.vue'
 
 const homeStore = useHomeStore()
 
-onMounted(async () => await homeStore.getGlobalKpis())
+onMounted(async () => await Promise.all([homeStore.getMainHighlights(), homeStore.getGlobalKpis()]))
 </script>
 <style lang="scss">
 .HomeView {

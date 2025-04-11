@@ -12,11 +12,14 @@
         { sortingKey: 'nameAZ', text: 'Nom A-Z' },
         { sortingKey: 'nameZA', text: 'Nom Z-A' }
       ]"
-      :createFunction="createAtlas"
       searchKey="name"
       @updateSortingKey="sortingAtlasSelectedMethod = $event"
       @update-search-query="searchQuery = $event"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="createAtlas" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <div class="AdminTable" :class="{ 'cursor-grab': sortingAtlasSelectedMethod === 'position' }">
       <VueDraggable
         ref="el"

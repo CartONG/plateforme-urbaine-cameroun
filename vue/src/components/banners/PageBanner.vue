@@ -8,7 +8,7 @@
 <script setup lang="ts">
 defineProps<{
   title: string
-  subtitle?: string
+  subtitle?: string | null
 }>()
 </script>
 <style scoped lang="scss">

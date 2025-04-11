@@ -11,4 +11,6 @@ enum AdministrativeScope: string
     case REGIONAL = 'regional';
     case STATE = 'state';
     case CITY = 'city';
+    case NEIGHBORHOOD = 'neighborhood';
+    case BOROUGH = 'borough';
 }

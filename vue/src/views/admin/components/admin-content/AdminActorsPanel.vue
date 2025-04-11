@@ -7,11 +7,14 @@
         { sortingKey: 'isValidated', text: 'Acteurs à valider' },
         { sortingKey: 'name', text: 'Nom' }
       ]"
-      :createFunction="createActor"
       searchKey="name"
       @updateSortingKey="sortingActorsSelectedMethod = $event"
       @update-search-query="searchQuery = $event"
-    />
+    >
+      <template #right-buttons>
+        <v-btn @click="createActor" color="main-red">{{ $t('admin.add') }}</v-btn>
+      </template>
+    </AdminTopBar>
     <AdminTable
       :is-overlay-shown-function="(item) => !(item as Actor).isValidated"
       :items="filteredItems"

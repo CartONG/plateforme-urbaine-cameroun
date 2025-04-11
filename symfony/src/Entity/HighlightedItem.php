@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Entity\File\MediaObject;
 use App\Enum\ItemType;
 use App\Repository\HighlightedItemRepository;
 use App\Services\State\Processor\Common\HighlightedItemProcessor;
@@ -85,10 +86,20 @@ class HighlightedItem
     #[Groups([HighlightedItem::GET_FULL])]
     private ?string $name = null;
 
-    public string $description;
+    #[Groups([HighlightedItem::GET_FULL])]
+    private ?string $slug = null;
+
+    #[Groups([HighlightedItem::GET_FULL])]
+    private ?MediaObject $image = null;
+
+    #[Groups([HighlightedItem::GET_FULL])]
+    private string $description;
+
+    #[Groups([HighlightedItem::GET_FULL])]
     public $updatedAt;
-    public $type;
-    public $link;
+
+    #[Groups([HighlightedItem::GET_FULL])]
+    private ?string $link = null;
 
     public function getId(): ?int
     {
@@ -100,9 +111,47 @@ class HighlightedItem
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(?string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): static
+    {
+        $this->link = $link;
+
+        return $this;
     }
 
     public function getItemId(): ?string
@@ -161,6 +210,30 @@ class HighlightedItem
     public function setItemType(ItemType $itemType): static
     {
         $this->itemType = $itemType;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -1,1 +1,1 @@
-export type OsmId = number
+export type OsmId = string

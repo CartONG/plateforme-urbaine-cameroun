@@ -18,10 +18,8 @@
 <script setup lang="ts">
 import GenericInfoCard from '@/components/global/GenericInfoCard.vue'
 import { useHomeStore } from '@/stores/homeStore'
-import { onBeforeMount } from 'vue'
 
 const homeStore = useHomeStore()
-onBeforeMount(async () => await homeStore.getMainHighlights())
 </script>
 
 <style lang="scss">

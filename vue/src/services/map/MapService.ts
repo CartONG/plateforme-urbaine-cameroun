@@ -40,6 +40,18 @@ export default class MapService {
     )
   }
 
+  static isLoaded(map: Map | null | undefined, callback: () => void) {
+    if (map) {
+      if (map?.loaded()) {
+        callback()
+      } else {
+        map.on('load', () => {
+          callback()
+        })
+      }
+    }
+  }
+
   static getStyle(basemap: Basemap) {
     return `${basemap.style}?key=${import.meta.env.VITE_MAPTILER_API_KEY}`
   }

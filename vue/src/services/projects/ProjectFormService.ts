@@ -4,7 +4,6 @@ import { useField, useForm } from 'vee-validate'
 import { z } from 'zod'
 import { i18n } from '@/plugins/i18n'
 import { CommonZodSchema } from '../forms/CommonZodSchema'
-import GeocodingService from '../map/GeocodingService'
 import { Status } from '@/models/enums/contents/Status'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
@@ -21,9 +20,12 @@ export class ProjectFormService {
       focalPointName: zodModels.maxLabel,
       focalPointPosition: zodModels.maxLabel.optional(),
       focalPointEmail: zodModels.email,
-      interventionZone: z.nativeEnum(AdministrativeScope),
+      administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)),
+      admin1List: zodModels.admin1Boundaries.optional(),
+      admin2List: zodModels.admin2Boundaries.optional(),
+      admin3List: zodModels.admin3Boundaries.optional(),
       focalPointTel: zodModels.phone,
-      osmData: zodModels.osmData,
+      geoData: zodModels.geoData,
       actor: zodModels.symfonyRelation,
       status: z.nativeEnum(Status),
       donors: zodModels.symfonyRelations,
@@ -34,10 +36,7 @@ export class ProjectFormService {
     })
 
     const { errors, handleSubmit, isSubmitting } = useForm<Partial<Project | ProjectSubmission>>({
-      initialValues: {
-        ...project,
-        osmData: project?.geoData ? GeocodingService.geoDataToGeocodingItem(project?.geoData) : null
-      },
+      initialValues: project,
       validationSchema: toTypedSchema(projectSchema)
     })
 
@@ -48,7 +47,10 @@ export class ProjectFormService {
       calendar: useField('calendar'),
       contractingOrganisation: useField('contractingOrganisation'),
       donors: useField('donors'),
-      interventionZone: useField('interventionZone'),
+      administrativeScopes: useField('administrativeScopes'),
+      admin1List: useField('admin1List'),
+      admin2List: useField('admin2List'),
+      admin3List: useField('admin3List'),
       focalPointName: useField('focalPointName'),
       focalPointPosition: useField('focalPointPosition'),
       focalPointEmail: useField('focalPointEmail'),
@@ -56,7 +58,7 @@ export class ProjectFormService {
       beneficiaryTypes: useField('beneficiaryTypes'),
       actor: useField('actor'),
       status: useField('status'),
-      osmData: useField('osmData'),
+      geoData: useField('geoData'),
       thematics: useField('thematics'),
       website: useField('website')
     }

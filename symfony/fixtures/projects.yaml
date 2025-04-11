@@ -8,7 +8,8 @@ App\Entity\Project:
     geoData: '@geoData_<current()>'
     images: []
     partners: []
-    interventionZone: '<randomElement(<(App\Enum\AdministrativeScope::toArray())>)>'
+    administrativeScopes: 
+      - '<(App\Enum\AdministrativeScope::NATIONAL)>'
     beneficiaryTypes: ['<randomElement(<(App\Enum\BeneficiaryType::toArray())>)>']
     donors: '<numberBetween(1, 2)>x  @organisation_<numberBetween(4, 6)>'
     contractingOrganisation: '@organisation_<numberBetween(1, 3)>'

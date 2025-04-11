@@ -3,7 +3,6 @@ import type { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType
 import { OsmPlaceType } from '@/models/enums/geo/OsmPlaceType'
 import type { GeocodingItem } from '@/models/interfaces/geo/GeocodingItem'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
-import type { OsmData } from '@/models/interfaces/geo/OsmData'
 
 export default class GeocodingService {
   static forwardGeocode = async (
@@ -28,11 +27,16 @@ export default class GeocodingService {
         .then((response) => {
           const geojson = response.data
           for (const feature of geojson.features) {
-            console.log('feature.properties.geocoding', feature)
-            const point: OsmData = {
-              osmId: feature.properties.geocoding.osm_id,
+            const point: GeoData = {
+              osmId: feature.properties.geocoding.osm_id.toString(),
               osmType: feature.properties.geocoding.osm_type,
-              osmName: feature.properties.geocoding.label
+              name: feature.properties.geocoding.label,
+              latitude: feature.geometry.coordinates[1],
+              longitude: feature.geometry.coordinates[0],
+              coords: {
+                lat: feature.geometry.coordinates[1],
+                lng: feature.geometry.coordinates[0]
+              }
             }
             if (osmPlaceTypesFilter.includes(feature.properties.geocoding.type)) {
               places.push(point)
@@ -47,36 +51,39 @@ export default class GeocodingService {
 
   static geoDataToGeocodingItem(geoData: GeoData): GeocodingItem | null {
     if (!geoData) return null
-    return {
-      osmId: geoData.osmId,
-      osmType: geoData.osmType,
-      osmName: geoData.name
-    }
+    return geoData
   }
 
-  static async getBbox(osmData: OsmData): Promise<OsmData> {
+  static async getBbox(geoData: GeoData): Promise<GeoData> {
     return await nominatimClient
       .get('/lookup?=', {
         params: {
-          osm_ids: this.getOsmIdentifier(osmData),
+          osm_ids: this.getOsmIdentifier(geoData),
           format: 'geojson'
         }
       })
       .then((response) => {
         const geojson = response.data
         const feature = geojson.features[0]
-        osmData.bbox = feature.bbox
-        osmData.coords = feature.geometry.coordinates
-        return osmData
+        geoData.bbox = feature.bbox
+        geoData.latitude = feature.geometry.coordinates[1]
+        geoData.longitude = feature.geometry.coordinates[0]
+        geoData.coords = {
+          lat: feature.geometry.coordinates[1],
+          lng: feature.geometry.coordinates[0]
+        }
+        return geoData
       })
   }
 
-  static getOsmIdentifier(osmData: OsmData): string {
-    return `${osmData.osmType[0].toUpperCase()}${osmData.osmId}`
+  static getOsmIdentifier(geoData: GeoData): string | null {
+    return geoData?.osmType ? `${geoData.osmType[0].toUpperCase()}${geoData.osmId}` : null
   }
 
   static getLocationName(geoData: GeoData): string {
     if (!geoData) return ''
-    return geoData.name.split(', ').splice(0, 2).join(', ')
+    return geoData.name
+      ? geoData.name.split(', ').splice(0, 2).join(', ')
+      : geoData.coords?.lat + ', ' + geoData.coords?.lng
   }
 }

@@ -1,5 +1,6 @@
 import type { ItemType } from '../enums/app/ItemType'
 import type { Item } from './Item'
+import type { BaseMediaObject } from './object/MediaObject'
 
 export type HighlightedItem = {
   id: number
@@ -13,5 +14,5 @@ export type HighlightedItem = {
   updatedAt?: Date
   slug?: string
   link?: string
-  image?: string
+  image?: BaseMediaObject
 }

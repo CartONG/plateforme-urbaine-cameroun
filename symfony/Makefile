@@ -84,6 +84,9 @@ create-short-migration: reset-database make-migration run-migration run-fixtures
 
 update-database: composer-install composer-dump-env cc run-migration	## Update database without clearing data
 
+import-admin-boundaries:	## Import admin boundaries into postgis
+	@$(DOCKER_EXEC_PHP) php bin/console app:import:admin-boundaries
+
 ##
 ## --------------------------------------------------------------------------------
 ##  🛠️  Tools

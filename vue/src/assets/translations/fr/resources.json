@@ -44,6 +44,9 @@
           "label": "Description",
           "placeholder": "Description"
         },
+        "imagePreview": {
+          "label": "Image de prévisualisation"
+        },
         "type": {
           "label": "Type de ressource",
           "placeholder": "Type de ressource"
