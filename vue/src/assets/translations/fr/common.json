@@ -185,14 +185,18 @@
         }
     }
   },
+  "areYouSurePopup": {
+    "title": "Attention ! Cette action est irréversible",
+    "label": "Êtes-vous certain de vouloir faire cette action ?"
+  },
   "adminBoundaries": {
-        "adminScope": "Echelle d'intervention",
-        "showInMap": "Visualiser les zones d'intervention",
-        "mapViewer": "Zones d'interventions",
-        "admin1": "Région",
-        "admin2": "Département",
-        "admin3": "Commune"
-    },
+    "adminScope": "Echelle d'intervention",
+    "showInMap": "Visualiser les zones d'intervention",
+    "mapViewer": "Zones d'interventions",
+    "admin1": "Région",
+    "admin2": "Département",
+    "admin3": "Commune"
+  },
   "comments": {
     "title": "Ajouter un commentaire",
     "form": {
@@ -372,6 +376,12 @@
       "validate": "La donnée a bien été validée",
       "delete": "La donnée a bien été supprimé",
       "error": "Une erreur est survenue lors du chargement des données"
+    },
+    "user": {
+      "create": "L'utilisateur a bien été créé",
+      "edit": "L'utilisateur a bien été modifié",
+      "validate": "L'utilisateur a bien été validé",
+      "delete": "L'utilisateur a bien été supprimé"
     }
   },
   "list": {

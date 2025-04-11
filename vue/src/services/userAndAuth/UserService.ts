@@ -14,4 +14,8 @@ export class UserService {
       headers: { 'Content-Type': 'application/merge-patch+json' }
     })
   }
+
+  static async deleteUser(user: User): Promise<AxiosResponse> {
+    return apiClient.delete(`/api/users/${user.id}`)
+  }
 }
