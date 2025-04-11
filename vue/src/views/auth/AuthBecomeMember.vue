@@ -6,6 +6,7 @@
         <template v-slot:url>
           <router-link
             append
+            class="Dialog__clickableText"
             :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER_WHY } }"
           >
             {{ $t('auth.becomeMember.subtitle.link') }}
@@ -58,6 +59,7 @@
               <template v-slot:url1>
                 <router-link
                   append
+                  class="Dialog__clickableText"
                   :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
                 >
                   {{ $t('auth.becomeMember.form.privacyPolicy.confidentialPolicy') }}
@@ -66,6 +68,7 @@
               <template v-slot:url2>
                 <router-link
                   append
+                  class="Dialog__clickableText"
                   :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
                 >
                   {{ $t('auth.becomeMember.form.privacyPolicy.usePolicy') }}
