@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="HomeMapDescription__mapImg">
-      <img src="@/assets/images/home_map_comparator.jpg" />
+      <img loading="lazy" src="@/assets/images/home_map_comparator.jpg" />
       <div class="HomeMapDescription__welcomeCtn">
         <h4>{{ $t('home.map.welcome') }}</h4>
         <p>{{ $t('home.map.welcomeDescription') }}</p>

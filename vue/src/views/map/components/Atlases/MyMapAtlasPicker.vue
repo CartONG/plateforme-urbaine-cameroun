@@ -11,7 +11,7 @@
       @update:modelValue="(newValue) => handleCheckboxChange(atlasMap.id, newValue as boolean)"
     />
     <div class="MyMapAtlasPicker__descCtn ml-2">
-      <img :src="atlasMap.mainLayer.icon" :alt="atlas.name" />
+      <img loading="lazy" :src="atlasMap.mainLayer.icon" :alt="atlas.name" />
       <div class="MyMapAtlasPicker__desc ml-2">
         <span>{{ atlasMap.mainLayer.name }}</span>
         <span>
@@ -27,12 +27,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import { LayerType } from '@/models/enums/geo/LayerType'
 import type { Atlas } from '@/models/interfaces/Atlas'
 import type { AtlasMap } from '@/models/interfaces/map/AtlasMap'
-import MyMapLayerAdditionnalMenu from '../MyMapLayerAdditionnalMenu.vue'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, type Ref } from 'vue'
-import { LayerType } from '@/models/enums/geo/LayerType'
+import MyMapLayerAdditionnalMenu from '../MyMapLayerAdditionnalMenu.vue'
 const props = defineProps<{
   atlas: Atlas
 }>()

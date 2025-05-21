@@ -11,7 +11,7 @@
       >
         <template v-slot:label>
           <div class="MyMapLayerPicker__descCtn">
-            <img :src="mainLayer.icon" :alt="mainLayer.name" />
+            <img loading="lazy" :src="mainLayer.icon" :alt="mainLayer.name" />
             <span>{{ mainLayer.name }}</span>
           </div>
         </template>
@@ -46,6 +46,7 @@
           <template v-slot:label>
             <div class="MyMapLayerPicker__iconCtn">
               <img
+                loading="lazy"
                 :src="subLayer.icon"
                 :alt="subLayer.name"
                 v-if="loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon"
@@ -64,11 +65,11 @@
 </template>
 
 <script setup lang="ts">
+import { LayerType } from '@/models/enums/geo/LayerType'
 import type { Layer } from '@/models/interfaces/map/Layer'
 import { debounce } from '@/services/utils/UtilsService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, ref, watch, type ModelRef } from 'vue'
-import { LayerType } from '@/models/enums/geo/LayerType'
 import MyMapLayerAdditionnalMenu from './MyMapLayerAdditionnalMenu.vue'
 
 const isExpanded = ref(false)

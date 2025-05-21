@@ -19,6 +19,7 @@
         </div>
         <div class="ProjectCard__block ProjectCard__block--right">
           <img
+            loading="lazy"
             v-if="project.logo?.contentsFilteredUrl.thumbnail"
             class="ProjectCard__logo"
             :src="project.logo?.contentsFilteredUrl.thumbnail"

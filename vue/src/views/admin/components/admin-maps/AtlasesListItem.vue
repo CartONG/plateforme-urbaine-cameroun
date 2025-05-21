@@ -7,7 +7,12 @@
       {{ atlas.position }}
     </div>
     <div class="AdminTable__item d-flex align-center">
-      <img :src="atlas.logo.contentUrl" v-if="atlas.logo" class="AdminTable__item__logo" />
+      <img
+        loading="lazy"
+        :src="atlas.logo.contentUrl"
+        v-if="atlas.logo"
+        class="AdminTable__item__logo"
+      />
       {{ atlas.name }}
     </div>
     <div class="AdminTable__item">
@@ -51,7 +56,7 @@
       :style="{ gridTemplateColumns: ['30%', '70%'].join(' ') }"
     >
       <div class="AdminTable__item">
-        <img class="AdminTable__mapImg" :src="map.logo.contentUrl" alt="" />
+        <img loading="lazy" class="AdminTable__mapImg" :src="map.logo.contentUrl" alt="" />
         {{ map.name }}
       </div>
       <div class="AdminTable__item">

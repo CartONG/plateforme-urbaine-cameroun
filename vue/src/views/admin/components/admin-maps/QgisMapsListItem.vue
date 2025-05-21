@@ -4,7 +4,12 @@
     :style="{ gridTemplateColumns: ['50%', '10%', '20%', '20%'].join(' ') }"
   >
     <div class="AdminTable__item d-flex align-center">
-      <img :src="map.logo.contentUrl" v-if="map.logo" class="AdminTable__item__logo" />
+      <img
+        loading="lazy"
+        :src="map.logo.contentUrl"
+        v-if="map.logo"
+        class="AdminTable__item__logo"
+      />
       {{ map.name }}
     </div>
     <div class="AdminTable__item">
@@ -55,10 +60,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { FormType } from '@/models/enums/app/FormType'
-import type { QgisMap } from '@/models/interfaces/QgisMap'
-import { useQgisMapStore } from '@/stores/qgisMapStore'
-import { ref, type ModelRef } from 'vue'
+import { FormType } from '@/models/enums/app/FormType';
+import type { QgisMap } from '@/models/interfaces/QgisMap';
+import { useQgisMapStore } from '@/stores/qgisMapStore';
+import { ref, type ModelRef } from 'vue';
 
 defineProps<{ map: QgisMap }>()
 const formType: ModelRef<FormType | undefined> = defineModel('formType')

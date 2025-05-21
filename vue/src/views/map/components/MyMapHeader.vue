@@ -12,7 +12,12 @@
         <v-icon icon="mdi-arrow-left" color="main-blue" />
       </v-btn>
       <router-link :to="{ name: 'home' }" class="Header__bannerLink">
-        <img src="@/assets/images/Logo.png" alt="Accueil" class="MyMapHeader__logo" />
+        <img
+          loading="lazy"
+          src="@/assets/images/Logo.png"
+          alt="Accueil"
+          class="MyMapHeader__logo"
+        />
       </router-link>
     </div>
     <Geocoding
@@ -44,13 +49,13 @@
 
 <script setup lang="ts">
 import Geocoding from '@/components/forms/Geocoding.vue'
+import ShareMenu from '@/components/global/ShareMenu.vue'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import LoginButton from '@/views/_layout/header/LoginButton.vue'
-import ShareMenu from '@/components/global/ShareMenu.vue'
 import { ref } from 'vue'
 
 const myMapStore = useMyMapStore()

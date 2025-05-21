@@ -3,6 +3,7 @@
     <template #content>
       <div class="GenericInfoCard__imgCtn">
         <img
+          loading="lazy"
           v-if="image?.contentsFilteredUrl?.thumbnail"
           class="GenericInfoCard__img"
           :src="image.contentsFilteredUrl.thumbnail"
@@ -58,14 +59,14 @@
 </template>
 
 <script setup lang="ts">
+import HighlightButton from '@/components/global/HighlightButton.vue'
 import InfoCard from '@/components/global/InfoCard.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
-import HighlightButton from '@/components/global/HighlightButton.vue'
 import { ItemType } from '@/models/enums/app/ItemType'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import { computed } from 'vue'
 import type { RouteLocationAsRelative } from 'vue-router'
-import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 
 const props = defineProps<{
   id: string

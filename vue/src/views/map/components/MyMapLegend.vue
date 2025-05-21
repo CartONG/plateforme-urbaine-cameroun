@@ -22,7 +22,7 @@
           <div class="MapLegend__item">
             <div class="d-flex align-center">
               <v-icon icon="mdi-drag" color="dark-grey"></v-icon>
-              <img :src="item.icon" v-if="item.layerType === layerType.APP_LAYER" />
+              <img loading="lazy" :src="item.icon" v-if="item.layerType === layerType.APP_LAYER" />
               <v-icon icon="mdi-layers-outline" color="black" v-else></v-icon>
               <span class="text-subtitle-2 font-weight-medium text-capitalize ml-1">{{
                 item.name
@@ -50,7 +50,7 @@
               >
                 <div class="d-flex align-center">
                   <v-icon icon="mdi-drag" color="dark-grey"></v-icon>
-                  <img :src="subItem.icon" />
+                  <img loading="lazy" :src="subItem.icon" />
                   <span class="text-caption text-capitalize ml-1">{{ subItem.name }}</span>
                 </div>
                 <div class="d-flex align-center">
@@ -73,13 +73,13 @@
 
 <script setup lang="ts">
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
+import { ItemType } from '@/models/enums/app/ItemType'
+import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
+import { LayerType } from '@/models/enums/geo/LayerType'
+import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
-import { LayerType } from '@/models/enums/geo/LayerType'
-import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
-import { ItemType } from '@/models/enums/app/ItemType'
-import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 const layerType = LayerType
 const atlasGroup = AtlasGroup
 
