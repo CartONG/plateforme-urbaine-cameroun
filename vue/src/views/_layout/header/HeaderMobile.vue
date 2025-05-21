@@ -30,7 +30,7 @@
           <v-icon icon="mdi mdi-close" />
         </div>
       </div>
-      <img src="@/assets/images/Frise.svg" alt="" />
+      <img src="@/assets/images/Frise.jpg" alt="" />
       <div class="Header__menu__content">
         <v-list lines="one" bg-color="light-yellow">
           <v-list-item
@@ -64,9 +64,9 @@
 </template>
 <script setup lang="ts">
 import { NavigationTabsService } from '@/services/application/NavigationTabsService'
-import LoginButton from './LoginButton.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { ref } from 'vue'
+import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
 const showMobileMenu = ref(false)

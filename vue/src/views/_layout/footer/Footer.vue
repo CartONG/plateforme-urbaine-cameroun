@@ -100,7 +100,7 @@
 
 <style lang="scss">
 .Footer {
-  background-image: url('@/assets/images/Frise.svg');
+  background-image: url('@/assets/images/Frise.jpg');
   background-repeat: repeat-x;
   width: 100%;
   padding: 6rem 0 2rem 0;
