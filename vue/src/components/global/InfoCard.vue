@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationAsRelativeGeneric } from 'vue-router'
+import type { RouteLocationAsRelativeGeneric } from 'vue-router';
 defineProps<{
   to?: string | RouteLocationAsRelativeGeneric
   light?: boolean

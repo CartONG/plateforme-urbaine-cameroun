@@ -5,11 +5,11 @@
         variant="elevated"
         elevation="1"
         density="comfortable"
-        icon="mdi-arrow-left"
+        icon="$arrowLeft"
         class="main-blue"
         :to="{ name: 'home' }"
       >
-        <v-icon icon="mdi-arrow-left" color="main-blue" />
+        <v-icon icon="$arrowLeft" color="main-blue" />
       </v-btn>
       <router-link :to="{ name: 'home' }" class="Header__bannerLink">
         <img
@@ -26,14 +26,14 @@
       :placeholder="$t('myMap.header.search.placeholder')"
       :geometry-details="true"
       class="MyMapHeader__search"
-      :icon="'mdi-magnify'"
+      :icon="'$magnify'"
       density="comfortable"
     />
 
     <div class="MyMapHeader__block MyMapHeader__block--left">
       <v-btn
         class="MyMapHeader__shareBtn"
-        prepend-icon="mdi-share-variant"
+        prepend-icon="$shareVariant"
         variant="elevated"
         elevation="1"
         @click="getSharedMapLink()"

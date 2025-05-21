@@ -39,7 +39,7 @@
           <v-btn
             variant="text"
             class="fit-content font-weight-medium flex-basis-auto text-body-3"
-            :prepend-icon="arePassedEventsShown ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+            :prepend-icon="arePassedEventsShown ? '$eyeOffOutline' : '$eyeOutline'"
             @click="arePassedEventsShown = !arePassedEventsShown"
             >{{
               arePassedEventsShown
@@ -61,7 +61,7 @@
           <v-btn
             class="fixed-btn"
             color="main-red"
-            prepend-icon="mdi-plus"
+            prepend-icon="$plus"
             @click="resourceStore.isResourceFormShown = true"
             v-if="userStore.userIsAdmin() || userStore.userHasRole(UserRoles.EDITOR_RESSOURCES)"
             >{{ $t('resources.add') }}</v-btn
@@ -78,22 +78,21 @@
 </template>
 
 <script setup lang="ts">
-import { useResourceStore } from '@/stores/resourceStore'
-import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
-import ListHeader from '@/views/_layout/list/ListHeader.vue'
-import ListSortBy from '@/views/_layout/list/ListSortBy.vue'
-import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
-import ListItems from '@/views/_layout/list/ListItems.vue'
-import ListFilterSelect from '@/views/_layout/list/ListFilterSelect.vue'
-import ResourceCard from '@/views/resources/components/ResourceCard.vue'
-import { useUserStore } from '@/stores/userStore'
-import { computed, ref, type Ref } from 'vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
-import type { Resource } from '@/models/interfaces/Resource'
-import { useThematicStore } from '@/stores/thematicStore'
-import { onMounted } from 'vue'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
+import type { Resource } from '@/models/interfaces/Resource'
+import { useResourceStore } from '@/stores/resourceStore'
+import { useThematicStore } from '@/stores/thematicStore'
+import { useUserStore } from '@/stores/userStore'
+import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
+import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
+import ListFilterSelect from '@/views/_layout/list/ListFilterSelect.vue'
+import ListHeader from '@/views/_layout/list/ListHeader.vue'
+import ListItems from '@/views/_layout/list/ListItems.vue'
+import ListSortBy from '@/views/_layout/list/ListSortBy.vue'
+import ResourceCard from '@/views/resources/components/ResourceCard.vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const resourceStore = useResourceStore()

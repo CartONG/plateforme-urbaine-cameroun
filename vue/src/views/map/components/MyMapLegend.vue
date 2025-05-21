@@ -1,7 +1,7 @@
 <template>
   <div class="maplibregl-ctrl maplibregl-ctrl-group MapLegend" :isOpen="legendIsShown">
     <v-btn
-      icon="mdi-layers"
+      icon="$layers"
       v-if="!legendIsShown"
       @click.stop="legendIsShown = true"
       class="text-main-blue"
@@ -9,7 +9,7 @@
     <div v-else class="MapLegend__ctn">
       <div class="MapLegend__title">
         <FormSectionTitle :text="$t('myMap.legend.title')" />
-        <v-icon icon="mdi-close" @click.stop="legendIsShown = false" color="main-blue"></v-icon>
+        <v-icon icon="$close" @click.stop="legendIsShown = false" color="main-blue"></v-icon>
       </div>
 
       <VueDraggable v-model="mapStore.legendList" @end="updateMainLayerOrder" group="parent">
@@ -21,9 +21,9 @@
         >
           <div class="MapLegend__item">
             <div class="d-flex align-center">
-              <v-icon icon="mdi-drag" color="dark-grey"></v-icon>
+              <v-icon icon="$drag" color="dark-grey"></v-icon>
               <img loading="lazy" :src="item.icon" v-if="item.layerType === layerType.APP_LAYER" />
-              <v-icon icon="mdi-layers-outline" color="black" v-else></v-icon>
+              <v-icon icon="$layersOutline" color="black" v-else></v-icon>
               <span class="text-subtitle-2 font-weight-medium text-capitalize ml-1">{{
                 item.name
               }}</span>
@@ -32,7 +32,7 @@
               <v-icon
                 v-if="!('atlasGroup' in item && item.atlasGroup === atlasGroup.PREDEFINED_MAP)"
                 color="dark-grey"
-                icon="mdi-delete-outline"
+                icon="$deleteOutline"
                 @click="removeMainLayer(item)"
               ></v-icon>
             </div>
@@ -49,7 +49,7 @@
                 :key="subItem.name"
               >
                 <div class="d-flex align-center">
-                  <v-icon icon="mdi-drag" color="dark-grey"></v-icon>
+                  <v-icon icon="$drag" color="dark-grey"></v-icon>
                   <img loading="lazy" :src="subItem.icon" />
                   <span class="text-caption text-capitalize ml-1">{{ subItem.name }}</span>
                 </div>
@@ -57,7 +57,7 @@
                   <v-icon
                     v-if="'atlasGroup' in item && item.atlasGroup === atlasGroup.THEMATIC_DATA"
                     color="dark-grey"
-                    icon="mdi-delete-outline"
+                    icon="$deleteOutline"
                     class="mr-1"
                     @click="removeSubLayer(item, subItem.name)"
                   ></v-icon>

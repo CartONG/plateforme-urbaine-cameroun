@@ -27,7 +27,7 @@
       <div class="Header__menu__top">
         <img loading="lazy" src="@/assets/images/Logo.png" />
         <div class="Header__menu__closer" @click="showMobileMenu = !showMobileMenu">
-          <v-icon icon="mdi mdi-close" />
+          <v-icon icon="$close" />
         </div>
       </div>
       <img loading="lazy" src="@/assets/images/Frise.jpg" alt="" />

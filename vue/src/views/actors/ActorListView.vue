@@ -49,7 +49,7 @@
           <v-btn
             class="fixed-btn"
             color="main-red"
-            prepend-icon="mdi-plus"
+            prepend-icon="$plus"
             @click="addActor()"
             v-if="userStore.userIsAdmin() || userStore.userIsActorEditor()"
             >{{ $t('actors.add') }}</v-btn
@@ -66,22 +66,22 @@
 </template>
 
 <script setup lang="ts">
-import { useActorsStore } from '@/stores/actorsStore'
-import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
-import ListSortBy from '@/views/_layout/list/ListSortBy.vue'
-import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
-import ListItems from '@/views/_layout/list/ListItems.vue'
-import ListFilterSelect from '@/views/_layout/list/ListFilterSelect.vue'
-import ActorCard from '@/views/actors/components/ActorCard.vue'
-import { useUserStore } from '@/stores/userStore'
-import { computed, ref, type Ref } from 'vue'
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
+import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
-import { useThematicStore } from '@/stores/thematicStore'
 import type { Thematic } from '@/models/interfaces/Thematic'
-import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
+import { useActorsStore } from '@/stores/actorsStore'
+import { useThematicStore } from '@/stores/thematicStore'
+import { useUserStore } from '@/stores/userStore'
+import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
+import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
+import ListFilterSelect from '@/views/_layout/list/ListFilterSelect.vue'
 import ListHeader from '@/views/_layout/list/ListHeader.vue'
+import ListItems from '@/views/_layout/list/ListItems.vue'
+import ListSortBy from '@/views/_layout/list/ListSortBy.vue'
+import ActorCard from '@/views/actors/components/ActorCard.vue'
+import { computed, ref, type Ref } from 'vue'
 
 const actorsStore = useActorsStore()
 const userStore = useUserStore()

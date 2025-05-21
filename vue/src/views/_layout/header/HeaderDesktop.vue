@@ -3,11 +3,11 @@
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
         <div class="Header__bannerLink">
-          <v-icon icon="mdi-help-circle-outline" />
+          <v-icon icon="$helpCircleOutline" />
           <span class="mr-6">{{ $t('header.help') }}</span>
         </div>
         <a :href="whatsappLink" target="_blank" class="Header__bannerLink">
-          <v-icon icon="mdi-email-outline" />
+          <v-icon icon="$emailOutline" />
           <span>{{ $t('header.contact') }}</span>
         </a>
       </div>

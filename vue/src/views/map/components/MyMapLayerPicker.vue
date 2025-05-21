@@ -21,7 +21,7 @@
           v-if="subLayers"
           variant="text"
           density="comfortable"
-          icon="mdi-layers"
+          icon="$layers"
           :color="isExpanded ? 'main-blue' : 'dark-grey'"
           @click="isExpanded = !isExpanded"
         />

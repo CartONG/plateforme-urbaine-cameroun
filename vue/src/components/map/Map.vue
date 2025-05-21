@@ -5,14 +5,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, watch, computed, ref, type Ref, useTemplateRef } from 'vue'
+import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
+import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
+import { IControl } from '@/services/map/MapService'
+import { debounce } from '@/services/utils/UtilsService'
+import { useApplicationStore } from '@/stores/applicationStore'
 import maplibregl, { GeoJSONSource } from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import ResetMapExtentControl from '@/components/map/controls/ResetMapExtentControl.vue'
-import { useApplicationStore } from '@/stores/applicationStore'
-import { IControl } from '@/services/map/MapService'
-import cameroonMask from '@/assets/geojsons/mask_cameroun.json'
-import { debounce } from '@/services/utils/UtilsService'
+import { computed, onMounted, ref, type Ref, useTemplateRef, watch } from 'vue'
 
 const applicationStore = useApplicationStore()
 const triggerZoomReset = computed(() => applicationStore.triggerZoomReset)

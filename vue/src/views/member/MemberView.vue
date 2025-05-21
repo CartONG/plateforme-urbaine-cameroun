@@ -20,7 +20,7 @@
                 <img loading="lazy" v-else src="@/assets/images/user/default_avatar.png" alt="" />
               </div>
               <v-btn
-                icon="mdi-pencil"
+                icon="$pencil"
                 class="UserAccount__avatarEdit"
                 @click.stop="triggerFileInput"
               ></v-btn>
@@ -138,21 +138,21 @@
             $t('account.save')
           }}</v-btn>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_ACTORS)"
             @click="actorsStore.setActorEditionMode(null)"
           >
             <span class="ml-2">{{ $t('header.addActor') }}</span>
           </BasicCard>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS)"
             @click="projectStore.isProjectFormShown = true"
           >
             <span class="ml-2">{{ $t('header.addProject') }}</span>
           </BasicCard>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_RESSOURCES)"
             @click="resourceStore.isResourceFormShown = true"
           >

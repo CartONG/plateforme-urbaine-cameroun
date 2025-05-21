@@ -13,7 +13,7 @@
                   variant="text"
                   v-bind="props"
                   density="comfortable"
-                  icon="mdi-map-outline"
+                  icon="$mapOutline"
                   class="hide-sm"
                   color="main-blue"
                 />
@@ -29,7 +29,7 @@
           <div class="SheetContentBanner__editBar">
             <v-btn
               class="PageBanner__editBtn fixed-btn"
-              prepend-icon="mdi-pencil-outline"
+              prepend-icon="$pencilOutline"
               color="main-red"
               variant="flat"
               v-if="isEditable"
@@ -47,15 +47,15 @@
 
 <script setup lang="ts">
 import PageBanner from '@/components/banners/PageBanner.vue'
-import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
-import ShareButton from '@/components/global/ShareButton.vue'
-import LikeButton from '@/components/global/LikeButton.vue'
-import SheetContactActions from './SheetContactActions.vue'
-import HighlightButton from '@/components/global/HighlightButton.vue'
 import CommentButton from '@/components/comments/CommentButton.vue'
-import type { CommentOrigin } from '@/models/interfaces/Comment'
-import type { RouteLocationAsRelative } from 'vue-router'
+import HighlightButton from '@/components/global/HighlightButton.vue'
+import LikeButton from '@/components/global/LikeButton.vue'
+import ShareButton from '@/components/global/ShareButton.vue'
 import type { User } from '@/models/interfaces/auth/User'
+import type { CommentOrigin } from '@/models/interfaces/Comment'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
+import type { RouteLocationAsRelative } from 'vue-router'
+import SheetContactActions from './SheetContactActions.vue'
 
 defineProps<{
   page: CommentOrigin.ACTOR | CommentOrigin.PROJECT

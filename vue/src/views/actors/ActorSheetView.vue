@@ -57,7 +57,7 @@
 
       <div class="SheetView__infoCard">
         <div class="d-flex flex-row">
-          <v-icon icon="mdi-map-marker-outline" color="main-black" />
+          <v-icon icon="$mapMarkerOutline" color="main-black" />
           <div class="ml-1">
             <p class="font-weight-bold">{{ actor.officeName }}</p>
             <p>{{ actor.officeAddress }}</p>

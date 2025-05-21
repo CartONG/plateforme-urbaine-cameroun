@@ -22,22 +22,20 @@
     <div class="AdminTable__item--last d-flex">
       <v-btn
         density="comfortable"
-        :icon="
-          showDetails ? 'mdi-arrow-up-bold-hexagon-outline' : 'mdi-arrow-down-bold-hexagon-outline'
-        "
+        :icon="showDetails ? '$arrowUpBoldHexagonOutline' : '$arrowDownBoldHexagonOutline'"
         class="mr-2"
         @click="showDetails = !showDetails"
       ></v-btn>
       <v-btn
         density="comfortable"
-        icon="mdi-pencil-outline"
+        icon="$pencilOutline"
         class="mr-2"
         @click="
           ((formType = FormType.EDIT), (atlasToEdit = atlas), (atlasStore.isFormShown = true))
         "
       ></v-btn>
-      <v-btn density="comfortable" icon="mdi-dots-vertical">
-        <v-icon icon="mdi-dots-vertical"></v-icon>
+      <v-btn density="comfortable" icon="$dotsVertical">
+        <v-icon icon="$dotsVertical"></v-icon>
         <v-menu activator="parent" location="left">
           <v-list class="AdminPanel__additionnalMenu">
             <v-list-item @click="atlasStore.deleteAtlas(atlas)">{{
@@ -60,7 +58,7 @@
         {{ map.name }}
       </div>
       <div class="AdminTable__item">
-        <v-icon icon="mdi-layers-outline"></v-icon>
+        <v-icon icon="$layersOutline"></v-icon>
         {{ map.qgisProject.layers?.join(', ') }}
       </div>
     </div>

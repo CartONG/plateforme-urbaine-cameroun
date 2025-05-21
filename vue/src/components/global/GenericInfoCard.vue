@@ -26,7 +26,7 @@
         :to="mapRoute"
         variant="text"
         density="comfortable"
-        icon="mdi-map-outline"
+        icon="$mapOutline"
         class="hide-sm"
         color="main-blue"
       />
@@ -41,7 +41,7 @@
         v-if="isEditable"
         variant="text"
         density="comfortable"
-        icon="mdi-pencil-outline"
+        icon="$pencilOutline"
         color="main-blue"
         @click.prevent="editFunction"
       >
@@ -51,7 +51,7 @@
     <template #footer-right>
       <v-icon
         class="InfoCard__actionIcon"
-        :icon="actionIcon ?? 'mdi-open-in-new'"
+        :icon="actionIcon ?? '$openInNew'"
         color="light-blue"
       ></v-icon>
     </template>

@@ -16,12 +16,7 @@
         </div>
       </div>
     </div>
-    <v-btn
-      size="small"
-      icon="mdi-arrow-right"
-      class="text-dark-grey"
-      @click="setActiveAtlas"
-    ></v-btn>
+    <v-btn size="small" icon="$arrowRight" class="text-dark-grey" @click="setActiveAtlas"></v-btn>
   </div>
 </template>
 <script setup lang="ts">

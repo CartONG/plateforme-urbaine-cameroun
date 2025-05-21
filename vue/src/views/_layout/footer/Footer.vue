@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="Footer__adressCtn">
-            <v-icon icon="mdi-map-marker-outline"></v-icon>
+            <v-icon icon="$mapMarkerOutline"></v-icon>
             <div class="Footer__adress">
               <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
               <span>Quartier Golf Bastos</span>
@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="Footer__adressCtn">
-            <v-icon icon="mdi-phone-outline"></v-icon>
+            <v-icon icon="$phoneOutline"></v-icon>
             <div class="Footer__adress">
               <span>00 237 6 52 26 66 18</span>
             </div>
@@ -45,8 +45,8 @@
             color="main-blue"
             class="Footer__btn"
             variant="flat"
-            prepend-icon="mdi-email-outline"
-            append-icon="mdi-arrow-right"
+            prepend-icon="$emailOutline"
+            append-icon="$arrowRight"
             onclick="location.href='mailto:plateformeurbaine@gmail.com';"
             >{{ $t('footer.email') }}</v-btn
           >

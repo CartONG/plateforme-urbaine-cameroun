@@ -26,7 +26,7 @@
         <template v-if="!(item as User).isValidated">
           <v-btn
             size="small"
-            icon="mdi-arrow-right"
+            icon="$arrowRight"
             class="text-main-blue"
             @click="editUser(item as User)"
           ></v-btn>
@@ -34,31 +34,31 @@
         <template v-else>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_ACTORS)"
-            icon="mdi-contacts"
+            icon="$contacts"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_PROJECTS)"
-            icon="mdi-rocket-launch"
+            icon="$rocketLaunch"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_DATA)"
-            icon="mdi-database-arrow-down"
+            icon="$databaseArrowDown"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_RESSOURCES)"
-            icon="mdi-account-group"
+            icon="$accountGroup"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-btn
             density="comfortable"
-            icon="mdi-pencil-outline"
+            icon="$pencilOutline"
             @click="editUser(item as User)"
             :disabled="(item as User).roles.includes(UserRoles.ADMIN)"
             class="disabled-white"
@@ -69,12 +69,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import AdminTable from '@/components/admin/AdminTable.vue'
+import AdminTopBar from '@/components/admin/AdminTopBar.vue'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
+import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
 import { computed, onBeforeMount, ref } from 'vue'
-import AdminTopBar from '@/components/admin/AdminTopBar.vue'
-import AdminTable from '@/components/admin/AdminTable.vue'
-import type { User } from '@/models/interfaces/auth/User'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
 const adminStore = useAdminStore()
 onBeforeMount(() => {
   adminStore.getMembers()
