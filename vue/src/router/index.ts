@@ -1,21 +1,20 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/home/HomeView.vue'
-import { useApplicationStore } from '@/stores/applicationStore'
-import ActorProfile from '@/views/actors/ActorSheetView.vue'
-import AdminMembers from '@/views/admin/components/AdminMembers.vue'
-import AdminContent from '@/views/admin/components/AdminContent.vue'
-import AdminComments from '@/views/admin/components/AdminComments.vue'
-import { useAdminStore } from '@/stores/adminStore'
 import { AdministrationPanels } from '@/models/enums/app/AdministrationPanels'
 import { DialogKey } from '@/models/enums/app/DialogKey'
-import { useProjectStore } from '@/stores/projectStore'
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
-import { useActorsStore } from '@/stores/actorsStore'
 import type { Actor } from '@/models/interfaces/Actor'
-import { useUserStore } from '@/stores/userStore'
 import { i18n } from '@/plugins/i18n'
-import AdminMaps from '@/views/admin/components/AdminMaps.vue'
+import { useActorsStore } from '@/stores/actorsStore'
+import { useAdminStore } from '@/stores/adminStore'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useMyMapStore } from '@/stores/myMapStore'
+import { useProjectStore } from '@/stores/projectStore'
+import { useUserStore } from '@/stores/userStore'
+import AdminComments from '@/views/admin/components/AdminComments.vue'
+import AdminContent from '@/views/admin/components/AdminContent.vue'
+import AdminMaps from '@/views/admin/components/AdminMaps.vue'
+import AdminMembers from '@/views/admin/components/AdminMembers.vue'
+import HomeView from '@/views/home/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,12 +37,20 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.actors')}`,
       name: 'actors',
-      component: () => import('@/views/actors/ActorListView.vue')
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/actors/ActorListView.vue')
+      }
     },
     {
       path: `/${i18n.t('routes.actors')}/:slug`,
       name: 'actorProfile',
-      component: ActorProfile,
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/actors/ActorSheetView.vue')
+      },
       beforeEnter: async (to, from, next) => {
         const actorsStore = useActorsStore()
         const actor: Actor | undefined = actorsStore.actors.find(
@@ -58,7 +65,11 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.projects')}`,
       name: 'projects',
-      component: () => import('@/views/projects/ProjectListView.vue'),
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/projects/ProjectListView.vue')
+      },
       beforeEnter: (to, from, next) => {
         const projectStore = useProjectStore()
         projectStore.isProjectMapFullWidth = to.query.type === ProjectListDisplay.MAP ? true : false
@@ -69,7 +80,11 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.projects')}/:slug`,
       name: 'projectPage',
-      component: () => import('@/views/projects/ProjectSheetView.vue'),
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/projects/ProjectSheetView.vue')
+      },
       beforeEnter: async (to, from, next) => {
         const projectStore = useProjectStore()
         await projectStore.loadProjectBySlug(to.params.slug)
@@ -241,16 +256,16 @@ router.beforeEach((to, from, next) => {
 })
 declare global {
   interface Window {
-    goatcounter: any;
+    goatcounter: any
   }
 }
-// Add manual goat counter analytics for SPA https://www.goatcounter.com/help/spa 
+// Add manual goat counter analytics for SPA https://www.goatcounter.com/help/spa
 // @ts-ignore
 if (import.meta.env.VITE_GOAT_COUNTER_NAMESPACE != null) {
   router.afterEach((to) => {
     if (window.goatcounter && typeof window.goatcounter.count === 'function') {
       window.goatcounter.count({
-        path: to.fullPath,
+        path: to.fullPath
       })
     }
   })

@@ -68,6 +68,7 @@ import ProjectCard from '@/views/projects/components/ProjectCard.vue'
 import ProjectMap from '@/views/projects/components/ProjectMap.vue'
 import { computed, onBeforeMount, ref, type Ref } from 'vue'
 const userStore = useUserStore()
+const applicationStore = useApplicationStore()
 const projectStore = useProjectStore()
 
 const sortOptions = Object.values(SortKey).map((key) => {
@@ -85,7 +86,11 @@ const setSortKey = (key: SortKey) => {
   projectStore.sortingProjectsSelectedMethod = key
 }
 
-onBeforeMount(async () => await projectStore.getAll())
+onBeforeMount(async () => {
+  applicationStore.isLoading = true
+  await projectStore.getAll()
+  applicationStore.isLoading = false
+})
 
 const orderedProjects = computed(() => projectStore.orderedProjects)
 const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)

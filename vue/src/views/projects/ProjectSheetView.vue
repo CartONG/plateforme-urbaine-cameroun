@@ -112,6 +112,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
 import router from '@/router'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
@@ -151,6 +152,7 @@ onBeforeRouteLeave(() => {
 
 onMounted(async () => {
   await loadSimilarProjects()
+  useApplicationStore().isLoading = false
 })
 
 watch(

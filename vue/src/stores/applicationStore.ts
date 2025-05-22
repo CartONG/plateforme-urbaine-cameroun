@@ -1,21 +1,22 @@
-import { computed, ref } from 'vue'
-import { defineStore } from 'pinia'
+import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
+import { DialogKey } from '@/models/enums/app/DialogKey'
+import { ItemType } from '@/models/enums/app/ItemType'
 import { StoresList } from '@/models/enums/app/StoresList'
-import { NavigationTabsService } from '@/services/application/NavigationTabsService'
+import type { LikesList } from '@/models/interfaces/LikesList'
+import type { Notification } from '@/models/interfaces/Notification'
 import { BreadcrumbsService } from '@/services/application/BreadcrumbsService'
+import { NavigationTabsService } from '@/services/application/NavigationTabsService'
+import { LikeService } from '@/services/likeSystem/LikeService'
+import { useProjectStore } from '@/stores/projectStore'
+import { defineStore } from 'pinia'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
-import { useProjectStore } from '@/stores/projectStore'
-import { DialogKey } from '@/models/enums/app/DialogKey'
-import type { Ref } from 'vue'
-import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
-import type { LikesList } from '@/models/interfaces/LikesList'
-import { LikeService } from '@/services/likeSystem/LikeService'
-import type { Notification } from '@/models/interfaces/Notification'
-import { ItemType } from '@/models/enums/app/ItemType'
 
 export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
   const { mobile } = useDisplay()
+  const isLoading = ref(false)
   const activeTab = ref(0)
   const activeDialog: Ref<DialogKey | null> = ref(null)
   const showEditContentDialog = ref(false)
@@ -62,6 +63,7 @@ export const useApplicationStore = defineStore(StoresList.APPLICATION, () => {
 
   return {
     mobile,
+    isLoading,
     notificationPile,
     activeTab,
     activeDialog,

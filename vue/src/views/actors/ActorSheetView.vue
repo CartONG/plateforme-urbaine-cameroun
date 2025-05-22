@@ -126,6 +126,7 @@ watchEffect(() => {
 })
 
 onMounted(async () => {
+  appStore.isLoading = true
   const route = useRoute()
   await actorsStore.getActors()
   watchEffect(() => {
@@ -135,6 +136,9 @@ onMounted(async () => {
           (actor) => actor.slug === route.params.slug
         )
         actorsStore.setSelectedActor(actor?.id as string)
+        appStore.isLoading = false
+      } else {
+        appStore.isLoading = false
       }
     }
   })

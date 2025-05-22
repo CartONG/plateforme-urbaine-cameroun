@@ -1,4 +1,5 @@
 <template>
+  <Loader v-if="appStore.isLoading" />
   <div class="App" :is-100-vh="appStore.is100vh" :is-light-header="appStore.isLightHeader">
     <Header v-if="!appStore.isFullViewport" />
     <div
@@ -35,6 +36,7 @@ import Header from '@/views/_layout/header/Header.vue'
 import NotificationBox from '@/views/_layout/notification/NotificationBox.vue'
 import { onBeforeMount } from 'vue'
 import { RouterView } from 'vue-router'
+import Loader from './components/global/Loader.vue'
 import { useThematicStore } from './stores/thematicStore'
 
 const appStore = useApplicationStore()

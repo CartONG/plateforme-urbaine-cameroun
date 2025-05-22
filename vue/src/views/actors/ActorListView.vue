@@ -72,6 +72,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'
 import { useActorsStore } from '@/stores/actorsStore'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
@@ -86,11 +87,14 @@ import { computed, onBeforeMount, ref, type Ref } from 'vue'
 const actorsStore = useActorsStore()
 const userStore = useUserStore()
 const thematicsStore = useThematicStore()
+const applicationStore = useApplicationStore()
 
 onBeforeMount(async () => {
+  applicationStore.isLoading = true
   await actorsStore.getActors()
   await actorsStore.getActorsSelectListContent()
   await thematicsStore.getAll()
+  applicationStore.isLoading = false
 })
 
 const searchQuery = ref('')
