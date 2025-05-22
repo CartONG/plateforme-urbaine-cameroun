@@ -12,7 +12,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@mdi/font": "7.4.47",
+    "@mdi/js": "^7.4.47",
     "@sentry/vue": "^8.41.0",
     "@vee-validate/i18n": "^4.15.0",
     "@vee-validate/zod": "^4.14.7",
