@@ -6,6 +6,7 @@
       <span style="font-size: 14px">{{ actor.category }}</span>
       <div class="ActorCard__logoCtn">
         <img
+          loading="lazy"
           class="ActorCard__logo"
           :src="actor.logo?.contentsFilteredUrl?.thumbnail"
           v-if="actor.logo?.contentsFilteredUrl?.thumbnail"

@@ -81,11 +81,17 @@ import ListHeader from '@/views/_layout/list/ListHeader.vue'
 import ListItems from '@/views/_layout/list/ListItems.vue'
 import ListSortBy from '@/views/_layout/list/ListSortBy.vue'
 import ActorCard from '@/views/actors/components/ActorCard.vue'
-import { computed, ref, type Ref } from 'vue'
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 
 const actorsStore = useActorsStore()
 const userStore = useUserStore()
 const thematicsStore = useThematicStore()
+
+onBeforeMount(async () => {
+  await actorsStore.getActors()
+  await actorsStore.getActorsSelectListContent()
+  await thematicsStore.getAll()
+})
 
 const searchQuery = ref('')
 const expertisesItems = actorsStore.actorsExpertises

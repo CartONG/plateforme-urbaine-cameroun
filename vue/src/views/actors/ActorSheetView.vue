@@ -125,8 +125,9 @@ watchEffect(() => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   const route = useRoute()
+  await actorsStore.getActors()
   watchEffect(() => {
     if (actorsStore.dataLoaded) {
       if (actorsStore.selectedActor === null) {
