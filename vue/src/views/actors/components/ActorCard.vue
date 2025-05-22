@@ -19,7 +19,7 @@
       <CommentButton position="Card" :origin="CommentOrigin.ACTOR" :originSlug="actor.slug" />
     </template>
     <template #footer-right>
-      <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>
+      <v-icon class="InfoCard__actionIcon" icon="$arrowRight" color="light-blue"></v-icon>
     </template>
   </InfoCard>
 </template>

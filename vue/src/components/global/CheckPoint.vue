@@ -36,7 +36,7 @@ defineProps<{
     .CheckPoint__icon {
       position: relative;
       background-color: rgb(var(--v-theme-light-yellow));
-      padding: 1.25rem;
+      margin: 1.25rem;
       border-radius: 50%;
     }
   }

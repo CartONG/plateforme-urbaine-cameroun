@@ -206,7 +206,7 @@ const setProjectLayer = async () => {
           margin-right: 0.5rem;
           color: rgb(var(--v-theme-main-blue));
           width: 1rem;
-          background-image: url(@/assets/images/icons/map/$filter.svg);
+          background-image: url(@/assets/images/icons/map/mdi-filter.svg);
         }
 
         .maplibregl-ctrl-text {

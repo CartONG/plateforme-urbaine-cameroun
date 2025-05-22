@@ -124,8 +124,7 @@ defineProps<{
 
   .InfoCard__actionIcon {
     background-color: transparent;
-    padding: 1rem;
-    border-radius: 50%;
+    border-radius: 15%;
     transition: all 0.1s ease-in;
   }
 }

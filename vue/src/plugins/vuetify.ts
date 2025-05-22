@@ -67,6 +67,7 @@ import {
   mdiEyeOutline,
   mdiFacebook,
   mdiFilter,
+  mdiFolder,
   mdiFolderEditOutline,
   mdiHeart,
   mdiHeartOutline,
@@ -104,6 +105,7 @@ export default createVuetify({
     aliases: {
       ...aliases,
       phone: mdiPhone,
+      folder: mdiFolder,
       commentText: mdiCommentText,
       commentTextOutline: mdiCommentTextOutline,
       emailOpenOutline: mdiEmailOpenOutline,

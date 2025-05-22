@@ -273,12 +273,12 @@
     },
     "member": {
       "label": "membre | membre | membres",
-      "icon": "account-group",
+      "icon": "accountGroup",
       "description": ""
     },
     "project": {
       "label": "projet | projet | projets",
-      "icon": "rocket-launch",
+      "icon": "rocketLaunch",
       "description": ""
     },
     "resource": {
@@ -288,7 +288,7 @@
     },
     "data": {
       "label": "donnée | donnée | données",
-      "icon": "database-arrow-down",
+      "icon": "databaseArrowDown",
       "description": ""
     }
   },
