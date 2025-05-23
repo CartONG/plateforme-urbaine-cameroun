@@ -3,3 +3,5 @@ gesdinet_jwt_refresh_token:
     ttl: 2592000
     ttl_update: true
     token_parameter_name: refresh_token
+    cookie:
+      enabled: true
