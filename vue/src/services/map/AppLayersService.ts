@@ -1,19 +1,20 @@
-import { ItemType } from '@/models/enums/app/ItemType'
-import { i18n } from '@/plugins/i18n'
-import { useProjectStore } from '@/stores/projectStore'
-import { computed } from 'vue'
-import LayerService from './LayerService'
+import actorLayerIcon from '@/assets/images/icons/map/actor_icon.png'
 import projectLayerIcon from '@/assets/images/icons/map/project_icon.png'
 import resourceLayerIcon from '@/assets/images/icons/map/resource_icon.png'
-import actorLayerIcon from '@/assets/images/icons/map/actor_icon.png'
-import MapService from './MapService'
+import { ItemType } from '@/models/enums/app/ItemType'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 import type { Layer } from '@/models/interfaces/map/Layer'
 import type { Thematic } from '@/models/interfaces/Thematic'
-import { useMyMapStore } from '@/stores/myMapStore'
+import { i18n } from '@/plugins/i18n'
 import { useActorsStore } from '@/stores/actorsStore'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { useMyMapStore } from '@/stores/myMapStore'
+import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
 import { useThematicStore } from '@/stores/thematicStore'
+import { computed } from 'vue'
+import LayerService from './LayerService'
+import MapService from './MapService'
 
 export class AppLayersService {
   static filteredProjects = computed(() => {
@@ -36,6 +37,7 @@ export class AppLayersService {
     const projectStore = useProjectStore()
     const resourceStore = useResourceStore()
     const thematicStore = useThematicStore()
+    const applicationStore = useApplicationStore()
     const myMapStore = useMyMapStore()
     const actorStore = useActorsStore()
     try {
@@ -51,6 +53,7 @@ export class AppLayersService {
       if (myMapStore.map == null) return
       MapService.isLoaded(myMapStore.map, async () => {
         await this.setPlatformDataLayers()
+        applicationStore.isLoading = false
       })
     } catch (error) {
       console.error('Erreur lors de l’initialisation des couches :', error)

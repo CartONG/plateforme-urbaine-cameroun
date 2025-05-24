@@ -94,7 +94,11 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.resources')}`,
       name: 'resources',
-      component: () => import('@/views/resources/ResourceListView.vue')
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/resources/ResourceListView.vue')
+      }
     },
     {
       path: `/${i18n.t('routes.services')}`,
@@ -104,7 +108,11 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.map')}`,
       name: 'map',
-      component: () => import('@/views/map/MyMapView.vue'),
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/map/MyMapView.vue')
+      },
       beforeEnter: (to, from, next) => {
         const myMapStore = useMyMapStore()
         myMapStore.activeItemId = to.query.item ? to.query.item.toString() : null

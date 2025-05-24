@@ -82,6 +82,7 @@ import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
 import type { Resource } from '@/models/interfaces/Resource'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useResourceStore } from '@/stores/resourceStore'
 import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
@@ -98,6 +99,7 @@ import { useRoute } from 'vue-router'
 const resourceStore = useResourceStore()
 const userStore = useUserStore()
 const thematicsStore = useThematicStore()
+const appStore = useApplicationStore()
 const route = useRoute()
 
 const thematicsItems = computed(() => thematicsStore.thematics)
@@ -110,6 +112,7 @@ const selectedResourceTypes: Ref<ResourceType[]> = ref([])
 onMounted(async () => {
   await resourceStore.getAll()
   await thematicsStore.getAll()
+  appStore.isLoading = false
 
   initRouteFilters()
 })
