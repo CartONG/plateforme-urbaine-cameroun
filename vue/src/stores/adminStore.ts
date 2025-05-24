@@ -2,10 +2,10 @@ import { AdministrationPanels } from '@/models/enums/app/AdministrationPanels'
 import { StoresList } from '@/models/enums/app/StoresList'
 import type { User } from '@/models/interfaces/auth/User'
 import { UsersService } from '@/services/application/UsersService'
+import { UserService } from '@/services/userAndAuth/UserService'
 import { defineStore } from 'pinia'
 import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
 import { useApplicationStore } from './applicationStore'
-import { UserService } from '@/services/userAndAuth/UserService'
 
 export const useAdminStore = defineStore(StoresList.ADMIN, () => {
   // AdminPanel is used for navigation in extension panels component
@@ -17,7 +17,7 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
 
   const appMembers = ref([])
   const getMembers = async () => {
-    appMembers.value = await UsersService.getMembers()
+    appMembers.value = await UsersService.getMembers(false)
   }
 
   async function createUser(user: Partial<User>) {

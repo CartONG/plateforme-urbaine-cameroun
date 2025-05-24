@@ -182,6 +182,7 @@ import { InputImageValidator } from '@/services/files/InputImageValidator'
 import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useActorsStore } from '@/stores/actorsStore'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
 import { useUserStore } from '@/stores/userStore'
@@ -190,6 +191,7 @@ const userStore = useUserStore()
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
+const applicationStore = useApplicationStore()
 
 const isResetPasswordSent = ref()
 const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
@@ -229,6 +231,7 @@ function setRolesStatus() {
 
 onMounted(() => {
   setRolesStatus()
+  applicationStore.isLoading = false
   watch(
     () => requestedRoles,
     () => {

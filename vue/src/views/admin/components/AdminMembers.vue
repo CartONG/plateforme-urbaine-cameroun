@@ -74,11 +74,8 @@ import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, ref } from 'vue'
 const adminStore = useAdminStore()
-onBeforeMount(() => {
-  adminStore.getMembers()
-})
 
 function createUser() {
   adminStore.setUserEditionMode(null)

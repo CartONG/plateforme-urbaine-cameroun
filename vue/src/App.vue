@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import DialogController from '@/components/global/DialogController.vue'
-import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
 import Footer from '@/views/_layout/footer/Footer.vue'
@@ -37,12 +36,9 @@ import NotificationBox from '@/views/_layout/notification/NotificationBox.vue'
 import { onBeforeMount } from 'vue'
 import { RouterView } from 'vue-router'
 import Loader from './components/global/Loader.vue'
-import { useThematicStore } from './stores/thematicStore'
 
 const appStore = useApplicationStore()
-const actorsStore = useActorsStore()
 const userStore = useUserStore()
-const thematicStore = useThematicStore()
 onBeforeMount(async () => {
   await userStore.checkAuthenticated()
   await appStore.getLikesList()

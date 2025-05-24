@@ -122,10 +122,16 @@ const router = createRouter({
     {
       path: `/${i18n.t('routes.myAccount')}`,
       name: 'userAccount',
-      component: () => import('@/views/member/MemberView.vue'),
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/member/MemberView.vue')
+      },
       beforeEnter: (to, from, next) => {
         const userStore = useUserStore()
+        const applicationStore = useApplicationStore()
         if (!userStore.userIsLogged) {
+          applicationStore.isLoading = false
           next({ path: '/' })
         } else {
           next()
@@ -142,7 +148,11 @@ const router = createRouter({
           name: 'adminUsers'
         }
       },
-      component: () => import('@/views/admin/AdminView.vue'),
+      component: () => {
+        const applicationStore = useApplicationStore()
+        applicationStore.isLoading = true
+        return import('@/views/admin/AdminView.vue')
+      },
       beforeEnter: (to, from, next) => {
         if (import.meta.env.MODE !== 'production') {
           next()
