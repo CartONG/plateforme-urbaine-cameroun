@@ -215,6 +215,7 @@
     "delete": "Supprimer",
     "or": "OU",
     "errors": "Le formulaire n'est pas valide",
+    "submitting": "Envoi en cours, merci de patienter",
     "errorMessages": {
       "required": "Ce champs est requis",
       "minlength": "Ce champs doit avoir au moins {min} caractères",

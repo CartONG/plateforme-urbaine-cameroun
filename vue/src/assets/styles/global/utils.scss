@@ -22,6 +22,13 @@
   }
 }
 
+.text-warning {
+  color: rgb(var(--v-theme-main-red));
+  font-weight: 600;
+  font-style: italic;
+  text-decoration: underline;
+}
+
 :root {
   .half-circle {
     --dim-half-circle-more: 0rem;

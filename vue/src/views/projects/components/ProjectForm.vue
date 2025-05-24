@@ -391,6 +391,7 @@
     </template>
     <template #footer-left>
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
+      <span v-show="isSubmitting" class="text-warning ml-3">{{ $t('forms.submitting') }}</span>
     </template>
     <template #footer-right>
       <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
