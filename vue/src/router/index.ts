@@ -3,6 +3,7 @@ import { DialogKey } from '@/models/enums/app/DialogKey'
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
 import type { Actor } from '@/models/interfaces/Actor'
 import { i18n } from '@/plugins/i18n'
+import { pinia } from '@/plugins/index'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminStore } from '@/stores/adminStore'
 import { useApplicationStore } from '@/stores/applicationStore'
@@ -38,7 +39,7 @@ const router = createRouter({
       path: `/${i18n.t('routes.actors')}`,
       name: 'actors',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/actors/ActorListView.vue')
       }
@@ -47,12 +48,12 @@ const router = createRouter({
       path: `/${i18n.t('routes.actors')}/:slug`,
       name: 'actorProfile',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/actors/ActorSheetView.vue')
       },
       beforeEnter: async (to, from, next) => {
-        const actorsStore = useActorsStore()
+        const actorsStore = useActorsStore(pinia)
         const actor: Actor | undefined = actorsStore.actors.find(
           (actor) => actor.slug === to.params.slug
         )
@@ -66,12 +67,12 @@ const router = createRouter({
       path: `/${i18n.t('routes.projects')}`,
       name: 'projects',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/projects/ProjectListView.vue')
       },
       beforeEnter: (to, from, next) => {
-        const projectStore = useProjectStore()
+        const projectStore = useProjectStore(pinia)
         projectStore.isProjectMapFullWidth = to.query.type === ProjectListDisplay.MAP ? true : false
         projectStore.activeProjectId = to.query.project ? to.query.project.toString() : null
         next()
@@ -81,12 +82,12 @@ const router = createRouter({
       path: `/${i18n.t('routes.projects')}/:slug`,
       name: 'projectPage',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/projects/ProjectSheetView.vue')
       },
       beforeEnter: async (to, from, next) => {
-        const projectStore = useProjectStore()
+        const projectStore = useProjectStore(pinia)
         await projectStore.loadProjectBySlug(to.params.slug)
         next()
       }
@@ -95,7 +96,7 @@ const router = createRouter({
       path: `/${i18n.t('routes.resources')}`,
       name: 'resources',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/resources/ResourceListView.vue')
       }
@@ -109,7 +110,7 @@ const router = createRouter({
       path: `/${i18n.t('routes.map')}`,
       name: 'map',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/map/MyMapView.vue')
       },
@@ -123,13 +124,16 @@ const router = createRouter({
       path: `/${i18n.t('routes.myAccount')}`,
       name: 'userAccount',
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/member/MemberView.vue')
       },
-      beforeEnter: (to, from, next) => {
+      beforeEnter: async (to, from, next) => {
         const userStore = useUserStore()
-        const applicationStore = useApplicationStore()
+        if (!userStore.loginCheck) {
+          await userStore.checkAuthenticated()
+        }
+        const applicationStore = useApplicationStore(pinia)
         if (!userStore.userIsLogged) {
           applicationStore.isLoading = false
           next({ path: '/' })
@@ -142,27 +146,26 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       redirect: () => {
-        const adminStore = useAdminStore()
+        const adminStore = useAdminStore(pinia)
         adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS
         return {
           name: 'adminUsers'
         }
       },
       component: () => {
-        const applicationStore = useApplicationStore()
+        const applicationStore = useApplicationStore(pinia)
         applicationStore.isLoading = true
         return import('@/views/admin/AdminView.vue')
       },
-      beforeEnter: (to, from, next) => {
-        if (import.meta.env.MODE !== 'production') {
-          next()
+      beforeEnter: async (to, from, next) => {
+        const userStore = useUserStore(pinia)
+        if (!userStore.loginCheck) {
+          await userStore.checkAuthenticated()
+        }
+        if (!userStore.userIsAdmin()) {
+          next({ path: '/' })
         } else {
-          const userStore = useUserStore()
-          if (!userStore.userIsAdmin()) {
-            next({ path: '/' })
-          } else {
-            next()
-          }
+          next()
         }
       },
       children: [
