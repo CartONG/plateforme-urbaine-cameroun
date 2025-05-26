@@ -24,14 +24,12 @@ const onFailedRefresh = (error: any) => {
 }
 
 const refreshAuthToken = async () => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     '/api/token/refresh',
     {},
     {
-      baseURL: 'https://' + window.location.hostname,
-      headers: {
-        Accept: 'application/json'
-      }
+      headers: { Accept: 'application/json' },
+      withCredentials: true
     }
   )
 
