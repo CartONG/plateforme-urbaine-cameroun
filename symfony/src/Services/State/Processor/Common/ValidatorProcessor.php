@@ -3,6 +3,7 @@
 namespace App\Services\State\Processor\Common;
 
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\State\ProcessorInterface;
 use App\Model\Enums\UserRoles;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,6 +20,11 @@ class ValidatorProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
+        
+        if ($operation instanceof Patch) {
+            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+        }
+
         if (!isset($data->isValidated) || false == $data->getIsValidated()) {
             if ($this->security->isGranted(UserRoles::ROLE_ADMIN)) {
                 $data->setIsValidated(true);
