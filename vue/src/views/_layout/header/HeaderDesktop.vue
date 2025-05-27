@@ -113,6 +113,7 @@ const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
               position: relative;
               height: $dim-logo;
               transform: translateY(calc(-1 * var(--dim-banner-h)));
+              border-radius: 50%;
             }
           }
 

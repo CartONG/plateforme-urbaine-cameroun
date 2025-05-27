@@ -64,9 +64,9 @@
 </template>
 <script setup lang="ts">
 import { NavigationTabsService } from '@/services/application/NavigationTabsService'
-import LoginButton from './LoginButton.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { ref } from 'vue'
+import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
 const showMobileMenu = ref(false)
@@ -84,10 +84,16 @@ const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
       max-height: 30rem;
       height: 60vh;
     }
+    .Header__bannerLink {
+      display: flex;
+      align-items: center;
+      color: rgb(var(--v-theme-main-blue));
+      text-decoration: none;
+    }
 
     .Header__appLogo {
       border: 1px solid rgb(var(--v-theme-main-grey));
-      border-radius: 10%;
+      border-radius: 50%;
       padding: 5px;
       height: 40px;
     }
