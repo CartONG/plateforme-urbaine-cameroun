@@ -20,7 +20,6 @@ class ValidatorProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        
         if ($operation instanceof Patch) {
             return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
         }
