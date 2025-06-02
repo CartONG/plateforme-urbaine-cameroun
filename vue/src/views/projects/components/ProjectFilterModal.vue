@@ -2,34 +2,6 @@
   <Modal :title="$t('projects.popup.filters.title')">
     <template #content>
       <div class="Modal__block">
-        <label class="Modal__label">{{ $t('projects.popup.filters.projectOwner.label') }}</label>
-        <v-autocomplete
-          variant="outlined"
-          hide-details="auto"
-          density="compact"
-          :placeholder="$t('placeholders.all')"
-          v-model="projectStore.filters.contractingOrganisations"
-          :items="contractingOrganisations"
-          item-title="name"
-          item-value="id"
-          multiple
-        ></v-autocomplete>
-      </div>
-      <div class="Modal__block">
-        <label class="Modal__label">{{ $t('projects.popup.filters.financial.label') }}</label>
-        <v-autocomplete
-          variant="outlined"
-          hide-details="auto"
-          density="compact"
-          :placeholder="$t('placeholders.all')"
-          v-model="projectStore.filters.donors"
-          :items="donors"
-          item-title="name"
-          item-value="id"
-          multiple
-        ></v-autocomplete>
-      </div>
-      <div class="Modal__block">
         <label class="Modal__label">{{ $t('projects.popup.filters.beneficiaries.label') }}</label>
         <v-chip-group
           v-model="projectStore.filters.beneficiaryTypes"
@@ -111,7 +83,6 @@ import Modal from '@/components/global/Modal.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { Status } from '@/models/enums/contents/Status'
-import { uniqueArray } from '@/services/utils/UtilsService'
 import { useProjectStore } from '@/stores/projectStore'
 import { useThematicStore } from '@/stores/thematicStore'
 import { computed, onBeforeMount } from 'vue'
@@ -120,12 +91,6 @@ const thematicsStore = useThematicStore()
 onBeforeMount(async () => await thematicsStore.getAll())
 
 const projectStore = useProjectStore()
-const contractingOrganisations = computed(() =>
-  uniqueArray(projectStore.projects.map((project) => project.contractingOrganisation))
-)
-const donors = computed(() =>
-  uniqueArray(projectStore.projects.map((project) => project.donors).flat())
-)
 const thematics = computed(() => thematicsStore.thematics)
 
 const resetFilters = () => {

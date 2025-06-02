@@ -135,10 +135,6 @@
           <v-btn type="submit" color="main-red show-sm" :loading="isSubmitting" class="w-100">{{
             $t('account.save')
           }}</v-btn>
-          <BasicCard icon="mdi-pencil-outline" class="mt-6">
-            <span class="ml-2">{{ $t('header.content') }}</span>
-          </BasicCard>
-          <v-divider></v-divider>
           <BasicCard
             icon="mdi-plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_ACTORS)"
@@ -152,9 +148,6 @@
             @click="projectStore.isProjectFormShown = true"
           >
             <span class="ml-2">{{ $t('header.addProject') }}</span>
-          </BasicCard>
-          <BasicCard icon="mdi-plus" v-if="userStore.userHasRole(UserRoles.EDITOR_DATA)">
-            <span class="ml-2">{{ $t('header.addData') }}</span>
           </BasicCard>
           <BasicCard
             icon="mdi-plus"

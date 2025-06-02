@@ -20,7 +20,9 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('projects.form.fields.description.label') }}</label>
+          <label class="Form__label required">{{
+            $t('projects.form.fields.description.label')
+          }}</label>
           <v-textarea
             variant="outlined"
             :placeholder="$t('projects.form.fields.description.label')"
@@ -42,7 +44,7 @@
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
           <v-textarea
             variant="outlined"
-            :rows="1"
+            :rows="4"
             :placeholder="$t('projects.form.fields.deliverables.label')"
             v-model="form.deliverables.value.value"
             :error-messages="form.deliverables.errorMessage.value"
@@ -86,16 +88,9 @@
             @blur="form.status.handleChange(form.status.value.value)"
           />
         </div>
-        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
-        <FormSectionTitle :text="$t('projects.form.section.location')" />
-        <LocationSelector
-          @update:model-value="form.geoData.handleChange"
-          v-model="form.geoData.value.value as GeoData"
-          :error-message="form.geoData.errorMessage.value"
-        />
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
-        <FormSectionTitle :text="$t('projects.form.section.localization')" />
+        <FormSectionTitle :text="$t('projects.form.section.adminScope')" />
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.adminScope') }}</label>
           <v-select
@@ -150,6 +145,14 @@
           ></v-autocomplete>
         </div>
 
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
+        <FormSectionTitle :text="$t('projects.form.section.localization')" />
+        <LocationSelector
+          @update:model-value="form.geoData.handleChange"
+          v-model="form.geoData.value.value as GeoData"
+          :error-message="form.geoData.errorMessage.value"
+        />
+
         <FormSectionTitle :text="$t('projects.form.section.thematics')" />
         <v-select
           density="compact"
@@ -164,9 +167,21 @@
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherThematicIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherThematic')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherThematic.value.value"
+            :error-messages="form.otherThematic.errorMessage.value"
+            @blur="form.otherThematic.handleChange"
+          />
+        </div>
 
         <FormSectionTitle :text="$t('projects.form.section.beneficiaryTypes')" />
-        <v-select
+        <v-autocomplete
           density="compact"
           variant="outlined"
           multiple
@@ -179,40 +194,112 @@
           @blur="form.beneficiaryTypes.handleChange(form.beneficiaryTypes.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherBeneficiaryIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherBeneficiary')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherBeneficiary.value.value"
+            :error-messages="form.otherBeneficiary.errorMessage.value"
+            @blur="form.otherBeneficiary.handleChange"
+          />
+        </div>
 
         <FormSectionTitle :text="$t('projects.form.section.financial')" />
         <v-select
           density="compact"
           variant="outlined"
           multiple
-          v-model="form.donors.value.value as Organisation[]"
-          :items="projectStore.donors"
+          v-model="form.financingTypes.value.value as ProjectFinancingType[]"
+          :items="Object.values(ProjectFinancingType)"
           :placeholder="$t('projects.form.section.financial')"
-          :item-title="(item) => item.name"
-          item-value="@id"
-          :error-messages="form.donors.errorMessage.value"
-          @blur="form.donors.handleChange(form.donors.value.value)"
+          :item-title="(item) => $t('projects.financing.' + item)"
+          :item-value="(item) => item"
+          :error-messages="form.financingTypes.errorMessage.value"
+          @blur="form.financingTypes.handleChange(form.financingTypes.value.value)"
           return-object
         />
+        <div class="Form__fieldCtn" v-if="otherFinancialTypeIsSelected">
+          <label class="Form__label conditionnal">{{
+            $t('projects.form.section.otherFinancingType')
+          }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherFinancingType.value.value"
+            :error-messages="form.otherFinancingType.errorMessage.value"
+            @blur="form.otherFinancingType.handleChange"
+          />
+        </div>
 
-        <FormSectionTitle :text="$t('projects.form.section.contractingOrganisation')" />
+        <v-tooltip location="start" :text="$t('projects.form.section.actorInChargeDisclaimer')">
+          <template v-slot:activator="{ props }">
+            <div>
+              <FormSectionTitle :text="$t('projects.form.section.actorInCharge')" v-bind="props" />
+              <div class="d-flex text-caption">
+                {{ $t('projects.form.alterTexts.noActorInCharge') }}
+                <v-checkbox
+                  hide-details
+                  density="compact"
+                  class="ml-1 mt-0 pa-0"
+                  :ripple="false"
+                  v-model="projectHasNoActorInCharge"
+                ></v-checkbox>
+              </div>
+            </div>
+          </template>
+        </v-tooltip>
+
         <v-select
+          v-if="!projectHasNoActorInCharge"
+          multiple
           density="compact"
           variant="outlined"
-          v-model="form.contractingOrganisation.value.value as Organisation"
-          :items="projectStore.contractingOrganisations"
-          :placeholder="$t('projects.form.section.contractingOrganisation')"
+          v-model="form.actorsInCharge.value.value as Partial<Actor>[]"
+          :items="actors"
+          :placeholder="$t('projects.form.section.actorInCharge')"
           :item-title="(item) => item.name"
           item-value="@id"
-          :error-messages="form.contractingOrganisation.errorMessage.value"
-          @blur="
-            form.contractingOrganisation.handleChange(form.contractingOrganisation.value.value)
-          "
+          :error-messages="form.actorsInCharge.errorMessage.value"
+          @blur="form.actorsInCharge.handleChange(form.actorsInCharge.value.value)"
           return-object
         />
+        <v-text-field
+          v-else
+          density="compact"
+          variant="outlined"
+          :placeholder="$t('projects.form.fields.otherActor.label')"
+          v-model="form.otherActorInCharge.value.value"
+          :error-messages="
+            projectHasNoActorInCharge && !form.otherActorInCharge.value.value
+              ? $t('projects.form.errorMessages.noActor')
+              : ''
+          "
+          @blur="form.otherActorInCharge.handleChange"
+        />
 
-        <FormSectionTitle :text="$t('projects.form.section.projectOwner')" />
+        <v-tooltip location="start" :text="$t('projects.form.section.projectOwnerDisclaimer')">
+          <template v-slot:activator="{ props }">
+            <div>
+              <FormSectionTitle :text="$t('projects.form.section.projectOwner')" v-bind="props" />
+              <div class="d-flex text-caption">
+                {{ $t('projects.form.alterTexts.noProjectOwner') }}
+                <v-checkbox
+                  hide-details
+                  density="compact"
+                  class="ml-1 mt-0 pa-0"
+                  :ripple="false"
+                  v-model="projectHasNoOwner"
+                ></v-checkbox>
+              </div>
+            </div>
+          </template>
+        </v-tooltip>
+
         <v-select
+          v-if="!projectHasNoOwner"
           density="compact"
           variant="outlined"
           v-model="form.actor.value.value as Actor"
@@ -220,9 +307,25 @@
           item-title="name"
           item-value="@id"
           :error-messages="form.actor.errorMessage.value"
+          :placeholder="$t('projects.form.section.projectOwner')"
           @blur="form.actor.handleChange(form.actor.value.value)"
+          clearable
           return-object
         />
+        <v-text-field
+          v-else
+          density="compact"
+          variant="outlined"
+          v-model="form.otherActor.value.value"
+          :placeholder="$t('projects.form.fields.otherActor.label')"
+          :error-messages="
+            projectHasNoOwner && !form.otherActor.value.value
+              ? $t('projects.form.errorMessages.noActor')
+              : ''
+          "
+          @blur="form.otherActor.handleChange"
+        />
+
         <FormSectionTitle :text="$t('projects.form.section.focalPoint')" />
 
         <div class="Form__fieldCtn">
@@ -276,9 +379,9 @@
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
-        <FormSectionTitle :text="$t('actors.form.images')" />
+        <FormSectionTitle :text="$t('projects.form.section.projectImages')" />
         <ImagesLoader @updateFiles="handleImagesUpdate" :existingImages="existingImages" />
-        <FormSectionTitle :text="$t('actors.form.partnerImages')" />
+        <FormSectionTitle :text="$t('projects.form.section.partnerLogos')" />
         <ImagesLoader
           @updateFiles="handleImagesPartnerUpdate"
           :existingImages="existingPartnerImages"
@@ -298,39 +401,39 @@
 </template>
 
 <script setup lang="ts">
-import { type Project, type ProjectSubmission } from '@/models/interfaces/Project'
-import { ProjectFormService } from '@/services/projects/ProjectFormService'
-import { useProjectStore } from '@/stores/projectStore'
-import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
-import { computed, onMounted, type Ref, ref } from 'vue'
-import Modal from '@/components/global/Modal.vue'
-import { useThematicStore } from '@/stores/thematicStore'
-import { FormType } from '@/models/enums/app/FormType'
-import type { Thematic } from '@/models/interfaces/Thematic'
-import { useActorsStore } from '@/stores/actorsStore'
-import type { Actor } from '@/models/interfaces/Actor'
-import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
-import { Status } from '@/models/enums/contents/Status'
-import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
-import type { Organisation } from '@/models/interfaces/Organisation'
-import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
-import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
-import { onInvalidSubmit } from '@/services/forms/FormService'
-import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
-import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
-import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
+import LocationSelector from '@/components/forms/LocationSelector.vue'
+import Modal from '@/components/global/Modal.vue'
+import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
+import { FormType } from '@/models/enums/app/FormType'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
+import { Status } from '@/models/enums/contents/Status'
+import type { Actor } from '@/models/interfaces/Actor'
 import type {
   Admin1Boundary,
   Admin2Boundary,
   Admin3Boundary
 } from '@/models/interfaces/AdminBoundaries'
-import { useUserStore } from '@/stores/userStore'
+import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import { type Project, type ProjectSubmission } from '@/models/interfaces/Project'
+import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
-import LocationSelector from '@/components/forms/LocationSelector.vue'
-import { NotificationType } from '@/models/enums/app/NotificationType'
+import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
+import { onInvalidSubmit } from '@/services/forms/FormService'
 import { addNotification } from '@/services/notifications/NotificationService'
+import { ProjectFormService } from '@/services/projects/ProjectFormService'
+import { useActorsStore } from '@/stores/actorsStore'
+import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
+import { useProjectStore } from '@/stores/projectStore'
+import { useThematicStore } from '@/stores/thematicStore'
+import { useUserStore } from '@/stores/userStore'
+import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
+import { computed, onMounted, type Ref, ref } from 'vue'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
@@ -343,6 +446,8 @@ const props = defineProps<{
   project: Project | null
   isShown: boolean
 }>()
+
+const projectHasNoOwner = ref(false)
 
 const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
@@ -363,6 +468,31 @@ const submitLabel = computed(() => {
 
 const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
+
+const otherThematicIsSelected = computed(() => {
+  if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
+    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
+const otherBeneficiaryIsSelected = computed(() => {
+  if (form.beneficiaryTypes.value?.value && Array.isArray(form.beneficiaryTypes.value?.value)) {
+    return (form.beneficiaryTypes.value?.value as BeneficiaryType[]).includes(
+      BeneficiaryType.OTHERS
+    )
+  }
+  return false
+})
+const otherFinancialTypeIsSelected = computed(() => {
+  if (form.financingTypes.value?.value && Array.isArray(form.financingTypes.value?.value)) {
+    return (form.financingTypes.value?.value as ProjectFinancingType[]).includes(
+      ProjectFinancingType.OTHER
+    )
+  }
+  return false
+})
+
+const projectHasNoActorInCharge = ref(false)
 
 const emit = defineEmits(['submitted', 'close'])
 
@@ -390,14 +520,18 @@ const activeAdminLevels = computed(() => {
 onMounted(async () => {
   await Promise.all([
     thematicsStore.getAll(),
-    projectStore.getAllDonors(),
-    projectStore.getAllContractingOrganisations(),
     actorsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
     adminBoundariesStore.getAdmin2(),
     adminBoundariesStore.getAdmin3()
   ])
   if (props.project) {
+    if (props.project.otherActor) {
+      projectHasNoOwner.value = true
+    }
+    if (props.project.otherActorInCharge) {
+      projectHasNoActorInCharge.value = true
+    }
     existingLogo.value = props.project.logo ? [props.project.logo] : []
     existingImages.value = [...props.project.images, ...props.project.externalImages]
     existingHostedImages = props.project.images

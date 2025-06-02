@@ -11,10 +11,9 @@ App\Entity\Project:
     administrativeScopes: 
       - '<(App\Enum\AdministrativeScope::NATIONAL)>'
     beneficiaryTypes: ['<randomElement(<(App\Enum\BeneficiaryType::toArray())>)>']
-    donors: '<numberBetween(1, 2)>x  @organisation_<numberBetween(4, 6)>'
-    contractingOrganisation: '@organisation_<numberBetween(1, 3)>'
+    financingTypes:  ['<(App\Enum\ProjectFinancingType::OWN_FUNDS)>']
     actor: '@actor_*'
-    thematics: '<numberBetween(1, 3)>x @thematic_*'
+    thematics: '<numberBetween(1, 12)>x @thematic_*'
     focalPointName: <firstName()> <lastName()>
     focalPointPosition: <jobTitle()>
     focalPointEmail: <email()>

@@ -19,9 +19,7 @@
         :map-btn-tooltip="$t('actorPage.seeLocation')"
         :createdBy="actor.createdBy"
         @edit="editActor"
-      >
-        <template #mapButton></template>
-      </SheetContentBanner>
+      />
       <div class="SheetView__contentCtn my-6" v-if="actor.description">
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
@@ -64,11 +62,7 @@
       <div class="SheetView__infoCard">
         <div>
           <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
-          <ContactCard
-            :name="actor.contactName"
-            :description="actor.contactPosition"
-            image="https://trustedexecutive.com/wp/wp-content/uploads/2016/06/morpheus-red-pill-blue-pill.jpg"
-          />
+          <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
         </div>
       </div>
     </div>

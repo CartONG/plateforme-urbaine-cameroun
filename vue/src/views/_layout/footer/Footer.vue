@@ -17,11 +17,6 @@
                 class="Footer__contactImg"
               />
               <img
-                src="@/assets/images/footer/twitter.svg"
-                alt="twitter"
-                class="Footer__contactImg"
-              />
-              <img
                 src="@/assets/images/footer/instagram.svg"
                 alt="instagram"
                 class="Footer__contactImg"

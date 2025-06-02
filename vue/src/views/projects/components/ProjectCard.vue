@@ -8,10 +8,10 @@
     <template #content>
       <div class="ProjectCard__content">
         <div class="ProjectCard__block ProjectCard__block--left">
-          <span class="InfoCard__subTitle">{{ project.geoData.name }}</span>
+          <span class="InfoCard__subTitle" v-if="project.geoData">{{ project.geoData.name }}</span>
           <span class="InfoCard__title">{{ project.name }}</span>
           <div class="ProjectCard__infoCtn">
-            <span v-if="project.actor?.name">{{ project.actor.name }}</span>
+            <span v-if="project.actor">{{ project.actor.name }}</span>
             <span v-if="!map" class="ProjectCard__updatedAt"
               >{{ $t('labels.updatedAt') }} {{ getFormattedDate(project) }}</span
             >
@@ -45,15 +45,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Project } from '@/models/interfaces/Project'
-import InfoCard from '@/components/global/InfoCard.vue'
+import CommentButton from '@/components/comments/CommentButton.vue'
 import ChipList from '@/components/content/ChipList.vue'
+import HighlightButton from '@/components/global/HighlightButton.vue'
+import InfoCard from '@/components/global/InfoCard.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
-import { localizeDate } from '@/services/utils/UtilsService'
-import HighlightButton from '@/components/global/HighlightButton.vue'
-import CommentButton from '@/components/comments/CommentButton.vue'
 import { CommentOrigin } from '@/models/interfaces/Comment'
+import type { Project } from '@/models/interfaces/Project'
+import { localizeDate } from '@/services/utils/UtilsService'
 
 defineProps<{
   project: Project | null

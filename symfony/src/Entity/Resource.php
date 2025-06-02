@@ -138,6 +138,13 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?MediaObject $previewImage = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?string $otherType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private ?string $otherThematic = null;
     /**
      * @var Collection<int, Admin1Boundary>
      */
@@ -316,6 +323,18 @@ class Resource
         return $this;
     }
 
+    public function getOtherType(): ?string
+    {
+        return $this->otherType;
+    }
+
+    public function setOtherType(?string $otherType): static
+    {
+        $this->otherType = $otherType;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Admin1Boundary>
      */
@@ -336,6 +355,18 @@ class Resource
     public function removeAdmin1List(Admin1Boundary $admin1List): static
     {
         $this->admin1List->removeElement($admin1List);
+
+        return $this;
+    }
+
+    public function getOtherThematic(): ?string
+    {
+        return $this->otherThematic;
+    }
+
+    public function setOtherThematic(?string $otherThematic): static
+    {
+        $this->otherThematic = $otherThematic;
 
         return $this;
     }

@@ -11,6 +11,17 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      const GOAT_COUNTER_NAMESPACE = "%VITE_GOAT_COUNTER_NAMESPACE%";
+      if (GOAT_COUNTER_NAMESPACE) {
+        const s = document.createElement("script");
+        s.setAttribute("data-goatcounter", "https://%VITE_GOAT_COUNTER_NAMESPACE%.goatcounter.com/count");
+        s.setAttribute("async", "");
+        s.src = "//gc.zgo.at/count.js";
+        document.body.appendChild(s);
+        window.goatcounter = {no_onload: true}
+      }
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -23,7 +23,7 @@
     <AdminTable
       :is-overlay-shown-function="(item) => !(item as Project).isValidated"
       :items="sortedProjects"
-      :tableKeys="['name', 'actor.acronym', 'updatedAt']"
+      :tableKeys="['name', 'status', 'updatedAt']"
       :column-widths="['5%', 'auto', '15%', '15%', '15%']"
     >
       <template #adminTableItemFirst="{ item }">
@@ -65,16 +65,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Project } from '@/models/interfaces/Project'
-import { useProjectStore } from '@/stores/projectStore'
-import { computed, onBeforeMount, ref, type Ref } from 'vue'
-import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
-import { i18n } from '@/plugins/i18n'
-import ProjectForm from '@/views/projects/components/ProjectForm.vue'
-import { FormType } from '@/models/enums/app/FormType'
-import { ProjectService } from '@/services/projects/ProjectService'
+import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import HighlightButton from '@/components/global/HighlightButton.vue'
+import { FormType } from '@/models/enums/app/FormType'
+import type { Project } from '@/models/interfaces/Project'
+import { i18n } from '@/plugins/i18n'
+import { ProjectService } from '@/services/projects/ProjectService'
+import { useProjectStore } from '@/stores/projectStore'
+import ProjectForm from '@/views/projects/components/ProjectForm.vue'
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 
 const projectStore = useProjectStore()
 const sortingProjectsSelectedMethod = ref('isValidated')
@@ -141,9 +141,13 @@ const filteredProjects = computed(() => {
   }
   return projects.value.filter((item: Project) => {
     return (
-      (item.actor.acronym
-        ? item.actor.acronym.toLowerCase().includes(searchQuery.value.toLowerCase())
-        : false) || item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      (item.actor?.acronym &&
+        item.actor.acronym.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (item.actor?.name &&
+        item.actor.name.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (item.otherActor &&
+        item.otherActor.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   })
 })

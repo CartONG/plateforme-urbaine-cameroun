@@ -1,12 +1,12 @@
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
+import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
+import { ResourceType } from '@/models/enums/contents/ResourceType'
 import type { Resource } from '@/models/interfaces/Resource'
+import { i18n } from '@/plugins/i18n'
+import { CommonZodSchema } from '@/services/forms/CommonZodSchema'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useField, useForm } from 'vee-validate'
 import { z } from 'zod'
-import { i18n } from '@/plugins/i18n'
-import { CommonZodSchema } from '@/services/forms/CommonZodSchema'
-import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
-import { ResourceType } from '@/models/enums/contents/ResourceType'
-import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 
 export class ResourceFormService {
   static getForm(resource: Resource | null) {
@@ -17,6 +17,7 @@ export class ResourceFormService {
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         description: zodModels.descriptionRequired,
         type: z.nativeEnum(ResourceType),
+        otherType: z.string().optional(),
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)).optional(),
         admin1List: zodModels.admin1Boundaries.optional(),
         admin2List: zodModels.admin2Boundaries.optional(),
@@ -28,7 +29,8 @@ export class ResourceFormService {
         link: zodModels.website.nullable().optional(),
         format: z.nativeEnum(ResourceFormat),
         author: zodModels.maxLabel.optional(),
-        thematics: zodModels.symfonyRelations
+        thematics: zodModels.symfonyRelations,
+        otherThematic: z.string().optional()
       })
       .refine(
         (schema) => {
@@ -58,6 +60,7 @@ export class ResourceFormService {
       name: useField('name'),
       description: useField('description'),
       type: useField('type'),
+      otherType: useField('otherType'),
       file: useField('file'),
       format: useField('format'),
       administrativeScopes: useField('administrativeScopes'),
@@ -69,6 +72,7 @@ export class ResourceFormService {
       endAt: useField('endAt'),
       author: useField('author'),
       thematics: useField('thematics'),
+      otherThematic: useField('otherThematic'),
       link: useField('link')
     }
 

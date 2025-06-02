@@ -2,6 +2,7 @@
 
 docker/postgres/*
 docker/qgis/data/*
+docker/osm2pgsql/*
 
 .idea
 local.mk

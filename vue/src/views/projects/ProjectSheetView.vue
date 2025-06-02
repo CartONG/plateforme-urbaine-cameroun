@@ -26,17 +26,7 @@
         :map-btn-tooltip="$t('projectPage.seeLocation')"
         :createdBy="project.createdBy"
         @edit="editProject"
-      >
-        <template #mapButton>
-          <v-btn
-            variant="elevated"
-            :to="{ name: 'map' }"
-            class="elevation-1 text-main-blue px-3 mx-2 hide-sm"
-            ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1" />
-            {{ $t('content.createAMap') }}
-          </v-btn>
-        </template>
-      </SheetContentBanner>
+      />
       <ProjectForm
         v-if="isEditable"
         :type="FormType.EDIT"

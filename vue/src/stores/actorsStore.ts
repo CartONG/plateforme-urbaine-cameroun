@@ -10,6 +10,7 @@ import type { Thematic } from '@/models/interfaces/Thematic'
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { i18n } from '@/plugins/i18n'
 import { useUserStore } from '@/stores/userStore'
 import { ItemType } from '@/models/enums/app/ItemType'
 import { DialogKey } from '@/models/enums/app/DialogKey'
@@ -68,23 +69,27 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     useApplicationStore().showEditContentDialog = true
   }
 
+  async function createOrEditActor(actor: ActorSubmission, edit: boolean) {
+    try {
+      actorForSubmission.value = actor
+      if (edit || useUserStore().userIsAdmin()) {
+        await saveActor(actor, edit)
+      } else {
+        actorEdition.active = false
+        useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE
+        useApplicationStore().showEditMessageDialog = ItemType.ACTOR
+      }
+    } catch (error) {
+      addNotification(i18n.t('actors.form.submitError'), NotificationType.ERROR, error as string)
+    }
+  }
+
   function resetActorEditionMode() {
     actorEdition.actor = null
     actorEdition.active = false
     useApplicationStore().showEditContentDialog = false
     useApplicationStore().showEditMessageDialog = false
     actorForSubmission.value = null
-  }
-
-  async function createOrEditActor(actor: ActorSubmission, edit: boolean) {
-    actorForSubmission.value = actor
-    if (edit || useUserStore().userIsAdmin()) {
-      await saveActor(actor, edit)
-    } else {
-      actorEdition.active = false
-      useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE
-      useApplicationStore().showEditMessageDialog = ItemType.ACTOR
-    }
   }
 
   async function saveActor(actor: ActorSubmission, edit: boolean) {
@@ -95,7 +100,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     }
     resetActorEditionMode()
     addNotification(
-      edit ? "L'acteur a bien été modifié" : "L'acteur a bien été ajouté",
+      edit ? i18n.t('actors.form.submitEdit') : i18n.t('actors.form.submitSuccess'),
       NotificationType.SUCCESS
     )
   }
@@ -103,7 +108,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   async function deleteActor(id: string) {
     await ActorsService.deleteActor(id)
     await getActors()
-    addNotification("L'acteur a bien été supprimé", NotificationType.SUCCESS)
+    addNotification(i18n.t('actors.form.delete'), NotificationType.SUCCESS)
   }
 
   const updateActor = (updatedActor: Actor) => {

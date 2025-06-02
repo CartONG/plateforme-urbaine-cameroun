@@ -130,7 +130,7 @@ class GeoData
         return $this;
     }
 
-    #[Groups([Project::GET_PARTIAL, Resource::GET_FULL, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM])]
+    #[Groups([Project::GET_FULL, Project::GET_PARTIAL, Resource::GET_FULL, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM])]
     public function getCoords(): ?array
     {
         return [

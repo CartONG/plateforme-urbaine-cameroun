@@ -3,7 +3,7 @@
     "header": {
       "share": "Partager",
       "search": {
-        "placeholder": "Rechercher un lieu ou une donnée"
+        "placeholder": "Rechercher un lieu"
       },
       "urlTooLong": "La carte ne peut pas être partagée en l'état. Veuillez réduire le nombre de couches.",
       "shareEmailBody": "Cliquez sur le lien ci-dessous pour voir la carte. \n{url}"
@@ -21,7 +21,6 @@
     },
     "rightSidebar": {
       "actions": {
-        "about": "À propos",
         "share": "Partager",
         "downloadLayer": "Télécharger la couche",
         "opacity": "Ajuster la transparence"

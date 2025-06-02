@@ -42,6 +42,16 @@
             :externalImagesLoader="false"
           />
         </div>
+        <div class="Form__fieldCtn">
+          <label class="Form__label">{{ $t('actors.form.description') }}</label>
+          <v-textarea
+            variant="outlined"
+            v-model="form.description.value.value"
+            :error-messages="form.description.errorMessage.value"
+            @blur="form.description.handleChange"
+          />
+        </div>
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.category') }}</label>
@@ -52,6 +62,16 @@
             :items="categoryItems"
             :error-messages="form.category.errorMessage.value"
             @blur="form.category.handleChange"
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="form.category.value.value === ActorsCategories.OTHERS">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherCategory') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherCategory.value.value"
+            :error-messages="form.otherCategory.errorMessage.value"
+            @blur="form.otherCategory.handleChange"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -69,6 +89,16 @@
             return-object
           />
         </div>
+        <div class="Form__fieldCtn" v-if="otherExpertiseIsSelected">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherExpertise') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherExpertise.value.value"
+            :error-messages="form.otherExpertise.errorMessage.value"
+            @blur="form.otherExpertise.handleChange"
+          />
+        </div>
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.thematic') }}</label>
           <v-select
@@ -83,15 +113,16 @@
             @blur="form.thematics.handleChange(form.thematics.value.value)"
             return-object
           />
-          <div class="Form__fieldCtn">
-            <label class="Form__label">{{ $t('actors.form.description') }}</label>
-            <v-textarea
-              variant="outlined"
-              v-model="form.description.value.value"
-              :error-messages="form.description.errorMessage.value"
-              @blur="form.description.handleChange"
-            />
-          </div>
+        </div>
+        <div class="Form__fieldCtn" v-if="otherThematicIsSelected">
+          <label class="Form__label conditionnal">{{ $t('actors.form.otherThematic') }}</label>
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            v-model="form.otherThematic.value.value"
+            :error-messages="form.otherThematic.errorMessage.value"
+            @blur="form.otherThematic.handleChange"
+          />
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
@@ -149,6 +180,7 @@
             return-object
           ></v-autocomplete>
         </div>
+
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <!-- Contact infos -->
@@ -178,6 +210,7 @@
           <v-text-field
             density="compact"
             variant="outlined"
+            placeholder="+237 652 266 618"
             v-model="form.phone.value.value"
             :error-messages="form.phone.errorMessage.value"
             @blur="form.phone.handleChange"
@@ -229,7 +262,9 @@
             @blur="form.officeAddress.handleChange"
           />
         </div>
-        <FormSectionTitle :text="$t('resources.form.section.location')" />
+        <v-divider color="main-grey" class="border-opacity-100"></v-divider>
+
+        <FormSectionTitle :text="$t('actors.form.location')" />
         <LocationSelector
           @update:model-value="form.geoData.handleChange"
           v-model="form.geoData.value.value as GeoData"
@@ -255,35 +290,35 @@
 </template>
 
 <script setup lang="ts">
-import { type Actor, type ActorSubmission } from '@/models/interfaces/Actor'
-import { ActorsFormService } from '@/services/actors/ActorsForm'
-import { useActorsStore } from '@/stores/actorsStore'
-import { useApplicationStore } from '@/stores/applicationStore'
-import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
-import { computed, onMounted, ref, type Ref } from 'vue'
-import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import type { Thematic } from '@/models/interfaces/Thematic'
-import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
-import Modal from '@/components/global/Modal.vue'
-import type { FileObject } from '@/models/interfaces/object/FileObject'
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import LocationSelector from '@/components/forms/LocationSelector.vue'
-import { useThematicStore } from '@/stores/thematicStore'
-import { onInvalidSubmit } from '@/services/forms/FormService'
-import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
-import { i18n } from '@/plugins/i18n'
-import { addNotification } from '@/services/notifications/NotificationService'
+import Modal from '@/components/global/Modal.vue'
+import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { NotificationType } from '@/models/enums/app/NotificationType'
-import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
-import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
+import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
+import { type Actor, type ActorSubmission } from '@/models/interfaces/Actor'
+import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type {
   Admin1Boundary,
   Admin2Boundary,
   Admin3Boundary
 } from '@/models/interfaces/AdminBoundaries'
+import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
+import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import type { Thematic } from '@/models/interfaces/Thematic'
+import { i18n } from '@/plugins/i18n'
+import { ActorsFormService } from '@/services/actors/ActorsForm'
+import { onInvalidSubmit } from '@/services/forms/FormService'
+import { addNotification } from '@/services/notifications/NotificationService'
+import { useActorsStore } from '@/stores/actorsStore'
+import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { useThematicStore } from '@/stores/thematicStore'
+import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 
 const appStore = useApplicationStore()
 const actorsStore = useActorsStore()
@@ -302,6 +337,19 @@ const submitLabel = computed(() => {
   } else {
     return i18n.t('forms.continue')
   }
+})
+
+const otherExpertiseIsSelected = computed(() => {
+  if (form.expertises.value?.value && Array.isArray(form.expertises.value?.value)) {
+    return (form.expertises.value?.value as ActorExpertise[]).map((x) => x.name).includes('Autre')
+  }
+  return false
+})
+const otherThematicIsSelected = computed(() => {
+  if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
+    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+  }
+  return false
 })
 
 const activeAdminLevels = computed(() => {
