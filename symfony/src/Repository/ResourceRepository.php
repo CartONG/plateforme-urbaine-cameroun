@@ -57,7 +57,7 @@ class ResourceRepository extends ServiceEntityRepository
             ->select('r')
             ->where("r.type = '".ResourceType::EVENTS->value."'")
             ->andWhere('r.startAt >= :startOfToday')
-            ->setParameter('startOfToday', new \DateTime('today 00:00:01')) 
+            ->setParameter('startOfToday', new \DateTime('today 00:00:01'))
             ->orderBy('r.startAt', 'ASC')
             ->setMaxResults(3)
             ->getQuery()
