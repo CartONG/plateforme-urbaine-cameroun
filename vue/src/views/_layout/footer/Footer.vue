@@ -10,16 +10,19 @@
                 src="@/assets/images/footer/facebook.svg"
                 alt="facebook"
                 class="Footer__contactImg ml-8"
+                @click="openFacebook"
               />
               <img
                 src="@/assets/images/footer/linkedin.svg"
                 alt="linkedin"
                 class="Footer__contactImg"
+                @click="openLinkedIn"
               />
               <img
                 src="@/assets/images/footer/instagram.svg"
                 alt="instagram"
                 class="Footer__contactImg"
+                @click="openInstagram"
               />
             </div>
           </div>
@@ -96,7 +99,17 @@
   </footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+function openFacebook() {
+  window.open('https://www.facebook.com/share/v/19H64XuEmM/?mibextid=wwXIfr', '_blank')
+}
+function openLinkedIn() {
+  window.open('https://www.linkedin.com/in/plateforme-urbaine-au-cameroun-197077357/', '_blank')
+}
+function openInstagram() {
+  window.open('https://www.instagram.com/reel/DJKM01XqfN8/?igsh=MWNneGYxMDNyemdrOQ==', '_blank')
+}
+</script>
 
 <style lang="scss">
 .Footer {
