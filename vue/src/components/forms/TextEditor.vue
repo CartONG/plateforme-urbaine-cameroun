@@ -1,5 +1,5 @@
 <template>
-  <div class="TextEditor">
+  <div class="TextEditor" :class="{ 'TextEditor--error': errorStatus }">
     <div class="TextEditor__toolbar">
       <v-btn
         :class="{ 'bg-main-blue': editor?.isActive('bold') }"
@@ -28,7 +28,7 @@
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn :class="{ 'bg-main-blue': isHeadingActive }" v-bind="props" size="x-small">
-            H
+            H <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -53,28 +53,47 @@
         </v-list>
       </v-menu>
     </div>
-    <editor-content :editor="editor" class="editor-content" />
+
+    <editor-content :editor="editor" />
+
+    <div v-if="errorStatus" class="TextEditor__errorMessage">
+      {{ Array.isArray(errorMessage) ? errorMessage[0] : errorMessage }}
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import StarterKit from '@tiptap/starter-kit'
 import { Editor, EditorContent } from '@tiptap/vue-3'
-import { computed, onBeforeUnmount, onMounted, type ModelRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch, type ModelRef } from 'vue'
 
-const model: ModelRef<string> = defineModel({ required: true })
+const contentModel: ModelRef<string> = defineModel('contentModel', { required: true })
+const errorMessage: ModelRef<string | string[]> = defineModel('errorMessage', { default: '' })
+const errorStatus: ModelRef<boolean> = defineModel('errorStatus', { default: false })
+
+watch(
+  () => errorStatus.value,
+  (newStatus) => {
+    console.log('Error status changed:', newStatus)
+  }
+)
 
 const editor = new Editor({
   extensions: [StarterKit],
-  content: model
+  content: contentModel,
+  editorProps: {
+    attributes: {
+      class: 'TextEditor__content'
+    }
+  }
 })
 
 editor.on('update', ({ editor }) => {
-  model.value = editor.getHTML()
+  contentModel.value = editor.getHTML()
 })
 
 onMounted(() => {
-  editor.commands.setContent(model.value)
+  editor.commands.setContent(contentModel.value)
 })
 
 // Toggle functions
@@ -99,10 +118,18 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
 .TextEditor {
   display: flex;
   flex-direction: column;
+  border: 1px solid rgb(var(--v-theme-dark-grey));
+  border-radius: 5px;
+}
+.TextEditor:hover {
+  border-color: black;
+}
+.TextEditor--error {
+  border-color: 2px red !important;
 }
 
 .TextEditor__toolbar {
@@ -111,5 +138,15 @@ onBeforeUnmount(() => {
   width: 100%;
   gap: 0.2rem;
   justify-content: center;
+}
+
+.TextEditor__content {
+  min-height: 10rem;
+}
+
+.TextEditor__errorMessage {
+  color: red;
+  font-size: 0.85em;
+  margin: 0.5em;
 }
 </style>
