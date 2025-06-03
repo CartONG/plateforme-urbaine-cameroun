@@ -57,24 +57,23 @@
     <editor-content :editor="editor" />
 
     <div v-if="errorStatus" class="TextEditor__errorMessage">
-      {{ Array.isArray(errorMessage) ? errorMessage[0] : errorMessage }}
+      {{ $t('forms.errorMessages.minlength', { min: minLength }) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import StarterKit from '@tiptap/starter-kit'
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import { computed, onBeforeUnmount, onMounted, watch, type ModelRef } from 'vue'
+import StarterKit from '@tiptap/starter-kit';
+import { Editor, EditorContent } from '@tiptap/vue-3';
+import { computed, onBeforeUnmount, onMounted, type ModelRef } from 'vue';
 
 const contentModel: ModelRef<string> = defineModel('contentModel', { required: true })
-const errorMessage: ModelRef<string | string[]> = defineModel('errorMessage', { default: '' })
-const errorStatus: ModelRef<boolean> = defineModel('errorStatus', { default: false })
-
-watch(
-  () => errorStatus.value,
-  (newStatus) => {
-    console.log('Error status changed:', newStatus)
+const props = withDefaults(
+  defineProps<{
+    minLength?: number
+  }>(),
+  {
+    minLength: 5
   }
 )
 
@@ -92,11 +91,12 @@ editor.on('update', ({ editor }) => {
   contentModel.value = editor.getHTML()
 })
 
+const errorStatus = computed(() => editor.getText().length < props.minLength)
+
 onMounted(() => {
   editor.commands.setContent(contentModel.value)
 })
 
-// Toggle functions
 const toggleBold = () => editor.chain().focus().toggleBold().run()
 const toggleItalic = () => editor.chain().focus().toggleItalic().run()
 const toggleStrike = () => editor.chain().focus().toggleStrike().run()
@@ -129,7 +129,10 @@ onBeforeUnmount(() => {
   border-color: black;
 }
 .TextEditor--error {
-  border-color: 2px red !important;
+  border: 2px solid red;
+}
+.TextEditor--error:hover {
+  border-color: red;
 }
 
 .TextEditor__toolbar {

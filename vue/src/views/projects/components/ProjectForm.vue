@@ -23,13 +23,7 @@
           <label class="Form__label required">{{
             $t('projects.form.fields.description.label')
           }}</label>
-          <v-textarea
-            variant="outlined"
-            :placeholder="$t('projects.form.fields.description.label')"
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            @blur="form.description.handleChange"
-          />
+          <TextEditor v-model:content-model="form.description.value.value" />
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('actors.form.logo') }}</label>
@@ -403,6 +397,7 @@
 <script setup lang="ts">
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import LocationSelector from '@/components/forms/LocationSelector.vue'
+import TextEditor from '@/components/forms/TextEditor.vue'
 import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'

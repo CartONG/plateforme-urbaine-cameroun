@@ -43,13 +43,8 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('actors.form.description') }}</label>
-          <TextEditor
-            :content-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            :error-status="errorStatus"
-            @update:content-model="checkDescriptionChange"
-          />
+          <label class="Form__label required">{{ $t('actors.form.description') }}</label>
+          <TextEditor v-model:content-model="form.description.value.value" />
         </div>
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
@@ -411,12 +406,6 @@ function handleImagesUpdate(lists: any) {
       existingHostedImages.push(image)
     }
   })
-}
-
-const errorStatus = ref(false)
-async function checkDescriptionChange() {
-  errorStatus.value = (await form.description.validate()).valid
-  console.log('Description error status:', errorStatus.value)
 }
 
 const submitForm = handleSubmit(
