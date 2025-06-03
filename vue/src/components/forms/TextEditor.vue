@@ -59,37 +59,43 @@
 
 <script setup lang="ts">
 import StarterKit from '@tiptap/starter-kit'
-
 import { Editor, EditorContent } from '@tiptap/vue-3'
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, type ModelRef } from 'vue'
 
-// Init Editor instance
-const editor = ref<Editor | null>(null)
+const model: ModelRef<string> = defineModel({ required: true })
 
-editor.value = new Editor({
+const editor = new Editor({
   extensions: [StarterKit],
-  content: '<p>Écris quelque chose ici…</p>'
+  content: model
+})
+
+editor.on('update', ({ editor }) => {
+  model.value = editor.getHTML()
+})
+
+onMounted(() => {
+  editor.commands.setContent(model.value)
 })
 
 // Toggle functions
-const toggleBold = () => editor.value?.chain().focus().toggleBold().run()
-const toggleItalic = () => editor.value?.chain().focus().toggleItalic().run()
-const toggleStrike = () => editor.value?.chain().focus().toggleStrike().run()
-const toggleHeading = (level: any) => editor.value?.chain().focus().toggleHeading({ level }).run()
+const toggleBold = () => editor.chain().focus().toggleBold().run()
+const toggleItalic = () => editor.chain().focus().toggleItalic().run()
+const toggleStrike = () => editor.chain().focus().toggleStrike().run()
+const toggleHeading = (level: any) => editor.chain().focus().toggleHeading({ level }).run()
 
 const isHeadingActive = computed(() => {
   return (
-    editor.value.isActive('heading', { level: 1 }) ||
-    editor.value.isActive('heading', { level: 2 }) ||
-    editor.value.isActive('heading', { level: 3 })
+    editor.isActive('heading', { level: 1 }) ||
+    editor.isActive('heading', { level: 2 }) ||
+    editor.isActive('heading', { level: 3 })
   )
 })
-const isH1Active = computed(() => editor.value.isActive('heading', { level: 1 }))
-const isH2Active = computed(() => editor.value.isActive('heading', { level: 2 }))
-const isH3Active = computed(() => editor.value.isActive('heading', { level: 3 }))
+const isH1Active = computed(() => editor.isActive('heading', { level: 1 }))
+const isH2Active = computed(() => editor.isActive('heading', { level: 2 }))
+const isH3Active = computed(() => editor.isActive('heading', { level: 3 }))
 
 onBeforeUnmount(() => {
-  editor.value?.destroy()
+  editor.destroy()
 })
 </script>
 

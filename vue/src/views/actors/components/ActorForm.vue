@@ -44,13 +44,7 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('actors.form.description') }}</label>
-          <TextEditor></TextEditor>
-          <v-textarea
-            variant="outlined"
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            @blur="form.description.handleChange"
-          />
+          <TextEditor v-model="form.description.value.value" />
         </div>
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
@@ -416,6 +410,7 @@ function handleImagesUpdate(lists: any) {
 
 const submitForm = handleSubmit(
   (values) => {
+    console.log('Submitting actor form', values)
     const actorSubmission: ActorSubmission = {
       ...(values as any),
       id: actorToEdit ? actorToEdit.id : undefined,

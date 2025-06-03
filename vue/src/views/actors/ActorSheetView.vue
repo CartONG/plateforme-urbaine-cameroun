@@ -24,7 +24,7 @@
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
         </div>
-        <p>{{ actor.description }}</p>
+        <span v-html="actor.description"></span>
       </div>
       <ActorRelatedContent :actor="actor" v-if="!appStore.mobile" />
     </div>
@@ -75,23 +75,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Actor } from '@/models/interfaces/Actor'
-import { useActorsStore } from '@/stores/actorsStore'
-import { computed, onMounted, watchEffect, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
-import ContentDivider from '@/components/content/ContentDivider.vue'
-import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
-import PrintButton from '@/components/global/PrintButton.vue'
-import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
-import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
+import ChipList from '@/components/content/ChipList.vue'
 import ContactCard from '@/components/content/ContactCard.vue'
+import ContentDivider from '@/components/content/ContentDivider.vue'
+import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
+import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
+import PrintButton from '@/components/global/PrintButton.vue'
+import type { Actor } from '@/models/interfaces/Actor'
+import { CommentOrigin } from '@/models/interfaces/Comment'
+import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
-import ChipList from '@/components/content/ChipList.vue'
-import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
-import { CommentOrigin } from '@/models/interfaces/Comment'
+import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
+import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 
 const appStore = useApplicationStore()
 const userStore = useUserStore()
