@@ -2,34 +2,36 @@
 
 namespace App\Entity;
 
+use App\Enum\ResourceType;
+use App\Enum\ResourceFormat;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Model\Enums\UserRoles;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Entity\File\FileObject;
+use Symfony\Component\Uid\Uuid;
+use ApiPlatform\Metadata\Delete;
+use App\Entity\File\MediaObject;
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\File\FileObject;
-use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use App\Entity\Trait\LocalizableEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Enum\ResourceFormat;
-use App\Enum\ResourceType;
-use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
-use App\Services\State\Processor\ResourceProcessor;
-use App\Services\State\Provider\NearestEventProvider;
-use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Trait\LocalizableEntity;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Trait\ValidateableEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Uuid;
+use App\Services\State\Processor\ResourceProcessor;
+use Symfony\Component\Serializer\Attribute\Context;
+use App\Services\State\Provider\NearestEventProvider;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
 #[ApiResource(
@@ -277,12 +279,21 @@ class Resource
 
     public function getStartAt(): ?\DateTimeImmutable
     {
-        return $this->startAt;
+        if (!$this->startAt) {
+        return null;
+    }
+
+    // Retourner en timezone local
+    return $this->startAt->setTimezone(new \DateTimeZone('Europe/Paris'));
     }
 
     public function setStartAt(?\DateTimeImmutable $startAt): static
     {
-        $this->startAt = $startAt;
+        if ($startAt) {
+            $this->startAt = $startAt->setTimezone(new \DateTimeZone('Europe/Paris'));
+        } else {
+            $this->startAt = null;
+        }
 
         return $this;
     }
@@ -294,7 +305,11 @@ class Resource
 
     public function setEndAt(?\DateTimeImmutable $endAt): static
     {
-        $this->endAt = $endAt;
+        if ($endAt) {
+            $this->endAt = $endAt->setTimezone(new \DateTimeZone('Europe/Paris'));
+        } else {
+            $this->endAt = null;
+        }
 
         return $this;
     }
