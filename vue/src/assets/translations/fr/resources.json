@@ -17,7 +17,8 @@
       "guides": "Tutoriels",
       "rapports": "Rapports projet",
       "regulations": "Réglementations",
-      "events": "Événements"
+      "events": "Événements",
+      "others": "Autre"
     },
     "resourceFormat": {
       "pdf": "PDF",
@@ -51,6 +52,10 @@
           "label": "Type de ressource",
           "placeholder": "Type de ressource"
         },
+        "otherType": {
+          "label": "Autre type de ressource",
+          "placeholder": "Preciser le type de ressource"
+        },
         "date": {
           "label": "Date",
           "placeholder": "Date"
@@ -62,6 +67,10 @@
         "thematics": {
           "label": "Thématiques",
           "placeholder": "Thématiques"
+        },
+        "otherThematics": {
+          "label": "Autre thématique",
+          "placeholder": "Preciser la thématique"
         },
         "author": {
           "label": "Auteur",
@@ -80,7 +89,8 @@
       "section": {
         "thematics": "Thématiques",
         "resource": "Ressource",
-        "location": "Localisation"
+        "location": "Localisation",
+        "centroids": "Centroïde de la zone d'intervention"
       }
     },
     "admin": {

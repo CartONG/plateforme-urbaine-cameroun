@@ -1,6 +1,7 @@
 <template>
   <div class="ContactCard">
     <div
+      v-if="image"
       class="ContactCard__photo"
       :style="'background: url(' + image + ') center no-repeat'"
     ></div>
@@ -15,7 +16,7 @@
 defineProps<{
   name: string
   description: string
-  image: string
+  image?: string
 }>()
 </script>
 

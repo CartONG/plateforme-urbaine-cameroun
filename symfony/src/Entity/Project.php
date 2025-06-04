@@ -22,6 +22,7 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\AdministrativeScope;
 use App\Enum\BeneficiaryType;
+use App\Enum\ProjectFinancingType;
 use App\Enum\Status;
 use App\Model\Enums\UserRoles;
 use App\Repository\ProjectRepository;
@@ -54,7 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
         ),
         new Get(
-            normalizationContext: ['groups' => [self::GET_PARTIAL]]
+            normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
         ),
     ]
 )]
@@ -174,7 +175,7 @@ class Project
     private Collection $partners;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?Actor $actor = null;
 
@@ -192,15 +193,29 @@ class Project
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?array $beneficiaryTypes = null;
 
-    #[ORM\JoinTable(name: 'projects_donors')]
+    #[ORM\Column(type: 'simple_array', enumType: ProjectFinancingType::class, options: ['default' => ProjectFinancingType::OTHER->value])]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
-    #[ORM\ManyToMany(targetEntity: Organisation::class)]
-    private Collection $donors;
+    private ?array $financingTypes;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
-    private ?Organisation $contractingOrganisation = null;
+    private ?string $otherThematic = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherBeneficiary = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherFinancingType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherActorInCharge = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?string $otherActor = null;
 
     /**
      * @var Collection<int, Admin1Boundary>
@@ -223,16 +238,24 @@ class Project
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private Collection $admin3List;
 
+    /**
+     * @var Collection<int, Actor>
+     */
+    #[ORM\ManyToMany(targetEntity: Actor::class)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private Collection $actorsInCharge;
+
     public function __construct()
     {
         $this->thematics = new ArrayCollection();
-        $this->donors = new ArrayCollection();
+        $this->financingTypes = [];
         $this->images = new ArrayCollection();
         $this->partners = new ArrayCollection();
         $this->administrativeScopes = [];
         $this->admin1List = new ArrayCollection();
         $this->admin2List = new ArrayCollection();
         $this->admin3List = new ArrayCollection();
+        $this->actorsInCharge = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -387,6 +410,39 @@ class Project
         return $this;
     }
 
+    /**
+     * @return Collection<int, ProjectFinancingType>
+     */
+    public function getFinancingTypes(): ?array
+    {
+        return $this->financingTypes;
+    }
+
+    public function setFinancingTypes(?array $financingTypes): self
+    {
+        $this->financingTypes = $financingTypes;
+
+        return $this;
+    }
+
+    public function addFinancingType(ProjectFinancingType $financingType): self
+    {
+        if (!in_array($financingType, $this->financingTypes ?? [], true)) {
+            $this->financingTypes[] = $financingType;
+        }
+
+        return $this;
+    }
+
+    public function removeFinancingType(ProjectFinancingType $financingType): self
+    {
+        if (($key = array_search($financingType, $this->financingTypes ?? [], true)) !== false) {
+            unset($this->financingTypes[$key]);
+        }
+
+        return $this;
+    }
+
     public function getFocalPointName(): ?string
     {
         return $this->focalPointName;
@@ -522,38 +578,14 @@ class Project
         return $this;
     }
 
-    /**
-     * @return Collection<int, Organisation>
-     */
-    public function getDonors(): Collection
+    public function getOtherThematic(): ?string
     {
-        return $this->donors;
+        return $this->otherThematic;
     }
 
-    public function addDonor(Organisation $donor): static
+    public function setOtherThematic(?string $otherThematic): static
     {
-        if (!$this->donors->contains($donor)) {
-            $this->donors->add($donor);
-        }
-
-        return $this;
-    }
-
-    public function removeDonor(Organisation $donor): static
-    {
-        $this->donors->removeElement($donor);
-
-        return $this;
-    }
-
-    public function getContractingOrganisation(): ?Organisation
-    {
-        return $this->contractingOrganisation;
-    }
-
-    public function setContractingOrganisation(?Organisation $contractingOrganisation): static
-    {
-        $this->contractingOrganisation = $contractingOrganisation;
+        $this->otherThematic = $otherThematic;
 
         return $this;
     }
@@ -582,6 +614,30 @@ class Project
         return $this;
     }
 
+    public function getOtherBeneficiary(): ?string
+    {
+        return $this->otherBeneficiary;
+    }
+
+    public function setOtherBeneficiary(?string $otherBeneficiary): static
+    {
+        $this->otherBeneficiary = $otherBeneficiary;
+
+        return $this;
+    }
+
+    public function getOtherFinancingType(): ?string
+    {
+        return $this->otherFinancingType;
+    }
+
+    public function setOtherFinancingType(?string $otherFinancingType): static
+    {
+        $this->otherFinancingType = $otherFinancingType;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Admin2Boundary>
      */
@@ -606,6 +662,30 @@ class Project
         return $this;
     }
 
+    public function getOtherActorInCharge(): ?string
+    {
+        return $this->otherActorInCharge;
+    }
+
+    public function setOtherActorInCharge(?string $otherActorInCharge): static
+    {
+        $this->otherActorInCharge = $otherActorInCharge;
+
+        return $this;
+    }
+
+    public function getOtherActor(): ?string
+    {
+        return $this->otherActor;
+    }
+
+    public function setOtherActor(?string $otherActor): static
+    {
+        $this->otherActor = $otherActor;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Admin3Boundary>
      */
@@ -626,6 +706,30 @@ class Project
     public function removeAdmin3List(Admin3Boundary $admin3List): static
     {
         $this->admin3List->removeElement($admin3List);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Actor>
+     */
+    public function getActorsInCharge(): Collection
+    {
+        return $this->actorsInCharge;
+    }
+
+    public function addActorsInCharge(Actor $actorsInCharge): static
+    {
+        if (!$this->actorsInCharge->contains($actorsInCharge)) {
+            $this->actorsInCharge->add($actorsInCharge);
+        }
+
+        return $this;
+    }
+
+    public function removeActorsInCharge(Actor $actorsInCharge): static
+    {
+        $this->actorsInCharge->removeElement($actorsInCharge);
 
         return $this;
     }

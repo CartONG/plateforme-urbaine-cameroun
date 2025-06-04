@@ -1,26 +1,24 @@
-import { StoresList } from '@/models/enums/app/StoresList'
-import { defineStore } from 'pinia'
-import { computed, reactive, ref, type Ref, type Reactive, watch, type ComputedRef } from 'vue'
-import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
-import { ProjectService } from '@/services/projects/ProjectService'
-import maplibregl, { LngLatBounds } from 'maplibre-gl'
-import { SortKey } from '@/models/enums/SortKey'
-import type { Status } from '@/models/enums/contents/Status'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
-import { useApplicationStore } from './applicationStore'
+import { SortKey } from '@/models/enums/SortKey'
 import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
-import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { DialogKey } from '@/models/enums/app/DialogKey'
 import { FormType } from '@/models/enums/app/FormType'
-import type { Organisation } from '@/models/interfaces/Organisation'
-import { OrganisationService } from '@/services/organisations/OrganisationService'
+import { ItemType } from '@/models/enums/app/ItemType'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { StoresList } from '@/models/enums/app/StoresList'
+import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import type { Status } from '@/models/enums/contents/Status'
+import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
+import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
-import { NotificationType } from '@/models/enums/app/NotificationType'
+import { ProjectService } from '@/services/projects/ProjectService'
 import { getBboxFromPointsGroup } from '@/services/utils/UtilsService'
 import { useUserStore } from '@/stores/userStore'
-import { DialogKey } from '@/models/enums/app/DialogKey'
-import { ItemType } from '@/models/enums/app/ItemType'
+import maplibregl, { LngLatBounds } from 'maplibre-gl'
+import { defineStore } from 'pinia'
+import { computed, reactive, ref, watch, type ComputedRef, type Reactive, type Ref } from 'vue'
+import { useApplicationStore } from './applicationStore'
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const projects: Ref<Project[]> = ref([])
@@ -35,8 +33,6 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const sortingProjectsSelectedMethod = ref(SortKey.PROJECTS_AZ)
   const isProjectMapFullWidth = ref(false)
   const isProjectFormShown = ref(false)
-  const donors: Ref<Organisation[]> = ref([])
-  const contractingOrganisations: Ref<Organisation[]> = ref([])
   const filteredProjects: Ref<Project[]> = ref([...projects.value])
 
   const filters: Reactive<{
@@ -45,28 +41,13 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     statuses: Status[]
     administrativeScopes: AdministrativeScope[]
     beneficiaryTypes: BeneficiaryType[]
-    contractingOrganisations: Organisation['id'][]
-    donors: Organisation['id'][]
   }> = reactive({
     searchValue: '',
     thematics: [],
     statuses: [],
     administrativeScopes: [],
-    beneficiaryTypes: [],
-    contractingOrganisations: [],
-    donors: []
+    beneficiaryTypes: []
   })
-
-  async function getAllDonors(): Promise<void> {
-    if (donors.value.length === 0) {
-      donors.value = await OrganisationService.getAllDonors()
-    }
-  }
-  async function getAllContractingOrganisations(): Promise<void> {
-    if (contractingOrganisations.value.length === 0) {
-      contractingOrganisations.value = await OrganisationService.getAllContractingOrganisations()
-    }
-  }
 
   async function getAll(): Promise<void> {
     if (projects.value.length === 0) {
@@ -124,7 +105,6 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   const filterProjects = (from: filteringTrigger = 'filters') => {
     const projectsList = projects.value.filter((project) => {
       const projectThematicIds = project.thematics.map((projectThematic) => projectThematic.id)
-      const projectDonorIds = project.donors.map((donor) => donor.id)
 
       return (
         (filters.searchValue === '' ||
@@ -138,31 +118,22 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
         (filters.administrativeScopes.length === 0 ||
           filters.administrativeScopes.some((interventionZone) =>
             project.administrativeScopes.some((scope) => scope === interventionZone)
-          )) &&
-        (filters.contractingOrganisations.length === 0 ||
-          filters.contractingOrganisations.some(
-            (contractingOrganisation) =>
-              project.contractingOrganisation.id === contractingOrganisation
-          )) &&
-        (filters.donors.length === 0 ||
-          filters.donors.some((donor) => projectDonorIds.includes(donor))) &&
-        (filters.beneficiaryTypes.length === 0 ||
-          filters.beneficiaryTypes.some((beneficiaryType) =>
-            project.beneficiaryTypes.includes(beneficiaryType)
           ))
       )
     })
 
     if (from === 'filters') {
-      map.value?.fitBounds(
-        getBboxFromPointsGroup(projectsList.map((x) => x.geoData.coords).filter((c) => c != null))
-      )
+      const projects = projectsList
+        .map((x) => x.geoData?.coords)
+        .filter((c) => c !== undefined && c !== null)
+      if (projects.length === 0) return projectsList
+      map.value?.fitBounds(getBboxFromPointsGroup(projects))
     }
     if (from === 'map') {
       if (!map.value) return projectsList
       const bounds = map.value.getBounds()
       return projectsList.filter((proj) => {
-        if (!proj.geoData.coords) return false
+        if (!proj.geoData?.coords) return true
         const { lat, lng } = proj.geoData.coords
         return bounds.contains([lng, lat])
       })
@@ -175,20 +146,21 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
       [
         ...new Set([
           project.name,
-          project.actor.name,
-          project.geoData.name,
-          project.contractingOrganisation.name,
+          project.actor?.name,
+          project.geoData?.name,
           project.administrativeScopes,
           i18n.t(`projects.status.${project.status}`),
           project.focalPointName,
           ...project.thematics.map((thematic) => thematic.name),
-          ...project.donors.map((donor) => donor.name),
           ...project.beneficiaryTypes.map((beneficiaryType) =>
             i18n.t(`beneficiaryType.${beneficiaryType}`)
           )
         ])
       ].filter((v) => v) as any[]
-    ).map((value) => value.toLowerCase())
+    ).map((value) => {
+      if (typeof value === 'string') return value.toLowerCase()
+      return value
+    })
   }
 
   const orderedProjects: ComputedRef<Project[]> = computed(() => {
@@ -263,16 +235,12 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.statuses = []
     filters.administrativeScopes = []
     filters.beneficiaryTypes = []
-    filters.contractingOrganisations = []
-    filters.donors = []
   }
 
   return {
     projects,
     project,
     projectForSubmission,
-    donors,
-    contractingOrganisations,
     similarProjects,
     filters,
     isProjectMapFullWidth,
@@ -288,8 +256,6 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     map,
     bbox,
     getAll,
-    getAllDonors,
-    getAllContractingOrganisations,
     filterProjects,
     saveProject,
     resetFilters,

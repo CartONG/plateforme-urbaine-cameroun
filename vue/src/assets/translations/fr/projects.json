@@ -1,7 +1,7 @@
 {
   "projectPage": {
     "about": "À propos",
-    "focalPoint": "Point de contact",
+    "focalPoint": "Personne de référence",
     "inImages": "En images",
     "keyNumbers": "Chiffres-clés",
     "otherProjectsWithSameThematics": "D’autres projets avec des thématiques communes",
@@ -42,11 +42,11 @@
           "placeholder": "mail@siteinternet.com"
         },
         "focalPointName": {
-          "label": "Nom complet du Point de contact",
+          "label": "Nom du référent",
           "placeholder": "Prénom NOM"
         },
         "focalPointPosition": {
-          "label": "Intitulé du Point de contact",
+          "label": "Fonction du référent",
           "placeholder": ""
         },
         "focalPointTel": {
@@ -68,22 +68,42 @@
         "website": {
           "label": "Site internet",
           "placeholder": "Site internet"
+        },
+        "otherActor": {
+          "label": "Précisez un autre responsable",
+          "placeholder": "Précisez un autre responsable"
         }
       },
       "section": {
         "beneficiaryTypes": "Bénéficiaires",
-        "contractingOrganisation": "Maîtrise d'ouvrage",
-        "financial": "Financement",
-        "focalPoint": "Point de contact",
-        "localization": "Localisation de zone d'intervention",
-        "projectOwner": "Responsable du projet",
-        "thematics": "Thématiques",
-        "location": "Localisation"
+        "actorInCharge": "Maîtrise d'ouvrage *",
+        "actorInChargeDisclaimer": "Organisation qui commande et finance le projet",
+        "financial": "Financement *",
+        "focalPoint": "Personne de référence",
+        "localization": "Localisation centroïde de la zone d'intervention",
+        "adminScope": "Localisation zone d'Intervention",
+        "projectOwner": "Responsable du projet *",
+        "projectOwnerDisclaimer": "En charge de la gestion et de la coordination du projet",
+        "thematics": "Thématiques *",
+        "otherThematic": "Précisez une autre thematique",
+        "otherFinancingType": "Précisez un autre type de financement",
+        "otherBeneficiary": "Entrez un autre bénéficiaire",
+        "otherDonor": "Précisez une autre organisation",
+        "projectImages": "Images du projet",
+        "partnerLogos": "Logos des partenaires"
+      },
+      "alterTexts": {
+        "noProjectOwner": "Le responsable du projet n'est pas un acteur enregistré sur la plateforme",
+        "noActorInCharge": "L'organisation responsable n'est pas un acteur enregistré sur la plateforme"
       },
       "title": {
         "create": "Ajouter un projet",
         "edit": "Modifier un projet",
         "validate": "Valider un projet"
+      },
+      "errorMessages": {
+        "noActorInCharge": "Vous devez ajouter au moins une organisation",
+        "noActor": "Vous devez ajouter au moins un responsable"
       }
     },
     "map": {
@@ -98,7 +118,7 @@
           "label": "Financement"
         },
         "interventionZones": {
-          "label": "Zones d'intervention"
+          "label": "Echelles d'intervention"
         },
         "projectOwner": {
           "label": "Maitre d'ouvrage"
@@ -116,16 +136,27 @@
     "project": "projet",
     "projects": "projet | projet | projets",
     "scope": {
-      "city": "Ville",
-      "national": "National",
-      "regional": "Régional",
-      "state": "Département",
+      "city": "Communale",
+      "international": "Internationale",
+      "national": "Nationale",
+      "regional": "Régionale",
+      "state": "Départementale",
       "neighborhood": "Quartier",
       "borough": "Arrondissement"
     },
     "status": {
       "finalized": "Finalisé",
       "ongoing": "En cours"
+    },
+    "financing": {
+      "autre": "Autre",
+      "fonds_propres": "Fonds propres",
+      "subvention_publique": "Subvention publique",
+      "pret_bancaire": "Prêt bancaire",
+      "investissement_prive": "Investissement prive",
+      "crowdfunding": "Crowdfunding",
+      "partenariat_public_prive": "Partenariat public prive",
+      "mecenat": "Mecenat"
     }
   }
 }

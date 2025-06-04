@@ -239,6 +239,22 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+declare global {
+  interface Window {
+    goatcounter: any;
+  }
+}
+// Add manual goat counter analytics for SPA https://www.goatcounter.com/help/spa 
+// @ts-ignore
+if (import.meta.env.VITE_GOAT_COUNTER_NAMESPACE != null) {
+  router.afterEach((to) => {
+    if (window.goatcounter && typeof window.goatcounter.count === 'function') {
+      window.goatcounter.count({
+        path: to.fullPath,
+      })
+    }
+  })
+}
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {

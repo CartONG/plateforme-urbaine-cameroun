@@ -166,38 +166,9 @@ export class CommonZodSchema {
         .string()
         .max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) })
         .optional(),
-      phone: z
-        .string()
-        .optional()
-        .refine(
-          (phone) => {
-            if (!phone) return true
-            const regex = /^(?:\+?[1-9]\d{1,3}[ .-]?)?(?:[1-9]\d{8}|0[1-9]\d{8})$/
-            return regex.test(phone)
-          },
-          {
-            message: i18n.t('forms.errorMessages.phone')
-          }
-        ),
+      phone: z.string().optional(),
       latString: LatitudeSchema,
-      lngString: LongitudeSchema,
-      latLngString: z
-        .string()
-        .optional()
-        .refine(
-          (value) => {
-            if (!value) return true
-            const regex = /^\s*(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)\s*$/
-            const match = value.match(regex)
-            if (!match) return false
-            const lat = parseFloat(match[1])
-            const lng = parseFloat(match[3])
-            return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180
-          },
-          {
-            message: i18n.t('forms.errorMessages.latLng')
-          }
-        )
+      lngString: LongitudeSchema
     }
   }
 

@@ -73,7 +73,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new GetCollection(
             // provider: UserProvider::class // To use if we need to open to every logged user if we need to see user names associated to likes
-            security: 'is_granted("ROLE_ADMIN")'
+            security: 'is_granted("ROLE_ADMIN")',
+            paginationEnabled: false
         ),
         new Post(),
         new Put(

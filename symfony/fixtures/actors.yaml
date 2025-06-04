@@ -4,8 +4,8 @@ App\Entity\Actor:
     acronym: <word(3, true)>
     createdBy: '@user_<numberBetween(1,3)>' 
     category: '<randomElement(<(App\Enum\ActorCategory::toArray())>)>'
-    expertises: '<numberBetween(1, 3)>x @actorexpertise_*'
-    thematics: '<numberBetween(1, 3)>x @thematic_*'
+    expertises: '<numberBetween(1, 4)>x @actorexpertise_*'
+    thematics: '<numberBetween(1, 12)>x @thematic_*'
     description: <paragraph()>
     administrativeScopes: 
       - '<(App\Enum\AdministrativeScope::NATIONAL)>'

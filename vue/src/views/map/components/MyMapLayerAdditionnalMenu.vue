@@ -14,12 +14,6 @@
     </template>
     <v-list class="MyMapLayerPicker__additionnalMenu mt-4">
       <v-list-item>
-        <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-information-outline"></v-icon>
-        </template>
-        <v-list-item-title>{{ $t('myMap.rightSidebar.actions.about') }}</v-list-item-title>
-      </v-list-item>
-      <v-list-item>
         <template v-slot:prepend
           ><v-icon color="main-blue" icon="mdi-share-variant-outline"></v-icon
         ></template>

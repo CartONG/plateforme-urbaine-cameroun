@@ -47,6 +47,10 @@
     "logout": "Déconnexion"
   },
   "inputs": {
+    "location": {
+      "lat": "Latitude",
+      "lng": "Longitude"
+    },
     "locationSelector": {
       "searchAddress": "Rechercher l'adresse",
       "enterGpsCoords": "Entrer les coordonnées GPS",
@@ -58,6 +62,53 @@
       "buttons": {
         "validate": "Valider",
         "cancel": "Annuler",
+        "create": "Créer",
+        "delete": "Supprimer",
+        "or": "OU",
+        "errors": "Le formulaire n'est pas valide",
+        "select": "Placer sur la carte",
+        "errorMessages": {
+            "required": "Ce champs est obligatoire",
+            "minlength": "Ce champs doit avoir au moins {min} caractères",
+            "maxlength": "Ce champs est limité à {max} caractères",
+            "email": "Veuillez renseigner une adresse email valide",
+            "url": "Veuillez renseigner une URL valide",
+            "https": "Veuillez renseigner un site en https://",
+            "phone": "Veuillez renseigner un numéro de téléphone valide",
+            "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
+            "file": {
+                "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
+                "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"
+            }
+        }
+    },
+    "filters": {
+        "sortBy": {
+            "placeholder": "Trier par",
+            "options": {
+                "projects_az": "Projets A > Z",
+                "projects_za": "Projets Z > A",
+                "updated_at_az": "Date de dernière mise à jour",
+                "actors_az": "Acteurs A > Z",
+                "actors_za": "Acteurs Z > A"
+            }
+        },
+        "search": "Rechercher..."
+    },
+    "labels": {
+        "updatedAt": "Mis à jour le",
+        "lastUpdatedAt": "Dernière mise à jour le",
+        "reset": "Réinitialiser"
+    },
+    "placeholders": {
+        "all": "Tous",
+        "sortBy": "Trier par"
+    },
+    "content": {
+        "createAMap": "Créer une carte",
+        "website": "Visiter le site internet",
+        "mail": "Contacter par mail",
+        "edit": "Modifier",
         "select": "Placer sur la carte"
       },
       "moveMap": "Déplacez et zoomez la carte pour positionner le point"
@@ -132,23 +183,6 @@
             "delete": "La donnée a bien été supprimé",
             "error": "Une erreur est survenue lors du chargement des données"
         }
-    },
-    "list": {
-        "resetFilters": "Réinitialiser les filtres",
-        "filtersTitle": "Affinez votre recherche"
-    },
-    "share": {
-        "shareWhatsapp": "Partager sur Whatsapp",
-        "shareFb": "Partager sur Facebook",
-        "shareEmail": "Partager par email",
-        "copyLink": "Copier le lien",
-        "urlCopied": "Lien copié",
-        "mailSubject": "Plateforme Urbaine du Cameroun - Partage de données",
-        "genericBody": "Je souhaite partager cet élément de la Plateforme Urbaine du Cameroun avec vous:"
-    },
-    "location": {
-      "lat": "Latitude",
-      "lng": "Longitude"
     }
   },
   "adminBoundaries": {
@@ -289,7 +323,8 @@
     "communities_of_communes": "Communautés de communes",
     "regions": "Régions",
     "local_institutions": "Institutions locales",
-    "associations_ngos": "Associations / ONG"
+    "associations_ngos": "Associations / ONG",
+    "others": "Autre"
   },
   "geocoding": {
     "placeholder": "Rechercher un lieu",

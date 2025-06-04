@@ -60,12 +60,12 @@
   </div>
 </template>
 <script setup lang="ts">
+import AdminTable from '@/components/admin/AdminTable.vue'
+import AdminTopBar from '@/components/admin/AdminTopBar.vue'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 import type { Actor } from '@/models/interfaces/Actor'
 import { useActorsStore } from '@/stores/actorsStore'
 import { computed, ref } from 'vue'
-import AdminTopBar from '@/components/admin/AdminTopBar.vue'
-import AdminTable from '@/components/admin/AdminTable.vue'
-import HighlightButton from '@/components/global/HighlightButton.vue'
 const actorsStore = useActorsStore()
 const sortingActorsSelectedMethod = ref('isValidated')
 
@@ -101,7 +101,7 @@ const filteredItems = computed(() => {
   }
   return sortedActors.value.filter((item: Actor) => {
     return (
-      item.acronym.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (item.acronym && item.acronym.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       item.category.toLowerCase().includes(searchQuery.value.toLowerCase())
     )

@@ -1,10 +1,10 @@
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { Actor } from '@/models/interfaces/Actor'
+import { i18n } from '@/plugins/i18n'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useField, useForm } from 'vee-validate'
 import { z } from 'zod'
-import { i18n } from '@/plugins/i18n'
 import { CommonZodSchema } from '../forms/CommonZodSchema'
-import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 
 export class ActorsFormService {
   static getActorsForm(actorToEdit: Actor | null) {
@@ -15,8 +15,11 @@ export class ActorsFormService {
       name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
       acronym: z.string().optional(),
       category: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
+      otherCategory: z.string().optional(),
       expertises: zodModels.symfonyRelations,
+      otherExpertise: z.string().optional(),
       thematics: zodModels.symfonyRelations,
+      otherThematic: z.string().optional(),
       administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)),
       admin1List: zodModels.admin1Boundaries.optional(),
       admin2List: zodModels.admin2Boundaries.optional(),
@@ -26,7 +29,7 @@ export class ActorsFormService {
       ///////// Contact \\\\\\\\\
       officeName: z.string().optional(),
       officeAddress: z.string().optional(),
-      geoData: zodModels.geoData,
+      geoData: zodModels.geoDataNullable.optional(),
       contactName: z.string().optional(),
       contactPosition: z.string().optional(),
       website: zodModels.website,
@@ -41,8 +44,11 @@ export class ActorsFormService {
       name: useField('name', '', { validateOnValueUpdate: false }),
       acronym: useField('acronym', '', { validateOnValueUpdate: false }),
       category: useField('category', '', { validateOnValueUpdate: false }),
+      otherCategory: useField('otherCategory', '', { validateOnValueUpdate: false }),
       expertises: useField('expertises', '', { validateOnValueUpdate: false }),
+      otherExpertise: useField('otherExpertise', '', { validateOnValueUpdate: false }),
       thematics: useField('thematics', '', { validateOnValueUpdate: false }),
+      otherThematic: useField('otherThematic', '', { validateOnValueUpdate: false }),
       administrativeScopes: useField('administrativeScopes', '', { validateOnValueUpdate: false }),
       admin1List: useField('admin1List', '', { validateOnValueUpdate: false }),
       admin2List: useField('admin2List', '', { validateOnValueUpdate: false }),

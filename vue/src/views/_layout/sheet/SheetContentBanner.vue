@@ -24,16 +24,6 @@
             <HighlightButton :item-id="id" />
             <LikeButton :id="id" />
             <CommentButton position="Sheet" :origin="page" originSlug="SheetPage" />
-            <slot name="mapButton"></slot>
-            <v-btn
-              v-if="page === 'Actor'"
-              variant="elevated"
-              :to="{ name: 'map' }"
-              class="elevation-1 text-main-blue px-3 mx-2 hide-sm"
-              ><img src="@/assets/images/icons/add_location_alt.svg" class="mr-1" />{{
-                $t('content.createAMap')
-              }}</v-btn
-            >
             <UpdateInfoLabel :date="updatedAt" :user="createdBy" class="show-sm text-left" />
           </div>
           <div class="SheetContentBanner__editBar">
