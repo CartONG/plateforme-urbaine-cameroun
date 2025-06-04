@@ -95,14 +95,18 @@
       "duplicate": "Une image avec ce nom est déjà sélectionnée"
     }
   },
+  "areYouSurePopup": {
+    "title": "Attention ! Cette action est irréversible",
+    "label": "Êtes-vous certain de vouloir faire cette action ?"
+  },
   "adminBoundaries": {
-        "adminScope": "Echelle d'intervention",
-        "showInMap": "Visualiser les zones d'intervention",
-        "mapViewer": "Zones d'interventions",
-        "admin1": "Région",
-        "admin2": "Département",
-        "admin3": "Commune"
-    },
+    "adminScope": "Echelle d'intervention",
+    "showInMap": "Visualiser les zones d'intervention",
+    "mapViewer": "Zones d'interventions",
+    "admin1": "Région",
+    "admin2": "Département",
+    "admin3": "Commune"
+  },
   "comments": {
     "title": "Ajouter un commentaire",
     "form": {
@@ -286,6 +290,12 @@
       "error": "Une erreur est survenue lors du chargement des données",
       "deleteSuccess": "La donnée a bien été supprimé",
       "deleteError":"Une erreur est survenue lors de la suppression de la donnée, assurez vous que ce projet QGIS n'est pas utilisé dans une carte"
+    },
+    "user": {
+      "create": "L'utilisateur a bien été créé",
+      "edit": "L'utilisateur a bien été modifié",
+      "validate": "L'utilisateur a bien été validé",
+      "delete": "L'utilisateur a bien été supprimé"
     }
   },
   "list": {

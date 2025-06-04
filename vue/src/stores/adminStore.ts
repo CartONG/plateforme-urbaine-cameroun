@@ -1,7 +1,10 @@
 import { AdministrationPanels } from '@/models/enums/app/AdministrationPanels'
+import { NotificationType } from '@/models/enums/app/NotificationType'
 import { StoresList } from '@/models/enums/app/StoresList'
 import type { User } from '@/models/interfaces/auth/User'
+import { i18n } from '@/plugins/i18n'
 import { UsersService } from '@/services/application/UsersService'
+import { addNotification } from '@/services/notifications/NotificationService'
 import { UserService } from '@/services/userAndAuth/UserService'
 import { defineStore } from 'pinia'
 import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
@@ -15,7 +18,7 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     AdministrationPanels.CONTENT_ACTORS
   )
 
-  const appMembers = ref([])
+  const appMembers: Ref<User[]> = ref([])
   const getMembers = async () => {
     appMembers.value = await UsersService.getMembers(false)
   }
@@ -48,12 +51,24 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     userEdition.active = false
   }
 
+  async function deleteUser(user: Partial<User>) {
+    await UserService.deleteUser(user).then(() => {
+      appMembers.value.forEach((member, key) => {
+        if (member.id === user.id) {
+          appMembers.value.splice(key, 1)
+          addNotification(i18n.t('notifications.user.delete'), NotificationType.SUCCESS)
+        }
+      })
+    })
+  }
+
   return {
     selectedAdminPanel,
     selectedAdminItem,
     appMembers,
     getMembers,
     createUser,
+    deleteUser,
     userEdition,
     setUserEditionMode,
     editUser
