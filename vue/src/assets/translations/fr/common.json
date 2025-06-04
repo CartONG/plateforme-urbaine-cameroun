@@ -283,8 +283,9 @@
       "create": "La donnée a bien été crée",
       "edit": "La donnée a bien été modifiée",
       "validate": "La donnée a bien été validée",
-      "delete": "La donnée a bien été supprimé",
-      "error": "Une erreur est survenue lors du chargement des données"
+      "error": "Une erreur est survenue lors du chargement des données",
+      "deleteSuccess": "La donnée a bien été supprimé",
+      "deleteError":"Une erreur est survenue lors de la suppression de la donnée, assurez vous que ce projet QGIS n'est pas utilisé dans une carte"
     }
   },
   "list": {

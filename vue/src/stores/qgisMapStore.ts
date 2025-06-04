@@ -1,14 +1,16 @@
-import { StoresList } from '@/models/enums/app/StoresList'
-import { defineStore } from 'pinia'
-import { ref, type Ref } from 'vue'
-import type { QgisMap } from '@/models/interfaces/QgisMap'
-import { QgisMapService } from '@/services/qgisMap/QgisMapService'
 import { FormType } from '@/models/enums/app/FormType'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { StoresList } from '@/models/enums/app/StoresList'
+import type { QgisMap } from '@/models/interfaces/QgisMap'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
-import { NotificationType } from '@/models/enums/app/NotificationType'
+import { QgisMapService } from '@/services/qgisMap/QgisMapService'
+import { defineStore } from 'pinia'
+import { ref, type Ref } from 'vue'
+import { useApplicationStore } from './applicationStore'
 
 export const useQgisMapStore = defineStore(StoresList.QGIS_MAP, () => {
+  const applicationStore = useApplicationStore()
   const qgisMaps: Ref<QgisMap[]> = ref([])
   const isQgisMapFormShown = ref(false)
   const isQgisMapVisualiserShown = ref(false)
@@ -20,6 +22,7 @@ export const useQgisMapStore = defineStore(StoresList.QGIS_MAP, () => {
   }
 
   const submitQgisMap = async (qgisMap: QgisMap, type: FormType) => {
+    applicationStore.isLoading = true
     const submittedQgisMap =
       type === FormType.CREATE
         ? await QgisMapService.post(qgisMap)
@@ -38,18 +41,28 @@ export const useQgisMapStore = defineStore(StoresList.QGIS_MAP, () => {
     } else {
       addNotification(i18n.t(`notifications.qgismap.error`), NotificationType.ERROR)
     }
-
+    applicationStore.isLoading = false
     return submittedQgisMap
   }
 
   const deleteQgisMap = async (qgisMap: QgisMap) => {
-    await QgisMapService.delete(qgisMap)
-    qgisMaps.value.forEach((p, key) => {
-      if (p.id === qgisMap.id) {
-        qgisMaps.value.splice(key, 1)
-        addNotification(i18n.t('notifications.qgismap.delete'), NotificationType.SUCCESS)
-      }
-    })
+    applicationStore.isLoading = true
+    try {
+      await QgisMapService.delete(qgisMap)
+      qgisMaps.value.forEach((p, key) => {
+        if (p.id === qgisMap.id) {
+          qgisMaps.value.splice(key, 1)
+          addNotification(i18n.t('notifications.qgismap.deleteSuccess'), NotificationType.SUCCESS)
+        }
+      })
+    } catch (error) {
+      addNotification(
+        i18n.t('notifications.qgismap.deleteError'),
+        NotificationType.ERROR,
+        error as string
+      )
+    }
+    applicationStore.isLoading = false
   }
 
   return {
