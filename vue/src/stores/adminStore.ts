@@ -52,14 +52,23 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
   }
 
   async function deleteUser(user: Partial<User>) {
-    await UserService.deleteUser(user).then(() => {
-      appMembers.value.forEach((member, key) => {
-        if (member.id === user.id) {
-          appMembers.value.splice(key, 1)
-          addNotification(i18n.t('notifications.user.delete'), NotificationType.SUCCESS)
-        }
+    useApplicationStore().isLoading = true
+    try {
+      await UserService.deleteUser(user).then(() => {
+        appMembers.value.forEach((member, key) => {
+          if (member.id === user.id) {
+            appMembers.value.splice(key, 1)
+            addNotification(i18n.t('notifications.user.deleteSuccess'), NotificationType.SUCCESS)
+          }
+        })
       })
-    })
+    } catch (error) {
+      addNotification(
+        i18n.t('notifications.user.deleteError'),
+        NotificationType.ERROR,
+        error as string
+      )
+    }
   }
 
   return {
