@@ -23,15 +23,7 @@
       :plainText="true"
     >
       <template #editContentCell="{ item }">
-        <template v-if="!(item as User).isValidated">
-          <v-btn
-            size="small"
-            icon="$arrowRight"
-            class="text-main-blue"
-            @click="editUser(item as User)"
-          ></v-btn>
-        </template>
-        <template v-else>
+        <template v-if="(item as User).isValidated">
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_ACTORS)"
             icon="$contacts"
@@ -56,14 +48,25 @@
             class="mr-1"
             size="small"
           ></v-icon>
-          <v-btn
-            density="comfortable"
-            icon="$pencilOutline"
-            @click="editUser(item as User)"
-            :disabled="(item as User).roles.includes(UserRoles.ADMIN)"
-            class="disabled-white"
-          ></v-btn>
         </template>
+        <v-btn
+          density="comfortable"
+          icon="$pencilOutline"
+          @click="editUser(item as User)"
+          class="disabled-white"
+        ></v-btn>
+        <v-btn
+          density="comfortable"
+          icon="$deleteOutline"
+          @click="isAreYouSurePopupShown = true"
+          class="disabled-white"
+        ></v-btn>
+        <AreYouSurePopup
+          :shown="isAreYouSurePopupShown"
+          :loading="isDeleting"
+          @hide="isAreYouSurePopupShown = false"
+          @confirm="deleteUser(item as User)"
+        />
       </template>
     </AdminTable>
   </div>
@@ -71,11 +74,18 @@
 <script setup lang="ts">
 import AdminTable from '@/components/admin/AdminTable.vue'
 import AdminTopBar from '@/components/admin/AdminTopBar.vue'
+import AreYouSurePopup from '@/components/global/AreYouSurePopup.vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
-import { computed, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
+
 const adminStore = useAdminStore()
+const isAreYouSurePopupShown = ref(false)
+const isDeleting = ref(false)
+onBeforeMount(() => {
+  adminStore.getMembers()
+})
 
 function createUser() {
   adminStore.setUserEditionMode(null)
@@ -83,6 +93,13 @@ function createUser() {
 
 function editUser(user: User) {
   adminStore.setUserEditionMode(user)
+}
+
+const deleteUser = async (user: User) => {
+  isDeleting.value = true
+  await adminStore.deleteUser(user)
+  isDeleting.value = false
+  isAreYouSurePopupShown.value = false
 }
 
 const sortingUsersSelectedMethod = ref('lastName')
