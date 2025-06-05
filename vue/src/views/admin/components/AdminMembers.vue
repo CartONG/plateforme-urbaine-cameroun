@@ -58,26 +58,27 @@
         <v-btn
           density="comfortable"
           icon="mdi-delete-outline"
-          @click="isAreYouSurePopupShown = true"
+          @click="((isAreYouSurePopupShown = true), (userToDelete = item))"
           class="disabled-white"
         ></v-btn>
         <AreYouSurePopup
           :shown="isAreYouSurePopupShown"
           :loading="isDeleting"
-          @hide="isAreYouSurePopupShown = false"
-          @confirm="deleteUser(item as User)" />
+          @hide="((isAreYouSurePopupShown = false), (userToDelete = null))"
+          @confirm="deleteUser()"
+        />
       </template>
     </AdminTable>
   </div>
 </template>
 <script setup lang="ts">
+import AdminTable from '@/components/admin/AdminTable.vue'
+import AdminTopBar from '@/components/admin/AdminTopBar.vue'
+import AreYouSurePopup from '@/components/global/AreYouSurePopup.vue'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
+import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
 import { computed, onBeforeMount, ref } from 'vue'
-import AdminTopBar from '@/components/admin/AdminTopBar.vue'
-import AdminTable from '@/components/admin/AdminTable.vue'
-import type { User } from '@/models/interfaces/auth/User'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
-import AreYouSurePopup from '@/components/global/AreYouSurePopup.vue'
 const adminStore = useAdminStore()
 const isAreYouSurePopupShown = ref(false)
 const isDeleting = ref(false)
@@ -93,10 +94,12 @@ function editUser(user: User) {
   adminStore.setUserEditionMode(user)
 }
 
-const deleteUser = async (user: User) => {
+const userToDelete = ref(null)
+const deleteUser = async () => {
   isDeleting.value = true
-  await adminStore.deleteUser(user)
+  await adminStore.deleteUser(userToDelete.value)
   isDeleting.value = false
+  userToDelete.value = null
   isAreYouSurePopupShown.value = false
 }
 
