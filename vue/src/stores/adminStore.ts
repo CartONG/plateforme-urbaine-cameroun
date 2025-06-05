@@ -17,7 +17,7 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
 
   const appMembers: Ref<User[]> = ref([])
   const getMembers = async () => {
-    appMembers.value = await UsersService.getMembers(false)
+    appMembers.value = await UsersService.getMembers()
   }
 
   async function createUser(user: Partial<User>) {
