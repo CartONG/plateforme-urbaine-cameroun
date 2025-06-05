@@ -30,7 +30,7 @@ class MainHighlightedItemsProvider implements ProviderInterface
 
         $idOrder = array_flip($highlightedItemsItemIds);
         usort($items, function ($a, $b) use ($idOrder) {
-            return ($idOrder[$a->getItemId()] ?? PHP_INT_MAX) <=> ($idOrder[$b->getItemId()] ?? PHP_INT_MAX);
+            return ($idOrder[$b->getItemId()] ?? PHP_INT_MAX) <=> ($idOrder[$a->getItemId()] ?? PHP_INT_MAX);
         });
 
         return $items;
