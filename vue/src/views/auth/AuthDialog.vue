@@ -19,14 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import Dialog from '@/components/global/Dialog.vue'
-import { DialogKey } from '@/models/enums/app/DialogKey'
+import Dialog from '@/components/global/Dialog.vue';
+import { DialogKey } from '@/models/enums/app/DialogKey';
 </script>
 
 <style lang="scss">
 .AuthDialog {
   &__forgotPassword {
-    color: rgb(var(--v-theme-main-red));
+    text-decoration: underline !important;
     font-size: $font-size-sm;
     margin-bottom: 1rem;
   }
@@ -36,7 +36,6 @@ import { DialogKey } from '@/models/enums/app/DialogKey'
     align-items: center;
     padding: 1rem;
     width: 100%;
-    color: rgb(var(--v-theme-main-red));
     font-weight: 700;
     background-color: rgb(var(--v-theme-light-yellow));
     margin-bottom: 1rem;

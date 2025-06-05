@@ -2,11 +2,6 @@
   <AuthDialog class="AuthbecomeMemberAskRoles">
     <template #title>{{ $t('auth.becomeMemberAskRoles.title') }}</template>
     <template #content>
-      <CheckPoint
-        class="mb-4"
-        :label="$t('auth.becomeMemberAskRoles.subtitle')"
-        :highlighted="true"
-      />
       <span class="mb-4 text-center">{{ $t('auth.becomeMemberAskRoles.form.info') }}</span>
       <Form @submit="onSubmit">
         <v-text-field
@@ -48,11 +43,10 @@
 </template>
 
 <script setup lang="ts">
-import AuthDialog from '@/views/auth/AuthDialog.vue'
 import Form from '@/components/forms/Form.vue'
-import CheckPoint from '@/components/global/CheckPoint.vue'
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useUserStore } from '@/stores/userStore'
+import AuthDialog from '@/views/auth/AuthDialog.vue'
 const userStore = useUserStore()
 
 const actionList = UserProfileForm.getRolesList()
