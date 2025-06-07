@@ -39,7 +39,6 @@ export class UserProfileForm {
       }),
       signUpMessage: z
         .string()
-        .min(10)
         .max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) })
         .optional()
         .or(z.literal('')),
