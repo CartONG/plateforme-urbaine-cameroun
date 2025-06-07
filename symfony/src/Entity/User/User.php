@@ -103,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups([self::GROUP_READ, self::GROUP_GETME, Actor::ACTOR_READ_ITEM, Project::GET_FULL])]
+    #[Groups([self::GROUP_READ, self::GROUP_GETME, Actor::ACTOR_READ_ITEM, Project::GET_FULL, Resource::GET_FULL])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
