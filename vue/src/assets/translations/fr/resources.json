@@ -66,6 +66,7 @@
         },
         "thematics": {
           "label": "Thématiques",
+          "subLabel": "Sélectionnez au moins une thématique",
           "placeholder": "Thématiques"
         },
         "otherThematics": {

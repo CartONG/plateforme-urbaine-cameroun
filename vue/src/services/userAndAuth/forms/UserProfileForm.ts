@@ -1,23 +1,21 @@
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm, useField } from 'vee-validate'
-import { z } from 'zod'
-import { i18n } from '@/plugins/i18n'
-import type { User } from '@/models/interfaces/auth/User'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
-import { ref } from 'vue'
+import type { User } from '@/models/interfaces/auth/User'
+import { i18n } from '@/plugins/i18n'
 import { UserValidator } from '@/services/userAndAuth/forms/UserValidator'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useField, useForm } from 'vee-validate'
+import { ref } from 'vue'
+import { z } from 'zod'
 
 export class UserProfileForm {
   static getSchema() {
     return z.object({
       firstName: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(2, { message: i18n.t('forms.errorMessages.minlength', { min: 2 }) })
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) }),
       lastName: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(2, { message: i18n.t('forms.errorMessages.minlength', { min: 2 }) })
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) }),
       organisation: z
@@ -40,8 +38,16 @@ export class UserProfileForm {
           }
         )
         .optional(),
-      email: z.string().email({ message: i18n.t('forms.errorMessages.email') }),
+      email: z
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
+        .email({ message: i18n.t('forms.errorMessages.email') }),
       ...UserValidator.passwordsObject(),
+      plainPassword: z
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
+        .min(8, { message: i18n.t('forms.errorMessages.minlength', { min: 8 }) }),
+      confirmPassword: z
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
+        .min(8, { message: i18n.t('forms.errorMessages.minlength', { min: 8 }) }),
       acceptTerms: z.boolean().refine((val) => val === true, {
         message: i18n.t('auth.becomeMember.form.privacyPolicy.error')
       }),

@@ -14,9 +14,13 @@ export class ResourceFormService {
     // @ts-expect-error - zod object.
     const resourceSchema: z.ZodType<Partial<Resource>> = z
       .object({
-        name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
+        name: z
+          .string({ required_error: i18n.t('forms.errorMessages.required') })
+          .min(1, { message: i18n.t('forms.errorMessages.required') }),
         description: zodModels.descriptionRequired,
-        type: z.nativeEnum(ResourceType),
+        type: z.nativeEnum(ResourceType, {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherType: z.string().optional(),
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)).optional(),
         admin1List: zodModels.admin1Boundaries.optional(),
@@ -27,8 +31,12 @@ export class ResourceFormService {
         endAt: z.coerce.date().nullable().optional(),
         file: zodModels.file.nullable().optional(),
         link: zodModels.website.nullable().optional(),
-        format: z.nativeEnum(ResourceFormat),
-        author: zodModels.maxLabel.optional(),
+        format: z.nativeEnum(ResourceFormat, {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
+        author: z
+          .string({ required_error: i18n.t('forms.errorMessages.required') })
+          .min(1, { message: i18n.t('forms.errorMessages.required') }),
         thematics: zodModels.symfonyRelations,
         otherThematic: z.string().optional()
       })
