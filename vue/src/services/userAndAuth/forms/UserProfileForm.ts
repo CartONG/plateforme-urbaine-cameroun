@@ -1,14 +1,17 @@
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm, useField } from 'vee-validate'
-import { z } from 'zod'
-import { i18n } from '@/plugins/i18n'
-import type { User } from '@/models/interfaces/auth/User'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
-import { ref } from 'vue'
+import type { User } from '@/models/interfaces/auth/User'
+import { i18n } from '@/plugins/i18n'
+import { CommonZodSchema } from '@/services/forms/CommonZodSchema'
 import { UserValidator } from '@/services/userAndAuth/forms/UserValidator'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useField, useForm } from 'vee-validate'
+import { ref } from 'vue'
+import { z } from 'zod'
 
 export class UserProfileForm {
   static getSchema() {
+    const zodModels = CommonZodSchema.getDefinitions()
+
     return z.object({
       firstName: z
         .string()
@@ -28,18 +31,7 @@ export class UserProfileForm {
         .string()
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) })
         .optional(),
-      phone: z
-        .string()
-        .refine(
-          (phone) => {
-            const regex = /^(?:\+?[1-9]\d{1,3}[ .-]?)?(?:[1-9]\d{8}|0[1-9]\d{8})$/
-            return regex.test(phone)
-          },
-          {
-            message: i18n.t('forms.errorMessages.phone')
-          }
-        )
-        .optional(),
+      phone: zodModels.phone,
       email: z.string().email({ message: i18n.t('forms.errorMessages.email') }),
       ...UserValidator.passwordsObject(),
       acceptTerms: z.boolean().refine((val) => val === true, {
@@ -47,7 +39,6 @@ export class UserProfileForm {
       }),
       signUpMessage: z
         .string()
-        .min(10)
         .max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) })
         .optional()
         .or(z.literal('')),
