@@ -14,7 +14,7 @@
     >
       <template #right-buttons>
         <v-btn
-          prepend-icon="mdi-folder-edit-outline"
+          prepend-icon="$folderEditOutline"
           color="main-red"
           :disabled="selectedComments.length === 0"
         >
@@ -22,11 +22,11 @@
           <v-menu activator="parent" location="left">
             <v-list>
               <v-list-item @click="markAsRead()">
-                <v-icon icon="mdi mdi-email-open-outline"></v-icon>
+                <v-icon icon="$emailOpenOutline"></v-icon>
                 <span class="ml-4">{{ $t('admin.comments.markAsRead') }}</span>
               </v-list-item>
               <v-list-item @click="deleteComments()">
-                <v-icon icon="mdi mdi-delete-outline"></v-icon>
+                <v-icon icon="$deleteOffOutline"></v-icon>
                 <span class="ml-4">{{ $t('admin.comments.delete') }}</span>
               </v-list-item>
             </v-list>
@@ -61,10 +61,10 @@
         </div>
         <div class="AdminTable__item d-flex align-center justify-center">
           <template v-if="comment.originURL">
-            <v-icon icon="mdi-magnify" @click="showEntity(comment.originURL)"></v-icon>
+            <v-icon icon="$magnify" @click="showEntity(comment.originURL)"></v-icon>
           </template>
           <template v-else-if="comment.location">
-            <v-icon icon="mdi-map" @click="showMap(comment.location, comment.message)"></v-icon>
+            <v-icon icon="$map" @click="showMap(comment.location, comment.message)"></v-icon>
           </template>
         </div>
       </div>

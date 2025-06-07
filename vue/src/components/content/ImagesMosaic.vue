@@ -7,6 +7,7 @@
     }"
   >
     <img
+      loading="lazy"
       v-for="(image, index) in images"
       :key="index"
       class="mosaic-item"
@@ -19,15 +20,15 @@
     />
   </div>
   <v-dialog v-model="showImageViewer" width="auto" v-if="hasViewer">
-    <img :src="imageViewerSrc" class="image-viewer" />
+    <img loading="lazy" :src="imageViewerSrc" class="image-viewer" />
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { FileObject as FileObjectType } from '@/models/interfaces/object/FileObject'
-import type { MediaObject } from '@/models/interfaces/object/MediaObject'
-import { FileObject } from '@/services/files/FileObject'
+import type { FileObject as FileObjectType } from '@/models/interfaces/object/FileObject';
+import type { MediaObject } from '@/models/interfaces/object/MediaObject';
+import { FileObject } from '@/services/files/FileObject';
+import { ref } from 'vue';
 
 withDefaults(
   defineProps<{

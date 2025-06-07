@@ -26,39 +26,39 @@
         <template v-if="(item as User).isValidated">
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_ACTORS)"
-            icon="mdi-contacts"
+            icon="$contacts"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_PROJECTS)"
-            icon="mdi-rocket-launch"
+            icon="$rocketLaunch"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_DATA)"
-            icon="mdi-database-arrow-down"
+            icon="$databaseArrowDown"
             class="mr-1"
             size="small"
           ></v-icon>
           <v-icon
             :color="getRoleIconColor(item as User, UserRoles.EDITOR_RESSOURCES)"
-            icon="mdi-account-group"
+            icon="$accountGroup"
             class="mr-1"
             size="small"
           ></v-icon>
         </template>
         <v-btn
           density="comfortable"
-          icon="mdi-pencil-outline"
+          icon="$pencilOutline"
           @click="editUser(item as User)"
           class="disabled-white"
         ></v-btn>
         <v-btn
           density="comfortable"
-          icon="mdi-delete-outline"
-          @click="((isAreYouSurePopupShown = true), (userToDelete = item))"
+          icon="$deleteOutline"
+          @click="((isAreYouSurePopupShown = true), (userToDelete = item as Partial<User>))"
           class="disabled-white"
         ></v-btn>
         <AreYouSurePopup
@@ -78,7 +78,7 @@ import AreYouSurePopup from '@/components/global/AreYouSurePopup.vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 const adminStore = useAdminStore()
 const isAreYouSurePopupShown = ref(false)
 const isDeleting = ref(false)
@@ -94,10 +94,10 @@ function editUser(user: User) {
   adminStore.setUserEditionMode(user)
 }
 
-const userToDelete = ref(null)
+const userToDelete: Ref<Partial<User> | null> = ref(null)
 const deleteUser = async () => {
   isDeleting.value = true
-  await adminStore.deleteUser(userToDelete.value)
+  await adminStore.deleteUser(userToDelete.value as Partial<User>)
   isDeleting.value = false
   userToDelete.value = null
   isAreYouSurePopupShown.value = false

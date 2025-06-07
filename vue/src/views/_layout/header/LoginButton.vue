@@ -4,7 +4,7 @@
     append
     :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_SIGN_IN } }"
   >
-    <v-btn color="main-red" prepend-icon="mdi-account-circle" flat>
+    <v-btn color="main-red" prepend-icon="$accountCircle" flat>
       {{ $t('header.login') }}
     </v-btn>
   </router-link>
@@ -13,8 +13,8 @@
       <v-btn
         base-color="white"
         class="text-main-blue"
-        prepend-icon="mdi-account-circle"
-        append-icon="mdi-chevron-down"
+        prepend-icon="$accountCircle"
+        append-icon="$chevronDown"
         v-bind="props"
         flat
       >
@@ -28,7 +28,7 @@
         @click="projectStore.isProjectFormShown = true"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
+          <v-icon color="main-blue" icon="$plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addProject') }}</v-list-item-title>
       </v-list-item>
@@ -37,7 +37,7 @@
         @click="actorsStore.setActorEditionMode(null)"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
+          <v-icon color="main-blue" icon="$plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addActor') }}</v-list-item-title>
       </v-list-item>
@@ -46,20 +46,20 @@
         @click="resourceStore.isResourceFormShown = true"
       >
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
+          <v-icon color="main-blue" icon="$plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addResource') }}</v-list-item-title>
       </v-list-item>
       <v-list-item v-if="userStore.userHasRole(UserRoles.EDITOR_DATA) || userStore.userIsAdmin()">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-plus"></v-icon>
+          <v-icon color="main-blue" icon="$plus"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.addData') }}</v-list-item-title>
       </v-list-item>
       <v-divider class="my-2" v-if="userStore.userIsAdmin()" />
       <v-list-item :to="{ name: 'userAccount' }">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-account-circle"></v-icon>
+          <v-icon color="main-blue" icon="$accountCircle"></v-icon>
         </template>
         <v-list-item-title color="main-blue" class="text-weight-bold">{{
           $t('header.account')
@@ -67,13 +67,13 @@
       </v-list-item>
       <v-list-item v-if="userStore.userIsAdmin()" :to="{ name: 'admin' }">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-tune"></v-icon>
+          <v-icon color="main-blue" icon="$tune"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.administration') }}</v-list-item-title>
       </v-list-item>
       <v-list-item @click="userStore.signOut()">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-logout"></v-icon>
+          <v-icon color="main-blue" icon="$logout"></v-icon>
         </template>
         <v-list-item-title>{{ $t('header.logout') }}</v-list-item-title>
       </v-list-item>
@@ -81,12 +81,12 @@
   </v-menu>
 </template>
 <script setup lang="ts">
-import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { DialogKey } from '@/models/enums/app/DialogKey'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { useActorsStore } from '@/stores/actorsStore'
-import { useUserStore } from '@/stores/userStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
+import { useUserStore } from '@/stores/userStore'
 
 const userStore = useUserStore()
 const actorsStore = useActorsStore()

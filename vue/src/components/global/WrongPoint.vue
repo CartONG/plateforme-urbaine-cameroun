@@ -1,6 +1,6 @@
 <template>
   <div class="WrongPoint" :highlighted="highlighted" :has-description="!!description">
-    <v-icon class="WrongPoint__icon" icon="mdi:mdi-close-circle-outline" color="main-red" />
+    <v-icon class="WrongPoint__icon" icon="$close-circle-outline" color="main-red" />
     <div class="WrongPoint__labelCtn">
       <span class="WrongPoint__label">{{ label }}</span>
       <span class="WrongPoint__description" v-if="description">{{ description }}</span>

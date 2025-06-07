@@ -2,28 +2,28 @@
   <v-menu activator="parent" :location="location">
     <v-list>
       <v-list-item @click="shareOnWhatsapp()">
-        <v-icon icon="mdi mdi-whatsapp"></v-icon>
+        <v-icon icon="$whatsapp"></v-icon>
         <span class="ml-4">{{ $t('share.shareWhatsapp') }}</span>
       </v-list-item>
       <v-list-item @click="shareOnFacebook()">
-        <v-icon icon="mdi mdi-facebook"></v-icon>
+        <v-icon icon="$facebook"></v-icon>
         <span class="ml-4">{{ $t('share.shareFb') }}</span>
       </v-list-item>
       <v-list-item @click="shareByEmail()">
-        <v-icon icon="mdi mdi-email-plus-outline"></v-icon>
+        <v-icon icon="$emailMultipleOutline"></v-icon>
         <span class="ml-4">{{ $t('share.shareEmail') }}</span>
       </v-list-item>
       <v-list-item @click="shareWithLink(url)">
-        <v-icon icon="mdi mdi-content-copy"></v-icon>
+        <v-icon icon="$contentCopy"></v-icon>
         <span class="ml-4">{{ $t('share.copyLink') }}</span>
       </v-list-item>
     </v-list>
   </v-menu>
 </template>
 <script setup lang="ts">
-import { NotificationType } from '@/models/enums/app/NotificationType'
-import { i18n } from '@/plugins/i18n'
-import { addNotification } from '@/services/notifications/NotificationService'
+import { NotificationType } from '@/models/enums/app/NotificationType';
+import { i18n } from '@/plugins/i18n';
+import { addNotification } from '@/services/notifications/NotificationService';
 
 const props = defineProps<{
   location: 'bottom' | 'top' | 'left' | 'right'

@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="HomeMapDescription__mapImg">
-      <img src="@/assets/images/home_map_comparator.png" />
+      <img loading="lazy" src="@/assets/images/home_map_comparator.jpg" />
       <div class="HomeMapDescription__welcomeCtn">
         <h4>{{ $t('home.map.welcome') }}</h4>
         <p>{{ $t('home.map.welcomeDescription') }}</p>
@@ -33,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import CheckPoint from '@/components/global/CheckPoint.vue'
-import PageTitle from '@/components/text-elements/PageTitle.vue'
+import CheckPoint from '@/components/global/CheckPoint.vue';
+import PageTitle from '@/components/text-elements/PageTitle.vue';
 
 const bullets = ['overview', 'simpleMaps', 'geodata', 'thematics', 'way']
 </script>
@@ -78,7 +78,7 @@ const bullets = ['overview', 'simpleMaps', 'geodata', 'thematics', 'way']
     }
 
     .HomeMapDescription__welcomeCtn {
-      background: rgb(var(--v-theme-light-yellow)) url(@/assets/images/Frise.svg) no-repeat top
+      background: rgb(var(--v-theme-light-yellow)) url(@/assets/images/Frise.jpg) no-repeat top
         center;
       background-attachment: local;
       background-size: 100% 1rem;

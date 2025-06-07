@@ -1,7 +1,7 @@
 <template>
   <div class="maplibregl-ctrl maplibregl-ctrl-group MapExport">
     <v-btn
-      icon="mdi-printer"
+      icon="$printer"
       @click.stop="mapStore.isMapExportActive = !mapStore.isMapExportActive"
       :class="{
         'text-white': mapStore.isMapExportActive,
@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useMyMapStore } from '@/stores/myMapStore'
+import { useMyMapStore } from '@/stores/myMapStore';
 
 const mapStore = useMyMapStore()
 </script>
