@@ -1,31 +1,31 @@
-import { StoresList } from '@/models/enums/app/StoresList'
-import { defineStore } from 'pinia'
-import { computed, reactive, ref, watch, type Ref } from 'vue'
-import type { GeoData } from '@/models/interfaces/geo/GeoData'
-import type { Layer } from '@/models/interfaces/map/Layer'
 import type Map from '@/components/map/Map.vue'
+import { ItemType, type QGISItemType } from '@/models/enums/app/ItemType'
+import { StoresList } from '@/models/enums/app/StoresList'
+import { LayerType } from '@/models/enums/geo/LayerType'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
+import type { Item } from '@/models/interfaces/Item'
 import type {
   AtlasActive,
   AtlasMap,
   FilteredQGISLayerFeatures
 } from '@/models/interfaces/map/AtlasMap'
-import { AtlasMapService } from '@/services/map/AtlasMapService'
+import type { Layer } from '@/models/interfaces/map/Layer'
 import type { AppLayerLegendItem, AtlasLayerLegendItem } from '@/models/interfaces/map/Legend'
-import { LayerType } from '@/models/enums/geo/LayerType'
-import { LegendService } from '@/services/map/LegendService'
-import type { LngLat, LngLatBounds } from 'maplibre-gl'
-import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
-import { AppLayersService } from '@/services/map/AppLayersService'
 import type { MapState } from '@/models/interfaces/map/MapState'
-import { useAtlasStore } from './atlasStore'
-import type { Item } from '@/models/interfaces/Item'
-import { useProjectStore } from './projectStore'
-import { useActorsStore } from './actorsStore'
-import { useResourceStore } from './resourceStore'
-import { ProjectService } from '@/services/projects/ProjectService'
 import { ActorsService } from '@/services/actors/ActorsService'
+import { AppLayersService } from '@/services/map/AppLayersService'
+import { AtlasMapService } from '@/services/map/AtlasMapService'
+import { LegendService } from '@/services/map/LegendService'
+import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
+import { ProjectService } from '@/services/projects/ProjectService'
 import { ResourceService } from '@/services/resources/ResourceService'
-import { ItemType, type QGISItemType } from '@/models/enums/app/ItemType'
+import type { LngLat, LngLatBounds } from 'maplibre-gl'
+import { defineStore } from 'pinia'
+import { computed, reactive, ref, watch, type Ref } from 'vue'
+import { useActorsStore } from './actorsStore'
+import { useAtlasStore } from './atlasStore'
+import { useProjectStore } from './projectStore'
+import { useResourceStore } from './resourceStore'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
@@ -52,6 +52,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const activeItemCoords: Ref<LngLat | null> = ref(null)
 
   const atlasMaps: Ref<AtlasMap[]> = ref([])
+  const atlasSearchText: Ref<string> = ref('')
   const activeAtlas: AtlasActive = reactive({
     leftPanel: {
       active: false,
@@ -229,6 +230,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     resourceLayer,
     resourceSubLayers,
     atlasMaps,
+    atlasSearchText,
     activeAtlas,
     initMapLayers,
     updateAtlasLayersVisibility,
