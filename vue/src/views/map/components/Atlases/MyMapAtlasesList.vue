@@ -6,7 +6,7 @@
         variant="outlined"
         v-model="mapStore.atlasSearchText"
         :label="$t('myMap.atlases.searchData')"
-        prepend-inner-icon="mdi-magnify"
+        prepend-inner-icon="$magnify"
         clearable
       />
     </div>
