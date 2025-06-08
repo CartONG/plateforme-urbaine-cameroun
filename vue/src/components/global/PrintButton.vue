@@ -3,7 +3,7 @@
     class="PrintButton"
     @click="print"
     variant="text"
-    prepend-icon="mdi-printer"
+    prepend-icon="$printer"
     icon-color="main-blue"
     >{{ $t('buttons.print') }}</v-btn
   >

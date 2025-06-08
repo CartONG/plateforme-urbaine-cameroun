@@ -13,7 +13,7 @@
         <v-expansion-panel-title>
           {{ $t('admin.panelMembers') }}
           <template v-slot:actions>
-            <v-icon color="main-blue" icon="mdi-chevron-right"></v-icon>
+            <v-icon color="main-blue" icon="$chevronRight"></v-icon>
           </template>
         </v-expansion-panel-title>
       </v-expansion-panel>
@@ -28,21 +28,21 @@
       >
         <v-expansion-panel-text>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminActors' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentActors') }}
             <div class="Admin__itemToValidateCounter" v-if="actorsToValidate > 0">
               {{ actorsToValidate }}
             </div>
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminProjects' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentProjects') }}
             <div class="Admin__itemToValidateCounter" v-if="projectsToValidate > 0">
               {{ projectsToValidate }}
             </div>
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminResources' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentResources') }}
             <div class="Admin__itemToValidateCounter" v-if="resourcesToValidate > 0">
               {{ resourcesToValidate }}
@@ -61,15 +61,15 @@
       >
         <v-expansion-panel-text>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminPredefinedMaps' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelPredefinedMaps') }}
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminThematicMaps' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelThematicMaps') }}
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminQgisMaps' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelMapQGIS') }}
           </router-link>
         </v-expansion-panel-text>
@@ -86,7 +86,7 @@
           <v-expansion-panel-title>
             {{ $t('admin.panelHighlightedItems') }}
             <template v-slot:actions>
-              <v-icon color="main-blue" icon="mdi-chevron-right"></v-icon>
+              <v-icon color="main-blue" icon="$chevronRight"></v-icon>
             </template>
           </v-expansion-panel-title>
         </router-link>
@@ -102,28 +102,28 @@
       >
         <v-expansion-panel-text>
           <router-link class="Admin__itemSelector" :to="{ name: 'actorsComments' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentActors') }}
             <div class="Admin__itemToValidateCounter" v-if="actorsCommentsToRead > 0">
               {{ actorsCommentsToRead }}
             </div>
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'projectsComments' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentProjects') }}
             <div class="Admin__itemToValidateCounter" v-if="projectsCommentsToRead > 0">
               {{ projectsCommentsToRead }}
             </div>
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'resourcesComments' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelContentResources') }}
             <div class="Admin__itemToValidateCounter" v-if="resourcesCommentsToRead > 0">
               {{ resourcesCommentsToRead }}
             </div>
           </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'mapComments' }">
-            <v-icon icon="mdi mdi-circle-small" size="large"></v-icon>
+            <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelCommentsMap') }}
             <div class="Admin__itemToValidateCounter" v-if="mapCommentsToRead > 0">
               {{ mapCommentsToRead }}

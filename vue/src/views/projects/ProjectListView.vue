@@ -9,7 +9,7 @@
           <v-btn
             v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS) || userStore.userIsAdmin()"
             @click="projectStore.isProjectFormShown = true"
-            prepend-icon="mdi-plus"
+            prepend-icon="$plus"
             color="main-red"
             >{{ $t('projects.form.title.create') }}</v-btn
           >
@@ -24,7 +24,7 @@
             density="comfortable"
           >
             <template v-slot:prepend-inner>
-              <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+              <v-icon icon="$magnify" color="main-blue"></v-icon>
             </template>
           </v-text-field>
           <v-select
@@ -56,19 +56,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onBeforeMount, type Ref } from 'vue'
-import { useProjectStore } from '@/stores/projectStore'
-import ProjectCard from '@/views/projects/components/ProjectCard.vue'
-import ProjectMap from '@/views/projects/components/ProjectMap.vue'
-import { useApplicationStore } from '@/stores/applicationStore'
-import { i18n } from '@/plugins/i18n'
-import { ref } from 'vue'
-import { SortKey } from '@/models/enums/SortKey'
-import type { Project } from '@/models/interfaces/Project'
 import Pagination from '@/components/global/Pagination.vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
+import { SortKey } from '@/models/enums/SortKey'
+import type { Project } from '@/models/interfaces/Project'
+import { i18n } from '@/plugins/i18n'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
+import ProjectCard from '@/views/projects/components/ProjectCard.vue'
+import ProjectMap from '@/views/projects/components/ProjectMap.vue'
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 const userStore = useUserStore()
+const applicationStore = useApplicationStore()
 const projectStore = useProjectStore()
 
 const sortOptions = Object.values(SortKey).map((key) => {
@@ -86,7 +86,11 @@ const setSortKey = (key: SortKey) => {
   projectStore.sortingProjectsSelectedMethod = key
 }
 
-onBeforeMount(async () => await projectStore.getAll())
+onBeforeMount(async () => {
+  applicationStore.isLoading = true
+  await projectStore.getAll()
+  applicationStore.isLoading = false
+})
 
 const orderedProjects = computed(() => projectStore.orderedProjects)
 const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)

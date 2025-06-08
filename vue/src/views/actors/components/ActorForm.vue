@@ -275,6 +275,7 @@
       <span class="text-action" @click="actorsStore.resetActorEditionMode()">{{
         $t('forms.cancel')
       }}</span>
+      <span v-show="isSubmitting" class="text-warning ml-3">{{ $t('forms.submitting') }}</span>
     </template>
     <template #footer-right>
       <v-btn type="submit" form="actor-form" color="main-red" :loading="isSubmitting">{{
@@ -414,7 +415,7 @@ function phoneValidation(phoneObject: any) {
 }
 
 const submitForm = handleSubmit(
-  (values) => {
+  async (values) => {
     const actorSubmission: ActorSubmission = {
       ...(values as any),
       id: actorToEdit ? actorToEdit.id : undefined,
@@ -424,7 +425,7 @@ const submitForm = handleSubmit(
       imagesToUpload: [...imagesToUpload.value],
       phone: internationalPhoneNumber
     }
-    actorsStore.createOrEditActor(actorSubmission, actorToEdit !== null)
+    await actorsStore.createOrEditActor(actorSubmission, actorToEdit !== null)
   },
   ({ errors }) => {
     console.log(errors)

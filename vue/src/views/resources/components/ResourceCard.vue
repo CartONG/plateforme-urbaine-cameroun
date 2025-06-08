@@ -28,11 +28,11 @@
         v-if="(isEvent && resource.startAt) || resource.geoData?.name"
       >
         <span v-if="isEvent && resource.startAt">
-          <v-icon icon="mdi-calendar" />
+          <v-icon icon="$calendar" />
           <span>{{ dateRangeLabel }}</span>
         </span>
         <span class="InfoCard__location" v-if="resource.geoData && locationName">
-          <v-icon icon="mdi-map-marker-outline" />
+          <v-icon icon="$mapMarkerOutline" />
           <span>{{ locationName }}</span>
         </span>
       </span>
@@ -55,20 +55,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Resource } from '@/models/interfaces/Resource'
-import { ItemType } from '@/models/enums/app/ItemType'
+import CommentButton from '@/components/comments/CommentButton.vue'
 import GenericInfoCard from '@/components/global/GenericInfoCard.vue'
+import { ItemType } from '@/models/enums/app/ItemType'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
-import { computed } from 'vue'
-import { useResourceStore } from '@/stores/resourceStore'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
-import { getDateRangeLabel, localizeDate } from '@/services/utils/UtilsService'
+import { CommentOrigin } from '@/models/interfaces/Comment'
+import type { Resource } from '@/models/interfaces/Resource'
 import GeocodingService from '@/services/map/GeocodingService'
 import { ResourceService } from '@/services/resources/ResourceService'
+import { getDateRangeLabel, localizeDate } from '@/services/utils/UtilsService'
+import { useResourceStore } from '@/stores/resourceStore'
 import { useUserStore } from '@/stores/userStore'
-import CommentButton from '@/components/comments/CommentButton.vue'
-import { CommentOrigin } from '@/models/interfaces/Comment'
 import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
+import { computed } from 'vue'
 
 const resourceStore = useResourceStore()
 const userStore = useUserStore()
@@ -87,12 +87,12 @@ const icon = computed(() => {
   switch (props.resource.format) {
     case ResourceFormat.VIDEO:
     case ResourceFormat.WEB:
-      return 'mdi-open-in-new'
+      return '$openInNew'
     case ResourceFormat.XLSX:
     case ResourceFormat.PDF:
-      return 'mdi-download'
+      return '$download'
     case ResourceFormat.IMAGE:
-      return 'mdi-arrow-right'
+      return '$arrowRight'
     default:
       return undefined
   }

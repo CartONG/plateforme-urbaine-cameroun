@@ -1,6 +1,6 @@
 <template>
   <div class="ListHeader">
-    <img src="@/assets/images/Mosaic_actors_page.svg" alt="" />
+    <img loading="lazy" src="@/assets/images/Mosaic_actors_page.svg" alt="" />
     <div class="ListHeader__content">
       <PageTitle :title="title" />
       <span class="ListHeader__desc">{{ description }}</span>
@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import ListSearchBar from '@/views/_layout/list/ListSearchBar.vue'
-import PageTitle from '@/components/text-elements/PageTitle.vue'
+import PageTitle from '@/components/text-elements/PageTitle.vue';
+import ListSearchBar from '@/views/_layout/list/ListSearchBar.vue';
 
 const searchQuery = defineModel()
 defineProps<{

@@ -6,6 +6,7 @@
       <span style="font-size: 14px">{{ actor.category }}</span>
       <div class="ActorCard__logoCtn">
         <img
+          loading="lazy"
           class="ActorCard__logo"
           :src="actor.logo?.contentsFilteredUrl?.thumbnail"
           v-if="actor.logo?.contentsFilteredUrl?.thumbnail"
@@ -19,21 +20,21 @@
       <CommentButton position="Card" :origin="CommentOrigin.ACTOR" :originSlug="actor.slug" />
     </template>
     <template #footer-right>
-      <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>
+      <v-icon class="InfoCard__actionIcon" icon="$arrowRight" color="light-blue"></v-icon>
     </template>
   </InfoCard>
 </template>
 
 <script setup lang="ts">
-import type { Actor } from '@/models/interfaces/Actor'
+import CommentButton from '@/components/comments/CommentButton.vue'
+import ShareButton from '@/components/global//ShareButton.vue'
+import HighlightButton from '@/components/global/HighlightButton.vue'
 import InfoCard from '@/components/global/InfoCard.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
-import ShareButton from '@/components/global//ShareButton.vue'
+import type { Actor } from '@/models/interfaces/Actor'
+import { CommentOrigin } from '@/models/interfaces/Comment'
 import { computed, type ComputedRef } from 'vue'
 import type { RouteLocationAsRelativeGeneric } from 'vue-router'
-import HighlightButton from '@/components/global/HighlightButton.vue'
-import CommentButton from '@/components/comments/CommentButton.vue'
-import { CommentOrigin } from '@/models/interfaces/Comment'
 const props = defineProps<{
   actor: Actor
 }>()

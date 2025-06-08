@@ -23,11 +23,13 @@ import type { LngLat, LngLatBounds } from 'maplibre-gl'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref, watch, type Ref } from 'vue'
 import { useActorsStore } from './actorsStore'
+import { useApplicationStore } from './applicationStore'
 import { useAtlasStore } from './atlasStore'
 import { useProjectStore } from './projectStore'
 import { useResourceStore } from './resourceStore'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
+  const applicationStore = useApplicationStore()
   const myMap: Ref<InstanceType<typeof Map> | undefined> = ref()
   const map = computed(() => myMap.value?.map)
   const mapCanvasToDataUrl: Ref<string | null> = ref(null)
@@ -96,6 +98,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
       updateMapLayersOrder()
     }
     deserializedMapState.value = null
+    applicationStore.isLoading = false
   }
 
   // Activate a watcher for app layers status

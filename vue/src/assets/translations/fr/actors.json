@@ -69,7 +69,9 @@
       "website": "Site internet",
       "submitSuccess": "L'acteur a bien été ajouté",
       "submitEdit": "L'acteur a bien été modifié",
-      "submitError": "Une erreur est survenue lors de la soumission du formulaire"
+      "submitError": "Une erreur est survenue lors de la soumission du formulaire",
+      "deleteSuccess": "L'acteur a bien été supprimé",
+      "deleteError": "Une erreur est survenue lors de la suppression de l'acteur. Veuillez supprimer les entités associées avant de supprimer l'acteur."
     },
     "name": "Nom",
     "search": "Rechercher un acteur",

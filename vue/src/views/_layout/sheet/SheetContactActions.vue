@@ -1,19 +1,19 @@
 <template>
   <div class="SheetContactActions">
-    <BasicCard icon="mdi-open-in-new" v-if="website">
+    <BasicCard icon="$openInNew" v-if="website">
       <a :href="website" target="_blank" class="ml-2">{{ $t('content.website') }}</a>
     </BasicCard>
-    <BasicCard icon="mdi-email-plus-outline" v-if="email">
+    <BasicCard icon="$emailPlusOutline" v-if="email">
       <a :href="`mailto:${email}`" class="ml-2">{{ $t('content.mail') }}</a>
     </BasicCard>
-    <BasicCard icon="mdi-phone" v-if="phone">
+    <BasicCard icon="$phone" v-if="phone">
       <span class="ml-2">{{ phone }}</span>
     </BasicCard>
   </div>
 </template>
 
 <script setup lang="ts">
-import BasicCard from '@/components/global/BasicCard.vue'
+import BasicCard from '@/components/global/BasicCard.vue';
 
 defineProps<{
   email: string

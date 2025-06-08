@@ -12,7 +12,7 @@
         <HomeKpis class="HomeView__mainContentKpis" />
       </div>
       <div class="HomeView__mainImagesCtn">
-        <img src="@/assets/images/home_iconography.svg" alt="" />
+        <img loading="lazy" src="@/assets/images/home_iconography.svg" alt="" />
       </div>
     </div>
     <div
@@ -41,15 +41,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import PageTitle from '@/components/text-elements/PageTitle.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
-import HomeKpis from '@/views/home/components/HomeKpis.vue'
-import HomeHighlights from '@/views/home/components/HomeHighlights.vue'
-import HomeMapDescription from '@/views/home/components/HomeMapDescription.vue'
-import HomeBecomeMember from '@/views/home/components/HomeBecomeMember.vue'
+import PageTitle from '@/components/text-elements/PageTitle.vue'
 import { useHomeStore } from '@/stores/homeStore'
-import { onMounted } from 'vue'
 import HomeAgenda from '@/views/home/components/HomeAgenda.vue'
+import HomeBecomeMember from '@/views/home/components/HomeBecomeMember.vue'
+import HomeHighlights from '@/views/home/components/HomeHighlights.vue'
+import HomeKpis from '@/views/home/components/HomeKpis.vue'
+import HomeMapDescription from '@/views/home/components/HomeMapDescription.vue'
+import { onMounted } from 'vue'
 
 const homeStore = useHomeStore()
 

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationAsRelativeGeneric } from 'vue-router'
+import type { RouteLocationAsRelativeGeneric } from 'vue-router';
 defineProps<{
   to?: string | RouteLocationAsRelativeGeneric
   light?: boolean
@@ -124,8 +124,7 @@ defineProps<{
 
   .InfoCard__actionIcon {
     background-color: transparent;
-    padding: 1rem;
-    border-radius: 50%;
+    border-radius: 15%;
     transition: all 0.1s ease-in;
   }
 }
