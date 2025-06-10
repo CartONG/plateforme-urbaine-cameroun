@@ -20,14 +20,13 @@ class ValidatorProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($operation instanceof Patch) {
-            return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-        }
-
         if (!isset($data->isValidated) || false == $data->getIsValidated()) {
             if ($this->security->isGranted(UserRoles::ROLE_ADMIN)) {
                 $data->setIsValidated(true);
             } else {
+                if ($operation instanceof Patch) {
+                    return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+                }
                 $data->setIsValidated(false);
             }
         }
