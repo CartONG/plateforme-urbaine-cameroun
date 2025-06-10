@@ -7,18 +7,21 @@
             <h4 class="Footer__title">{{ $t('footer.contact') }}</h4>
             <div class="Footer__contactLogos">
               <img
+                loading="lazy"
                 src="@/assets/images/footer/facebook.svg"
                 alt="facebook"
                 class="Footer__contactImg ml-8"
                 @click="openFacebook"
               />
               <img
+                loading="lazy"
                 src="@/assets/images/footer/linkedin.svg"
                 alt="linkedin"
                 class="Footer__contactImg"
                 @click="openLinkedIn"
               />
               <img
+                loading="lazy"
                 src="@/assets/images/footer/instagram.svg"
                 alt="instagram"
                 class="Footer__contactImg"
@@ -27,7 +30,7 @@
             </div>
           </div>
           <div class="Footer__adressCtn">
-            <v-icon icon="mdi-map-marker-outline"></v-icon>
+            <v-icon icon="$mapMarkerOutline"></v-icon>
             <div class="Footer__adress">
               <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
               <span>Quartier Golf Bastos</span>
@@ -36,7 +39,7 @@
             </div>
           </div>
           <div class="Footer__adressCtn">
-            <v-icon icon="mdi-phone-outline"></v-icon>
+            <v-icon icon="$phoneOutline"></v-icon>
             <div class="Footer__adress">
               <span>00 237 6 52 26 66 18</span>
             </div>
@@ -45,8 +48,8 @@
             color="main-blue"
             class="Footer__btn"
             variant="flat"
-            prepend-icon="mdi-email-outline"
-            append-icon="mdi-arrow-right"
+            prepend-icon="$emailOutline"
+            append-icon="$arrowRight"
             onclick="location.href='mailto:plateformeurbaine@gmail.com';"
             >{{ $t('footer.email') }}</v-btn
           >
@@ -54,36 +57,45 @@
         <div class="Footer__block Footer__block--right">
           <h4 class="Footer__title">{{ $t('footer.partners') }}</h4>
           <div class="Footer__partnersLogos">
-            <img src="@/assets/images/footer/cameroun_flag.svg" alt="cameroun flag" />
+            <img
+              loading="lazy"
+              src="@/assets/images/footer/cameroun_flag.svg"
+              alt="cameroun flag"
+            />
             <a href="https://www.eeas.europa.eu/delegations/cameroun_fr?s=88" target="_blank"
-              ><img src="@/assets/images/footer/logo_ue.png" alt="union-europeenne"
+              ><img loading="lazy" src="@/assets/images/footer/logo_ue.png" alt="union-europeenne"
             /></a>
             <a href="https://www.expertisefrance.fr/fiche-projet?id=882931" target="_blank"
-              ><img src="@/assets/images/footer/logo_ef.png" alt="expertise-france"
+              ><img loading="lazy" src="@/assets/images/footer/logo_ef.png" alt="expertise-france"
             /></a>
           </div>
           <div class="Footer__secondaryPartnersLogos">
             <a href="https://www.minhdu.gov.cm/" target="_blank"
-              ><img src="@/assets/images/footer/minhdu.png" alt="minhdu"
+              ><img loading="lazy" src="@/assets/images/footer/minhdu.png" alt="minhdu"
             /></a>
             <a href="https://www.minddevel.gov.cm" target="_blank"
-              ><img src="@/assets/images/footer/mindevel.png" alt="minddevel"
+              ><img loading="lazy" src="@/assets/images/footer/mindevel.png" alt="minddevel"
             /></a>
             <a href="https://cvuc-uccc.com" target="_blank"
-              ><img src="@/assets/images/footer/cvuc.png" alt="cvuc"
+              ><img loading="lazy" src="@/assets/images/footer/cvuc.png" alt="cvuc"
             /></a>
-            <span><img src="@/assets/images/footer/asso_cameroun.png" alt="asso_cameroun" /></span>
+            <span
+              ><img
+                loading="lazy"
+                src="@/assets/images/footer/asso_cameroun.png"
+                alt="asso_cameroun"
+            /></span>
             <a href="https://minepat.gov.cm/fr/accueil" target="_blank"
-              ><img src="@/assets/images/footer/minepat.png" alt="minepat"
+              ><img loading="lazy" src="@/assets/images/footer/minepat.png" alt="minepat"
             /></a>
             <a href="https://yaounde.cm" target="_blank"
-              ><img src="@/assets/images/footer/yaounde.png" alt="yaounde"
+              ><img loading="lazy" src="@/assets/images/footer/yaounde.png" alt="yaounde"
             /></a>
             <a href="https://tresorpublic.cm/fr/ministries/mindcaf" target="_blank"
-              ><img src="@/assets/images/footer/mindcaf.png" alt="mindcaf"
+              ><img loading="lazy" src="@/assets/images/footer/mindcaf.png" alt="mindcaf"
             /></a>
             <a href="https://www.facebook.com/groups/2611030598941314" target="_blank"
-              ><img src="@/assets/images/footer/maroua.png" alt="maroua"
+              ><img loading="lazy" src="@/assets/images/footer/maroua.png" alt="maroua"
             /></a>
           </div>
         </div>
@@ -113,7 +125,7 @@ function openInstagram() {
 
 <style lang="scss">
 .Footer {
-  background-image: url('@/assets/images/Frise.svg');
+  background-image: url('@/assets/images/Frise.jpg');
   background-repeat: repeat-x;
   width: 100%;
   padding: 6rem 0 2rem 0;

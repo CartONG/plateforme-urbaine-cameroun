@@ -2,7 +2,7 @@
   <div class="CheckPoint" :highlighted="highlighted" :has-description="description ? true : false">
     <v-icon
       class="CheckPoint__icon"
-      icon="mdi:mdi-check-circle"
+      icon="$checkCircle"
       :style="
         highlighted ? 'background:' + (highlightColor ?? 'rgb(var(--v-theme-light-yellow)') : ''
       "
@@ -36,7 +36,7 @@ defineProps<{
     .CheckPoint__icon {
       position: relative;
       background-color: rgb(var(--v-theme-light-yellow));
-      padding: 1.25rem;
+      margin: 1.25rem;
       border-radius: 50%;
     }
   }

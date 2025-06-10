@@ -17,7 +17,7 @@ import type { App } from 'vue'
 import VueTelInput from 'vue-tel-input'
 import 'vue-tel-input/vue-tel-input.css'
 
-const pinia = createPinia()
+export const pinia = createPinia()
 export function registerPlugins(app: App) {
   app
     .use(vuetify)
