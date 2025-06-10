@@ -5,3 +5,6 @@ gesdinet_jwt_refresh_token:
     token_parameter_name: refresh_token
     cookie:
       enabled: true
+      http_only: false
+      same_site: strict
+    

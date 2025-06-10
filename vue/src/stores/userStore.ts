@@ -1,23 +1,23 @@
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import { StoresList } from '@/models/enums/app/StoresList'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type {
   EmailVerifierValues,
   SignInValues,
   SignUpValues
 } from '@/models/interfaces/auth/AuthenticationsValues'
 import type { User, UserSubmission } from '@/models/interfaces/auth/User'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
+import FileUploader from '@/services/files/FileUploader'
 import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import JwtCookie from '@/services/userAndAuth/JWTCookie'
+import { UserService } from '@/services/userAndAuth/UserService'
+import * as Sentry from '@sentry/browser'
+import { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import * as Sentry from '@sentry/browser'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
-import FileUploader from '@/services/files/FileUploader'
-import type { FileObject } from '@/models/interfaces/object/FileObject'
-import { UserService } from '@/services/userAndAuth/UserService'
 import { useApplicationStore } from './applicationStore'
-import { AxiosError } from 'axios'
 
 export const useUserStore = defineStore(StoresList.USER, () => {
   const router = useRouter()
@@ -100,7 +100,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   }
 
   const checkAuthenticated = async () => {
-    const jwtCookieIsValid = JwtCookie.isValid()
+    const jwtCookieIsValid = await JwtCookie.isValid()
     if (jwtCookieIsValid) {
       setCurrentUser()
     }

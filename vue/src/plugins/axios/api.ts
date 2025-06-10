@@ -3,6 +3,7 @@ import { NotificationType } from '@/models/enums/app/NotificationType'
 import { i18n } from '@/plugins/i18n'
 import router from '@/router'
 import { addNotification } from '@/services/notifications/NotificationService'
+import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import * as Sentry from '@sentry/vue'
 import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from 'axios'
 
@@ -21,19 +22,6 @@ const onRefreshed = () => {
 const onFailedRefresh = (error: any) => {
   refreshSubscribers.forEach((callback) => callback(error))
   refreshSubscribers = []
-}
-
-const refreshAuthToken = async () => {
-  const response = await axiosInstance.post(
-    '/api/token/refresh',
-    {},
-    {
-      headers: { Accept: 'application/json' },
-      withCredentials: true
-    }
-  )
-
-  return response.data
 }
 
 const axiosInstance = axios.create({
@@ -65,7 +53,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true
 
       try {
-        await refreshAuthToken()
+        await AuthenticationService.refreshAuthToken()
         onRefreshed()
         return axiosInstance(originalRequest)
       } catch (refreshError) {
