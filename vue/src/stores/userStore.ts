@@ -22,6 +22,7 @@ import { useApplicationStore } from './applicationStore'
 export const useUserStore = defineStore(StoresList.USER, () => {
   const router = useRouter()
   const route = useRoute()
+  const loginCheck = ref(false)
   const currentUser = ref<User | null>(null)
   const errorWhileSignInOrSignUp = ref(false)
   const invalidAccount = ref(false)
@@ -105,8 +106,9 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const checkAuthenticated = async () => {
     const jwtCookieIsValid = await JwtCookie.isValid()
     if (jwtCookieIsValid) {
-      setCurrentUser()
+      await setCurrentUser()
     }
+    loginCheck.value = true
   }
 
   const patchUser = async (
@@ -126,6 +128,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     router.replace({ query: { ...route.query, dialog: undefined } })
   }
   return {
+    loginCheck,
     userIsLogged,
     userIsAdmin,
     userIsEditor,

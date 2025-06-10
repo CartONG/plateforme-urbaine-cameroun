@@ -19,6 +19,7 @@
         </div>
         <div class="ProjectCard__block ProjectCard__block--right">
           <img
+            loading="lazy"
             v-if="project.logo?.contentsFilteredUrl.thumbnail"
             class="ProjectCard__logo"
             :src="project.logo?.contentsFilteredUrl.thumbnail"
@@ -39,7 +40,7 @@
       <CommentButton position="Card" :origin="CommentOrigin.PROJECT" :originSlug="project.slug" />
     </template>
     <template #footer-right>
-      <v-icon class="InfoCard__actionIcon" icon="mdi mdi-arrow-right" color="light-blue"></v-icon>
+      <v-icon class="InfoCard__actionIcon" icon="$arrowRight" color="light-blue"></v-icon>
     </template>
   </InfoCard>
 </template>

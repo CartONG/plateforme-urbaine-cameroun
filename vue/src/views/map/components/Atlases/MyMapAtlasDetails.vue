@@ -3,7 +3,7 @@
     <div class="d-flex flex-row flex-wrap">
       <v-btn
         size="small"
-        icon="mdi-arrow-left"
+        icon="$arrowLeft"
         class="text-dark-grey"
         elevation="4"
         @click="removeActiveAtlas()"
@@ -44,12 +44,12 @@
 </template>
 <script setup lang="ts">
 import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
-import type { Atlas } from '@/models/interfaces/Atlas'
-import { inject, type Ref } from 'vue'
-import { useMyMapStore } from '@/stores/myMapStore'
-import MyMapLayerPicker from '@/views/map/components/MyMapLayerPicker.vue'
-import MyMapAtlasPicker from '@/views/map/components/Atlases/MyMapAtlasPicker.vue'
 import { LayerType } from '@/models/enums/geo/LayerType'
+import type { Atlas } from '@/models/interfaces/Atlas'
+import { useMyMapStore } from '@/stores/myMapStore'
+import MyMapAtlasPicker from '@/views/map/components/Atlases/MyMapAtlasPicker.vue'
+import MyMapLayerPicker from '@/views/map/components/MyMapLayerPicker.vue'
+import { inject, type Ref } from 'vue'
 const hideDetails: Ref<boolean> = inject('hideDetails') as Ref<boolean>
 const myMapStore = useMyMapStore()
 

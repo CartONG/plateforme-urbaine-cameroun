@@ -4,7 +4,7 @@
       <div class="Modal__header">
         <span class="Modal__title">{{ title }}</span>
         <div class="Modal__closeBtn">
-          <v-icon icon="mdi mdi-close" @click="$emit('close')"></v-icon>
+          <v-icon icon="$close" @click="$emit('close')"></v-icon>
         </div>
       </div>
       <div class="Modal__content">

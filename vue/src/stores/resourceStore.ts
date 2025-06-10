@@ -1,16 +1,16 @@
-import { StoresList } from '@/models/enums/app/StoresList'
-import { defineStore } from 'pinia'
-import { ref, type Ref, computed, watch } from 'vue'
-import type { Resource, ResourceEvent } from '@/models/interfaces/Resource'
-import { ResourceService } from '@/services/resources/ResourceService'
+import { DialogKey } from '@/models/enums/app/DialogKey'
 import { FormType } from '@/models/enums/app/FormType'
+import { ItemType } from '@/models/enums/app/ItemType'
+import { NotificationType } from '@/models/enums/app/NotificationType'
+import { StoresList } from '@/models/enums/app/StoresList'
+import type { Resource, ResourceEvent } from '@/models/interfaces/Resource'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
-import { NotificationType } from '@/models/enums/app/NotificationType'
-import { useUserStore } from '@/stores/userStore'
+import { ResourceService } from '@/services/resources/ResourceService'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { DialogKey } from '@/models/enums/app/DialogKey'
-import { ItemType } from '@/models/enums/app/ItemType'
+import { useUserStore } from '@/stores/userStore'
+import { defineStore } from 'pinia'
+import { computed, ref, watch, type Ref } from 'vue'
 
 export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   const resources: Ref<Resource[]> = ref([])
@@ -79,13 +79,23 @@ export const useResourceStore = defineStore(StoresList.RESOURCES, () => {
   )
 
   const deleteResource = async (resource: Resource) => {
-    await ResourceService.delete(resource)
-    resources.value.forEach((p, key) => {
-      if (p.id === resource.id) {
-        resources.value.splice(key, 1)
-        addNotification(i18n.t('notifications.resource.delete'), NotificationType.SUCCESS)
-      }
-    })
+    useApplicationStore().isLoading = true
+    try {
+      await ResourceService.delete(resource)
+      resources.value.forEach((p, key) => {
+        if (p.id === resource.id) {
+          resources.value.splice(key, 1)
+          addNotification(i18n.t('notifications.resource.deleteSuccess'), NotificationType.SUCCESS)
+        }
+      })
+    } catch (error) {
+      addNotification(
+        i18n.t('notifications.resource.deleteError'),
+        NotificationType.ERROR,
+        error as string
+      )
+    }
+    useApplicationStore().isLoading = false
   }
 
   return {

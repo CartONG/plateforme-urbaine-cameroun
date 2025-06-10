@@ -22,18 +22,18 @@
 </template>
 
 <script setup lang="ts">
-import Map from '@/components/map/Map.vue'
-import MapService, { IControl } from '@/services/map/MapService'
-import { useProjectStore } from '@/stores/projectStore'
-import { computed, onMounted, onUnmounted, useTemplateRef, watch } from 'vue'
 import projectIcon from '@/assets/images/icons/map/project_icon.png'
 import projectHoverIcon from '@/assets/images/icons/map/project_icon_hover.png'
+import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
+import Map from '@/components/map/Map.vue'
+import router from '@/router'
+import MapService, { IControl } from '@/services/map/MapService'
+import { useProjectStore } from '@/stores/projectStore'
+import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
 import ProjectCard from '@/views/projects/components/ProjectCard.vue'
 import ProjectFilterModal from '@/views/projects/components/ProjectFilterModal.vue'
 import { type ResolvedImageSpecification } from 'maplibre-gl'
-import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
-import router from '@/router'
-import ToggleSidebarControl from '@/components/map/controls/ToggleSidebarControl.vue'
+import { computed, onMounted, onUnmounted, useTemplateRef, watch } from 'vue'
 
 type MapType = InstanceType<typeof Map>
 type ProjectCard = InstanceType<typeof ProjectCard>

@@ -2,7 +2,7 @@
   <template v-if="userStore.userIsLogged">
     <v-btn
       v-if="position === 'Sheet'"
-      :icon="isFormCommentVisible ? 'mdi-comment-text' : 'mdi-comment-text-outline'"
+      :icon="isFormCommentVisible ? '$commentText' : '$commentTextOutline'"
       @click.stop="isFormCommentVisible = true"
       :class="{
         'text-white': isFormCommentVisible,
@@ -14,7 +14,7 @@
       v-else
       variant="text"
       density="comfortable"
-      :icon="isFormCommentVisible ? 'mdi-comment-text' : 'mdi-comment-text-outline'"
+      :icon="isFormCommentVisible ? '$commentText' : '$commentTextOutline'"
       color="main-red"
       @click.prevent="isFormCommentVisible = true"
     >
@@ -29,10 +29,10 @@
   </template>
 </template>
 <script setup lang="ts">
-import CommentForm from '@/components/comments/CommentForm.vue'
-import type { CommentOrigin } from '@/models/interfaces/Comment'
-import { useUserStore } from '@/stores/userStore'
-import { ref } from 'vue'
+import CommentForm from '@/components/comments/CommentForm.vue';
+import type { CommentOrigin } from '@/models/interfaces/Comment';
+import { useUserStore } from '@/stores/userStore';
+import { ref } from 'vue';
 
 defineProps<{
   position: 'Sheet' | 'Card'

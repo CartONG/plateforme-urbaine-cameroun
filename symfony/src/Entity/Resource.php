@@ -277,12 +277,21 @@ class Resource
 
     public function getStartAt(): ?\DateTimeImmutable
     {
-        return $this->startAt;
+        if (!$this->startAt) {
+            return null;
+        }
+
+        // Retourner en timezone local
+        return $this->startAt->setTimezone(new \DateTimeZone('Europe/Paris'));
     }
 
     public function setStartAt(?\DateTimeImmutable $startAt): static
     {
-        $this->startAt = $startAt;
+        if ($startAt) {
+            $this->startAt = $startAt->setTimezone(new \DateTimeZone('Europe/Paris'));
+        } else {
+            $this->startAt = null;
+        }
 
         return $this;
     }
@@ -294,7 +303,11 @@ class Resource
 
     public function setEndAt(?\DateTimeImmutable $endAt): static
     {
-        $this->endAt = $endAt;
+        if ($endAt) {
+            $this->endAt = $endAt->setTimezone(new \DateTimeZone('Europe/Paris'));
+        } else {
+            $this->endAt = null;
+        }
 
         return $this;
     }

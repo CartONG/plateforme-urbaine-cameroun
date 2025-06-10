@@ -3,11 +3,11 @@
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
         <div class="Header__bannerLink">
-          <v-icon icon="mdi-help-circle-outline" />
+          <v-icon icon="$helpCircleOutline" />
           <span class="mr-6">{{ $t('header.help') }}</span>
         </div>
         <a :href="whatsappLink" target="_blank" class="Header__bannerLink">
-          <v-icon icon="mdi-email-outline" />
+          <v-icon icon="$emailOutline" />
           <span>{{ $t('header.contact') }}</span>
         </a>
       </div>
@@ -16,7 +16,12 @@
       <div class="Header__navContent container container--transition">
         <div class="Header__navBlock Header__navBlock--left">
           <router-link :to="{ name: 'home' }" class="Header__bannerLink">
-            <img src="@/assets/images/Logo.png" alt="Accueil" class="Header__appLogo" />
+            <img
+              loading="lazy"
+              src="@/assets/images/Logo.png"
+              alt="Accueil"
+              class="Header__appLogo"
+            />
           </router-link>
         </div>
         <nav class="Header__navBlock Header__navBlock--right">
@@ -33,6 +38,7 @@
           </v-tabs>
           <v-btn base-color="white" class="text-main-blue mr-3 gap-5" :to="{ name: 'map' }" flat>
             <img
+              loading="lazy"
               src="@/assets/images/icons/add_location_alt.svg"
               alt="Accueil"
               class="Header__appLogo mr-1"
@@ -113,6 +119,7 @@ const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
               position: relative;
               height: $dim-logo;
               transform: translateY(calc(-1 * var(--dim-banner-h)));
+              border-radius: 50%;
             }
           }
 
