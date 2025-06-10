@@ -43,6 +43,9 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   const signIn = async (values: SignInValues, hideDialog = true) => {
     try {
       await AuthenticationService.signIn(values)
+      if (!values.stayLoggedIn) {
+        await JwtCookie.deleteRefreshToken()
+      }
       await setCurrentUser()
       errorWhileSignInOrSignUp.value = false
       if (currentUser.value?.hasSeenRequestedRoles === false) {

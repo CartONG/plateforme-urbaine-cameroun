@@ -55,4 +55,8 @@ export default class JwtCookie {
     }
     return false
   }
+
+  public static deleteRefreshToken(): void {
+    document.cookie = 'refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/'
+  }
 }
