@@ -44,7 +44,10 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.description') }}</label>
-          <TextEditor v-model:content-model="form.description.value.value" />
+          <TextEditor
+            v-model:content-model="form.description.value.value"
+            :parent-form-error="formError"
+          />
         </div>
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
@@ -408,9 +411,11 @@ function handleImagesUpdate(lists: any) {
   })
 }
 
+const formError = ref<boolean>(false)
 const submitForm = handleSubmit(
   (values) => {
     console.log('Submitting actor form', values)
+    formError.value = false
     const actorSubmission: ActorSubmission = {
       ...(values as any),
       id: actorToEdit ? actorToEdit.id : undefined,
@@ -423,6 +428,7 @@ const submitForm = handleSubmit(
   },
   ({ errors }) => {
     console.log(errors)
+    formError.value = true
     addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
     onInvalidSubmit()
   }

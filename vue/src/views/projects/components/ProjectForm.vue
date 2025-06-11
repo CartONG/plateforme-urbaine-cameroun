@@ -23,7 +23,10 @@
           <label class="Form__label required">{{
             $t('projects.form.fields.description.label')
           }}</label>
-          <TextEditor v-model:content-model="form.description.value.value" />
+          <TextEditor
+            v-model:content-model="form.description.value.value"
+            :parent-form-error="formError"
+          />
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('actors.form.logo') }}</label>
@@ -537,8 +540,10 @@ onMounted(async () => {
   }
 })
 
+const formError = ref<boolean>(false)
 const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
+    formError.value = false
     let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
@@ -558,6 +563,7 @@ const submitForm = handleSubmit(
     emit('submitted', submittedProject)
   },
   () => {
+    formError.value = true
     addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
     onInvalidSubmit()
   }

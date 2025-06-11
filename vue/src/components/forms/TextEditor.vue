@@ -6,7 +6,7 @@
         @click.stop="toggleBold"
         size="x-small"
       >
-        <v-icon>mdi-format-bold</v-icon>
+        G
       </v-btn>
 
       <v-btn
@@ -22,33 +22,33 @@
         @click.stop="toggleStrike"
         size="x-small"
       >
-        <v-icon>mdi-format-strikethrough</v-icon>
+        <span class="text-decoration-line-through">ABC</span>
       </v-btn>
 
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn :class="{ 'bg-main-blue': isHeadingActive }" v-bind="props" size="x-small">
-            H <v-icon>mdi-menu-down</v-icon>
+            T <v-icon>mdi-menu-down</v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item
             @click="toggleHeading(1)"
-            :class="{ 'text-main-blue': isH1Active, 'font-weight-bold': isH1Active }"
+            :class="{ 'bg-main-blue': isH1Active, 'font-weight-bold': isH1Active }"
           >
-            H1
+            T1
           </v-list-item>
           <v-list-item
             @click="toggleHeading(2)"
-            :class="{ 'text-main-blue': isH2Active, 'font-weight-bold': isH2Active }"
+            :class="{ 'bg-main-blue': isH2Active, 'font-weight-bold': isH2Active }"
           >
-            H2
+            T2
           </v-list-item>
           <v-list-item
             @click="toggleHeading(3)"
-            :class="{ 'text-main-blue': isH3Active, 'font-weight-bold': isH3Active }"
+            :class="{ 'bg-main-blue': isH3Active, 'font-weight-bold': isH3Active }"
           >
-            H3
+            T3
           </v-list-item>
         </v-list>
       </v-menu>
@@ -70,10 +70,11 @@ import { computed, onBeforeUnmount, onMounted, type ModelRef } from 'vue';
 const contentModel: ModelRef<string> = defineModel('contentModel', { required: true })
 const props = withDefaults(
   defineProps<{
+    parentFormError: boolean
     minLength?: number
   }>(),
   {
-    minLength: 5
+    minLength: 50
   }
 )
 
@@ -91,7 +92,9 @@ editor.on('update', ({ editor }) => {
   contentModel.value = editor.getHTML()
 })
 
-const errorStatus = computed(() => editor.getText().length < props.minLength)
+const errorStatus = computed(
+  () => editor.getText().length < props.minLength && props.parentFormError
+)
 
 onMounted(() => {
   editor.commands.setContent(contentModel.value)
@@ -145,6 +148,10 @@ onBeforeUnmount(() => {
 
 .TextEditor__content {
   min-height: 10rem;
+
+  ul li {
+    margin-left: 1.5rem;
+  }
 }
 
 .TextEditor__errorMessage {
