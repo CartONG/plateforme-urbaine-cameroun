@@ -3,9 +3,9 @@
     <div class="ProjectsView__listCtn">
       <div class="ProjectsView__listHeader">
         <div class="ProjectsView__listHeaderBlock ProjectsView__listHeaderBlock--top">
-          <h3 class="ProjectsView__projectCount">
+          <span class="SectionTitle">
             {{ projectsCount }} {{ $t('projects.projects', projectsCount) }}
-          </h3>
+          </span>
           <v-btn
             v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS) || userStore.userIsAdmin()"
             @click="projectStore.isProjectFormShown = true"
@@ -143,9 +143,6 @@ const paginatedProjects: Ref<Project[]> = ref([])
 
         &--top {
           justify-content: space-between;
-          .ProjectsView__projectCount {
-            color: rgb(var(--v-theme-main-blue));
-          }
         }
 
         &--bottom {
