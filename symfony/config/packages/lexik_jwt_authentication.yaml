@@ -1,4 +1,6 @@
 lexik_jwt_authentication:
+# https://github.com/markitosgv/JWTRefreshTokenBundle
+    token_ttl: 7200
     token_extractors:
         authorization_header:
             enabled: false

@@ -1,6 +1,7 @@
 export interface SignInValues {
   email: string
   password: string
+  stayLoggedIn?: boolean
 }
 
 export interface SignUpValues {

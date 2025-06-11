@@ -28,11 +28,6 @@
       </div>
     </div>
     <div class="HomeView__ctn HomeView__ctn--agenda">
-      <SectionBanner
-        :text="$t('home.agenda.title')"
-        :action-label="$t('home.agenda.action')"
-        :action-link="{ name: 'resources', query: { type: 'events' } }"
-      />
       <HomeAgenda />
     </div>
     <div class="HomeView__ctn HomeView__ctn--why-subscribe">

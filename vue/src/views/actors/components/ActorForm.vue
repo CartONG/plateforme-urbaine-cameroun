@@ -43,12 +43,10 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label">{{ $t('actors.form.description') }}</label>
-          <v-textarea
-            variant="outlined"
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            @blur="form.description.handleChange"
+          <label class="Form__label required">{{ $t('actors.form.description') }}</label>
+          <TextEditor
+            v-model:content-model="form.description.value.value"
+            :parent-form-error="formError"
           />
         </div>
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
@@ -288,6 +286,7 @@
 <script setup lang="ts">
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import LocationSelector from '@/components/forms/LocationSelector.vue'
+import TextEditor from '@/components/forms/TextEditor.vue'
 import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
@@ -413,9 +412,10 @@ function phoneValidation(phoneObject: any) {
   form.phone.value.value = phoneObject.nationalNumber
   internationalPhoneNumber = phoneObject.number
 }
-
+const formError = ref<boolean>(false)
 const submitForm = handleSubmit(
   async (values) => {
+    formError.value = false
     const actorSubmission: ActorSubmission = {
       ...(values as any),
       id: actorToEdit ? actorToEdit.id : undefined,
@@ -429,6 +429,7 @@ const submitForm = handleSubmit(
   },
   ({ errors }) => {
     console.log(errors)
+    formError.value = true
     addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
     onInvalidSubmit()
   }

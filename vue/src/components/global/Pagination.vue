@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -40,6 +40,14 @@ const updatePaginatedItems = () => {
   const start = (page.value - 1) * props.itemsPerPage
   const end = start + props.itemsPerPage
   paginatedItems.value = props.items.slice(start, end)
+  scrollToTop()
+}
+
+const scrollToTop = () => {
+  document.getElementsByClassName('SectionTitle')[0]?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  })
 }
 </script>
 

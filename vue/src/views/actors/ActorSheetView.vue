@@ -29,7 +29,7 @@
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
         </div>
-        <p>{{ actor.description }}</p>
+        <span v-html="formattedDescription"></span>
       </div>
       <ActorRelatedContent :actor="actor" v-if="!appStore.mobile" />
     </div>
@@ -55,7 +55,7 @@
       <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
       <AdminBoundariesButton :entity="actor" />
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.officeName || actor.officeAddress">
         <div class="d-flex flex-row">
           <v-icon icon="$mapMarkerOutline" color="main-black" />
           <div class="ml-1">
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.contactName || actor.contactPosition">
         <div>
           <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
           <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
@@ -74,7 +74,7 @@
     </div>
     <ActorRelatedContent :actor="actor" v-if="appStore.mobile" />
     <div class="SheetView__block SheetView__block--bottom">
-      <SectionBanner :text="$t('actorPage.images')" />
+      <SectionBanner :text="$t('actorPage.images')" v-if="actorImages.length" />
       <ImagesMosaic :images="actorImages" :key="mosaicKey" />
       <ContentDivider />
     </div>
@@ -154,6 +154,10 @@ const isEditable = computed(() => {
 function editActor() {
   actorsStore.setActorEditionMode(actor.value)
 }
+
+const formattedDescription = computed(() => {
+  return actor.value?.description ? actor.value.description.replace(/<p><\/p>/g, '<br />') : ''
+})
 </script>
 <style lang="scss">
 @import '@/assets/styles/views/SheetView';

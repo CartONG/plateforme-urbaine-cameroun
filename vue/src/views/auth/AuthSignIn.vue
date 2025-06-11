@@ -23,7 +23,10 @@
         >
           {{ $t('auth.signIn.form.forgotPassword') }}
         </router-link>
-        <v-checkbox :label="$t('auth.signIn.form.rememberMe')"></v-checkbox>
+        <v-checkbox
+          :label="$t('auth.signIn.form.rememberMe')"
+          v-model="form.stayLoggedIn.value.value"
+        ></v-checkbox>
         <div class="AuthDialog__error" v-if="userStore.errorWhileSignInOrSignUp">
           {{ $t('auth.signIn.error') }}
         </div>
@@ -40,6 +43,7 @@
       <span>{{ $t('auth.signIn.question') }}</span>
       <router-link
         append
+        class="Dialog__clickableText"
         :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
       >
         {{ $t('auth.becomeMember.title') }}
@@ -49,11 +53,11 @@
 </template>
 
 <script setup lang="ts">
-import AuthDialog from '@/views/auth/AuthDialog.vue'
-import { DialogKey } from '@/models/enums/app/DialogKey'
 import Form from '@/components/forms/Form.vue'
-import { useUserStore } from '@/stores/userStore'
+import { DialogKey } from '@/models/enums/app/DialogKey'
 import { SignInForm } from '@/services/userAndAuth/forms/SignInForm'
+import { useUserStore } from '@/stores/userStore'
+import AuthDialog from '@/views/auth/AuthDialog.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const userStore = useUserStore()

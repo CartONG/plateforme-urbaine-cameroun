@@ -38,7 +38,7 @@
       />
       <div class="SheetView__contentCtn my-6">
         <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.about') }}</div>
-        <p>{{ project.description }}</p>
+        <span v-html="project.description"></span>
       </div>
       <ProjectRelatedContent :project="project" />
     </div>
@@ -75,7 +75,9 @@
           />
         </div>
       </div>
-      <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.partners') }}</div>
+      <div class="SheetView__title SheetView__title--divider" v-if="project.partners.length">
+        {{ $t('projectPage.partners') }}
+      </div>
       <ImagesMosaic
         :images="project.partners"
         :key="mosaicKey"
@@ -84,7 +86,7 @@
       />
     </div>
     <div class="SheetView__block SheetView__block--bottom">
-      <SectionBanner :text="$t('projectPage.inImages')" />
+      <SectionBanner :text="$t('projectPage.inImages')" v-if="images.length" />
       <ImagesMosaic :images="images" :key="mosaicKey" />
       <ContentDivider />
       <SectionBanner

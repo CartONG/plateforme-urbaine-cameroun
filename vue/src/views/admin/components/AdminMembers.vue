@@ -58,14 +58,14 @@
         <v-btn
           density="comfortable"
           icon="$deleteOutline"
-          @click="isAreYouSurePopupShown = true"
+          @click="((isAreYouSurePopupShown = true), (userToDelete = item as Partial<User>))"
           class="disabled-white"
         ></v-btn>
         <AreYouSurePopup
           :shown="isAreYouSurePopupShown"
           :loading="isDeleting"
-          @hide="isAreYouSurePopupShown = false"
-          @confirm="deleteUser(item as User)"
+          @hide="((isAreYouSurePopupShown = false), (userToDelete = null))"
+          @confirm="deleteUser()"
         />
       </template>
     </AdminTable>
@@ -78,8 +78,7 @@ import AreYouSurePopup from '@/components/global/AreYouSurePopup.vue'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { User } from '@/models/interfaces/auth/User'
 import { useAdminStore } from '@/stores/adminStore'
-import { computed, onBeforeMount, ref } from 'vue'
-
+import { computed, onBeforeMount, ref, type Ref } from 'vue'
 const adminStore = useAdminStore()
 const isAreYouSurePopupShown = ref(false)
 const isDeleting = ref(false)
@@ -95,10 +94,12 @@ function editUser(user: User) {
   adminStore.setUserEditionMode(user)
 }
 
-const deleteUser = async (user: User) => {
+const userToDelete: Ref<Partial<User> | null> = ref(null)
+const deleteUser = async () => {
   isDeleting.value = true
-  await adminStore.deleteUser(user)
+  await adminStore.deleteUser(userToDelete.value as Partial<User>)
   isDeleting.value = false
+  userToDelete.value = null
   isAreYouSurePopupShown.value = false
 }
 

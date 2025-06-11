@@ -173,19 +173,21 @@ function searchActors(actors: Actor[]) {
   const searchText = searchQuery.value.toLowerCase()
   return actors.filter(
     (actor) =>
-      actor.name.toLowerCase().indexOf(searchText) > -1 ||
-      actor.acronym.toLowerCase().indexOf(searchText) > -1 ||
+      actor.name?.toLowerCase().indexOf(searchText) > -1 ||
+      actor.acronym?.toLowerCase().indexOf(searchText) > -1 ||
       actor.category.toLowerCase().indexOf(searchText) > -1 ||
-      actor.expertises.some((exp: ActorExpertise) => exp.name.toLowerCase().includes(searchText)) ||
+      actor.expertises?.some((exp: ActorExpertise) =>
+        exp.name.toLowerCase().includes(searchText)
+      ) ||
       actor.thematics.some((thematic: Thematic) =>
         thematic.name.toLowerCase().includes(searchText)
       ) ||
       actor.administrativeScopes.some((scope: AdministrativeScope) =>
         scope.toLowerCase().includes(searchText)
       ) ||
-      (actor.officeName && actor.officeName.toLowerCase().indexOf(searchText) > -1) ||
-      (actor.officeAddress && actor.officeAddress.toLowerCase().indexOf(searchText) > -1) ||
-      (actor.contactName && actor.contactName.toLowerCase().indexOf(searchText) > -1)
+      actor.officeName?.toLowerCase().indexOf(searchText) > -1 ||
+      actor.officeAddress?.toLowerCase().indexOf(searchText) > -1 ||
+      actor.contactName?.toLowerCase().indexOf(searchText) > -1
   )
 }
 </script>
