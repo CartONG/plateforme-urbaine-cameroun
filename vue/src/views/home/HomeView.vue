@@ -12,7 +12,7 @@
         <HomeKpis class="HomeView__mainContentKpis" />
       </div>
       <div class="HomeView__mainImagesCtn">
-        <img src="@/assets/images/home_iconography.svg" alt="" />
+        <img loading="lazy" src="@/assets/images/home_iconography.svg" alt="" />
       </div>
     </div>
     <div

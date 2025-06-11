@@ -21,6 +21,7 @@ import { computed, reactive, ref, watch, type ComputedRef, type Reactive, type R
 import { useApplicationStore } from './applicationStore'
 
 export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
+  const applicationStore = useApplicationStore()
   const projects: Ref<Project[]> = ref([])
   const project: Ref<Project | null> = ref(null)
   const projectForSubmission: Ref<ProjectSubmission | null> = ref(null)
@@ -58,8 +59,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
 
   async function loadProjectBySlug(slug: string | string[]): Promise<void> {
     if (project.value?.slug !== slug && typeof slug === 'string') {
-      const appStore = useApplicationStore()
-      appStore.currentContentPage = ContentPagesList.PROJECT
+      applicationStore.currentContentPage = ContentPagesList.PROJECT
       project.value = await ProjectService.getBySlug(slug)
     }
   }
@@ -193,8 +193,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     }
     projectForSubmission.value = project
     isProjectFormShown.value = false
-    useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE
-    useApplicationStore().showEditMessageDialog = ItemType.PROJECT
+    applicationStore.activeDialog = DialogKey.EDITOR_NEW_MESSAGE
+    applicationStore.showEditMessageDialog = ItemType.PROJECT
   }
 
   const saveProject = async (project: ProjectSubmission, type: FormType) => {
@@ -220,13 +220,23 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   }
 
   const deleteProject = async (project: Project) => {
-    await ProjectService.delete(project)
-    projects.value.forEach((p, key) => {
-      if (p.id === project.id) {
-        projects.value.splice(key, 1)
-        addNotification(i18n.t('notifications.project.delete'), NotificationType.SUCCESS)
-      }
-    })
+    applicationStore.isLoading = true
+    try {
+      await ProjectService.delete(project)
+      projects.value.forEach((p, key) => {
+        if (p.id === project.id) {
+          projects.value.splice(key, 1)
+          addNotification(i18n.t('notifications.project.deleteSuccess'), NotificationType.SUCCESS)
+        }
+      })
+    } catch (error) {
+      addNotification(
+        i18n.t('notifications.project.deleteError'),
+        NotificationType.ERROR,
+        error as string
+      )
+    }
+    applicationStore.isLoading = false
   }
 
   const resetFilters = () => {

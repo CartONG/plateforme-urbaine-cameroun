@@ -1,4 +1,5 @@
 <template>
+  <Loader v-if="appStore.isLoading" />
   <div class="App" :is-100-vh="appStore.is100vh" :is-light-header="appStore.isLightHeader">
     <Header v-if="!appStore.isFullViewport" />
     <div
@@ -25,27 +26,21 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { onBeforeMount } from 'vue'
-import Header from '@/views/_layout/header/Header.vue'
-import Footer from '@/views/_layout/footer/Footer.vue'
 import DialogController from '@/components/global/DialogController.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { useActorsStore } from '@/stores/actorsStore'
 import { useUserStore } from '@/stores/userStore'
+import Footer from '@/views/_layout/footer/Footer.vue'
 import EditContentDialog from '@/views/_layout/forms/EditContentDialog.vue'
-import { useThematicStore } from './stores/thematicStore'
+import Header from '@/views/_layout/header/Header.vue'
 import NotificationBox from '@/views/_layout/notification/NotificationBox.vue'
+import { onBeforeMount } from 'vue'
+import { RouterView } from 'vue-router'
+import Loader from './components/global/Loader.vue'
 
 const appStore = useApplicationStore()
-const actorsStore = useActorsStore()
 const userStore = useUserStore()
-const thematicStore = useThematicStore()
 onBeforeMount(async () => {
   await userStore.checkAuthenticated()
-  await actorsStore.getActors()
-  await actorsStore.getActorsSelectListContent()
-  await thematicStore.getAll()
   await appStore.getLikesList()
 })
 </script>

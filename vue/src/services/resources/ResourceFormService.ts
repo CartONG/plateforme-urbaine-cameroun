@@ -14,9 +14,13 @@ export class ResourceFormService {
     // @ts-expect-error - zod object.
     const resourceSchema: z.ZodType<Partial<Resource>> = z
       .object({
-        name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
+        name: z
+          .string({ required_error: i18n.t('forms.errorMessages.required') })
+          .min(1, { message: i18n.t('forms.errorMessages.required') }),
         description: zodModels.descriptionRequired,
-        type: z.nativeEnum(ResourceType),
+        type: z.nativeEnum(ResourceType, {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherType: z.string().optional(),
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)).optional(),
         admin1List: zodModels.admin1Boundaries.optional(),
@@ -27,31 +31,54 @@ export class ResourceFormService {
         endAt: z.coerce.date().nullable().optional(),
         file: zodModels.file.nullable().optional(),
         link: zodModels.website.nullable().optional(),
-        format: z.nativeEnum(ResourceFormat),
-        author: zodModels.maxLabel.optional(),
+        format: z.nativeEnum(ResourceFormat, {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
+        author: z
+          .string({ required_error: i18n.t('forms.errorMessages.required') })
+          .min(1, { message: i18n.t('forms.errorMessages.required') }),
         thematics: zodModels.symfonyRelations,
         otherThematic: z.string().optional()
       })
+      .refine((data) => data.type !== ResourceType.EVENTS || Boolean(data.startAt), {
+        message: i18n.t('forms.errorMessages.required'),
+        path: ['startAt']
+      })
       .refine(
-        (schema) => {
-          return schema.file || schema.link
+        (data) => {
+          const requiredTypes = [
+            ResourceType.RAPPORTS,
+            ResourceType.REGULATIONS,
+            ResourceType.OTHERS
+          ]
+
+          if (requiredTypes.includes(data.type)) {
+            return data.administrativeScopes !== undefined
+          }
+
+          return true
         },
         {
-          message: i18n.t('resources.form.errorMessages.atLeastOneField'),
-          path: ['link', 'file']
-        }
-      )
-      .refine(
-        (schema) =>
-          (schema.type === ResourceType.EVENTS && schema.startAt) ||
-          schema.type !== ResourceType.EVENTS,
-        {
           message: i18n.t('forms.errorMessages.required'),
-          path: ['startAt']
+          path: ['administrativeScopes']
         }
       )
+      .superRefine((data, ctx) => {
+        if (!data.file && !data.link) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['file'],
+            message: i18n.t('resources.form.errorMessages.atLeastOneField')
+          })
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['link'],
+            message: i18n.t('resources.form.errorMessages.atLeastOneField')
+          })
+        }
+      })
 
-    const { errors, handleSubmit, isSubmitting, setFieldValue } = useForm<Partial<Resource>>({
+    const { errors, handleSubmit, isSubmitting } = useForm<Partial<Resource>>({
       initialValues: resource,
       validationSchema: toTypedSchema(resourceSchema)
     })
@@ -76,6 +103,6 @@ export class ResourceFormService {
       link: useField('link')
     }
 
-    return { form, errors, handleSubmit, isSubmitting, setFieldValue }
+    return { form, errors, handleSubmit, isSubmitting }
   }
 }

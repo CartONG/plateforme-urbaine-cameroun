@@ -34,4 +34,8 @@ export class AuthenticationService {
   static async resendEmailVerifier(email: string): Promise<AxiosResponse> {
     return apiClient.post(`/api/users/verify_email/send`, { email: email })
   }
+
+  static async refreshAuthToken(): Promise<AxiosResponse> {
+    return apiClient.post('/api/token/refresh', {}, { withCredentials: true })
+  }
 }

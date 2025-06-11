@@ -33,14 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
-import GeocodingService from '@/services/map/GeocodingService'
-import { debounce } from '@/services/utils/UtilsService'
 import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
 import type { GeocodingItem } from '@/models/interfaces/geo/GeocodingItem'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import { i18n } from '@/plugins/i18n'
+import GeocodingService from '@/services/map/GeocodingService'
+import { debounce } from '@/services/utils/UtilsService'
+import type { Ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const geoData = defineModel<GeoData | null>({
   default: {
@@ -62,7 +62,7 @@ const props = withDefaults(
   }>(),
   {
     searchType: NominatimSearchType.FREE,
-    icon: 'mdi-map-marker-outline',
+    icon: '$mapMarkerOutline',
     geometryDetails: false,
     placeholder: i18n.t('geocoding.placeholder')
   }

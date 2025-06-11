@@ -11,6 +11,7 @@ use App\Entity\File\FileObject;
 use App\Entity\Trait\TimestampableEntity;
 use App\Enum\QgisMapType;
 use App\Repository\QgisMapRepository;
+use App\Services\State\Processor\QgisMapDeleteProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -28,6 +29,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             security: 'is_granted("ROLE_ADMIN")',
         ),
         new Delete(
+            processor: QgisMapDeleteProcessor::class,
             security: 'is_granted("ROLE_ADMIN")',
         ),
     ],

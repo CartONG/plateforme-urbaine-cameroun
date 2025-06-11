@@ -15,6 +15,7 @@
       </div>
       <div class="AdminTable__item" v-for="(tableKey, index) in tableKeys" :key="index">
         <img
+          loading="lazy"
           v-if="index === 0 && withLogo && getNestedObjectValue(item, logoField)"
           :src="getNestedObjectValue(item, logoField)"
           class="AdminTable__item__logo"
@@ -45,19 +46,18 @@
 </template>
 
 <script setup lang="ts">
-import type { Actor } from '@/models/interfaces/Actor'
-import { getNestedObjectValue } from '@/services/utils/UtilsService'
-import { onMounted, ref, watch, type Ref } from 'vue'
 import Pagination from '@/components/global/Pagination.vue'
-import type { Project } from '@/models/interfaces/Project'
+import type { Actor } from '@/models/interfaces/Actor'
 import type { User } from '@/models/interfaces/auth/User'
-import type { Resource } from '@/models/interfaces/Resource'
-import type { QgisMap } from '@/models/interfaces/QgisMap'
-import { reduceText } from '@/services/utils/UtilsService'
-import type { HighlightedItem } from '@/models/interfaces/HighlightedItem'
-import { useDraggable } from 'vue-draggable-plus'
-import type { SortableEvent } from 'sortablejs'
 import type { AppComment } from '@/models/interfaces/Comment'
+import type { HighlightedItem } from '@/models/interfaces/HighlightedItem'
+import type { Project } from '@/models/interfaces/Project'
+import type { QgisMap } from '@/models/interfaces/QgisMap'
+import type { Resource } from '@/models/interfaces/Resource'
+import { getNestedObjectValue, reduceText } from '@/services/utils/UtilsService'
+import type { SortableEvent } from 'sortablejs'
+import { onMounted, ref, watch, type Ref } from 'vue'
+import { useDraggable } from 'vue-draggable-plus'
 
 type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment
 

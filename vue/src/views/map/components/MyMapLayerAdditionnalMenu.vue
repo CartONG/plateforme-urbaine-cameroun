@@ -8,26 +8,26 @@
         v-bind="props"
         variant="text"
         density="comfortable"
-        icon="mdi-dots-horizontal"
+        icon="$dotsHorizontal"
         :color="isActive ? 'main-blue' : 'dark-grey'"
       />
     </template>
     <v-list class="MyMapLayerPicker__additionnalMenu mt-4">
       <v-list-item>
         <template v-slot:prepend
-          ><v-icon color="main-blue" icon="mdi-share-variant-outline"></v-icon
+          ><v-icon color="main-blue" icon="$shareVariantOutline"></v-icon
         ></template>
         <v-list-item-title>{{ $t('myMap.rightSidebar.actions.share') }}</v-list-item-title>
       </v-list-item>
       <v-list-item @click="downloadSourceData">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-download-outline"></v-icon>
+          <v-icon color="main-blue" icon="$downloadOutline"></v-icon>
         </template>
         <v-list-item-title>{{ $t('myMap.rightSidebar.actions.downloadLayer') }}</v-list-item-title>
       </v-list-item>
       <v-list-item @click.stop="isLayerOpacityShown = !isLayerOpacityShown">
         <template v-slot:prepend>
-          <v-icon color="main-blue" icon="mdi-opacity"></v-icon>
+          <v-icon color="main-blue" icon="$opicity"></v-icon>
         </template>
         <v-list-item-title>{{ $t('myMap.rightSidebar.actions.opacity') }}</v-list-item-title>
       </v-list-item>

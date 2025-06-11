@@ -21,14 +21,14 @@
     </div>
     <div class="HomeBecomeMember__imageCtn">
       <img
-        class="HomeBecomeMember__image"
         loading="lazy"
+        class="HomeBecomeMember__image"
         src="@/assets/images/home_becomemember.jpg"
         alt=""
       />
       <img
-        class="HomeBecomeMember__image HomeBecomeMember__image--shape"
         loading="lazy"
+        class="HomeBecomeMember__image HomeBecomeMember__image--shape"
         src="@/assets/images/home_becomemember_shape.svg"
         alt=""
       />
@@ -37,9 +37,9 @@
 </template>
 
 <script setup lang="ts">
-import { i18n } from '@/plugins/i18n'
 import CheckPoint from '@/components/global/CheckPoint.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
+import { i18n } from '@/plugins/i18n'
 
 const reasons = [
   i18n.t('auth.becomeMemberWhy.form.reasons.urbanTransformation'),

@@ -2,7 +2,7 @@
   <div class="MyMapAtlasSummary" :type="type">
     <div class="d-flex flex-row flex-wrap">
       <div class="MyMapAtlasSummary_logo" :type="type">
-        <img :src="atlas.logo.contentUrl" v-if="atlas.logo" />
+        <img loading="lazy" :src="atlas.logo.contentUrl" v-if="atlas.logo" />
       </div>
       <div class="MyMapAtlasSummary_desc">
         <div class="MyMapAtlasSummary_title">{{ atlas.name }}</div>
@@ -16,19 +16,14 @@
         </div>
       </div>
     </div>
-    <v-btn
-      size="small"
-      icon="mdi-arrow-right"
-      class="text-dark-grey"
-      @click="setActiveAtlas"
-    ></v-btn>
+    <v-btn size="small" icon="$arrowRight" class="text-dark-grey" @click="setActiveAtlas"></v-btn>
   </div>
 </template>
 <script setup lang="ts">
-import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
-import type { Atlas } from '@/models/interfaces/Atlas'
-import { useMyMapStore } from '@/stores/myMapStore'
-import { inject, type Ref } from 'vue'
+import { AtlasGroup } from '@/models/enums/geo/AtlasGroup';
+import type { Atlas } from '@/models/interfaces/Atlas';
+import { useMyMapStore } from '@/stores/myMapStore';
+import { inject, type Ref } from 'vue';
 
 const props = defineProps<{
   atlas: Atlas
