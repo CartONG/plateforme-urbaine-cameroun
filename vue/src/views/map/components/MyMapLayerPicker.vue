@@ -53,7 +53,10 @@
               />
               <span
                 class="text-capitalize"
-                :class="{ 'ml-1': loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon }"
+                :class="{
+                  'ml-1': loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon,
+                  MyMapLayerPicker__highlightedText: isNameInSearchText(subLayer.name)
+                }"
                 >{{ subLayer.name }}</span
               >
             </div>
@@ -111,6 +114,29 @@ watch(
   }
 )
 
+watch(
+  () => myMapStore.atlasSearchText,
+  (newValue) => {
+    if (newValue) {
+      if (subLayers.value && props.loadedLayerType === LayerType.ATLAS_LAYER) {
+        if (myMapStore.atlasSearchText.length >= 3) {
+          if (subLayers.value.some((subLayer) => isNameInSearchText(subLayer.name))) {
+            isExpanded.value = true
+          } else {
+            isExpanded.value = false
+          }
+        } else {
+          isExpanded.value = false
+        }
+      }
+    } else {
+      if (subLayers.value && props.loadedLayerType === LayerType.ATLAS_LAYER) {
+        isExpanded.value = false
+      }
+    }
+  }
+)
+
 const changeLayerOpacity = debounce(async (layer: Layer, opacityPercentage: number) => {
   if (mainLayer.value) {
     const opacity = opacityPercentage / 100
@@ -142,28 +168,10 @@ const editAllSubLayers = (show = true) => {
   emits('update')
 }
 
-// const downloadSourceData = async () => {
-//   const layerId = mainLayer.value?.id.toString()
-//   if (myMapStore.myMap?.map && layerId) {
-//     if (props.loadedLayerType === LayerType.APP_LAYER) {
-//       const data = await myMapStore.myMap?.getData(layerId)
-//       if (data) {
-//         downloadJson(data, layerId)
-//       }
-//     } else {
-//       if ((mainLayer.value as AtlasLayer).qgisMapType === QgisMapType.VECTOR) {
-//         const atlas = myMapStore.atlasMaps.find((atlasMap) => atlasMap.id === layerId)
-//         if (atlas) {
-//           const qgisProject = atlas.qgisProjectName
-//           const qgisLayers = atlas.subLayers.map((subLayer) => subLayer.name)
-//           QgisMapMaplibreService.getData(qgisProject, qgisLayers)
-//         }
-//       } else {
-//         addNotification(i18n.t('myMap.atlases.dataNotFetchable'), NotificationType.ERROR)
-//       }
-//     }
-//   }
-// }
+function isNameInSearchText(name: string): boolean {
+  if (!myMapStore.atlasSearchText) return false
+  return name.toLowerCase().includes(myMapStore.atlasSearchText.toLowerCase())
+}
 </script>
 
 <style lang="scss">
@@ -253,6 +261,13 @@ const editAllSubLayers = (show = true) => {
         opacity: 1;
       }
     }
+  }
+
+  .MyMapLayerPicker__highlightedText {
+    color: rgb(var(--v-theme-main-blue));
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: underline;
   }
 }
 </style>

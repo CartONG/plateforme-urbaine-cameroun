@@ -8,6 +8,8 @@
         :label="$t('myMap.atlases.searchData')"
         prepend-inner-icon="$magnify"
         clearable
+        color="main-blue"
+        icon-color="main-blue"
       />
     </div>
     <MyMapAtlas v-for="atlas in atlases" :key="atlas.id" :atlas="atlas" :type="type" />

@@ -7,11 +7,11 @@
       <div class="MyMapAtlasSummary_desc">
         <div class="MyMapAtlasSummary_title">{{ atlas.name }}</div>
         <div class="MyMapAtlasSummary_details">
-          {{ atlas.maps.length }}
+          {{ filteredLength }}
           {{
             type === AtlasGroup.PREDEFINED_MAP
-              ? $t('myMap.atlases.map', { count: atlas.maps.length })
-              : $t('myMap.atlases.data', { count: atlas.maps.length })
+              ? $t('myMap.atlases.map', { count: filteredLength })
+              : $t('myMap.atlases.data', { count: filteredLength })
           }}
         </div>
       </div>
@@ -23,7 +23,7 @@
 import { AtlasGroup } from '@/models/enums/geo/AtlasGroup';
 import type { Atlas } from '@/models/interfaces/Atlas';
 import { useMyMapStore } from '@/stores/myMapStore';
-import { inject, type Ref } from 'vue';
+import { computed, inject, type Ref } from 'vue';
 
 const props = defineProps<{
   atlas: Atlas
@@ -42,6 +42,17 @@ function setActiveAtlas() {
     mapStore.activeAtlas.rightPanel.atlasID = props.atlas['@id']
   }
 }
+
+const filteredLength = computed(() => {
+  if (props.type === AtlasGroup.PREDEFINED_MAP || !mapStore.atlasSearchText) {
+    return props.atlas.maps.length
+  }
+  return props.atlas.maps.filter(
+    (map) =>
+      map.name.includes(mapStore.atlasSearchText) ||
+      map.qgisProject.layers?.some((layer) => layer.includes(mapStore.atlasSearchText))
+  ).length
+})
 </script>
 
 <style>
