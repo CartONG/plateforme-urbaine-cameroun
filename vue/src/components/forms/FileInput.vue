@@ -17,7 +17,7 @@
         v-if="file"
         variant="text"
         density="comfortable"
-        icon="mdi-trash-can-outline"
+        icon="$trashCanOutilne"
         color="main-blue"
         @click="file = null"
       ></v-btn>
@@ -33,8 +33,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
+import { computed, ref } from 'vue'
 
 const isSelecting = ref(false)
 const file = defineModel<File | FileObject | null>()

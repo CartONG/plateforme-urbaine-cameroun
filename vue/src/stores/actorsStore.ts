@@ -1,21 +1,22 @@
+import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
+import { DialogKey } from '@/models/enums/app/DialogKey'
+import { ItemType } from '@/models/enums/app/ItemType'
+import { NotificationType } from '@/models/enums/app/NotificationType'
 import { StoresList } from '@/models/enums/app/StoresList'
 import type { Actor, ActorSubmission } from '@/models/interfaces/Actor'
-import { ActorsService } from '@/services/actors/ActorsService'
-import { defineStore } from 'pinia'
-import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
-import { useApplicationStore } from './applicationStore'
-import { useRouter } from 'vue-router'
 import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type { Thematic } from '@/models/interfaces/Thematic'
-import { ContentPagesList } from '@/models/enums/app/ContentPagesList'
-import { addNotification } from '@/services/notifications/NotificationService'
-import { NotificationType } from '@/models/enums/app/NotificationType'
 import { i18n } from '@/plugins/i18n'
+import { ActorsService } from '@/services/actors/ActorsService'
+import { addNotification } from '@/services/notifications/NotificationService'
 import { useUserStore } from '@/stores/userStore'
-import { ItemType } from '@/models/enums/app/ItemType'
-import { DialogKey } from '@/models/enums/app/DialogKey'
+import { defineStore } from 'pinia'
+import { reactive, ref, watch, type Reactive, type Ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useApplicationStore } from './applicationStore'
 
 export const useActorsStore = defineStore(StoresList.ACTORS, () => {
+  const applicationStore = useApplicationStore()
   const dataLoaded = ref(false)
   const router = useRouter()
   const actors: Actor[] = reactive([])
@@ -48,8 +49,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   async function setSelectedActor(id: string, redirect: boolean = true) {
     selectedActor.value = await ActorsService.getActor(id)
     if (redirect) {
-      const appStore = useApplicationStore()
-      appStore.currentContentPage = ContentPagesList.ACTOR
+      applicationStore.currentContentPage = ContentPagesList.ACTOR
       router.push({ name: 'actorProfile', params: { slug: selectedActor.value.slug } })
     }
   }
@@ -58,7 +58,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
     () => actorEdition.active,
     () => {
       if (!actorEdition.active) {
-        useApplicationStore().showEditContentDialog = false
+        applicationStore.showEditContentDialog = false
       }
     }
   )
@@ -66,7 +66,7 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   function setActorEditionMode(actor: Actor | null) {
     actorEdition.actor = actor
     actorEdition.active = true
-    useApplicationStore().showEditContentDialog = true
+    applicationStore.showEditContentDialog = true
   }
 
   async function createOrEditActor(actor: ActorSubmission, edit: boolean) {
@@ -76,8 +76,8 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
         await saveActor(actor, edit)
       } else {
         actorEdition.active = false
-        useApplicationStore().activeDialog = DialogKey.EDITOR_NEW_MESSAGE
-        useApplicationStore().showEditMessageDialog = ItemType.ACTOR
+        applicationStore.activeDialog = DialogKey.EDITOR_NEW_MESSAGE
+        applicationStore.showEditMessageDialog = ItemType.ACTOR
       }
     } catch (error) {
       addNotification(i18n.t('actors.form.submitError'), NotificationType.ERROR, error as string)
@@ -87,8 +87,8 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   function resetActorEditionMode() {
     actorEdition.actor = null
     actorEdition.active = false
-    useApplicationStore().showEditContentDialog = false
-    useApplicationStore().showEditMessageDialog = false
+    applicationStore.showEditContentDialog = false
+    applicationStore.showEditMessageDialog = false
     actorForSubmission.value = null
   }
 
@@ -106,9 +106,15 @@ export const useActorsStore = defineStore(StoresList.ACTORS, () => {
   }
 
   async function deleteActor(id: string) {
-    await ActorsService.deleteActor(id)
-    await getActors()
-    addNotification(i18n.t('actors.form.delete'), NotificationType.SUCCESS)
+    applicationStore.isLoading = true
+    try {
+      await ActorsService.deleteActor(id)
+      await getActors()
+      addNotification(i18n.t('actors.form.deleteSuccess'), NotificationType.SUCCESS)
+    } catch (error) {
+      addNotification(i18n.t('actors.form.deleteError'), NotificationType.ERROR, error as string)
+    }
+    applicationStore.isLoading = false
   }
 
   const updateActor = (updatedActor: Actor) => {

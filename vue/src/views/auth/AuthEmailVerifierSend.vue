@@ -1,5 +1,5 @@
 <template>
-  <AuthDialog>
+  <AuthDialog class="Dialog--authEmailVerifier">
     <template #title>{{ $t('auth.emailVerifier.title') }}</template>
     <template #content>
       <Form @submit.prevent="onSubmit" v-if="!isSent">
@@ -28,15 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import AuthDialog from '@/views/auth/AuthDialog.vue'
-import { useField, useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
 import Form from '@/components/forms/Form.vue'
-import { UserValidator } from '@/services/userAndAuth/forms/UserValidator'
-import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
 import CheckPoint from '@/components/global/CheckPoint.vue'
-import { useRouter } from 'vue-router'
+import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
+import { UserValidator } from '@/services/userAndAuth/forms/UserValidator'
+import AuthDialog from '@/views/auth/AuthDialog.vue'
+import { toTypedSchema } from '@vee-validate/zod'
+import { useField, useForm } from 'vee-validate'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { z } from 'zod'
 
 const router = useRouter()
@@ -69,3 +69,9 @@ const onSubmit = handleSubmit(async (values) => {
 
 const close = () => router.replace({ query: { dialog: undefined } })
 </script>
+
+<style lang="scss">
+.Dialog--authEmailVerifier {
+  justify-content: center;
+}
+</style>

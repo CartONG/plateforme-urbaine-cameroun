@@ -137,7 +137,6 @@ class Project
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Regex(pattern: '/^[0-9]{4,15}$/')]
     private ?string $focalPointTel = null;
 
     #[ORM\Column(length: 255, nullable: true)]

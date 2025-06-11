@@ -2,7 +2,12 @@
   <div class="ActorSheetView SheetView" v-if="actor">
     <div class="SheetView__block SheetView__block--left">
       <div class="SheetView__logoCtn show-sm">
-        <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
+        <img
+          loading="lazy"
+          :src="actor.logo.contentUrl"
+          class="SheetView__logo"
+          v-if="actor.logo"
+        />
       </div>
       <SheetContentBanner
         :page="CommentOrigin.ACTOR"
@@ -35,6 +40,7 @@
       </div>
       <div class="SheetView__logoCtn hide-sm">
         <img
+          loading="lazy"
           :src="actor.logo?.contentsFilteredUrl?.thumbnail"
           alt=""
           v-if="actor.logo?.contentsFilteredUrl?.thumbnail"
@@ -51,7 +57,7 @@
 
       <div class="SheetView__infoCard">
         <div class="d-flex flex-row">
-          <v-icon icon="mdi-map-marker-outline" color="main-black" />
+          <v-icon icon="$mapMarkerOutline" color="main-black" />
           <div class="ml-1">
             <p class="font-weight-bold">{{ actor.officeName }}</p>
             <p>{{ actor.officeAddress }}</p>
@@ -119,8 +125,10 @@ watchEffect(() => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
+  appStore.isLoading = true
   const route = useRoute()
+  await actorsStore.getActors()
   watchEffect(() => {
     if (actorsStore.dataLoaded) {
       if (actorsStore.selectedActor === null) {
@@ -128,13 +136,19 @@ onMounted(() => {
           (actor) => actor.slug === route.params.slug
         )
         actorsStore.setSelectedActor(actor?.id as string)
+        appStore.isLoading = false
+      } else {
+        appStore.isLoading = false
       }
     }
   })
 })
 
 const isEditable = computed(() => {
-  return userStore.userIsAdmin() || actor.value?.createdBy.id === userStore.currentUser?.id
+  return (
+    (userStore.userIsAdmin() || actor.value?.createdBy?.id === userStore.currentUser?.id) &&
+    userStore.currentUser != null
+  )
 })
 
 function editActor() {

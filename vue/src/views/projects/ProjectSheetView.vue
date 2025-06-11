@@ -3,6 +3,7 @@
     <div class="SheetView__block SheetView__block--left">
       <div class="SheetView__logoCtn show-sm">
         <img
+          loading="lazy"
           v-if="project.logo?.contentUrl"
           :src="project.logo?.contentUrl"
           class="SheetView__logo"
@@ -48,6 +49,7 @@
       </div>
       <div class="SheetView__logoCtn hide-sm">
         <img
+          loading="lazy"
           v-if="project.logo?.contentUrl"
           :src="project.logo?.contentUrl"
           class="SheetView__logo"
@@ -110,6 +112,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
 import router from '@/router'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
 import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
@@ -149,6 +152,7 @@ onBeforeRouteLeave(() => {
 
 onMounted(async () => {
   await loadSimilarProjects()
+  useApplicationStore().isLoading = false
 })
 
 watch(

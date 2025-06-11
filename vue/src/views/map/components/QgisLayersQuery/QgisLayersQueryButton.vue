@@ -1,7 +1,7 @@
 <template>
   <div class="maplibregl-ctrl maplibregl-ctrl-group QgisQueryButton">
     <v-btn
-      icon="mdi-database-search"
+      icon="$databaseSearch"
       @click.stop="mapStore.isQgisLayerQueryActive = !mapStore.isQgisLayerQueryActive"
       :class="{
         'text-white': mapStore.isQgisLayerQueryActive,
