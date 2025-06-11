@@ -4,7 +4,12 @@
     :style="{ gridTemplateColumns: ['50%', '10%', '20%', '20%'].join(' ') }"
   >
     <div class="AdminTable__item d-flex align-center">
-      <img :src="map.logo.contentUrl" v-if="map.logo" class="AdminTable__item__logo" />
+      <img
+        loading="lazy"
+        :src="map.logo.contentUrl"
+        v-if="map.logo"
+        class="AdminTable__item__logo"
+      />
       {{ map.name }}
     </div>
     <div class="AdminTable__item">
@@ -14,20 +19,18 @@
     <div class="AdminTable__item--last d-flex">
       <v-btn
         density="comfortable"
-        :icon="
-          showDetails ? 'mdi-arrow-up-bold-hexagon-outline' : 'mdi-arrow-down-bold-hexagon-outline'
-        "
+        :icon="showDetails ? '$arrowUpBoldHexagonOutline' : '$arrowDownBoldHexagonOutline'"
         class="mr-2"
         @click="showDetails = !showDetails"
       ></v-btn>
       <v-btn
         density="comfortable"
-        icon="mdi-map-outline"
+        icon="$mapOutline"
         @click="showQgisProjectOnMap(map)"
         class="mr-2"
       ></v-btn>
-      <v-btn density="comfortable" icon="mdi-dots-vertical">
-        <v-icon icon="mdi-dots-vertical"></v-icon>
+      <v-btn density="comfortable" icon="$dotsVertical">
+        <v-icon icon="$dotsVertical"></v-icon>
         <v-menu activator="parent" location="left">
           <v-list class="AdminPanel__additionnalMenu">
             <v-list-item @click="editQgisMap(map)">{{ $t('forms.edit') }}</v-list-item>
@@ -45,7 +48,7 @@
       :style="{ gridTemplateColumns: ['50%', '50%'].join(' ') }"
     >
       <div class="AdminTable__item">
-        <v-icon icon="mdi-layers-outline"></v-icon>
+        <v-icon icon="$layersOutline"></v-icon>
         {{ map.qgisProject.layers?.join(', ') }}
       </div>
       <div class="AdminTable__item">
@@ -55,10 +58,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { FormType } from '@/models/enums/app/FormType'
-import type { QgisMap } from '@/models/interfaces/QgisMap'
-import { useQgisMapStore } from '@/stores/qgisMapStore'
-import { ref, type ModelRef } from 'vue'
+import { FormType } from '@/models/enums/app/FormType';
+import type { QgisMap } from '@/models/interfaces/QgisMap';
+import { useQgisMapStore } from '@/stores/qgisMapStore';
+import { ref, type ModelRef } from 'vue';
 
 defineProps<{ map: QgisMap }>()
 const formType: ModelRef<FormType | undefined> = defineModel('formType')

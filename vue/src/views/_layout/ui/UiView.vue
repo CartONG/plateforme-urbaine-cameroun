@@ -3,7 +3,7 @@
     <h2>Design System</h2>
     <div class="UiView__componentCtn">
       <h4>BasicCard</h4>
-      <BasicCard icon="mdi-open-in-new">
+      <BasicCard icon="$openInNew">
         <a :href="''" target="_blank" class="ml-2">{{ $t('content.website') }}</a>
       </BasicCard>
     </div>
@@ -23,11 +23,7 @@
           <ShareButton :additionnal-path="'A_shared_link'" />
         </template>
         <template #footer-right>
-          <v-icon
-            class="InfoCard__actionIcon"
-            icon="mdi mdi-arrow-right"
-            color="light-blue"
-          ></v-icon>
+          <v-icon class="InfoCard__actionIcon" icon="$arrowRight"></v-icon>
         </template>
       </InfoCard>
       <h4>InfoCard <code>:light="true"</code></h4>
@@ -40,11 +36,7 @@
           <ShareButton :additionnal-path="'A_shared_link'" />
         </template>
         <template #footer-right>
-          <v-icon
-            class="InfoCard__actionIcon"
-            icon="mdi mdi-arrow-right"
-            color="light-blue"
-          ></v-icon>
+          <v-icon class="InfoCard__actionIcon" icon="$arrowRight"></v-icon>
         </template>
       </InfoCard>
     </div>
@@ -72,17 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import Geocoding from '@/components/forms/Geocoding.vue'
-import BasicCard from '@/components/global/BasicCard.vue'
-import InfoCard from '@/components/global/InfoCard.vue'
-import ShareButton from '@/components/global/ShareButton.vue'
-import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
-import Pagination from '@/components/global/Pagination.vue'
-import { useActorsStore } from '@/stores/actorsStore'
-import { computed, ref } from 'vue'
 import DateInput from '@/components/forms/DateInput.vue'
 import FileInput from '@/components/forms/FileInput.vue'
-import LocationSelector from '@/components/forms/LocationSelector.vue';
+import Geocoding from '@/components/forms/Geocoding.vue'
+import LocationSelector from '@/components/forms/LocationSelector.vue'
+import BasicCard from '@/components/global/BasicCard.vue'
+import InfoCard from '@/components/global/InfoCard.vue'
+import Pagination from '@/components/global/Pagination.vue'
+import ShareButton from '@/components/global/ShareButton.vue'
+import { NominatimSearchType } from '@/models/enums/geo/NominatimSearchType'
+import { useActorsStore } from '@/stores/actorsStore'
+import { computed, ref } from 'vue'
 const actorsStore = useActorsStore()
 
 /* Pagination.vue */

@@ -12,14 +12,14 @@
         @update:modelValue="searchQuery = $event"
       >
         <template v-slot:prepend-inner>
-          <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+          <v-icon icon="$magnify" color="main-blue"></v-icon>
         </template>
       </v-text-field>
     </div>
     <div class="AdminTopBar--right">
       <v-btn color="white" class="mr-3" v-if="sortingListItems">
         <span class="font-weight-regular">{{ $t('placeholders.sortBy') }}</span>
-        <v-icon icon="mdi mdi-menu-down" class="ml-1"></v-icon>
+        <v-icon icon="$menuDown" class="ml-1"></v-icon>
         <v-menu activator="parent">
           <v-list>
             <v-list-item

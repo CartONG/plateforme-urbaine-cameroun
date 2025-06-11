@@ -367,15 +367,10 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.focalPointTel.label') }}</label>
-          <v-text-field
-            density="compact"
-            variant="outlined"
+          <vue-tel-input
             v-model="form.focalPointTel.value.value"
-            :placeholder="$t('projects.form.fields.focalPointTel.label')"
-            :error-messages="form.focalPointTel.errorMessage.value"
-            @blur="form.focalPointTel.handleChange"
-            type="tel"
-          />
+            @validate="phoneValidation"
+          ></vue-tel-input>
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
@@ -391,6 +386,7 @@
     </template>
     <template #footer-left>
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
+      <span v-show="isSubmitting" class="text-warning ml-3">{{ $t('forms.submitting') }}</span>
     </template>
     <template #footer-right>
       <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
@@ -542,6 +538,12 @@ onMounted(async () => {
   }
 })
 
+let internationalPhoneNumber: string | null = null
+function phoneValidation(phoneObject: any) {
+  form.focalPointTel.value.value = phoneObject.nationalNumber
+  internationalPhoneNumber = phoneObject.number
+}
+
 const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
     let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
@@ -556,7 +558,8 @@ const submitForm = handleSubmit(
       externalImages: existingExternalImages,
       logoToUpload: newLogo.value[0],
       imagesToUpload: [...imagesToUpload.value],
-      imagesPartnerToUpload: [...imagesPartnerToUpload.value]
+      imagesPartnerToUpload: [...imagesPartnerToUpload.value],
+      focalPointTel: internationalPhoneNumber as string
     }
 
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)

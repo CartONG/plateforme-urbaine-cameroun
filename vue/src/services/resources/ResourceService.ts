@@ -1,10 +1,10 @@
-import { apiClient } from '@/plugins/axios/api'
-import type { Resource, ResourceEvent } from '@/models/interfaces/Resource'
-import { handleFileUpload } from '@/services/forms/FormService'
-import FileUploader from '@/services/files/FileUploader'
-import type { BaseMediaObject } from '../../models/interfaces/object/MediaObject'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
+import type { Resource, ResourceEvent } from '@/models/interfaces/Resource'
+import { apiClient } from '@/plugins/axios/api'
+import FileUploader from '@/services/files/FileUploader'
+import { handleFileUpload } from '@/services/forms/FormService'
 import { transformSymfonyRelationToIRIs } from '@/services/utils/UtilsService'
+import type { BaseMediaObject } from '../../models/interfaces/object/MediaObject'
 
 export class ResourceService {
   static async getAll(): Promise<Resource[]> {
@@ -26,6 +26,7 @@ export class ResourceService {
 
   static async patch(resource: Resource): Promise<Resource> {
     resource = await handleFileUpload(resource)
+    console.log(resource)
     const updatedResource = await apiClient
       .patch('/api/resources/' + resource.id, transformSymfonyRelationToIRIs(resource))
       .then((response) => response.data)
@@ -53,9 +54,11 @@ export class ResourceService {
   }
 
   static async getNearestEvents(): Promise<ResourceEvent[]> {
-    return await apiClient
+    const res = await apiClient
       .get('/api/resources/events/nearest')
       .then((response) => response.data['hydra:member'])
+    console.log(res)
+    return res
   }
 
   static getLink(resource: Resource): string {

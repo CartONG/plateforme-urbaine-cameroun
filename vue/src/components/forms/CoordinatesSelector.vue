@@ -29,7 +29,7 @@
         variant="text"
         class="CoordinatesSelector__selectBtn"
         density="comfortable"
-        :prepend-icon="isSelecting ? 'mdi mdi-crosshairs-gps' : 'mdi mdi-crosshairs'"
+        :prepend-icon="isSelecting ? '$crosshairsGps' : '$crosshairsGps'"
         color="main-blue"
         @click="isSelecting = !isSelecting"
       >
@@ -43,15 +43,15 @@
       <v-icon
         v-if="isSelecting"
         size="1.5rem"
-        icon="mdi mdi-crosshairs-gps"
+        icon="$crosshairsGps"
         class="CoordinatesSelector__coordsIcon"
         color="main-blue"
       ></v-icon>
       <div class="CoordinatesSelector__coordsValidateBtns" v-if="isSelecting">
-        <v-btn :elevation="2" prepend-icon="mdi-check" @click="validate" color="main-blue">{{
+        <v-btn :elevation="2" prepend-icon="$check" @click="validate" color="main-blue">{{
           $t('inputs.coordsSelector.buttons.validate')
         }}</v-btn>
-        <v-btn :elevation="2" prepend-icon="mdi-close" @click="cancel">{{
+        <v-btn :elevation="2" prepend-icon="$close" @click="cancel">{{
           $t('inputs.coordsSelector.buttons.cancel')
         }}</v-btn>
       </div>
@@ -60,11 +60,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch, type ModelRef } from 'vue'
-import Map from '../map/Map.vue'
-import { useTemplateRef } from 'vue'
 import coordsIcon from '@/assets/images/icons/map/project_icon.png'
 import MapService from '@/services/map/MapService'
+import { computed, onMounted, ref, useTemplateRef, watch, type ModelRef } from 'vue'
+import Map from '../map/Map.vue'
 
 const lat: ModelRef<number | undefined> = defineModel('lat')
 const lng: ModelRef<number | undefined> = defineModel('lng')

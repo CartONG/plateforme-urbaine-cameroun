@@ -33,7 +33,7 @@
         <template v-if="!(item as Project).isValidated">
           <v-btn
             size="small"
-            icon="mdi-arrow-right"
+            icon="$arrowRight"
             class="text-main-blue"
             @click="editProject(item as Project, FormType.VALIDATE)"
           ></v-btn>
@@ -41,12 +41,12 @@
         <template v-else>
           <v-btn
             density="comfortable"
-            icon="mdi-pencil-outline"
+            icon="$pencilOutline"
             @click="editProject(item as Project)"
             class="mr-2"
           ></v-btn>
-          <v-btn density="comfortable" icon="mdi-dots-vertical">
-            <v-icon icon="mdi-dots-vertical"></v-icon>
+          <v-btn density="comfortable" icon="$dotsVertical">
+            <v-icon icon="$dotsVertical"></v-icon>
             <v-menu activator="parent" location="left">
               <v-list class="AdminPanel__additionnalMenu">
                 <v-list-item

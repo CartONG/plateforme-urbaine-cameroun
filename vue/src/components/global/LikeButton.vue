@@ -3,7 +3,7 @@
     <v-btn
       variant="text"
       density="comfortable"
-      :icon="likeId > 0 ? 'mdi mdi-heart' : 'mdi mdi-heart-outline'"
+      :icon="likeId > 0 ? '$heart' : '$heartOutline'"
       color="main-blue"
       @click.prevent="switchLike()"
     >
@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { useApplicationStore } from '@/stores/applicationStore'
-import { useUserStore } from '@/stores/userStore'
-import { computed } from 'vue'
+import { useApplicationStore } from '@/stores/applicationStore';
+import { useUserStore } from '@/stores/userStore';
+import { computed } from 'vue';
 const props = defineProps<{
   id: string
 }>()
