@@ -55,7 +55,7 @@
       <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
       <AdminBoundariesButton :entity="actor" />
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.officeName || actor.officeAddress">
         <div class="d-flex flex-row">
           <v-icon icon="$mapMarkerOutline" color="main-black" />
           <div class="ml-1">
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.contactName || actor.contactPosition">
         <div>
           <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
           <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
