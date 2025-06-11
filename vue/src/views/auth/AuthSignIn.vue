@@ -43,6 +43,7 @@
       <span>{{ $t('auth.signIn.question') }}</span>
       <router-link
         append
+        class="Dialog__clickableText"
         :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_BECOME_MEMBER } }"
       >
         {{ $t('auth.becomeMember.title') }}

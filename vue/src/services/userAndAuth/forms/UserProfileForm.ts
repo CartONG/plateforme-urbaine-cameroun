@@ -34,7 +34,7 @@ export class UserProfileForm {
       phone: zodModels.phone,
       email: z.string().email({ message: i18n.t('forms.errorMessages.email') }),
       ...UserValidator.passwordsObject(),
-      acceptTerms: z.boolean().refine((val) => val === true, {
+      acceptTerms: z.literal(true, {
         message: i18n.t('auth.becomeMember.form.privacyPolicy.error')
       }),
       signUpMessage: z

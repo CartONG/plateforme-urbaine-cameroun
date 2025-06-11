@@ -47,7 +47,11 @@ const closeDialog = () => {
   --dialog-padding-top: 5.5rem;
   $dim-dialog-h: calc(100vh - 4rem);
 
-  background: #fff url(@/assets/images/Frise.jpg) no-repeat top center;
+  &__clickableText {
+    text-decoration: underline !important;
+  }
+
+  background: #fff url(@/assets/images/Frise.svg) no-repeat top center;
   background-attachment: local;
   padding: var(--dialog-padding-top) var(--dialog-padding-x) 3rem var(--dialog-padding-x);
   width: $dim-dialog-w;
