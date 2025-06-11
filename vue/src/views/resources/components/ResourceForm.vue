@@ -136,7 +136,7 @@
           <v-divider color="main-grey" class="border-opacity-100"></v-divider>
           <FormSectionTitle :text="$t('actors.form.adminScopeSection')" />
           <div class="Form__fieldCtn">
-            <label class="Form__label required">{{ $t('actors.form.adminScope') }}</label>
+            <label class="Form__label">{{ $t('actors.form.adminScope') }}</label>
             <v-select
               density="compact"
               variant="outlined"
@@ -202,6 +202,9 @@
           />
         </template>
         <FormSectionTitle :text="$t('resources.form.section.thematics')" />
+        <label class="Form__label required">{{
+          $t('resources.form.fields.thematics.subLabel')
+        }}</label>
         <v-select
           density="compact"
           variant="outlined"

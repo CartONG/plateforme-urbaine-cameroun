@@ -93,8 +93,8 @@ export class CommonZodSchema {
       )
 
     return {
-      symfonyRelations: z.array(SymfonyRelationSchema).nonempty({
-        message: i18n.t('forms.errorMessages.required')
+      symfonyRelations: z.array(SymfonyRelationSchema, {
+        required_error: i18n.t('forms.errorMessages.required')
       }),
       symfonyRelation: SymfonyRelationSchema,
       admin1Boundaries: z.array(Admin1BoundarySchema),
@@ -152,12 +152,12 @@ export class CommonZodSchema {
           }
         ),
       description: z
-        .string()
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(1, { message: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
         .optional(),
       descriptionRequired: z
-        .string()
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) }),
       maxLabel: z
         .string()
