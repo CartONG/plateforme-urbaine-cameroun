@@ -46,9 +46,10 @@ Issue, and unwanted data loss ? You can proceed with the next step.
 This operation will erase data, and will go to a previous state. Be careful if you use it
 :::
 
-Go back to your previous version targeting a specific tag. And then pull the backup.
+Go back to your previous version targeting a specific tag. And then pull the backup and redeploy.
 
 ``` bash
 git checkout tags/<replace-with-the-tag-you-want-to-revert-to>
 make pull-backup tag=<replace-with-the-tag-you-want-to-revert-to>
+make deploy-prod
 ```
