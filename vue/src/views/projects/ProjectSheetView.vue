@@ -38,7 +38,7 @@
       />
       <div class="SheetView__contentCtn my-6">
         <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.about') }}</div>
-        <p>{{ project.description }}</p>
+        <span v-html="project.description"></span>
       </div>
       <ProjectRelatedContent :project="project" />
     </div>

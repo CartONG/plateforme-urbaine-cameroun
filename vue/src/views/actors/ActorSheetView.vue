@@ -29,7 +29,7 @@
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
         </div>
-        <p>{{ actor.description }}</p>
+        <span v-html="formattedDescription"></span>
       </div>
       <ActorRelatedContent :actor="actor" v-if="!appStore.mobile" />
     </div>
@@ -154,6 +154,10 @@ const isEditable = computed(() => {
 function editActor() {
   actorsStore.setActorEditionMode(actor.value)
 }
+
+const formattedDescription = computed(() => {
+  return actor.value?.description ? actor.value.description.replace(/<p><\/p>/g, '<br />') : ''
+})
 </script>
 <style lang="scss">
 @import '@/assets/styles/views/SheetView';

@@ -14,13 +14,11 @@ export class UserProfileForm {
 
     return z.object({
       firstName: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(2, { message: i18n.t('forms.errorMessages.minlength', { min: 2 }) })
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) }),
       lastName: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(2, { message: i18n.t('forms.errorMessages.minlength', { min: 2 }) })
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) }),
       organisation: z
@@ -32,9 +30,11 @@ export class UserProfileForm {
         .max(255, { message: i18n.t('forms.errorMessages.maxlength', { max: 255 }) })
         .optional(),
       phone: zodModels.phone,
-      email: z.string().email({ message: i18n.t('forms.errorMessages.email') }),
+      email: z
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
+        .email({ message: i18n.t('forms.errorMessages.email') }),
       ...UserValidator.passwordsObject(),
-      acceptTerms: z.literal(true, {
+      acceptTerms: z.boolean().refine((val) => val === true, {
         message: i18n.t('auth.becomeMember.form.privacyPolicy.error')
       }),
       signUpMessage: z

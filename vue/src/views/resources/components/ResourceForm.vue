@@ -136,7 +136,7 @@
           <v-divider color="main-grey" class="border-opacity-100"></v-divider>
           <FormSectionTitle :text="$t('actors.form.adminScopeSection')" />
           <div class="Form__fieldCtn">
-            <label class="Form__label required">{{ $t('actors.form.adminScope') }}</label>
+            <label class="Form__label">{{ $t('actors.form.adminScope') }}</label>
             <v-select
               density="compact"
               variant="outlined"
@@ -202,6 +202,9 @@
           />
         </template>
         <FormSectionTitle :text="$t('resources.form.section.thematics')" />
+        <label class="Form__label required">{{
+          $t('resources.form.fields.thematics.subLabel')
+        }}</label>
         <v-select
           density="compact"
           variant="outlined"
@@ -401,6 +404,7 @@ const resourceFormats = computed(() => {
 
 const submitForm = handleSubmit(
   async (values) => {
+    console.log('Submitting resource form with values:', values)
     const resourceSubmission: Resource = nestedObjectsToIri(values)
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.resource) {
       resourceSubmission.id = props.resource.id
@@ -411,7 +415,10 @@ const submitForm = handleSubmit(
     const submittedResource = await resourceStore.submitResource(resourceSubmission, props.type)
     emit('submitted', submittedResource)
   },
-  () => {
+  (errors) => {
+    console.error('Resource form submission errors:', errors)
+    const requiredTypes = [ResourceType.RAPPORTS, ResourceType.REGULATIONS, ResourceType.OTHERS]
+    console.log(requiredTypes.includes(errors.values.type))
     addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
     onInvalidSubmit()
   }
