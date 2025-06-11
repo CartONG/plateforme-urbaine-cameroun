@@ -19,7 +19,7 @@ export class ProjectFormService {
         description: zodModels.description,
         calendar: zodModels.maxDescription,
         deliverables: zodModels.maxDescription,
-        focalPointName: zodModels.maxLabel,
+        focalPointName: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         focalPointPosition: zodModels.maxLabel.optional(),
         focalPointEmail: zodModels.email,
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
@@ -33,13 +33,17 @@ export class ProjectFormService {
         actor: zodModels.symfonyRelation.optional(),
         otherActor: z.string().optional(),
         status: z.nativeEnum(Status, { required_error: i18n.t('forms.errorMessages.required') }),
-        financingTypes: z.array(z.nativeEnum(ProjectFinancingType)),
+        financingTypes: z.array(z.nativeEnum(ProjectFinancingType), {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherFinancingType: z.string().optional(),
         actorsInCharge: z.array(zodModels.symfonyRelation).optional(),
         otherActorInCharge: z.string().optional(),
         thematics: zodModels.symfonyRelations,
         otherThematic: z.string().optional(),
-        beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType)),
+        beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType), {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherBeneficiary: z.string().optional(),
         website: zodModels.website
       })

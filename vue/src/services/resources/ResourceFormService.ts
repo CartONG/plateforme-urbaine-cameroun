@@ -40,26 +40,45 @@ export class ResourceFormService {
         thematics: zodModels.symfonyRelations,
         otherThematic: z.string().optional()
       })
+      .refine((data) => data.type !== ResourceType.EVENTS || Boolean(data.startAt), {
+        message: i18n.t('forms.errorMessages.required'),
+        path: ['startAt']
+      })
       .refine(
-        (schema) => {
-          return schema.file || schema.link
+        (data) => {
+          const requiredTypes = [
+            ResourceType.RAPPORTS,
+            ResourceType.REGULATIONS,
+            ResourceType.OTHERS
+          ]
+
+          if (requiredTypes.includes(data.type)) {
+            return data.administrativeScopes !== undefined
+          }
+
+          return true
         },
         {
-          message: i18n.t('resources.form.errorMessages.atLeastOneField'),
-          path: ['link', 'file']
-        }
-      )
-      .refine(
-        (schema) =>
-          (schema.type === ResourceType.EVENTS && schema.startAt) ||
-          schema.type !== ResourceType.EVENTS,
-        {
           message: i18n.t('forms.errorMessages.required'),
-          path: ['startAt']
+          path: ['administrativeScopes']
         }
       )
+      .superRefine((data, ctx) => {
+        if (!data.file && !data.link) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['file'],
+            message: i18n.t('resources.form.errorMessages.atLeastOneField')
+          })
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['link'],
+            message: i18n.t('resources.form.errorMessages.atLeastOneField')
+          })
+        }
+      })
 
-    const { errors, handleSubmit, isSubmitting, setFieldValue } = useForm<Partial<Resource>>({
+    const { errors, handleSubmit, isSubmitting } = useForm<Partial<Resource>>({
       initialValues: resource,
       validationSchema: toTypedSchema(resourceSchema)
     })
@@ -84,6 +103,6 @@ export class ResourceFormService {
       link: useField('link')
     }
 
-    return { form, errors, handleSubmit, isSubmitting, setFieldValue }
+    return { form, errors, handleSubmit, isSubmitting }
   }
 }
