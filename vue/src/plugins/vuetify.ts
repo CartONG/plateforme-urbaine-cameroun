@@ -69,6 +69,7 @@ import {
   mdiFilter,
   mdiFolder,
   mdiFolderEditOutline,
+  mdiFormatItalic,
   mdiHeart,
   mdiHeartOutline,
   mdiHelpCircleOutline,
@@ -104,6 +105,7 @@ export default createVuetify({
     defaultSet: 'mdi',
     aliases: {
       ...aliases,
+      formatItalic: mdiFormatItalic,
       phone: mdiPhone,
       folder: mdiFolder,
       commentText: mdiCommentText,

@@ -39,24 +39,20 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
-          <v-textarea
-            variant="outlined"
-            :rows="4"
-            :placeholder="$t('projects.form.fields.deliverables.label')"
-            v-model="form.deliverables.value.value"
-            :error-messages="form.deliverables.errorMessage.value"
-            @blur="form.deliverables.handleChange"
+          <TextEditor
+            v-model:content-model="form.deliverables.value.value"
+            :parent-form-error="formError"
+            :min-length="0"
+            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.calendar.label') }}</label>
-          <v-textarea
-            variant="outlined"
-            :rows="1"
-            :placeholder="$t('projects.form.fields.calendar.label')"
-            v-model="form.calendar.value.value"
-            :error-messages="form.calendar.errorMessage.value"
-            @blur="form.calendar.handleChange"
+          <TextEditor
+            v-model:content-model="form.calendar.value.value"
+            :parent-form-error="formError"
+            :min-length="0"
+            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">

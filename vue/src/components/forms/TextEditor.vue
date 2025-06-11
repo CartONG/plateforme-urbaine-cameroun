@@ -14,7 +14,7 @@
         @click.stop="toggleItalic"
         size="x-small"
       >
-        <v-icon>mdi-format-italic</v-icon>
+        <v-icon icon="$formatItalic"></v-icon>
       </v-btn>
 
       <v-btn
@@ -28,7 +28,7 @@
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn :class="{ 'bg-main-blue': isHeadingActive }" v-bind="props" size="x-small">
-            T <v-icon>mdi-menu-down</v-icon>
+            T <v-icon icon="$menuDown"></v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -57,7 +57,12 @@
     <editor-content :editor="editor" />
 
     <div v-if="errorStatus" class="TextEditor__errorMessage">
-      {{ $t('forms.errorMessages.minlength', { min: minLength }) }}
+      <span v-if="editor.getText().length > props.maxLength">{{
+        $t('forms.errorMessages.maxlength', { max: maxLength })
+      }}</span>
+      <span v-else-if="editor.getText().length < props.minLength">{{
+        $t('forms.errorMessages.minlength', { min: minLength })
+      }}</span>
     </div>
   </div>
 </template>
@@ -72,9 +77,11 @@ const props = withDefaults(
   defineProps<{
     parentFormError: boolean
     minLength?: number
+    maxLength?: number
   }>(),
   {
-    minLength: 50
+    minLength: 50,
+    maxLength: Infinity
   }
 )
 
@@ -93,7 +100,9 @@ editor.on('update', ({ editor }) => {
 })
 
 const errorStatus = computed(
-  () => editor.getText().length < props.minLength && props.parentFormError
+  () =>
+    (editor.getText().length < props.minLength || editor.getText().length > props.maxLength) &&
+    props.parentFormError
 )
 
 onMounted(() => {
