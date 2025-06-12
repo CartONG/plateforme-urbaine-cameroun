@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 trait ODDEntity
 {
-    #[ORM\Column(type: 'simple_array', enumType: ODD::class)]
+    #[ORM\Column(type: 'json', enumType: ODD::class)]
     #[Groups([Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, Actor::ACTOR_WRITE, Project::GET_FULL, Project::GET_PARTIAL, Project::WRITE, Resource::GET_FULL, Resource::WRITE])]
     private array $odds = [];
 
