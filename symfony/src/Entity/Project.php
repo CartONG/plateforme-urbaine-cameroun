@@ -2,41 +2,41 @@
 
 namespace App\Entity;
 
-use App\Enum\Status;
-use ApiPlatform\Metadata\Get;
-use App\Enum\BeneficiaryType;
-use ApiPlatform\Metadata\Post;
-use App\Model\Enums\UserRoles;
-use Doctrine\DBAL\Types\Types;
-use ApiPlatform\Metadata\Patch;
-use App\Entity\Trait\ODDEntity;
-use Symfony\Component\Uid\Uuid;
-use ApiPlatform\Metadata\Delete;
-use App\Entity\File\MediaObject;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Trait\BanocEntity;
-use App\Enum\AdministrativeScope;
-use App\Enum\ProjectFinancingType;
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\SluggableEntity;
-use App\Repository\ProjectRepository;
-use App\Entity\Trait\ThematizedEntity;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Entity\Trait\LocalizableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Controller\Project\SimilarProjectsAction;
+use App\Entity\File\MediaObject;
+use App\Entity\Trait\BanocEntity;
+use App\Entity\Trait\BlameableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
+use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ODDEntity;
+use App\Entity\Trait\SluggableEntity;
+use App\Entity\Trait\ThematizedEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\ValidateableEntity;
+use App\Enum\AdministrativeScope;
+use App\Enum\BeneficiaryType;
+use App\Enum\ProjectFinancingType;
+use App\Enum\Status;
+use App\Model\Enums\UserRoles;
+use App\Repository\ProjectRepository;
 use App\Services\State\Processor\ProjectProcessor;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Index(columns: ['slug', 'is_validated'], name: 'idx_project_slug_is_validated')]

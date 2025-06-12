@@ -2,10 +2,10 @@
 
 namespace App\Entity\Trait;
 
-use App\Enum\ODD;
 use App\Entity\Actor;
 use App\Entity\Project;
 use App\Entity\Resource;
+use App\Enum\ODD;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
