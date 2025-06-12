@@ -10,7 +10,7 @@
       <ListFilterBox>
         <ListFilterSelect
           v-model="selectedThematic"
-          :items="thematicsItems"
+          :items="Object.values(Thematic)"
           :label="$t('resources.thematic')"
         />
         <ListFilterSelect
@@ -81,10 +81,10 @@
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Resource } from '@/models/interfaces/Resource'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
 import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
@@ -98,11 +98,9 @@ import { useRoute } from 'vue-router'
 
 const resourceStore = useResourceStore()
 const userStore = useUserStore()
-const thematicsStore = useThematicStore()
 const appStore = useApplicationStore()
 const route = useRoute()
 
-const thematicsItems = computed(() => thematicsStore.thematics)
 const searchQuery = ref('')
 const arePassedEventsShown = ref(false)
 const selectedThematic: Ref<string[]> = ref([])
@@ -111,7 +109,6 @@ const selectedResourceTypes: Ref<ResourceType[]> = ref([])
 
 onMounted(async () => {
   await resourceStore.getAll()
-  await thematicsStore.getAll()
   appStore.isLoading = false
 
   initRouteFilters()
@@ -138,7 +135,7 @@ const filteredResources = computed(() => {
   if (selectedThematic.value && selectedThematic.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
       return resource.thematics.some((thematic) =>
-        (selectedThematic.value as string[]).includes(thematic['@id'])
+        (selectedThematic.value as string[]).includes(thematic)
       )
     })
   }

@@ -210,10 +210,10 @@
           variant="outlined"
           multiple
           v-model="form.thematics.value.value as Thematic[]"
-          :items="thematics"
+          :items="Object.values(Thematic)"
+          :item-title="(item) => $t('forms.thematics.' + item)"
+          :item-value="(item) => item"
           :placeholder="$t('resources.form.section.thematics')"
-          item-title="name"
-          item-value="@id"
           :error-messages="form.thematics.errorMessage.value"
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
@@ -257,6 +257,7 @@ import { FormType } from '@/models/enums/app/FormType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type {
   Admin1Boundary,
   Admin2Boundary,
@@ -342,7 +343,7 @@ const otherRessourceTypeIsSelected = computed(() => {
 })
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })

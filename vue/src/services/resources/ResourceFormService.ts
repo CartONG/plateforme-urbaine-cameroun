@@ -37,7 +37,7 @@ export class ResourceFormService {
         author: z
           .string({ required_error: i18n.t('forms.errorMessages.required') })
           .min(1, { message: i18n.t('forms.errorMessages.required') }),
-        thematics: zodModels.symfonyRelations,
+        thematics: zodModels.thematics,
         otherThematic: z.string().optional()
       })
       .refine((data) => data.type !== ResourceType.EVENTS || Boolean(data.startAt), {
