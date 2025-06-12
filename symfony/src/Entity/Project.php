@@ -2,38 +2,41 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\Enum\Status;
+use ApiPlatform\Metadata\Get;
+use App\Enum\BeneficiaryType;
+use ApiPlatform\Metadata\Post;
+use App\Model\Enums\UserRoles;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Entity\Trait\ODDEntity;
+use Symfony\Component\Uid\Uuid;
+use ApiPlatform\Metadata\Delete;
+use App\Entity\File\MediaObject;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Trait\BanocEntity;
+use App\Enum\AdministrativeScope;
+use App\Enum\ProjectFinancingType;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use App\Controller\Project\SimilarProjectsAction;
-use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use App\Entity\Trait\LocalizableEntity;
 use App\Entity\Trait\SluggableEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Enum\AdministrativeScope;
-use App\Enum\BeneficiaryType;
-use App\Enum\ProjectFinancingType;
-use App\Enum\Status;
-use App\Model\Enums\UserRoles;
 use App\Repository\ProjectRepository;
-use App\Services\State\Processor\ProjectProcessor;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Trait\ThematizedEntity;
+use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ValidateableEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Project\SimilarProjectsAction;
+use App\Services\State\Processor\ProjectProcessor;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Index(columns: ['slug', 'is_validated'], name: 'idx_project_slug_is_validated')]
@@ -84,10 +87,25 @@ class Project
     use LocalizableEntity;
     use ValidateableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const GET_FULL = 'project:get:full';
     public const GET_PARTIAL = 'project:get:partial';
     public const WRITE = 'project:write';
+
+    public function __construct()
+    {
+        $this->financingTypes = [];
+        $this->images = new ArrayCollection();
+        $this->partners = new ArrayCollection();
+        $this->administrativeScopes = [];
+        $this->admin1List = new ArrayCollection();
+        $this->admin2List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
+        $this->actorsInCharge = new ArrayCollection();
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -112,13 +130,6 @@ class Project
     #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private array $administrativeScopes = [];
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'projects')]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(length: 255)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
@@ -244,19 +255,6 @@ class Project
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private Collection $actorsInCharge;
 
-    public function __construct()
-    {
-        $this->thematics = new ArrayCollection();
-        $this->financingTypes = [];
-        $this->images = new ArrayCollection();
-        $this->partners = new ArrayCollection();
-        $this->administrativeScopes = [];
-        $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
-        $this->admin3List = new ArrayCollection();
-        $this->actorsInCharge = new ArrayCollection();
-    }
-
     public function getId(): ?string
     {
         return $this->id;
@@ -381,30 +379,6 @@ class Project
         if (($key = array_search($scope, $this->administrativeScopes ?? [], true)) !== false) {
             unset($this->administrativeScopes[$key]);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }

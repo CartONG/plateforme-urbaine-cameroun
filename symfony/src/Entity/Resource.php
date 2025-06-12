@@ -2,33 +2,36 @@
 
 namespace App\Entity;
 
+use App\Enum\ResourceType;
+use App\Enum\ResourceFormat;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Model\Enums\UserRoles;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Entity\File\FileObject;
+use App\Entity\Trait\ODDEntity;
+use Symfony\Component\Uid\Uuid;
+use ApiPlatform\Metadata\Delete;
+use App\Entity\File\MediaObject;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Trait\BanocEntity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\File\FileObject;
-use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use App\Entity\Trait\LocalizableEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Enum\ResourceFormat;
-use App\Enum\ResourceType;
-use App\Model\Enums\UserRoles;
+use App\Entity\Trait\ThematizedEntity;
 use App\Repository\ResourceRepository;
+use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Trait\LocalizableEntity;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Trait\ValidateableEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -75,6 +78,9 @@ class Resource
     use ValidateableEntity;
     use LocalizableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
@@ -100,13 +106,6 @@ class Resource
     #[ORM\Column(enumType: ResourceFormat::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'resources')]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
@@ -168,7 +167,6 @@ class Resource
 
     public function __construct()
     {
-        $this->thematics = new ArrayCollection();
         $this->admin1List = new ArrayCollection();
         $this->admin2List = new ArrayCollection();
         $this->admin3List = new ArrayCollection();
@@ -235,30 +233,6 @@ class Resource
     public function setLink(?string $link): static
     {
         $this->link = $link;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }

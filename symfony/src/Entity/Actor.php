@@ -11,14 +11,19 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\File\MediaObject;
+use App\Entity\Trait\BanocEntity;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ODDEntity;
 use App\Entity\Trait\SluggableEntity;
+use App\Entity\Trait\ThematizedEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ActorCategory;
 use App\Enum\AdministrativeScope;
+use App\Enum\ODD;
+use App\Enum\Thematic;
 use App\Model\Enums\UserRoles;
 use App\Repository\ActorRepository;
 use App\Security\Voter\ActorVoter;
@@ -71,11 +76,24 @@ class Actor
     use BlameableEntity;
     use ValidateableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const ACTOR_READ_COLLECTION = 'actor:read_collection';
     public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
     public const ACTOR_READ_ITEM = 'actor:read_item';
     public const ACTOR_WRITE = 'actor:write';
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+        $this->administrativeScopes = [];
+        $this->images = new ArrayCollection();
+        $this->admin1List = new ArrayCollection();
+        $this->admin2List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -95,20 +113,6 @@ class Actor
     #[ORM\Column(enumType: ActorCategory::class)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::GET_FULL])]
     private ?ActorCategory $category = null;
-
-    /**
-     * @var Collection<int, ActorExpertise>
-     */
-    #[ORM\ManyToMany(targetEntity: ActorExpertise::class, inversedBy: 'actors')]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $expertises;
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'actors')]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
@@ -153,6 +157,7 @@ class Actor
     #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private array $administrativeScopes = [];
+
 
     #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
@@ -203,18 +208,6 @@ class Actor
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $admin3List;
 
-    public function __construct()
-    {
-        $this->expertises = new ArrayCollection();
-        $this->thematics = new ArrayCollection();
-        $this->projects = new ArrayCollection();
-        $this->administrativeScopes = [];
-        $this->images = new ArrayCollection();
-        $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
-        $this->admin3List = new ArrayCollection();
-    }
-
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -252,54 +245,6 @@ class Actor
     public function setCategory(ActorCategory $category): static
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ActorExpertise>
-     */
-    public function getExpertises(): Collection
-    {
-        return $this->expertises;
-    }
-
-    public function addExpertise(ActorExpertise $expertise): static
-    {
-        if (!$this->expertises->contains($expertise)) {
-            $this->expertises->add($expertise);
-        }
-
-        return $this;
-    }
-
-    public function removeExpertise(ActorExpertise $expertise): static
-    {
-        $this->expertises->removeElement($expertise);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }
