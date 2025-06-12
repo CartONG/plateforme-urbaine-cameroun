@@ -9,11 +9,11 @@
   </div>
   <div class="SheetView__contentCtn" v-if="project.calendar">
     <SectionBanner :text="$t('projectPage.projectCalendar')" />
-    <p>{{ project.calendar }}</p>
+    <span v-html="formatedCalendar"></span>
   </div>
   <div class="SheetView__contentCtn" v-if="project.deliverables">
     <SectionBanner :text="$t('projectPage.projectDeliverables')" />
-    <p>{{ project.deliverables }}</p>
+    <span v-html="formatedDeliverable"></span>
   </div>
 </template>
 
@@ -22,12 +22,16 @@ import SectionBanner from '@/components/banners/SectionBanner.vue'
 import Kpi from '@/components/content/Kpi.vue'
 import { KpiKey } from '@/models/enums/app/KpiKey'
 import type { Project } from '@/models/interfaces/Project'
+import { formatHTMLForSheetView } from '@/services/utils/UtilsService'
 import { computed } from 'vue'
-defineProps<{
+const props = defineProps<{
   project: Project
 }>()
 
 const hasOneNonEmptyKpi = computed(() => kpis.some((kpi) => kpi.count > 0))
+
+const formatedCalendar = computed(() => formatHTMLForSheetView(props.project.calendar))
+const formatedDeliverable = computed(() => formatHTMLForSheetView(props.project.deliverables))
 
 const kpis = [
   {

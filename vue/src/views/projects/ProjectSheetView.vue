@@ -38,7 +38,7 @@
       />
       <div class="SheetView__contentCtn my-6">
         <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.about') }}</div>
-        <span v-html="project.description"></span>
+        <span v-html="formattedDescription"></span>
       </div>
       <ProjectRelatedContent :project="project" />
     </div>
@@ -114,6 +114,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
 import router from '@/router'
+import { formatHTMLForSheetView } from '@/services/utils/UtilsService'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
@@ -190,6 +191,10 @@ const isEditable = computed(() => {
 const editProject = () => {
   isFormShown.value = true
 }
+
+const formattedDescription = computed(() =>
+  formatHTMLForSheetView(project.value?.description as string)
+)
 </script>
 
 <style lang="scss">
