@@ -5,11 +5,7 @@
         <img loading="lazy" :src="atlas.logo.contentUrl" v-if="atlas.logo" />
       </div>
       <div class="MyMapAtlasSummary_desc">
-        <v-tooltip
-          :text="atlas.name"
-          :location="type === AtlasGroup.PREDEFINED_MAP ? 'end' : 'start'"
-          v-if="atlas.name.length > 20"
-        >
+        <v-tooltip :text="atlas.name" location="top" v-if="atlas.name.length > 20">
           <template v-slot:activator="{ props }">
             <div class="MyMapAtlasSummary_title" v-bind="props">
               {{ reduceText(atlas.name, 20) }}
@@ -58,7 +54,11 @@ function setActiveAtlas() {
 }
 
 const filteredLength = computed(() => {
-  if (props.type === AtlasGroup.PREDEFINED_MAP || !mapStore.atlasSearchText) {
+  if (
+    props.type === AtlasGroup.PREDEFINED_MAP ||
+    !mapStore.atlasSearchText ||
+    props.atlas.name.includes(mapStore.atlasSearchText)
+  ) {
     return props.atlas.maps.length
   }
   return props.atlas.maps.filter(
