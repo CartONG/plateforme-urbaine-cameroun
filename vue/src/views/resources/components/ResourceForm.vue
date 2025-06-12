@@ -265,7 +265,6 @@ import type {
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import { type Resource } from '@/models/interfaces/Resource'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -273,7 +272,6 @@ import { addNotification } from '@/services/notifications/NotificationService'
 import { ResourceFormService } from '@/services/resources/ResourceFormService'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import type { Ref } from 'vue'
@@ -281,7 +279,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const resourceStore = useResourceStore()
-const thematicsStore = useThematicStore()
 const userStore = useUserStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 
@@ -295,7 +292,6 @@ const props = defineProps<{
 
 onMounted(async () => {
   await Promise.all([
-    thematicsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
     adminBoundariesStore.getAdmin2(),
     adminBoundariesStore.getAdmin3()
@@ -369,7 +365,6 @@ const handleDateChange = () => {
 }
 
 const emit = defineEmits(['submitted', 'close'])
-const thematics = computed(() => thematicsStore.thematics)
 watch(
   () => form.type.value.value,
   () => {

@@ -1,5 +1,6 @@
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { ActorsCategories } from '../enums/contents/actors/ActorsCategories'
+import type { Thematic } from '../enums/contents/Thematic'
 import type { ActorExpertise } from './ActorExpertise'
 import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { Blameable } from './common/Blameable'
@@ -10,7 +11,6 @@ import type { ContentImageFromUserFile } from './ContentImage'
 import type { GeoData } from './geo/GeoData'
 import type { BaseMediaObject } from './object/MediaObject'
 import type { Project } from './Project'
-import type { Thematic } from './Thematic'
 
 export interface Actor extends Timestampable, Validateable, Blameable, ThematicItem {
   id: string

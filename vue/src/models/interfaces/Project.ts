@@ -50,9 +50,8 @@ export interface Project
   creatorMessage?: string
 }
 
-export interface ProjectSubmission extends Omit<Project, 'actor' | 'thematics' | 'logo'> {
+export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
   actor: iri
-  thematics: iri[]
   logo: string
   logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]

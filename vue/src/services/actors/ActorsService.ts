@@ -1,10 +1,8 @@
 import type { Actor, ActorSubmission } from '@/models/interfaces/Actor'
-import { apiClient } from '@/plugins/axios/api'
-import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import type { Thematic } from '@/models/interfaces/Thematic'
-import FileUploader from '@/services/files/FileUploader'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
+import { apiClient } from '@/plugins/axios/api'
+import FileUploader from '@/services/files/FileUploader'
 import { transformSymfonyRelationToIRIs } from '@/services/utils/UtilsService'
 
 export class ActorsService {
@@ -80,19 +78,6 @@ export class ActorsService {
 
   static async deleteActor(id: string): Promise<void> {
     await apiClient.delete(`/api/actors/${id}`)
-  }
-
-  static async getActorsExpertisesList(): Promise<ActorExpertise[]> {
-    const data = (
-      await apiClient.get('/api/actor_expertises', { headers: { accept: 'application/ld+json' } })
-    ).data
-    return data['hydra:member']
-  }
-  static async getActorsThematicsList(): Promise<Thematic[]> {
-    const data = (
-      await apiClient.get('/api/thematics', { headers: { accept: 'application/ld+json' } })
-    ).data
-    return data['hydra:member']
   }
 
   static transformSymfonyRelationToIRIs(actor: any): ActorSubmission {

@@ -46,11 +46,11 @@
           class="Modal__chipGroup"
         >
           <v-chip
-            v-for="thematic in thematics"
-            :key="thematic.id"
-            :value="thematic.id"
+            v-for="thematic in Object.values(Thematic)"
+            :key="thematic"
+            :value="thematic"
             variant="outlined"
-            >{{ thematic.name }}</v-chip
+            >{{ $t('forms.thematics.' + thematic) }}</v-chip
           >
         </v-chip-group>
       </div>
@@ -83,15 +83,10 @@ import Modal from '@/components/global/Modal.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { Status } from '@/models/enums/contents/Status'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import { useProjectStore } from '@/stores/projectStore'
-import { useThematicStore } from '@/stores/thematicStore'
-import { computed, onBeforeMount } from 'vue'
-
-const thematicsStore = useThematicStore()
-onBeforeMount(async () => await thematicsStore.getAll())
 
 const projectStore = useProjectStore()
-const thematics = computed(() => thematicsStore.thematics)
 
 const resetFilters = () => {
   projectStore.resetFilters()

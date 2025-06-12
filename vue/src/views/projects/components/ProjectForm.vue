@@ -152,10 +152,10 @@
           variant="outlined"
           multiple
           v-model="form.thematics.value.value as Thematic[]"
-          :items="thematics"
+          :items="Object.values(Thematic)"
+          :item-title="(item) => $t('forms.thematics.' + item)"
+          :item-value="(item) => item"
           :placeholder="$t('projects.form.section.thematics')"
-          item-title="name"
-          item-value="@id"
           :error-messages="form.thematics.errorMessage.value"
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
@@ -401,6 +401,7 @@ import { NotificationType } from '@/models/enums/app/NotificationType'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
 import type {
   Admin1Boundary,
@@ -411,7 +412,6 @@ import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import { type Project, type ProjectSubmission } from '@/models/interfaces/Project'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -420,14 +420,12 @@ import { ProjectFormService } from '@/services/projects/ProjectFormService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useProjectStore } from '@/stores/projectStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, type Ref, ref } from 'vue'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
-const thematicsStore = useThematicStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 const userStore = useUserStore()
 
@@ -456,12 +454,11 @@ const submitLabel = computed(() => {
   return i18n.t('forms.' + props.type)
 })
 
-const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
 
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })
@@ -509,7 +506,6 @@ const activeAdminLevels = computed(() => {
 
 onMounted(async () => {
   await Promise.all([
-    thematicsStore.getAll(),
     actorsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
     adminBoundariesStore.getAdmin2(),

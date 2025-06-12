@@ -73,40 +73,15 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('actors.form.expertise') }}</label>
-          <v-select
-            density="compact"
-            variant="outlined"
-            multiple
-            v-model="form.expertises.value.value as ActorExpertise[]"
-            :items="expertisesItems"
-            item-title="name"
-            item-value="@id"
-            :error-messages="form.expertises.errorMessage.value"
-            @blur="form.expertises.handleChange(form.expertises.value.value)"
-            return-object
-          />
-        </div>
-        <div class="Form__fieldCtn" v-if="otherExpertiseIsSelected">
-          <label class="Form__label conditionnal">{{ $t('actors.form.otherExpertise') }}</label>
-          <v-text-field
-            density="compact"
-            variant="outlined"
-            v-model="form.otherExpertise.value.value"
-            :error-messages="form.otherExpertise.errorMessage.value"
-            @blur="form.otherExpertise.handleChange"
-          />
-        </div>
-        <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.thematic') }}</label>
           <v-select
             density="compact"
             variant="outlined"
             multiple
             v-model="form.thematics.value.value as Thematic[]"
-            :items="thematicsItems"
-            item-title="name"
-            item-value="@id"
+            :items="Object.values(Thematic)"
+            :item-title="(item) => $t('forms.thematics.' + item)"
+            :item-value="(item) => item"
             :error-messages="form.thematics.errorMessage.value"
             @blur="form.thematics.handleChange(form.thematics.value.value)"
             return-object
@@ -291,9 +266,9 @@ import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
 import { type Actor, type ActorSubmission } from '@/models/interfaces/Actor'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
 import type {
   Admin1Boundary,
   Admin2Boundary,
@@ -303,7 +278,6 @@ import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { ActorsFormService } from '@/services/actors/ActorsForm'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -311,21 +285,17 @@ import { addNotification } from '@/services/notifications/NotificationService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, ref, type Ref } from 'vue'
 
 const appStore = useApplicationStore()
 const actorsStore = useActorsStore()
-const thematicsStore = useThematicStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 
 const actorToEdit: Actor | null = actorsStore.actorEdition.actor
 const { form, handleSubmit, isSubmitting } = ActorsFormService.getActorsForm(actorToEdit)
 
 const categoryItems = Object.values(ActorsCategories)
-const expertisesItems = actorsStore.actorsExpertises
-const thematicsItems = computed(() => thematicsStore.thematics)
 const submitLabel = computed(() => {
   if (actorToEdit) {
     return !actorToEdit.isValidated ? i18n.t('forms.validate') : i18n.t('forms.edit')
@@ -334,15 +304,9 @@ const submitLabel = computed(() => {
   }
 })
 
-const otherExpertiseIsSelected = computed(() => {
-  if (form.expertises.value?.value && Array.isArray(form.expertises.value?.value)) {
-    return (form.expertises.value?.value as ActorExpertise[]).map((x) => x.name).includes('Autre')
-  }
-  return false
-})
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })
@@ -374,7 +338,6 @@ let existingExternalImages: string[] = []
 
 onMounted(async () => {
   await Promise.all([
-    thematicsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
     adminBoundariesStore.getAdmin2(),
     adminBoundariesStore.getAdmin3()

@@ -9,16 +9,6 @@
     <div class="ListView__filters">
       <ListFilterBox>
         <ListFilterSelect
-          v-model="selectedExpertise"
-          :items="expertisesItems"
-          :label="$t('actors.expertise')"
-        />
-        <ListFilterSelect
-          v-model="selectedThematic"
-          :items="thematicsItems"
-          :label="$t('actors.thematic')"
-        />
-        <ListFilterSelect
           v-model="selectedAdminScope"
           :items="Object.values(AdministrativeScope)"
           :label="$t('actors.adminScope')"
@@ -69,11 +59,8 @@
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
 import type { Actor } from '@/models/interfaces/Actor'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
 import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
@@ -86,21 +73,16 @@ import { computed, onBeforeMount, ref, type Ref } from 'vue'
 
 const actorsStore = useActorsStore()
 const userStore = useUserStore()
-const thematicsStore = useThematicStore()
 const applicationStore = useApplicationStore()
 
 onBeforeMount(async () => {
   applicationStore.isLoading = true
   await actorsStore.getActors()
-  await actorsStore.getActorsSelectListContent()
-  await thematicsStore.getAll()
   applicationStore.isLoading = false
 })
 
 const searchQuery = ref('')
-const expertisesItems = actorsStore.actorsExpertises
 const selectedExpertise: Ref<string[] | null> = ref(null)
-const thematicsItems = computed(() => thematicsStore.thematics)
 const selectedThematic: Ref<string[] | null> = ref(null)
 const selectedAdminScope: Ref<string[] | null> = ref(null)
 const categoryItems = Object.values(ActorsCategories)
@@ -176,12 +158,6 @@ function searchActors(actors: Actor[]) {
       actor.name?.toLowerCase().indexOf(searchText) > -1 ||
       actor.acronym?.toLowerCase().indexOf(searchText) > -1 ||
       actor.category.toLowerCase().indexOf(searchText) > -1 ||
-      actor.expertises?.some((exp: ActorExpertise) =>
-        exp.name.toLowerCase().includes(searchText)
-      ) ||
-      actor.thematics.some((thematic: Thematic) =>
-        thematic.name.toLowerCase().includes(searchText)
-      ) ||
       actor.administrativeScopes.some((scope: AdministrativeScope) =>
         scope.toLowerCase().includes(searchText)
       ) ||

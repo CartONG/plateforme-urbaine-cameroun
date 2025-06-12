@@ -18,9 +18,7 @@ export class ActorsFormService {
       acronym: z.string().optional(),
       category: z.string({ required_error: i18n.t('forms.errorMessages.required') }),
       otherCategory: z.string().optional(),
-      expertises: zodModels.symfonyRelations,
-      otherExpertise: z.string().optional(),
-      thematics: zodModels.symfonyRelations,
+      thematics: zodModels.thematics,
       otherThematic: z.string().optional(),
       administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
         required_error: i18n.t('forms.errorMessages.required')

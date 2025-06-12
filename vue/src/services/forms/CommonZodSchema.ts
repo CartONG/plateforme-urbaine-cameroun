@@ -1,3 +1,5 @@
+import { ODD } from '@/models/enums/contents/ODD'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type {
   Admin1Boundary,
   Admin2Boundary,
@@ -168,7 +170,18 @@ export class CommonZodSchema {
         .optional(),
       phone: z.string().optional(),
       latString: LatitudeSchema,
-      lngString: LongitudeSchema
+      lngString: LongitudeSchema,
+      thematics: z.array(z.nativeEnum(Thematic), {
+        required_error: i18n.t('forms.errorMessages.required')
+      }),
+      odds: z.array(z.nativeEnum(ODD), {
+        required_error: i18n.t('forms.errorMessages.required')
+      }),
+      banoc: z
+        .string()
+        .min(1, { message: i18n.t('forms.errorMessages.minlength', { min: 1 }) })
+        .max(6, { message: i18n.t('forms.errorMessages.maxlength', { max: 6 }) })
+        .optional()
     }
   }
 

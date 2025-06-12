@@ -39,7 +39,7 @@ export class ProjectFormService {
         otherFinancingType: z.string().optional(),
         actorsInCharge: z.array(zodModels.symfonyRelation).optional(),
         otherActorInCharge: z.string().optional(),
-        thematics: zodModels.symfonyRelations,
+        thematics: zodModels.thematics,
         otherThematic: z.string().optional(),
         beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType), {
           required_error: i18n.t('forms.errorMessages.required')

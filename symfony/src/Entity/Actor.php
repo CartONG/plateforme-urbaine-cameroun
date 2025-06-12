@@ -22,8 +22,6 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ActorCategory;
 use App\Enum\AdministrativeScope;
-use App\Enum\ODD;
-use App\Enum\Thematic;
 use App\Model\Enums\UserRoles;
 use App\Repository\ActorRepository;
 use App\Security\Voter\ActorVoter;
@@ -35,6 +33,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
@@ -179,10 +178,6 @@ class Actor
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?string $otherCategory = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private ?string $otherExpertise = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
@@ -485,18 +480,6 @@ class Actor
     public function removeAdmin1List(Admin1Boundary $admin1List): static
     {
         $this->admin1List->removeElement($admin1List);
-
-        return $this;
-    }
-
-    public function getOtherExpertise(): ?string
-    {
-        return $this->otherExpertise;
-    }
-
-    public function setOtherExpertise(?string $otherExpertise): static
-    {
-        $this->otherExpertise = $otherExpertise;
 
         return $this;
     }
