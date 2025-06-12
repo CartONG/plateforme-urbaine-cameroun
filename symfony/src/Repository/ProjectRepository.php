@@ -53,19 +53,19 @@ class ProjectRepository extends ServiceEntityRepository
     public function findTwoSimilarProjectsByThematics(Project $project): array
     {
         $projectThematics = $project->getThematics();
-        
+
         if (empty($projectThematics)) {
             return [];
         }
 
-        $thematicValues = array_map(fn($thematic) => $thematic->value, $projectThematics);
-        
+        $thematicValues = array_map(fn ($thematic) => $thematic->value, $projectThematics);
+
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.id != :id')
             ->setParameter('id', $project->getId())
             ->orderBy('p.updatedAt', 'DESC')
             ->setMaxResults(2);
-        
+
         $orConditions = [];
         foreach ($thematicValues as $index => $value) {
             $orConditions[] = "p.thematics LIKE :thematic_$index";
@@ -73,7 +73,7 @@ class ProjectRepository extends ServiceEntityRepository
         }
 
         if (!empty($orConditions)) {
-            $qb->andWhere('(' . implode(' OR ', $orConditions) . ')');
+            $qb->andWhere('('.implode(' OR ', $orConditions).')');
         }
 
         return $qb->getQuery()->getResult();
