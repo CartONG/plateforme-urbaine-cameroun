@@ -1,6 +1,6 @@
 <template>
   <div class="MyMapAtlas__maps">
-    <div class="d-flex flex-row flex-wrap">
+    <div class="d-flex flex-row">
       <v-btn
         size="small"
         icon="$arrowLeft"

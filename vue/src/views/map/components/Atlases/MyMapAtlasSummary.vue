@@ -5,7 +5,20 @@
         <img loading="lazy" :src="atlas.logo.contentUrl" v-if="atlas.logo" />
       </div>
       <div class="MyMapAtlasSummary_desc">
-        <div class="MyMapAtlasSummary_title">{{ atlas.name }}</div>
+        <v-tooltip
+          :text="atlas.name"
+          :location="type === AtlasGroup.PREDEFINED_MAP ? 'end' : 'start'"
+          v-if="atlas.name.length > 20"
+        >
+          <template v-slot:activator="{ props }">
+            <div class="MyMapAtlasSummary_title" v-bind="props">
+              {{ reduceText(atlas.name, 20) }}
+            </div>
+          </template>
+        </v-tooltip>
+        <div class="MyMapAtlasSummary_title" v-else>
+          {{ atlas.name }}
+        </div>
         <div class="MyMapAtlasSummary_details">
           {{ filteredLength }}
           {{
@@ -20,10 +33,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AtlasGroup } from '@/models/enums/geo/AtlasGroup';
-import type { Atlas } from '@/models/interfaces/Atlas';
-import { useMyMapStore } from '@/stores/myMapStore';
-import { computed, inject, type Ref } from 'vue';
+import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
+import type { Atlas } from '@/models/interfaces/Atlas'
+import { reduceText } from '@/services/utils/UtilsService'
+import { useMyMapStore } from '@/stores/myMapStore'
+import { computed, inject, type Ref } from 'vue'
 
 const props = defineProps<{
   atlas: Atlas

@@ -12,7 +12,12 @@
         <template v-slot:label>
           <div class="MyMapLayerPicker__descCtn">
             <img loading="lazy" :src="mainLayer.icon" :alt="mainLayer.name" />
-            <span>{{ mainLayer.name }}</span>
+            <v-tooltip :text="mainLayer.name" location="top" v-if="mainLayer.name.length > 15">
+              <template v-slot:activator="{ props }">
+                <span v-bind="props">{{ reduceText(mainLayer.name, 15) }}</span>
+              </template>
+            </v-tooltip>
+            <span v-else>{{ mainLayer.name }}</span>
           </div>
         </template>
       </v-checkbox>
@@ -51,7 +56,21 @@
                 :alt="subLayer.name"
                 v-if="loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon"
               />
+              <v-tooltip :text="subLayer.name" location="top" v-if="subLayer.name.length > 25">
+                <template v-slot:activator="{ props }">
+                  <span
+                    class="text-capitalize"
+                    v-bind="props"
+                    :class="{
+                      'ml-1': loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon,
+                      MyMapLayerPicker__highlightedText: isNameInSearchText(subLayer.name)
+                    }"
+                    >{{ reduceText(subLayer.name, 25) }}</span
+                  >
+                </template>
+              </v-tooltip>
               <span
+                v-else
                 class="text-capitalize"
                 :class="{
                   'ml-1': loadedLayerType === LayerType.ATLAS_LAYER && subLayer.icon,
@@ -70,7 +89,7 @@
 <script setup lang="ts">
 import { LayerType } from '@/models/enums/geo/LayerType'
 import type { Layer } from '@/models/interfaces/map/Layer'
-import { debounce } from '@/services/utils/UtilsService'
+import { debounce, reduceText } from '@/services/utils/UtilsService'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, ref, watch, type ModelRef } from 'vue'
 import MyMapLayerAdditionnalMenu from './MyMapLayerAdditionnalMenu.vue'
