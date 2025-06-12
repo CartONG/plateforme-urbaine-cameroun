@@ -22,8 +22,6 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ActorCategory;
 use App\Enum\AdministrativeScope;
-use App\Enum\ODD;
-use App\Enum\Thematic;
 use App\Model\Enums\UserRoles;
 use App\Repository\ActorRepository;
 use App\Security\Voter\ActorVoter;
@@ -157,7 +155,6 @@ class Actor
     #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private array $administrativeScopes = [];
-
 
     #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
