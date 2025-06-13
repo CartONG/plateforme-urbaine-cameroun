@@ -54,6 +54,16 @@
           >
         </v-chip-group>
       </div>
+
+      <div class="Modal__block">
+        <label class="Modal__label">{{ $t('projects.popup.filters.beneficiaries.label') }}</label>
+        <v-chip-group v-model="projectStore.filters.odds" column multiple class="Modal__chipGroup">
+          <v-chip v-for="odd in Object.values(ODD)" :key="odd" :value="odd" variant="outlined">{{
+            $t(`forms.odds.${odd}`)
+          }}</v-chip>
+        </v-chip-group>
+      </div>
+
       <div class="Modal__block">
         <label class="Modal__label">{{ $t('projects.popup.filters.status.label') }}</label>
         <v-chip-group
@@ -82,6 +92,7 @@
 import Modal from '@/components/global/Modal.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { Status } from '@/models/enums/contents/Status'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import { useProjectStore } from '@/stores/projectStore'

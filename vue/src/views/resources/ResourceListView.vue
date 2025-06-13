@@ -13,6 +13,18 @@
           :items="Object.values(Thematic)"
           :label="$t('resources.thematic')"
         />
+        <v-select
+          class="ListFilterSelect"
+          v-model="selectedODD"
+          density="compact"
+          variant="outlined"
+          :label="$t('forms.odds.title')"
+          :items="Object.values(ODD)"
+          :item-title="(item) => $t('forms.odds.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
+        />
         <ListFilterSelect
           v-model="selectedResourceFormats"
           :items="Object.values(ResourceFormat)"
@@ -26,6 +38,11 @@
           :item-title="(item: ResourceType) => $t('resources.resourceType.' + item)"
           :item-value="(item: ResourceType) => item"
           :label="$t('resources.type')"
+        />
+        <ListFilterSelect
+          v-model="selectedAdminScope"
+          :items="Object.values(AdministrativeScope)"
+          :label="$t('actors.adminScope')"
         />
       </ListFilterBox>
       <div class="ListView__actions">
@@ -78,7 +95,9 @@
 </template>
 
 <script setup lang="ts">
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
 import { Thematic } from '@/models/enums/contents/Thematic'
@@ -104,8 +123,10 @@ const route = useRoute()
 const searchQuery = ref('')
 const arePassedEventsShown = ref(false)
 const selectedThematic: Ref<string[]> = ref([])
+const selectedODD: Ref<ODD[] | null> = ref(null)
 const selectedResourceFormats: Ref<ResourceFormat[]> = ref([])
 const selectedResourceTypes: Ref<ResourceType[]> = ref([])
+const selectedAdminScope: Ref<string[] | null> = ref(null)
 
 onMounted(async () => {
   await resourceStore.getAll()
@@ -140,6 +161,12 @@ const filteredResources = computed(() => {
     })
   }
 
+  if (selectedODD.value && selectedODD.value.length > 0) {
+    filteredResources = filteredResources.filter((resource: Resource) => {
+      return resource.odds.some((odd) => (selectedODD.value as ODD[]).includes(odd))
+    })
+  }
+
   if (selectedResourceFormats.value && selectedResourceFormats.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
       return selectedResourceFormats.value.includes(resource.format)
@@ -149,6 +176,13 @@ const filteredResources = computed(() => {
   if (selectedResourceTypes.value && selectedResourceTypes.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
       return selectedResourceTypes.value.includes(resource.type)
+    })
+  }
+  if (selectedAdminScope.value && selectedAdminScope.value.length > 0) {
+    filteredResources = filteredResources.filter((resource: Resource) => {
+      return resource.administrativeScopes.some((scope) =>
+        (selectedAdminScope.value as string[]).includes(scope)
+      )
     })
   }
   return filteredResources
@@ -211,6 +245,8 @@ const searchResources = (resources: Resource[]) => {
 const resetFilters = () => {
   searchQuery.value = ''
   arePassedEventsShown.value = false
+  selectedODD.value = null
+  selectedAdminScope.value = null
   selectedThematic.value = []
   selectedResourceFormats.value = []
   selectedResourceTypes.value = []

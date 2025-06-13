@@ -6,6 +6,8 @@ import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
+import type { AdministrativeScope } from '../enums/AdministrativeScope'
+import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { BanocItem } from './common/BanocItem'
 import type { ODDItem } from './common/ODDItem'
 import type { ContentImageFromUserFile } from './ContentImage'
@@ -32,6 +34,10 @@ export interface Resource
   author: string
   previewImage?: BaseMediaObject
   creatorMessage?: string
+  administrativeScopes: AdministrativeScope[]
+  admin1List?: Admin1Boundary[]
+  admin2List?: Admin2Boundary[]
+  admin3List?: Admin3Boundary[]
   [key: string]: any
 }
 
