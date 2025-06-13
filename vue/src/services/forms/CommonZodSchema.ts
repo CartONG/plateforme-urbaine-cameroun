@@ -1,13 +1,13 @@
-import { i18n } from '@/plugins/i18n'
-import type { GeoData } from '@/models/interfaces/geo/GeoData'
-import type { FileObject } from '@/models/interfaces/object/FileObject'
-import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
-import { number, z, ZodType } from 'zod'
 import type {
   Admin1Boundary,
   Admin2Boundary,
   Admin3Boundary
 } from '@/models/interfaces/AdminBoundaries'
+import type { GeoData } from '@/models/interfaces/geo/GeoData'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
+import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
+import { i18n } from '@/plugins/i18n'
+import { number, z, ZodType } from 'zod'
 
 export class CommonZodSchema {
   static getDefinitions() {
@@ -93,8 +93,8 @@ export class CommonZodSchema {
       )
 
     return {
-      symfonyRelations: z.array(SymfonyRelationSchema).nonempty({
-        message: i18n.t('forms.errorMessages.required')
+      symfonyRelations: z.array(SymfonyRelationSchema, {
+        required_error: i18n.t('forms.errorMessages.required')
       }),
       symfonyRelation: SymfonyRelationSchema,
       admin1Boundaries: z.array(Admin1BoundarySchema),
@@ -152,12 +152,12 @@ export class CommonZodSchema {
           }
         ),
       description: z
-        .string()
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(1, { message: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
         .optional(),
       descriptionRequired: z
-        .string()
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) }),
       maxLabel: z
         .string()

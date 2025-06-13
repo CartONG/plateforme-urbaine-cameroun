@@ -16,20 +16,44 @@
   </div>
 </template>
 <script setup lang="ts">
-import AdminPanelsSelector from '@/views/admin/components/AdminPanelsSelector.vue'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
-import { useUserStore } from '@/stores/userStore'
-import { useProjectStore } from '@/stores/projectStore'
 import PageBanner from '@/components/banners/PageBanner.vue'
-import { onMounted } from 'vue'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
+import { useActorsStore } from '@/stores/actorsStore'
+import { useAdminStore } from '@/stores/adminStore'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { useAtlasStore } from '@/stores/atlasStore'
 import { useCommentStore } from '@/stores/commentStore'
+import { useHighlightStore } from '@/stores/highlightStore'
+import { useProjectStore } from '@/stores/projectStore'
+import { useQgisMapStore } from '@/stores/qgisMapStore'
+import { useResourceStore } from '@/stores/resourceStore'
+import { useUserStore } from '@/stores/userStore'
+import AdminPanelsSelector from '@/views/admin/components/AdminPanelsSelector.vue'
+import { onMounted } from 'vue'
 const userStore = useUserStore()
 const projectStore = useProjectStore()
+const actorsStore = useActorsStore()
+const applicationStore = useApplicationStore()
 const commentStore = useCommentStore()
+const atlasStore = useAtlasStore()
+const highlightStore = useHighlightStore()
+const qgisMapStore = useQgisMapStore()
+const resourceStore = useResourceStore()
+const adminStore = useAdminStore()
 
 onMounted(async () => {
-  projectStore.getAll()
-  commentStore.getAll()
+  const promises = [
+    actorsStore.getActors(),
+    projectStore.getAll(),
+    commentStore.getAll(),
+    atlasStore.getAll(),
+    highlightStore.getAll(),
+    qgisMapStore.getAll(),
+    resourceStore.getAll(),
+    adminStore.getMembers()
+  ]
+  await Promise.all(promises)
+  applicationStore.isLoading = false
 })
 </script>
 <style lang="scss">

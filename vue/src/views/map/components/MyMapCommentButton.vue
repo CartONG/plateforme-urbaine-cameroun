@@ -2,7 +2,7 @@
 <template>
   <div class="maplibregl-ctrl maplibregl-ctrl-group MapExport">
     <v-btn
-      icon="mdi-comment-text"
+      icon="$commentText"
       @click.stop="activeMapComment"
       :class="{
         'text-white': commentStore.isAppCommentActive,

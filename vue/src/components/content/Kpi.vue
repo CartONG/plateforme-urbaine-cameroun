@@ -2,11 +2,7 @@
   <div class="Kpi">
     <div class="Kpi__block Kpi__block--data">
       <div class="Kpi__icon">
-        <v-icon
-          :icon="'mdi mdi-' + $t('kpi.' + kpi.key + '.icon')"
-          size="x-large"
-          color="main-green"
-        />
+        <v-icon :icon="'$' + $t('kpi.' + kpi.key + '.icon')" size="x-large" color="main-green" />
       </div>
       <div class="Kpi__infoCtn">
         <div class="Kpi__count">{{ kpi.count }}</div>
@@ -20,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Kpi } from '@/models/interfaces/Kpi'
+import type { Kpi } from '@/models/interfaces/Kpi';
 
 defineProps<{
   kpi: Kpi

@@ -19,10 +19,12 @@ export class ProjectFormService {
         description: zodModels.description,
         calendar: zodModels.maxDescription,
         deliverables: zodModels.maxDescription,
-        focalPointName: zodModels.maxLabel,
+        focalPointName: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         focalPointPosition: zodModels.maxLabel.optional(),
         focalPointEmail: zodModels.email,
-        administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)),
+        administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
+          message: i18n.t('forms.errorMessages.required')
+        }),
         admin1List: zodModels.admin1Boundaries.optional(),
         admin2List: zodModels.admin2Boundaries.optional(),
         admin3List: zodModels.admin3Boundaries.optional(),
@@ -30,14 +32,18 @@ export class ProjectFormService {
         geoData: zodModels.geoDataNullable.optional(),
         actor: zodModels.symfonyRelation.optional(),
         otherActor: z.string().optional(),
-        status: z.nativeEnum(Status),
-        financingTypes: z.array(z.nativeEnum(ProjectFinancingType)),
+        status: z.nativeEnum(Status, { required_error: i18n.t('forms.errorMessages.required') }),
+        financingTypes: z.array(z.nativeEnum(ProjectFinancingType), {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherFinancingType: z.string().optional(),
         actorsInCharge: z.array(zodModels.symfonyRelation).optional(),
         otherActorInCharge: z.string().optional(),
         thematics: zodModels.symfonyRelations,
         otherThematic: z.string().optional(),
-        beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType)),
+        beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType), {
+          required_error: i18n.t('forms.errorMessages.required')
+        }),
         otherBeneficiary: z.string().optional(),
         website: zodModels.website
       })
@@ -68,20 +74,20 @@ export class ProjectFormService {
       description: '',
       deliverables: '',
       calendar: '',
-      actorsInCharge: [],
-      otherActorInCharge: '',
-      financingTypes: [],
-      administrativeScopes: [],
+      actorsInCharge: undefined,
+      otherActorInCharge: undefined,
+      financingTypes: undefined,
+      administrativeScopes: undefined,
       focalPointName: '',
       focalPointPosition: '',
       focalPointEmail: '',
       focalPointTel: '',
-      beneficiaryTypes: [],
+      beneficiaryTypes: undefined,
       actor: undefined,
       otherActor: '',
       status: undefined,
       geoData: undefined,
-      thematics: [],
+      thematics: undefined,
       website: ''
     }
 

@@ -28,7 +28,7 @@
         <template v-if="!(item as Actor).isValidated">
           <v-btn
             size="small"
-            icon="mdi-arrow-right"
+            icon="$arrowRight"
             class="text-main-blue"
             @click="editActor(item as Actor)"
           ></v-btn>
@@ -36,12 +36,12 @@
         <template v-else>
           <v-btn
             density="comfortable"
-            icon="mdi-pencil-outline"
+            icon="$pencilOutline"
             @click="editActor(item as Actor)"
             class="mr-2"
           ></v-btn>
-          <v-btn density="comfortable" icon="mdi-dots-vertical">
-            <v-icon icon="mdi-dots-vertical"></v-icon>
+          <v-btn density="comfortable" icon="$dotsVertical">
+            <v-icon icon="$dotsVertical"></v-icon>
             <v-menu activator="parent" location="left">
               <v-list class="AdminPanel__additionnalMenu">
                 <v-list-item

@@ -71,13 +71,16 @@ regenerate-entity:	## Regenerate entities
 enable-postgis:		## Enable postgis
 	@$(SYMFONY) dbal:run-sql 'CREATE extension postgis;'
 
+enable-hstore:		## Enable hstore
+	@$(SYMFONY) dbal:run-sql 'CREATE extension hstore;'
+
 make-run-migration: make-migration run-migration	## Create and run a new migration
 
 reset-database: recreate-database run-migration		## Reset the database (recreate and run migrations)
 
 rerun-database: reset-database run-fixtures		## Reset the database (recreate, run migrations and run fixtures)
 
-configure-database: enable-postgis	## Configure the database
+configure-database: enable-postgis enable-hstore	## Configure the database
 
 
 create-short-migration: reset-database make-migration run-migration run-fixtures ## Create a small migration

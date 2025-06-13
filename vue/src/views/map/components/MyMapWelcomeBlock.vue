@@ -23,7 +23,7 @@ const isClosed = ref(false)
 
 <style lang="scss">
 .MyMapWelcomeBlock {
-  background: rgb(var(--v-theme-light-yellow)) url(@/assets/images/Frise.svg) no-repeat top center;
+  background: rgb(var(--v-theme-light-yellow)) url(@/assets/images/Frise.jpg) no-repeat top center;
   background-size: 130% 1rem;
   // background-attachment: local;
   padding: var(--dialog-padding-top) var(--dialog-padding-x) 3rem var(--dialog-padding-x);

@@ -6,7 +6,7 @@
   >
     <template #content>
       <div class="ContentForm__toValidate mt-3" v-if="userToEdit && !userToEdit.isValidated">
-        <img src="@/assets/images/actorToValidate.svg" alt="" />
+        <img loading="lazy" src="@/assets/images/actorToValidate.svg" alt="" />
         <span class="ml-2">{{ $t('auth.editForm.newMember') }} 31 janvier 2025 à 11h30.</span>
       </div>
       <v-form @submit.prevent="submitForm" id="user-form" class="Form Form--user">
@@ -108,14 +108,14 @@
 </template>
 
 <script setup lang="ts">
-import Modal from '@/components/global/Modal.vue'
 import Chip from '@/components/content/Chip.vue'
+import Modal from '@/components/global/Modal.vue'
 import type { User } from '@/models/interfaces/auth/User'
+import { i18n } from '@/plugins/i18n'
+import { onInvalidSubmit } from '@/services/forms/FormService'
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useAdminStore } from '@/stores/adminStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { onInvalidSubmit } from '@/services/forms/FormService'
-import { i18n } from '@/plugins/i18n'
 import { computed } from 'vue'
 const appStore = useApplicationStore()
 const adminStore = useAdminStore()

@@ -15,7 +15,7 @@
               class="Header__bannerLink"
               @click="appStore.activeTab = 0"
             >
-              <img src="@/assets/images/Logo.png" class="Header__appLogo" />
+              <img loading="lazy" src="@/assets/images/Logo.png" class="Header__appLogo" />
               <span class="ml-4 text-main-blue">{{ $t('header.title') }}</span>
               <span class="ml-2 text-main-blue font-weight-bold">{{ $t('header.title2') }}</span>
             </router-link>
@@ -25,12 +25,12 @@
     </v-layout>
     <div v-if="showMobileMenu" class="Header__menu">
       <div class="Header__menu__top">
-        <img src="@/assets/images/Logo.png" />
+        <img loading="lazy" src="@/assets/images/Logo.png" />
         <div class="Header__menu__closer" @click="showMobileMenu = !showMobileMenu">
-          <v-icon icon="mdi mdi-close" />
+          <v-icon icon="$close" />
         </div>
       </div>
-      <img src="@/assets/images/Frise.svg" alt="" />
+      <img loading="lazy" src="@/assets/images/Frise.jpg" alt="" />
       <div class="Header__menu__content">
         <v-list lines="one" bg-color="light-yellow">
           <v-list-item
@@ -64,9 +64,9 @@
 </template>
 <script setup lang="ts">
 import { NavigationTabsService } from '@/services/application/NavigationTabsService'
-import LoginButton from './LoginButton.vue'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { ref } from 'vue'
+import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
 const showMobileMenu = ref(false)
@@ -84,10 +84,16 @@ const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
       max-height: 30rem;
       height: 60vh;
     }
+    .Header__bannerLink {
+      display: flex;
+      align-items: center;
+      color: rgb(var(--v-theme-main-blue));
+      text-decoration: none;
+    }
 
     .Header__appLogo {
       border: 1px solid rgb(var(--v-theme-main-grey));
-      border-radius: 10%;
+      border-radius: 50%;
       padding: 5px;
       height: 40px;
     }

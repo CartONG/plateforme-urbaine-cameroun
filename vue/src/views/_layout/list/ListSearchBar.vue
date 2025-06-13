@@ -9,7 +9,7 @@
       :placeholder="placeholder"
     >
       <template v-slot:prepend-inner>
-        <v-icon icon="mdi-magnify" color="main-blue"></v-icon>
+        <v-icon icon="$magnify" color="main-blue"></v-icon>
       </template>
     </v-text-field>
   </div>

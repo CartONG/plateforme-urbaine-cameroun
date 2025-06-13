@@ -1,6 +1,6 @@
 import type { UserRoles } from '@/models/enums/auth/UserRoles'
-import type { FileObject } from '../object/FileObject'
 import type { Validateable } from '../common/Validateable'
+import type { FileObject } from '../object/FileObject'
 
 export interface User extends Validateable {
   id: number
@@ -10,7 +10,7 @@ export interface User extends Validateable {
   fullName: string
   organisation: string
   position: string
-  phoneNumber: string
+  phone: string
   email: string
   roles: UserRoles[]
   requestedRoles: UserRoles[]

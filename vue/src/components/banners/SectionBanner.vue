@@ -8,14 +8,14 @@
       :to="actionLink"
       class="mt-3 px-2"
       variant="text"
-      append-icon="mdi-arrow-right"
+      append-icon="$arrowRight"
     >
       {{ actionLabel }}
     </v-btn>
   </div>
 </template>
 <script setup lang="ts">
-import type { RouteLocationAsRelativeGeneric } from 'vue-router'
+import type { RouteLocationAsRelativeGeneric } from 'vue-router';
 
 defineProps<{
   text: string

@@ -3,7 +3,7 @@
     <div class="MyMapExport__title">
       <v-btn
         size="small"
-        icon="mdi-arrow-left"
+        icon="$arrowLeft"
         class="text-dark-grey"
         elevation="4"
         @click="mapStore.isMapExportActive = false"
