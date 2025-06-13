@@ -4,6 +4,7 @@ import type { Thematic } from '../enums/contents/Thematic'
 import type { ActorExpertise } from './ActorExpertise'
 import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { Blameable } from './common/Blameable'
+import type { ODDItem } from './common/ODDItem'
 import type { ThematicItem } from './common/ThematicItem'
 import type { Timestampable } from './common/Timestampable'
 import type { Validateable } from './common/Validateable'
@@ -11,10 +12,16 @@ import type { ContentImageFromUserFile } from './ContentImage'
 import type { GeoData } from './geo/GeoData'
 import type { BaseMediaObject } from './object/MediaObject'
 import type { Project } from './Project'
+import type { SymfonyRelation } from './SymfonyRelation'
 
-export interface Actor extends Timestampable, Validateable, Blameable, ThematicItem {
+export interface Actor
+  extends SymfonyRelation,
+    Timestampable,
+    Validateable,
+    Blameable,
+    ThematicItem,
+    ODDItem {
   id: string
-  '@id': string
   name: string
   acronym: string
   category: ActorsCategories

@@ -231,6 +231,22 @@
             @blur="form.otherThematic.handleChange"
           />
         </div>
+
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
+          />
+        </div>
       </v-form>
     </template>
     <template #footer-left>
@@ -255,6 +271,7 @@ import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { FormType } from '@/models/enums/app/FormType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
 import { Thematic } from '@/models/enums/contents/Thematic'

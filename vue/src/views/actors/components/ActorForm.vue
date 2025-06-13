@@ -98,6 +98,22 @@
           />
         </div>
 
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
+          />
+        </div>
+
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         <FormSectionTitle :text="$t('actors.form.adminScopeSection')" />
         <div class="Form__fieldCtn">
@@ -266,6 +282,7 @@ import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
 import { type Actor, type ActorSubmission } from '@/models/interfaces/Actor'

@@ -173,6 +173,22 @@
           />
         </div>
 
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
+          />
+        </div>
+
         <FormSectionTitle :text="$t('projects.form.section.beneficiaryTypes')" />
         <v-autocomplete
           density="compact"
@@ -399,6 +415,7 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { FormType } from '@/models/enums/app/FormType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
 import { Thematic } from '@/models/enums/contents/Thematic'

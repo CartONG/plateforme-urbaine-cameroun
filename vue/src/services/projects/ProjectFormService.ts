@@ -41,6 +41,7 @@ export class ProjectFormService {
         otherActorInCharge: z.string().optional(),
         thematics: zodModels.thematics,
         otherThematic: z.string().optional(),
+        odds: zodModels.odds,
         beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType), {
           required_error: i18n.t('forms.errorMessages.required')
         }),
@@ -88,6 +89,7 @@ export class ProjectFormService {
       status: undefined,
       geoData: undefined,
       thematics: undefined,
+      odds: undefined,
       website: ''
     }
 
@@ -124,6 +126,7 @@ export class ProjectFormService {
       geoData: useField('geoData'),
       thematics: useField('thematics'),
       otherThematic: useField('otherThematic'),
+      odds: useField('odds'),
       website: useField('website')
     }
 

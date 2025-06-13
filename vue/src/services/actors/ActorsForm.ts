@@ -20,6 +20,7 @@ export class ActorsFormService {
       otherCategory: z.string().optional(),
       thematics: zodModels.thematics,
       otherThematic: z.string().optional(),
+      odds: zodModels.odds,
       administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
         required_error: i18n.t('forms.errorMessages.required')
       }),
@@ -47,10 +48,9 @@ export class ActorsFormService {
       acronym: useField('acronym', '', { validateOnValueUpdate: false }),
       category: useField('category', '', { validateOnValueUpdate: false }),
       otherCategory: useField('otherCategory', '', { validateOnValueUpdate: false }),
-      expertises: useField('expertises', '', { validateOnValueUpdate: false }),
-      otherExpertise: useField('otherExpertise', '', { validateOnValueUpdate: false }),
       thematics: useField('thematics', '', { validateOnValueUpdate: false }),
       otherThematic: useField('otherThematic', '', { validateOnValueUpdate: false }),
+      odds: useField('odds', '', { validateOnValueUpdate: false }),
       administrativeScopes: useField('administrativeScopes', '', { validateOnValueUpdate: false }),
       admin1List: useField('admin1List', '', { validateOnValueUpdate: false }),
       admin2List: useField('admin2List', '', { validateOnValueUpdate: false }),
