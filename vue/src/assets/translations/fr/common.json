@@ -207,6 +207,11 @@
       "15": "Vie terrestre",
       "16": "Paix, justice et institutions efficaces",
       "17": "Partenariats pour la réalisation des objectifs"
+    },
+    "banoc": {
+      "title": "Base Adresses Numérique Ouverte du Cameroun",
+      "code": "Code BANOC",
+      "url": "URL"
     }
   },
   "filters": {

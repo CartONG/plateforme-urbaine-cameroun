@@ -37,7 +37,9 @@ export class ActorsFormService {
       contactPosition: z.string().optional(),
       website: zodModels.website,
       email: zodModels.email,
-      phone: zodModels.phone
+      phone: zodModels.phone,
+      banoc: zodModels.banoc,
+      banocUrl: zodModels.banocUrl
     })
     const { errors, handleSubmit, isSubmitting } = useForm<Actor>({
       initialValues: actorToEdit,
@@ -63,7 +65,9 @@ export class ActorsFormService {
       contactPosition: useField('contactPosition', '', { validateOnValueUpdate: false }),
       website: useField('website', '', { validateOnValueUpdate: false }),
       email: useField('email', '', { validateOnValueUpdate: false }),
-      phone: useField('phone', '', { validateOnValueUpdate: false })
+      phone: useField('phone', '', { validateOnValueUpdate: false }),
+      banoc: useField('banoc', '', { validateOnValueUpdate: false }),
+      banocUrl: useField('banocUrl', '', { validateOnValueUpdate: false })
     }
     return { form, errors, handleSubmit, isSubmitting }
   }

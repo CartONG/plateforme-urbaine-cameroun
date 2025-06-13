@@ -46,7 +46,9 @@ export class ProjectFormService {
           required_error: i18n.t('forms.errorMessages.required')
         }),
         otherBeneficiary: z.string().optional(),
-        website: zodModels.website
+        website: zodModels.website,
+        banoc: zodModels.banoc,
+        banocUrl: zodModels.banocUrl
       })
       .refine(
         (data) => {
@@ -90,7 +92,9 @@ export class ProjectFormService {
       geoData: undefined,
       thematics: undefined,
       odds: undefined,
-      website: ''
+      website: '',
+      banoc: undefined,
+      banocUrl: undefined
     }
 
     const { errors, handleSubmit, isSubmitting } = useForm<Partial<Project | ProjectSubmission>>({
@@ -127,7 +131,9 @@ export class ProjectFormService {
       thematics: useField('thematics'),
       otherThematic: useField('otherThematic'),
       odds: useField('odds'),
-      website: useField('website')
+      website: useField('website'),
+      banoc: useField('banoc'),
+      banocUrl: useField('banocUrl')
     }
 
     return { form, errors, handleSubmit, isSubmitting }

@@ -246,6 +246,35 @@
             @blur="form.officeAddress.handleChange"
           />
         </div>
+
+        <label class="Form__label">{{ $t('forms.banoc.title') }}</label>
+        <div class="d-flex">
+          <div class="Form__fieldCtn flex-shrink-0">
+            <label class="Form__label">{{ $t('forms.banoc.code') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banoc.value.value"
+                :error-messages="form.banoc.errorMessage.value"
+                @blur="form.banoc.handleChange"
+              />
+            </div>
+          </div>
+          <div class="Form__fieldCtn ml-3 flex-grow-1">
+            <label class="Form__label">{{ $t('forms.banoc.url') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banocUrl.value.value"
+                :error-messages="form.banocUrl.errorMessage.value"
+                @blur="form.banocUrl.handleChange"
+              />
+            </div>
+          </div>
+        </div>
+
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <FormSectionTitle :text="$t('actors.form.location')" />

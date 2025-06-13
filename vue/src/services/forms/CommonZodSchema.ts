@@ -181,7 +181,8 @@ export class CommonZodSchema {
         .string()
         .min(1, { message: i18n.t('forms.errorMessages.minlength', { min: 1 }) })
         .max(6, { message: i18n.t('forms.errorMessages.maxlength', { max: 6 }) })
-        .optional()
+        .optional(),
+      banocUrl: z.string().optional()
     }
   }
 

@@ -39,7 +39,9 @@ export class ResourceFormService {
           .min(1, { message: i18n.t('forms.errorMessages.required') }),
         thematics: zodModels.thematics,
         otherThematic: z.string().optional(),
-        odds: zodModels.odds
+        odds: zodModels.odds,
+        banoc: zodModels.banoc,
+        banocUrl: zodModels.banocUrl
       })
       .refine((data) => data.type !== ResourceType.EVENTS || Boolean(data.startAt), {
         message: i18n.t('forms.errorMessages.required'),
@@ -102,7 +104,9 @@ export class ResourceFormService {
       thematics: useField('thematics'),
       otherThematic: useField('otherThematic'),
       odds: useField('odds'),
-      link: useField('link')
+      link: useField('link'),
+      banoc: useField('banoc'),
+      banocUrl: useField('banocUrl')
     }
 
     return { form, errors, handleSubmit, isSubmitting }

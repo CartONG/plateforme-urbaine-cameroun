@@ -12,6 +12,7 @@ import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import type { ProjectFinancingType } from '../enums/contents/ProjectFinancingType'
 import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
+import type { BanocItem } from './common/BanocItem'
 import type { ODDItem } from './common/ODDItem'
 
 export interface Project
@@ -21,7 +22,8 @@ export interface Project
     Localizable,
     ThematicItem,
     SymfonyRelation,
-    ODDItem {
+    ODDItem,
+    BanocItem {
   id: string
   name: string
   slug: string

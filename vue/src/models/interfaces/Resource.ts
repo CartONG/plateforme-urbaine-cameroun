@@ -6,6 +6,7 @@ import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
+import type { BanocItem } from './common/BanocItem'
 import type { ODDItem } from './common/ODDItem'
 import type { ContentImageFromUserFile } from './ContentImage'
 import type { GeoData } from './geo/GeoData'
@@ -17,7 +18,8 @@ export interface Resource
     Blameable,
     ThematicItem,
     SymfonyRelation,
-    ODDItem {
+    ODDItem,
+    BanocItem {
   id: string
   name: string
   description: string

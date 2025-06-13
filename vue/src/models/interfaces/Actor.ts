@@ -1,8 +1,8 @@
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { ActorsCategories } from '../enums/contents/actors/ActorsCategories'
 import type { Thematic } from '../enums/contents/Thematic'
-import type { ActorExpertise } from './ActorExpertise'
 import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
+import type { BanocItem } from './common/BanocItem'
 import type { Blameable } from './common/Blameable'
 import type { ODDItem } from './common/ODDItem'
 import type { ThematicItem } from './common/ThematicItem'
@@ -20,14 +20,13 @@ export interface Actor
     Validateable,
     Blameable,
     ThematicItem,
-    ODDItem {
+    ODDItem,
+    BanocItem {
   id: string
   name: string
   acronym: string
   category: ActorsCategories
   otherCategory?: string
-  expertises: ActorExpertise[]
-  otherExpertise?: string
   thematics: Thematic[]
   otherThematic?: string
   description: string
