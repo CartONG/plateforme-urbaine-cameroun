@@ -16,6 +16,13 @@ import LayerService from './LayerService'
 import MapService from './MapService'
 
 export class AppLayersService {
+  private static mapThematics = Object.values(Thematic).map((t, i) => {
+    return {
+      id: i,
+      name: t,
+      isShown: true
+    }
+  })
   static filteredProjects = computed(() => {
     const projectStore = useProjectStore()
     const myMapStore = useMyMapStore()
@@ -39,12 +46,11 @@ export class AppLayersService {
     const myMapStore = useMyMapStore()
     const actorStore = useActorsStore()
     try {
+      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
       if (!myMapStore.isMapAlreadyBeenMounted) {
         this.initMainLayers()
         this.initSubLayers()
       }
-
-      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
 
       if (myMapStore.map == null) return
       MapService.isLoaded(myMapStore.map, async () => {
@@ -102,33 +108,42 @@ export class AppLayersService {
 
   static initSubLayers() {
     const myMapStore = useMyMapStore()
-    let projectThematics = Object.values(Thematic)
-    let actorsThematics = Object.values(Thematic)
-    let resourcesThematics = Object.values(Thematic)
+    const mapThematics = Object.values(Thematic).map((t, i) => {
+      return {
+        id: i,
+        name: t,
+        isShown: true
+      }
+    })
+
+    let projectThematics = this.mapThematics
+    let actorsThematics = this.mapThematics
+    let resourcesThematics = this.mapThematics
+
     if (myMapStore?.deserializedMapState) {
-      projectThematics = projectThematics.map((x) => {
+      projectThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.projects?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.projects?.includes(x.id) as boolean
         }
       })
 
-      actorsThematics = actorsThematics.map((x) => {
+      actorsThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.actors?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.actors?.includes(x.id) as boolean
         }
       })
 
-      resourcesThematics = resourcesThematics.map((x) => {
+      resourcesThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.resources?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.resources?.includes(x.id) as boolean
         }
       })
     }
-    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics)
-    myMapStore!.actorSubLayers = LayerService.initSubLayer(actorsThematics)
+    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics as any, true)
+    myMapStore!.actorSubLayers = LayerService.initSubLayer(actorsThematics as any)
     myMapStore!.resourceSubLayers = LayerService.initSubLayer(resourcesThematics)
   }
 
@@ -166,21 +181,18 @@ export class AppLayersService {
       case ItemType.ACTOR:
         return MapService.getGeojson(this.filteredActors.value)
       case ItemType.PROJECT:
-        return MapService.getGeojson(this.filteredProjects.value)
+        return MapService.getGeojson(this.filteredProjects.value, true)
       case ItemType.RESOURCE:
         return MapService.getGeojson(this.filteredResources.value)
     }
   }
 
   static filterByThematic(items: ThematicItem[], subLayers: Layer[]) {
-    const activeThematics: Layer['id'][] = subLayers
+    const activeThematics: Layer['name'][] = subLayers
       .filter((layer: Layer) => layer.isShown)
-      .map((layer: Layer) => layer.id)
+      .map((layer: Layer) => layer.name)
     return items.filter((item) => {
-      const itemThematicIds = item.thematics.map((itemThematic: Thematic) => itemThematic.id)
-      return activeThematics.some(
-        (thematic) => typeof thematic !== 'string' && itemThematicIds.includes(thematic)
-      )
+      return activeThematics.some((thematic) => item.thematics.includes(thematic as Thematic))
     })
   }
 }
