@@ -17,7 +17,7 @@ final class Version20250612213859 extends AbstractMigration
         return '';
     }
 
-   public function up(Schema $schema): void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
@@ -48,7 +48,6 @@ final class Version20250612213859 extends AbstractMigration
             COMMENT ON COLUMN resource.odds IS NULL
         SQL);
     }
-
 
     public function down(Schema $schema): void
     {
