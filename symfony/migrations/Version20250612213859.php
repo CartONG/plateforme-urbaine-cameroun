@@ -17,7 +17,7 @@ final class Version20250612213859 extends AbstractMigration
         return '';
     }
 
-    public function up(Schema $schema): void
+   public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
@@ -30,24 +30,25 @@ final class Version20250612213859 extends AbstractMigration
             ALTER TABLE actor DROP other_expertise
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE actor ALTER odds TYPE JSON
+            ALTER TABLE actor ALTER COLUMN odds TYPE JSON USING odds::json
         SQL);
         $this->addSql(<<<'SQL'
             COMMENT ON COLUMN actor.odds IS NULL
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE project ALTER odds TYPE JSON
+            ALTER TABLE project ALTER COLUMN odds TYPE JSON USING odds::json
         SQL);
         $this->addSql(<<<'SQL'
             COMMENT ON COLUMN project.odds IS NULL
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE resource ALTER odds TYPE JSON
+            ALTER TABLE resource ALTER COLUMN odds TYPE JSON USING odds::json
         SQL);
         $this->addSql(<<<'SQL'
             COMMENT ON COLUMN resource.odds IS NULL
         SQL);
     }
+
 
     public function down(Schema $schema): void
     {
