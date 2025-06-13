@@ -49,6 +49,19 @@
       </div>
       <ChipList :items="actor.thematics" />
 
+      <div class="SheetView__title SheetView__title--divider">
+        <span>{{ $t('forms.odds.title') }}</span>
+      </div>
+      <div>
+        <img
+          class="SheetView__ODD mr-2"
+          :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
+          :alt="odd"
+          v-for="odd in actor.odds.sort((a, b) => parseInt(a) - parseInt(b))"
+          :key="odd"
+        />
+      </div>
+
       <div class="SheetView__title SheetView__title--divider mt-lg-12">
         <span>{{ $t('actorPage.adminScope') }}</span>
       </div>

@@ -59,6 +59,20 @@
       <div class="SheetView__title SheetView__title--divider mt-lg-12">
         <span>{{ $t('actorPage.adminScope') }}</span>
       </div>
+
+      <div class="SheetView__title SheetView__title--divider">
+        <span>{{ $t('forms.odds.title') }}</span>
+      </div>
+      <div>
+        <img
+          class="SheetView__ODD mr-2"
+          :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
+          :alt="odd"
+          v-for="odd in project.odds.sort((a, b) => parseInt(a) - parseInt(b))"
+          :key="odd"
+        />
+      </div>
+
       <span>{{ project.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
       <AdminBoundariesButton :entity="project" />
       <div class="SheetView__infoCard">
