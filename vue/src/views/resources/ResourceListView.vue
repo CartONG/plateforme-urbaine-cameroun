@@ -39,10 +39,17 @@
           :item-value="(item: ResourceType) => item"
           :label="$t('resources.type')"
         />
-        <ListFilterSelect
+        <v-select
+          class="ListFilterSelect"
           v-model="selectedAdminScope"
-          :items="Object.values(AdministrativeScope)"
+          density="compact"
+          variant="outlined"
           :label="$t('actors.adminScope')"
+          :items="Object.values(AdministrativeScope)"
+          :item-title="(item) => $t('actors.scope.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
       </ListFilterBox>
       <div class="ListView__actions">
@@ -126,7 +133,7 @@ const selectedThematic: Ref<string[]> = ref([])
 const selectedODD: Ref<ODD[] | null> = ref(null)
 const selectedResourceFormats: Ref<ResourceFormat[]> = ref([])
 const selectedResourceTypes: Ref<ResourceType[]> = ref([])
-const selectedAdminScope: Ref<string[] | null> = ref(null)
+const selectedAdminScope: Ref<AdministrativeScope[] | null> = ref(null)
 
 onMounted(async () => {
   await resourceStore.getAll()
@@ -180,7 +187,7 @@ const filteredResources = computed(() => {
   }
   if (selectedAdminScope.value && selectedAdminScope.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
-      return resource.administrativeScopes.some((scope) =>
+      return resource.administrativeScopes?.some((scope) =>
         (selectedAdminScope.value as string[]).includes(scope)
       )
     })

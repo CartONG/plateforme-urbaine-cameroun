@@ -30,10 +30,17 @@
           :items="categoryItems"
           :label="$t('actors.category')"
         />
-        <ListFilterSelect
+        <v-select
+          class="ListFilterSelect"
           v-model="selectedAdminScope"
-          :items="Object.values(AdministrativeScope)"
+          density="compact"
+          variant="outlined"
           :label="$t('actors.adminScope')"
+          :items="Object.values(AdministrativeScope)"
+          :item-title="(item) => $t('actors.scope.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
       </ListFilterBox>
 
@@ -103,7 +110,7 @@ onBeforeMount(async () => {
 const searchQuery = ref('')
 const selectedThematic: Ref<string[] | null> = ref(null)
 const selectedODD: Ref<ODD[] | null> = ref(null)
-const selectedAdminScope: Ref<string[] | null> = ref(null)
+const selectedAdminScope: Ref<AdministrativeScope[] | null> = ref(null)
 const categoryItems = Object.values(ActorsCategories)
 const selectedCategory: Ref<ActorsCategories[] | null> = ref(null)
 

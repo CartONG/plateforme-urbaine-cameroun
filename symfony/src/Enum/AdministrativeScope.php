@@ -10,8 +10,5 @@ enum AdministrativeScope: string
     case INTERNATIONAL = 'international';
     case NATIONAL = 'national';
     case REGIONAL = 'regional';
-    case STATE = 'state';
     case CITY = 'city';
-    case NEIGHBORHOOD = 'neighborhood';
-    case BOROUGH = 'borough';
 }

@@ -26,12 +26,9 @@
     "expertise": "Compétence",
     "scope": {
       "international": "International",
-      "city": "Ville",
+      "city": "Communal",
       "national": "National",
-      "regional": "Régional",
-      "state": "Département",
-      "neighborhood": "Quartier",
-      "borough": "Arrondissement"
+      "regional": "Régional"
     },
     "form": {
       "acronym": "Acronyme",
