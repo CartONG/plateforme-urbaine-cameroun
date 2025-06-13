@@ -8,6 +8,7 @@ import { NotificationType } from '@/models/enums/app/NotificationType'
 import { StoresList } from '@/models/enums/app/StoresList'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { ODD } from '@/models/enums/contents/ODD'
+import type { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import type { Status } from '@/models/enums/contents/Status'
 import type { Thematic } from '@/models/enums/contents/Thematic'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
@@ -44,13 +45,15 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     administrativeScopes: AdministrativeScope[]
     odds: ODD[]
     beneficiaryTypes: BeneficiaryType[]
+    financingTypes: ProjectFinancingType[]
   }> = reactive({
     searchValue: '',
     thematics: [],
     statuses: [],
     administrativeScopes: [],
     odds: [],
-    beneficiaryTypes: []
+    beneficiaryTypes: [],
+    financingTypes: []
   })
 
   async function getAll(): Promise<void> {
@@ -123,7 +126,19 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
             project.administrativeScopes.some((scope) => scope === interventionZone)
           )) &&
         (filters.odds.length === 0 ||
-          filters.odds.some((odd) => project.odds.some((projectOdd) => projectOdd === odd)))
+          filters.odds.some((odd) => project.odds.some((projectOdd) => projectOdd === odd))) &&
+        (filters.beneficiaryTypes.length === 0 ||
+          filters.beneficiaryTypes.some((beneficiaryType) =>
+            project.beneficiaryTypes.some(
+              (projectBeneficiaryType) => projectBeneficiaryType === beneficiaryType
+            )
+          )) &&
+        (filters.financingTypes.length === 0 ||
+          filters.financingTypes.some((financingType) =>
+            project.financingTypes.some(
+              (projectFinancingType) => projectFinancingType === financingType
+            )
+          ))
       )
     })
 
@@ -251,6 +266,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.administrativeScopes = []
     filters.odds = []
     filters.beneficiaryTypes = []
+    filters.financingTypes = []
   }
 
   return {
