@@ -1,6 +1,14 @@
 import { i18n } from '@/plugins/i18n'
 import { LngLat, LngLatBounds, type LngLatLike } from 'maplibre-gl'
 
+export const normalizeUrl = (url: string) => {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  return `https://${url}`
+}
+
 export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
 }

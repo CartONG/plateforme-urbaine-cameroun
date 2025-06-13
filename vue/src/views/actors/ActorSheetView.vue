@@ -49,24 +49,54 @@
       </div>
       <ChipList :items="actor.thematics" />
 
-      <div class="SheetView__title SheetView__title--divider">
-        <span>{{ $t('forms.odds.title') }}</span>
-      </div>
       <div>
-        <img
-          class="SheetView__ODD mr-2"
-          :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
-          :alt="odd"
-          v-for="odd in actor.odds.sort((a, b) => parseInt(a) - parseInt(b))"
-          :key="odd"
-        />
+        <div class="SheetView__title SheetView__title--divider">
+          <span>{{ $t('forms.odds.title') }}</span>
+        </div>
+        <div>
+          <img
+            class="SheetView__ODD mr-2"
+            :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
+            :alt="odd"
+            v-for="odd in actor.odds.sort((a, b) => parseInt(a) - parseInt(b))"
+            :key="odd"
+          />
+        </div>
       </div>
 
-      <div class="SheetView__title SheetView__title--divider mt-lg-12">
-        <span>{{ $t('actorPage.adminScope') }}</span>
+      <div>
+        <div class="SheetView__title SheetView__title--divider mt-lg-12">
+          <span>{{ $t('actorPage.adminScope') }}</span>
+        </div>
+        <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
+        <AdminBoundariesButton :entity="actor" />
       </div>
-      <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
-      <AdminBoundariesButton :entity="actor" />
+
+      <div>
+        <div
+          class="SheetView__title SheetView__title--divider"
+          v-if="actor.banoc || actor.banocUrl"
+        >
+          <span>{{ $t('forms.banoc.title') }}</span>
+        </div>
+        <div class="d-flex flex-column">
+          <p v-if="actor.banoc">
+            <span class="font-weight-bold">{{ $t('forms.banoc.code') + ' :' }}</span>
+            {{ actor.banoc }}
+          </p>
+          <p v-if="actor.banocUrl">
+            <span class="font-weight-bold">{{ $t('forms.banoc.url') + ' :' }}</span>
+            <a :href="normalizeUrl(actor.banocUrl)" target="_blank">{{ actor.banocUrl }}</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="SheetView__infoCard" v-if="actor.contactName || actor.contactPosition">
+        <div>
+          <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
+          <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
+        </div>
+      </div>
 
       <div class="SheetView__infoCard" v-if="actor.officeName || actor.officeAddress">
         <div class="d-flex flex-row">
@@ -75,13 +105,6 @@
             <p class="font-weight-bold">{{ actor.officeName }}</p>
             <p>{{ actor.officeAddress }}</p>
           </div>
-        </div>
-      </div>
-
-      <div class="SheetView__infoCard" v-if="actor.contactName || actor.contactPosition">
-        <div>
-          <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
-          <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
         </div>
       </div>
     </div>
@@ -103,6 +126,7 @@ import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBou
 import PrintButton from '@/components/global/PrintButton.vue'
 import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
+import { normalizeUrl } from '@/services/utils/UtilsService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
