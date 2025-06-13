@@ -8,17 +8,19 @@
             <div class="UserAccount__avatarCtn" @click="triggerFileInput">
               <div class="UserAccount__avatar">
                 <img
+                  loading="lazy"
                   v-if="selectedProfileImage.length > 0"
                   :src="selectedProfileImage[0].preview"
                 />
                 <img
+                  loading="lazy"
                   v-else-if="userStore.currentUser?.logo"
                   :src="userStore.currentUser.logo.contentUrl"
                 />
-                <img v-else src="@/assets/images/user/default_avatar.png" alt="" />
+                <img loading="lazy" v-else src="@/assets/images/user/default_avatar.png" alt="" />
               </div>
               <v-btn
-                icon="mdi-pencil"
+                icon="$pencil"
                 class="UserAccount__avatarEdit"
                 @click.stop="triggerFileInput"
               ></v-btn>
@@ -136,21 +138,21 @@
             $t('account.save')
           }}</v-btn>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_ACTORS)"
             @click="actorsStore.setActorEditionMode(null)"
           >
             <span class="ml-2">{{ $t('header.addActor') }}</span>
           </BasicCard>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_PROJECTS)"
             @click="projectStore.isProjectFormShown = true"
           >
             <span class="ml-2">{{ $t('header.addProject') }}</span>
           </BasicCard>
           <BasicCard
-            icon="mdi-plus"
+            icon="$plus"
             v-if="userStore.userHasRole(UserRoles.EDITOR_RESSOURCES)"
             @click="resourceStore.isResourceFormShown = true"
           >
@@ -170,24 +172,26 @@
 </template>
 <script setup lang="ts">
 import SectionBanner from '@/components/banners/SectionBanner.vue'
-import BasicCard from '@/components/global/BasicCard.vue'
 import Chip from '@/components/content/Chip.vue'
+import BasicCard from '@/components/global/BasicCard.vue'
 import { ContentImageType } from '@/models/enums/app/ContentImageType'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
 import type { UserSubmission } from '@/models/interfaces/auth/User'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { InputImageValidator } from '@/services/files/InputImageValidator'
+import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
+import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useActorsStore } from '@/stores/actorsStore'
-import { useUserStore } from '@/stores/userStore'
-import { onMounted, ref, watch, type Ref } from 'vue'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { AuthenticationService } from '@/services/userAndAuth/AuthenticationService'
+import { useUserStore } from '@/stores/userStore'
+import { onMounted, ref, watch, type Ref } from 'vue'
 const userStore = useUserStore()
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
+const applicationStore = useApplicationStore()
 
 const isResetPasswordSent = ref()
 const selectedProfileImage: Ref<ContentImageFromUserFile[]> = ref([])
@@ -227,6 +231,7 @@ function setRolesStatus() {
 
 onMounted(() => {
   setRolesStatus()
+  applicationStore.isLoading = false
   watch(
     () => requestedRoles,
     () => {

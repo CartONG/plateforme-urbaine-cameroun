@@ -23,12 +23,9 @@
           <label class="Form__label required">{{
             $t('projects.form.fields.description.label')
           }}</label>
-          <v-textarea
-            variant="outlined"
-            :placeholder="$t('projects.form.fields.description.label')"
-            v-model="form.description.value.value"
-            :error-messages="form.description.errorMessage.value"
-            @blur="form.description.handleChange"
+          <TextEditor
+            v-model:content-model="form.description.value.value"
+            :parent-form-error="formError"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -42,24 +39,20 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
-          <v-textarea
-            variant="outlined"
-            :rows="4"
-            :placeholder="$t('projects.form.fields.deliverables.label')"
-            v-model="form.deliverables.value.value"
-            :error-messages="form.deliverables.errorMessage.value"
-            @blur="form.deliverables.handleChange"
+          <TextEditor
+            v-model:content-model="form.deliverables.value.value"
+            :parent-form-error="formError"
+            :min-length="0"
+            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.calendar.label') }}</label>
-          <v-textarea
-            variant="outlined"
-            :rows="1"
-            :placeholder="$t('projects.form.fields.calendar.label')"
-            v-model="form.calendar.value.value"
-            :error-messages="form.calendar.errorMessage.value"
-            @blur="form.calendar.handleChange"
+          <TextEditor
+            v-model:content-model="form.calendar.value.value"
+            :parent-form-error="formError"
+            :min-length="0"
+            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -367,15 +360,10 @@
         </div>
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.focalPointTel.label') }}</label>
-          <v-text-field
-            density="compact"
-            variant="outlined"
+          <vue-tel-input
             v-model="form.focalPointTel.value.value"
-            :placeholder="$t('projects.form.fields.focalPointTel.label')"
-            :error-messages="form.focalPointTel.errorMessage.value"
-            @blur="form.focalPointTel.handleChange"
-            type="tel"
-          />
+            @validate="phoneValidation"
+          ></vue-tel-input>
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
@@ -391,6 +379,7 @@
     </template>
     <template #footer-left>
       <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
+      <span v-show="isSubmitting" class="text-warning ml-3">{{ $t('forms.submitting') }}</span>
     </template>
     <template #footer-right>
       <v-btn type="submit" form="project-form" color="main-red" :loading="isSubmitting">
@@ -403,6 +392,7 @@
 <script setup lang="ts">
 import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import LocationSelector from '@/components/forms/LocationSelector.vue'
+import TextEditor from '@/components/forms/TextEditor.vue'
 import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
@@ -542,8 +532,16 @@ onMounted(async () => {
   }
 })
 
+const formError = ref<boolean>(false)
+let internationalPhoneNumber: string | null = null
+function phoneValidation(phoneObject: any) {
+  form.focalPointTel.value.value = phoneObject.nationalNumber
+  internationalPhoneNumber = phoneObject.number
+}
+
 const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
+    formError.value = false
     let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
@@ -556,13 +554,15 @@ const submitForm = handleSubmit(
       externalImages: existingExternalImages,
       logoToUpload: newLogo.value[0],
       imagesToUpload: [...imagesToUpload.value],
-      imagesPartnerToUpload: [...imagesPartnerToUpload.value]
+      imagesPartnerToUpload: [...imagesPartnerToUpload.value],
+      focalPointTel: internationalPhoneNumber as string
     }
 
     const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
     emit('submitted', submittedProject)
   },
   () => {
+    formError.value = true
     addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
     onInvalidSubmit()
   }

@@ -6,12 +6,12 @@
     elevation="1"
     density="comfortable"
     :size="'2.5rem'"
-    icon="mdi-arrow-left"
+    icon="$arrowLeft"
     :color="isHiglighted ? 'bright-blue' : 'white'"
     @click="isToggled = !isToggled"
   >
     <v-icon
-      icon="mdi-chevron-left"
+      icon="$chevronLeft"
       class="maplibregl-ctrl-icon"
       :inversed-direction="inversedDirection"
       :size="'1.5rem'"
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 const isToggled = defineModel<boolean>({ default: false })
 const props = withDefaults(
   defineProps<{

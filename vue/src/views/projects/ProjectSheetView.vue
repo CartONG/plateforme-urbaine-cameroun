@@ -3,6 +3,7 @@
     <div class="SheetView__block SheetView__block--left">
       <div class="SheetView__logoCtn show-sm">
         <img
+          loading="lazy"
           v-if="project.logo?.contentUrl"
           :src="project.logo?.contentUrl"
           class="SheetView__logo"
@@ -37,7 +38,7 @@
       />
       <div class="SheetView__contentCtn my-6">
         <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.about') }}</div>
-        <p>{{ project.description }}</p>
+        <span v-html="project.description"></span>
       </div>
       <ProjectRelatedContent :project="project" />
     </div>
@@ -48,6 +49,7 @@
       </div>
       <div class="SheetView__logoCtn hide-sm">
         <img
+          loading="lazy"
           v-if="project.logo?.contentUrl"
           :src="project.logo?.contentUrl"
           class="SheetView__logo"
@@ -73,7 +75,9 @@
           />
         </div>
       </div>
-      <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.partners') }}</div>
+      <div class="SheetView__title SheetView__title--divider" v-if="project.partners.length">
+        {{ $t('projectPage.partners') }}
+      </div>
       <ImagesMosaic
         :images="project.partners"
         :key="mosaicKey"
@@ -82,7 +86,7 @@
       />
     </div>
     <div class="SheetView__block SheetView__block--bottom">
-      <SectionBanner :text="$t('projectPage.inImages')" />
+      <SectionBanner :text="$t('projectPage.inImages')" v-if="images.length" />
       <ImagesMosaic :images="images" :key="mosaicKey" />
       <ContentDivider />
       <SectionBanner
@@ -97,29 +101,30 @@
 </template>
 
 <script setup lang="ts">
-import type { Project } from '@/models/interfaces/Project'
-import { useProjectStore } from '@/stores/projectStore'
-import { computed, onMounted, ref, watch, watchEffect } from 'vue'
-import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
-import ContentDivider from '@/components/content/ContentDivider.vue'
-import { useUserStore } from '@/stores/userStore'
-import ChipList from '@/components/content/ChipList.vue'
-import ProjectRelatedContent from './components/ProjectRelatedContent.vue'
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
-import ProjectCard from '@/views/projects/components/ProjectCard.vue'
-import ContactCard from '@/components/content/ContactCard.vue'
-import ActorCard from '@/views/actors/components/ActorCard.vue'
-import PrintButton from '@/components/global/PrintButton.vue'
-import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
-import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
-import ProjectForm from '@/views/projects/components/ProjectForm.vue'
-import { FormType } from '@/models/enums/app/FormType'
-import router from '@/router'
-import type { Actor } from '@/models/interfaces/Actor'
+import ChipList from '@/components/content/ChipList.vue'
+import ContactCard from '@/components/content/ContactCard.vue'
+import ContentDivider from '@/components/content/ContentDivider.vue'
 import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
 import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
+import PrintButton from '@/components/global/PrintButton.vue'
+import { FormType } from '@/models/enums/app/FormType'
+import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
+import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
+import type { Project } from '@/models/interfaces/Project'
+import router from '@/router'
+import { useApplicationStore } from '@/stores/applicationStore'
+import { useProjectStore } from '@/stores/projectStore'
+import { useUserStore } from '@/stores/userStore'
+import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
+import ActorCard from '@/views/actors/components/ActorCard.vue'
+import ProjectCard from '@/views/projects/components/ProjectCard.vue'
+import ProjectForm from '@/views/projects/components/ProjectForm.vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
+import ProjectRelatedContent from './components/ProjectRelatedContent.vue'
 
 const userStore = useUserStore()
 const projectStore = useProjectStore()
@@ -149,6 +154,7 @@ onBeforeRouteLeave(() => {
 
 onMounted(async () => {
   await loadSimilarProjects()
+  useApplicationStore().isLoading = false
 })
 
 watch(

@@ -2,7 +2,12 @@
   <div class="ActorSheetView SheetView" v-if="actor">
     <div class="SheetView__block SheetView__block--left">
       <div class="SheetView__logoCtn show-sm">
-        <img :src="actor.logo.contentUrl" class="SheetView__logo" v-if="actor.logo" />
+        <img
+          loading="lazy"
+          :src="actor.logo.contentUrl"
+          class="SheetView__logo"
+          v-if="actor.logo"
+        />
       </div>
       <SheetContentBanner
         :page="CommentOrigin.ACTOR"
@@ -24,7 +29,7 @@
         <div class="SheetView__title SheetView__title--divider">
           {{ $t('actorPage.description') }}
         </div>
-        <p>{{ actor.description }}</p>
+        <span v-html="formattedDescription"></span>
       </div>
       <ActorRelatedContent :actor="actor" v-if="!appStore.mobile" />
     </div>
@@ -35,6 +40,7 @@
       </div>
       <div class="SheetView__logoCtn hide-sm">
         <img
+          loading="lazy"
           :src="actor.logo?.contentsFilteredUrl?.thumbnail"
           alt=""
           v-if="actor.logo?.contentsFilteredUrl?.thumbnail"
@@ -49,9 +55,9 @@
       <span>{{ actor.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
       <AdminBoundariesButton :entity="actor" />
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.officeName || actor.officeAddress">
         <div class="d-flex flex-row">
-          <v-icon icon="mdi-map-marker-outline" color="main-black" />
+          <v-icon icon="$mapMarkerOutline" color="main-black" />
           <div class="ml-1">
             <p class="font-weight-bold">{{ actor.officeName }}</p>
             <p>{{ actor.officeAddress }}</p>
@@ -59,7 +65,7 @@
         </div>
       </div>
 
-      <div class="SheetView__infoCard">
+      <div class="SheetView__infoCard" v-if="actor.contactName || actor.contactPosition">
         <div>
           <h5 class="SheetView__title">{{ $t('actorPage.contact') }}</h5>
           <ContactCard :name="actor.contactName" :description="actor.contactPosition" />
@@ -68,30 +74,30 @@
     </div>
     <ActorRelatedContent :actor="actor" v-if="appStore.mobile" />
     <div class="SheetView__block SheetView__block--bottom">
-      <SectionBanner :text="$t('actorPage.images')" />
+      <SectionBanner :text="$t('actorPage.images')" v-if="actorImages.length" />
       <ImagesMosaic :images="actorImages" :key="mosaicKey" />
       <ContentDivider />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { Actor } from '@/models/interfaces/Actor'
-import { useActorsStore } from '@/stores/actorsStore'
-import { computed, onMounted, watchEffect, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
-import ContentDivider from '@/components/content/ContentDivider.vue'
-import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
-import PrintButton from '@/components/global/PrintButton.vue'
-import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
-import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
+import ChipList from '@/components/content/ChipList.vue'
 import ContactCard from '@/components/content/ContactCard.vue'
+import ContentDivider from '@/components/content/ContentDivider.vue'
+import ImagesMosaic from '@/components/content/ImagesMosaic.vue'
+import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
+import PrintButton from '@/components/global/PrintButton.vue'
+import type { Actor } from '@/models/interfaces/Actor'
+import { CommentOrigin } from '@/models/interfaces/Comment'
+import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
-import ChipList from '@/components/content/ChipList.vue'
-import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBoundariesButton.vue'
-import { CommentOrigin } from '@/models/interfaces/Comment'
+import SheetContentBanner from '@/views/_layout/sheet/SheetContentBanner.vue'
+import UpdateInfoLabel from '@/views/_layout/sheet/UpdateInfoLabel.vue'
+import ActorRelatedContent from '@/views/actors/components/ActorRelatedContent.vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 
 const appStore = useApplicationStore()
 const userStore = useUserStore()
@@ -119,8 +125,10 @@ watchEffect(() => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
+  appStore.isLoading = true
   const route = useRoute()
+  await actorsStore.getActors()
   watchEffect(() => {
     if (actorsStore.dataLoaded) {
       if (actorsStore.selectedActor === null) {
@@ -128,18 +136,28 @@ onMounted(() => {
           (actor) => actor.slug === route.params.slug
         )
         actorsStore.setSelectedActor(actor?.id as string)
+        appStore.isLoading = false
+      } else {
+        appStore.isLoading = false
       }
     }
   })
 })
 
 const isEditable = computed(() => {
-  return userStore.userIsAdmin() || actor.value?.createdBy.id === userStore.currentUser?.id
+  return (
+    (userStore.userIsAdmin() || actor.value?.createdBy?.id === userStore.currentUser?.id) &&
+    userStore.currentUser != null
+  )
 })
 
 function editActor() {
   actorsStore.setActorEditionMode(actor.value)
 }
+
+const formattedDescription = computed(() => {
+  return actor.value?.description ? actor.value.description.replace(/<p><\/p>/g, '<br />') : ''
+})
 </script>
 <style lang="scss">
 @import '@/assets/styles/views/SheetView';

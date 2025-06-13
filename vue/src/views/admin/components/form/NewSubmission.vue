@@ -1,6 +1,6 @@
 <template>
   <div class="NewSubmission">
-    <img src="@/assets/images/actorToValidate.svg" alt="" />
+    <img loading="lazy" src="@/assets/images/actorToValidate.svg" alt="" />
     <div class="ml-2">
       {{
         $t('admin.form.newSubmission', {
@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from '@/models/interfaces/auth/User'
-import { localizeDate, localizeTime } from '@/services/utils/UtilsService'
+import type { User } from '@/models/interfaces/auth/User';
+import { localizeDate, localizeTime } from '@/services/utils/UtilsService';
 
 defineProps<{
   createdBy: User

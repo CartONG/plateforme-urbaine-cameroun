@@ -16,9 +16,9 @@
 </template>
 
 <script setup lang="ts">
-import { useApplicationStore } from '@/stores/applicationStore'
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useApplicationStore } from '@/stores/applicationStore';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 interface Props {
   closeOutside?: boolean
@@ -46,8 +46,7 @@ const closeDialog = () => {
   --dialog-padding-x: 2.5rem;
   --dialog-padding-top: 5.5rem;
   $dim-dialog-h: calc(100vh - 4rem);
-
-  background: #fff url(@/assets/images/Frise.svg) no-repeat top center;
+  background: #fff url(@/assets/images/Frise.jpg) no-repeat top center;
   background-attachment: local;
   padding: var(--dialog-padding-top) var(--dialog-padding-x) 3rem var(--dialog-padding-x);
   width: $dim-dialog-w;
@@ -61,6 +60,10 @@ const closeDialog = () => {
   border-radius: 3px;
   box-shadow: $mixin-shadow;
   white-space: pre-line;
+
+  &__clickableText {
+    text-decoration: underline !important;
+  }
 
   .Dialog__header {
     display: flex;

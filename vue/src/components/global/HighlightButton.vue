@@ -4,7 +4,7 @@
     v-if="userStore.userIsAdmin()"
     variant="text"
     density="comfortable"
-    :icon="'mdi mdi-star' + (!highlightedItem?.isHighlighted ? '-outline' : '')"
+    :icon="'$star' + (!highlightedItem?.isHighlighted ? 'Outline' : '')"
     color="main-blue"
   ></v-btn>
 </template>

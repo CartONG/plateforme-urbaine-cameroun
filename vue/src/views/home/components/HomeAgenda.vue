@@ -1,10 +1,17 @@
 <template>
+  <SectionBanner
+    :text="$t('home.agenda.title')"
+    :action-label="$t('home.agenda.action')"
+    :action-link="{ name: 'resources', query: { type: 'events' } }"
+    v-if="resourceStore.nearestEvents.length"
+  />
   <div class="HomeAgenda">
     <ResourceCard v-for="item in resourceStore.nearestEvents" :resource="item" :key="item.id" />
   </div>
 </template>
 
 <script setup lang="ts">
+import SectionBanner from '@/components/banners/SectionBanner.vue'
 import { useResourceStore } from '@/stores/resourceStore'
 import ResourceCard from '@/views/resources/components/ResourceCard.vue'
 import { onBeforeMount } from 'vue'

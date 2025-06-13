@@ -8,7 +8,7 @@
     @dragleave.prevent="handleDragLeave"
     @click="triggerFileInput"
   >
-    <img src="@/assets/images/importFilesIcon.svg" alt="" />
+    <img loading="lazy" src="@/assets/images/importFilesIcon.svg" alt="" />
     <p class="ml-2">
       {{ $t('actors.form.drag') }}
       <span class="InputImage__dropzone__uploadLink">{{ $t('actors.form.import') }}</span>
@@ -46,6 +46,7 @@
       <div v-for="(existingImage, index) in existingImages" :key="index" class="position-relative">
         <div @click="removeExistingImage(index)" class="LoadedImages__closer">X</div>
         <img
+          loading="lazy"
           :src="
             FileObject.hasThumbnail(existingImage as BaseMediaObject)
               ? (existingImage as BaseMediaObject).contentsFilteredUrl.thumbnail
@@ -58,6 +59,7 @@
     <div v-for="(selectedFile, index) in selectedFiles" :key="index" class="position-relative">
       <div @click="removeLoadedFile(index)" class="LoadedImages__closer">X</div>
       <img
+        loading="lazy"
         :src="selectedFile.preview"
         :alt="(selectedFile as any).name ? (selectedFile as ContentImageFromUserFile).name : ''"
         class="LoadedImages__preview ma-2"
@@ -69,10 +71,10 @@
 <script setup lang="ts">
 import { ContentImageType } from '@/models/enums/app/ContentImageType'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
-import { InputImageValidator } from '@/services/files/InputImageValidator'
-import { type Ref, ref } from 'vue'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import { FileObject } from '@/services/files/FileObject'
+import { InputImageValidator } from '@/services/files/InputImageValidator'
+import { type Ref, ref } from 'vue'
 
 const props = defineProps({
   existingImages: {

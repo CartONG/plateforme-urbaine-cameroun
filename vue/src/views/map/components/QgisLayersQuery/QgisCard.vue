@@ -5,12 +5,12 @@
         <span>
           {{ features[visibleLayer].name }}
           <v-icon
-            icon="mdi:mdi-chevron-left"
+            icon="$chevronLeft"
             @click="decreaseVisibleLayer"
             :color="visibleLayer > 0 ? 'main-blue' : 'main-grey'"
           />
           <v-icon
-            icon="mdi:mdi-chevron-right"
+            icon="$chevronRight"
             @click="increaseVisibleLayer"
             :color="visibleLayer < features.length - 1 ? 'main-blue' : 'main-grey'"
           />
@@ -21,12 +21,12 @@
         <span>
           {{ features[visibleLayer].data[visibleSubLayer][0] }}
           <v-icon
-            icon="mdi:mdi-chevron-left"
+            icon="$chevronLeft"
             :color="visibleSubLayer > 0 ? 'main-blue' : 'main-grey'"
             @click="decreaseVisibleSubLayer"
           />
           <v-icon
-            icon="mdi:mdi-chevron-right"
+            icon="$chevronRight"
             :color="
               visibleSubLayer < features[visibleLayer].data.length - 1 ? 'main-blue' : 'main-grey'
             "
@@ -56,12 +56,12 @@
       </v-table>
       <div class="d-flex justify-center">
         <v-icon
-          icon="mdi:mdi-chevron-left"
+          icon="$chevronLeft"
           :color="visibleFeature > 0 ? 'main-blue' : 'main-grey'"
           @click="decreaseVisibleFeature"
         />
         <v-icon
-          icon="mdi:mdi-chevron-right"
+          icon="$chevronRight"
           :color="
             visibleFeature < features[visibleLayer].data[visibleSubLayer][1].length - 1
               ? 'main-blue'
@@ -75,12 +75,12 @@
 </template>
 
 <script setup lang="ts">
-import InfoCard from '@/components/global/InfoCard.vue'
+import InfoCard from '@/components/global/InfoCard.vue';
 import type {
-  FilteredQGISLayerFeatures,
-  QGISFeatureAttributes
-} from '@/models/interfaces/map/AtlasMap'
-import { ref } from 'vue'
+    FilteredQGISLayerFeatures,
+    QGISFeatureAttributes
+} from '@/models/interfaces/map/AtlasMap';
+import { ref } from 'vue';
 
 const props = defineProps<{
   features: FilteredQGISLayerFeatures[]

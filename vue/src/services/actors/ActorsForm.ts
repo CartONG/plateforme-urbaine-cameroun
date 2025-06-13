@@ -12,15 +12,19 @@ export class ActorsFormService {
 
     const actorSchema = z.object({
       ///////// Main infos \\\\\\\\\
-      name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
+      name: z
+        .string({ required_error: i18n.t('forms.errorMessages.required') })
+        .min(3, { message: i18n.t('forms.errorMessages.minlength', { min: 3 }) }),
       acronym: z.string().optional(),
-      category: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
+      category: z.string({ required_error: i18n.t('forms.errorMessages.required') }),
       otherCategory: z.string().optional(),
       expertises: zodModels.symfonyRelations,
       otherExpertise: z.string().optional(),
       thematics: zodModels.symfonyRelations,
       otherThematic: z.string().optional(),
-      administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)),
+      administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
+        required_error: i18n.t('forms.errorMessages.required')
+      }),
       admin1List: zodModels.admin1Boundaries.optional(),
       admin2List: zodModels.admin2Boundaries.optional(),
       admin3List: zodModels.admin3Boundaries.optional(),

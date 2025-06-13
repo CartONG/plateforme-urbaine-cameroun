@@ -41,6 +41,10 @@
         flex-flow: column wrap;
         gap: .5rem;
         width: 100%;
+
+        span ul li {
+            margin-left: 2rem;
+        }
     }
 
     .SheetView__updatedAtCtn {

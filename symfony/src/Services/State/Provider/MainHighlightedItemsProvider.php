@@ -28,6 +28,11 @@ class MainHighlightedItemsProvider implements ProviderInterface
             $this->actorRepository->findHighlightedItems($highlightedItemsItemIds),
         );
 
+        $idOrder = array_flip($highlightedItemsItemIds);
+        usort($items, function ($a, $b) use ($idOrder) {
+            return ($idOrder[$b->getItemId()] ?? PHP_INT_MAX) <=> ($idOrder[$a->getItemId()] ?? PHP_INT_MAX);
+        });
+
         return $items;
     }
 }
