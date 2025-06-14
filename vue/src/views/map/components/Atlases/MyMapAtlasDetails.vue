@@ -73,8 +73,10 @@ const filteredMapsIds = computed(() => {
   return props.atlas.maps
     .filter(
       (map) =>
-        map.name.includes(myMapStore.atlasSearchText) ||
-        map.qgisProject.layers?.some((layer) => layer.includes(myMapStore.atlasSearchText))
+        map.name.toLowerCase().includes(myMapStore.atlasSearchText.toLowerCase()) ||
+        map.qgisProject.layers?.some((layer) =>
+          layer.toLowerCase().includes(myMapStore.atlasSearchText.toLowerCase())
+        )
     )
     .map((map) => map['@id'])
 })

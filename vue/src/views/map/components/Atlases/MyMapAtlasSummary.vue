@@ -5,10 +5,10 @@
         <img loading="lazy" :src="atlas.logo.contentUrl" v-if="atlas.logo" />
       </div>
       <div class="MyMapAtlasSummary_desc">
-        <v-tooltip :text="atlas.name" location="top" v-if="atlas.name.length > 20">
+        <v-tooltip :text="atlas.name" location="top" v-if="atlas.name.length > 19">
           <template v-slot:activator="{ props }">
             <div class="MyMapAtlasSummary_title" v-bind="props">
-              {{ reduceText(atlas.name, 20) }}
+              {{ reduceText(atlas.name, 19) }}
             </div>
           </template>
         </v-tooltip>
@@ -63,8 +63,10 @@ const filteredLength = computed(() => {
   }
   return props.atlas.maps.filter(
     (map) =>
-      map.name.includes(mapStore.atlasSearchText) ||
-      map.qgisProject.layers?.some((layer) => layer.includes(mapStore.atlasSearchText))
+      map.name.toLowerCase().includes(mapStore.atlasSearchText.toLowerCase()) ||
+      map.qgisProject.layers?.some((layer) =>
+        layer.toLowerCase().includes(mapStore.atlasSearchText.toLowerCase())
+      )
   ).length
 })
 </script>
