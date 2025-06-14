@@ -26,7 +26,6 @@ export class ProjectFormService {
           message: i18n.t('forms.errorMessages.required')
         }),
         admin1List: zodModels.admin1Boundaries.optional(),
-        admin2List: zodModels.admin2Boundaries.optional(),
         admin3List: zodModels.admin3Boundaries.optional(),
         focalPointTel: zodModels.phone,
         geoData: zodModels.geoDataNullable.optional(),
@@ -116,7 +115,6 @@ export class ProjectFormService {
       otherFinancingType: useField('otherFinancingType'),
       administrativeScopes: useField('administrativeScopes'),
       admin1List: useField('admin1List'),
-      admin2List: useField('admin2List'),
       admin3List: useField('admin3List'),
       focalPointName: useField('focalPointName'),
       focalPointPosition: useField('focalPointPosition'),

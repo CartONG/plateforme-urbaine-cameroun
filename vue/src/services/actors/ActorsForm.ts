@@ -26,7 +26,6 @@ export class ActorsFormService {
         required_error: i18n.t('forms.errorMessages.required')
       }),
       admin1List: zodModels.admin1Boundaries.optional(),
-      admin2List: zodModels.admin2Boundaries.optional(),
       admin3List: zodModels.admin3Boundaries.optional(),
 
       ///////// Contact \\\\\\\\\
@@ -55,7 +54,6 @@ export class ActorsFormService {
       odds: useField('odds', '', { validateOnValueUpdate: false }),
       administrativeScopes: useField('administrativeScopes', '', { validateOnValueUpdate: false }),
       admin1List: useField('admin1List', '', { validateOnValueUpdate: false }),
-      admin2List: useField('admin2List', '', { validateOnValueUpdate: false }),
       admin3List: useField('admin3List', '', { validateOnValueUpdate: false }),
       description: useField('description', '', { validateOnValueUpdate: false }),
       officeName: useField('officeName', '', { validateOnValueUpdate: false }),

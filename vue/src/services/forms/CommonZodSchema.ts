@@ -100,7 +100,6 @@ export class CommonZodSchema {
       }),
       symfonyRelation: SymfonyRelationSchema,
       admin1Boundaries: z.array(Admin1BoundarySchema),
-      admin2Boundaries: z.array(Admin2BoundarySchema),
       admin3Boundaries: z.array(Admin3BoundarySchema),
       geoData: NotNullableGeoDataSchema,
       geoDataNullable: NullableGeoDataSchema,

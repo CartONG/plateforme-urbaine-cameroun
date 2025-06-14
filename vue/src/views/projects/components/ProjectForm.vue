@@ -110,19 +110,6 @@
             return-object
           ></v-autocomplete>
         </div>
-        <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin2">
-          <label class="Form__label">{{ $t('actors.form.admin2') }}</label>
-          <v-autocomplete
-            multiple
-            density="compact"
-            :items="adminBoundariesStore.admin2Boundaries"
-            item-title="adm2Name"
-            item-value="@id"
-            variant="outlined"
-            v-model="form.admin2List.value.value as Admin2Boundary[]"
-            return-object
-          ></v-autocomplete>
-        </div>
         <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin3">
           <label class="Form__label">{{ $t('actors.form.admin3') }}</label>
           <v-autocomplete
@@ -447,11 +434,7 @@ import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingTy
 import { Status } from '@/models/enums/contents/Status'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
-import type {
-  Admin1Boundary,
-  Admin2Boundary,
-  Admin3Boundary
-} from '@/models/interfaces/AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
@@ -537,9 +520,6 @@ const activeAdminLevels = computed(() => {
       admin1: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.REGIONAL
       ),
-      admin2: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
-        AdministrativeScope.STATE
-      ),
       admin3: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.CITY
       )
@@ -552,7 +532,6 @@ onMounted(async () => {
   await Promise.all([
     actorsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
-    adminBoundariesStore.getAdmin2(),
     adminBoundariesStore.getAdmin3()
   ])
   if (props.project) {

@@ -24,7 +24,6 @@ export class ResourceFormService {
         otherType: z.string().optional(),
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)).optional(),
         admin1List: zodModels.admin1Boundaries.optional(),
-        admin2List: zodModels.admin2Boundaries.optional(),
         admin3List: zodModels.admin3Boundaries.optional(),
         geoData: zodModels.geoDataNullable.optional(),
         startAt: z.coerce.date().nullable().optional(),
