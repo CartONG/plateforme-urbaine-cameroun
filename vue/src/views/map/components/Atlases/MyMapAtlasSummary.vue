@@ -57,7 +57,7 @@ const filteredLength = computed(() => {
   if (
     props.type === AtlasGroup.PREDEFINED_MAP ||
     !mapStore.atlasSearchText ||
-    props.atlas.name.includes(mapStore.atlasSearchText)
+    props.atlas.name.toLowerCase().includes(mapStore.atlasSearchText.toLowerCase())
   ) {
     return props.atlas.maps.length
   }

@@ -66,7 +66,7 @@ const filteredMapsIds = computed(() => {
   if (
     props.type === AtlasGroup.PREDEFINED_MAP ||
     !myMapStore.atlasSearchText ||
-    props.atlas.name.includes(myMapStore.atlasSearchText)
+    props.atlas.name.toLowerCase().includes(myMapStore.atlasSearchText.toLowerCase())
   ) {
     return props.atlas.maps.map((map) => map['@id'])
   }
