@@ -57,18 +57,23 @@
       </div>
       <ChipList :items="project.thematics" />
 
-      <div>
+      <div v-if="project.odds && Array.isArray(project.odds) && project.odds.length > 0"">
         <div class="SheetView__title SheetView__title--divider">
           <span>{{ $t('forms.odds.title') }}</span>
         </div>
         <div>
-          <img
-            class="SheetView__ODD mr-2"
-            :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
-            :alt="odd"
+          <template
             v-for="odd in project.odds?.sort((a, b) => parseInt(a) - parseInt(b))"
             :key="odd"
-          />
+          >
+            <img
+              class="SheetView__ODD mr-2"
+              :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
+              :alt="odd"
+              v-if="parseInt(odd) >= 1 && parseInt(odd) <= 17"
+            />
+            <span v-else>{{ $t('forms.odds.' + odd) }}</span>
+          </template>
         </div>
       </div>
 
