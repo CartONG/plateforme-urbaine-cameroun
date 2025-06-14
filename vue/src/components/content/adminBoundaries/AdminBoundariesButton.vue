@@ -3,7 +3,6 @@
     class="AdminBoundaries__toMap"
     v-if="
       (entity.admin1List && entity.admin1List.length > 0) ||
-      (entity.admin2List && entity.admin2List.length > 0) ||
       (entity.admin3List && entity.admin3List.length > 0)
     "
     @click="showAdminMap"

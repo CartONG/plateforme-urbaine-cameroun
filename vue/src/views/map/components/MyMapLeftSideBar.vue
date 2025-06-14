@@ -4,23 +4,25 @@
     <MyMapAtlasesList
       :title="$t('atlas.predefinedMap')"
       :type="AtlasGroup.PREDEFINED_MAP"
-      :atlases="
-        atlasStore.atlasList
-          .filter((atlas) => atlas.atlasGroup === AtlasGroup.PREDEFINED_MAP)
-          .sort((a, b) => a.position - b.position)
-      "
-      v-if="atlasStore.atlasList.length > 0"
+      :atlases="atlasesList"
+      v-if="atlasesList.length"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import MyMapWelcomeBlock from '@/views/map/components/MyMapWelcomeBlock.vue'
-import MyMapAtlasesList from '@/views/map/components/Atlases/MyMapAtlasesList.vue'
 import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 import { useAtlasStore } from '@/stores/atlasStore'
+import MyMapAtlasesList from '@/views/map/components/Atlases/MyMapAtlasesList.vue'
+import MyMapWelcomeBlock from '@/views/map/components/MyMapWelcomeBlock.vue'
+import { computed } from 'vue'
 
 const atlasStore = useAtlasStore()
+const atlasesList = computed(() =>
+  atlasStore.atlasList
+    .filter((atlas) => atlas.atlasGroup === AtlasGroup.PREDEFINED_MAP)
+    .sort((a, b) => a.position - b.position)
+)
 </script>
 
 <style lang="scss">

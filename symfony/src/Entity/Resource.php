@@ -12,9 +12,12 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Entity\File\FileObject;
 use App\Entity\File\MediaObject;
+use App\Entity\Trait\BanocEntity;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ODDEntity;
+use App\Entity\Trait\ThematizedEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\ResourceFormat;
@@ -65,7 +68,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN") or object.getCreatedBy() == user',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Resource
@@ -75,6 +78,9 @@ class Resource
     use ValidateableEntity;
     use LocalizableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
@@ -94,19 +100,11 @@ class Resource
     #[ORM\Column(type: Types::TEXT)]
     #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 500)]
     private ?string $description = null;
 
     #[ORM\Column(enumType: ResourceFormat::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'resources')]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
@@ -153,13 +151,6 @@ class Resource
     private Collection $admin1List;
 
     /**
-     * @var Collection<int, Admin2Boundary>
-     */
-    #[ORM\ManyToMany(targetEntity: Admin2Boundary::class)]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    private Collection $admin2List;
-
-    /**
      * @var Collection<int, Admin3Boundary>
      */
     #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
@@ -168,9 +159,7 @@ class Resource
 
     public function __construct()
     {
-        $this->thematics = new ArrayCollection();
         $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
         $this->admin3List = new ArrayCollection();
     }
 
@@ -235,30 +224,6 @@ class Resource
     public function setLink(?string $link): static
     {
         $this->link = $link;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }
@@ -380,30 +345,6 @@ class Resource
     public function setOtherThematic(?string $otherThematic): static
     {
         $this->otherThematic = $otherThematic;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Admin2Boundary>
-     */
-    public function getAdmin2List(): Collection
-    {
-        return $this->admin2List;
-    }
-
-    public function addAdmin2List(Admin2Boundary $admin2List): static
-    {
-        if (!$this->admin2List->contains($admin2List)) {
-            $this->admin2List->add($admin2List);
-        }
-
-        return $this;
-    }
-
-    public function removeAdmin2List(Admin2Boundary $admin2List): static
-    {
-        $this->admin2List->removeElement($admin2List);
 
         return $this;
     }

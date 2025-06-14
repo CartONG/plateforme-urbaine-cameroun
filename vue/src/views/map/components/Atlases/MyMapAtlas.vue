@@ -8,10 +8,10 @@
 <script setup lang="ts">
 import { AtlasGroup } from '@/models/enums/geo/AtlasGroup'
 import type { Atlas } from '@/models/interfaces/Atlas'
-import MyMapAtlasSummary from '@/views/map/components/Atlases/MyMapAtlasSummary.vue'
-import MyMapAtlasDetails from '@/views/map/components/Atlases/MyMapAtlasDetails.vue'
-import { computed, provide, ref } from 'vue'
 import { useMyMapStore } from '@/stores/myMapStore'
+import MyMapAtlasDetails from '@/views/map/components/Atlases/MyMapAtlasDetails.vue'
+import MyMapAtlasSummary from '@/views/map/components/Atlases/MyMapAtlasSummary.vue'
+import { computed, provide, ref } from 'vue'
 
 const props = defineProps<{
   atlas: Atlas

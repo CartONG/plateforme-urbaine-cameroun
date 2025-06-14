@@ -1,8 +1,8 @@
 import type Basemap from '@/models/interfaces/map/Basemap'
-import maplibregl from 'maplibre-gl'
+import type PersistentGeoJSON from '@/models/interfaces/map/PersistentGeoJSON'
 import axios from 'axios'
 import type { Map } from 'maplibre-gl'
-import type PersistentGeoJSON from '@/models/interfaces/map/PersistentGeoJSON'
+import maplibregl from 'maplibre-gl'
 
 export default class MapService {
   static getGeojson(data: any[]): PersistentGeoJSON {

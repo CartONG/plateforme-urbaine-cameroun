@@ -26,19 +26,15 @@
     "expertise": "Compétence",
     "scope": {
       "international": "International",
-      "city": "Ville",
+      "city": "Communal",
       "national": "National",
-      "regional": "Régional",
-      "state": "Département",
-      "neighborhood": "Quartier",
-      "borough": "Arrondissement"
+      "regional": "Régional"
     },
     "form": {
       "acronym": "Acronyme",
       "adminScope": "Échelles d'intervention",
       "adminScopeSection": "Localisation zone d'intervention",
       "admin1": "Sélectionnez les régions d'intervention",
-      "admin2": "Sélectionnez les départements d'intervention",
       "admin3": "Sélectionnez les communes d'intervention",
       "category": "Catégorie",
       "otherCategory": "Précisez une autre catégorie",

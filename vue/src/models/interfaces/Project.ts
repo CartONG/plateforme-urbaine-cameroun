@@ -11,7 +11,9 @@ import type { Timestampable } from '@/models/interfaces/common/Timestampable'
 import type { Validateable } from '@/models/interfaces/common/Validateable'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import type { ProjectFinancingType } from '../enums/contents/ProjectFinancingType'
-import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from './AdminBoundaries'
+import type { BanocItem } from './common/BanocItem'
+import type { ODDItem } from './common/ODDItem'
 
 export interface Project
   extends Timestampable,
@@ -19,7 +21,9 @@ export interface Project
     Blameable,
     Localizable,
     ThematicItem,
-    SymfonyRelation {
+    SymfonyRelation,
+    ODDItem,
+    BanocItem {
   id: string
   name: string
   slug: string
@@ -32,7 +36,6 @@ export interface Project
   partners: BaseMediaObject[]
   administrativeScopes: AdministrativeScope[]
   admin1List?: Admin1Boundary[]
-  admin2List?: Admin2Boundary[]
   admin3List?: Admin3Boundary[]
   beneficiaryTypes: BeneficiaryType[]
   focalPointName: string
@@ -50,9 +53,8 @@ export interface Project
   creatorMessage?: string
 }
 
-export interface ProjectSubmission extends Omit<Project, 'actor' | 'thematics' | 'logo'> {
+export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
   actor: iri
-  thematics: iri[]
   logo: string
   logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]

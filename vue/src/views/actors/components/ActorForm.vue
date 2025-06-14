@@ -73,40 +73,15 @@
           />
         </div>
         <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('actors.form.expertise') }}</label>
-          <v-select
-            density="compact"
-            variant="outlined"
-            multiple
-            v-model="form.expertises.value.value as ActorExpertise[]"
-            :items="expertisesItems"
-            item-title="name"
-            item-value="@id"
-            :error-messages="form.expertises.errorMessage.value"
-            @blur="form.expertises.handleChange(form.expertises.value.value)"
-            return-object
-          />
-        </div>
-        <div class="Form__fieldCtn" v-if="otherExpertiseIsSelected">
-          <label class="Form__label conditionnal">{{ $t('actors.form.otherExpertise') }}</label>
-          <v-text-field
-            density="compact"
-            variant="outlined"
-            v-model="form.otherExpertise.value.value"
-            :error-messages="form.otherExpertise.errorMessage.value"
-            @blur="form.otherExpertise.handleChange"
-          />
-        </div>
-        <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('actors.form.thematic') }}</label>
           <v-select
             density="compact"
             variant="outlined"
             multiple
             v-model="form.thematics.value.value as Thematic[]"
-            :items="thematicsItems"
-            item-title="name"
-            item-value="@id"
+            :items="Object.values(Thematic)"
+            :item-title="(item) => $t('forms.thematics.' + item)"
+            :item-value="(item) => item"
             :error-messages="form.thematics.errorMessage.value"
             @blur="form.thematics.handleChange(form.thematics.value.value)"
             return-object
@@ -120,6 +95,22 @@
             v-model="form.otherThematic.value.value"
             :error-messages="form.otherThematic.errorMessage.value"
             @blur="form.otherThematic.handleChange"
+          />
+        </div>
+
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
           />
         </div>
 
@@ -149,19 +140,6 @@
             item-value="@id"
             variant="outlined"
             v-model="form.admin1List.value.value as Admin1Boundary[]"
-            return-object
-          ></v-autocomplete>
-        </div>
-        <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin2">
-          <label class="Form__label">{{ $t('actors.form.admin2') }}</label>
-          <v-autocomplete
-            multiple
-            density="compact"
-            :items="adminBoundariesStore.admin2Boundaries"
-            item-title="adm2Name"
-            item-value="@id"
-            variant="outlined"
-            v-model="form.admin2List.value.value as Admin2Boundary[]"
             return-object
           ></v-autocomplete>
         </div>
@@ -255,6 +233,35 @@
             @blur="form.officeAddress.handleChange"
           />
         </div>
+
+        <label class="Form__label">{{ $t('forms.banoc.title') }}</label>
+        <div class="d-flex">
+          <div class="Form__fieldCtn flex-shrink-0">
+            <label class="Form__label">{{ $t('forms.banoc.code') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banoc.value.value"
+                :error-messages="form.banoc.errorMessage.value"
+                @blur="form.banoc.handleChange"
+              />
+            </div>
+          </div>
+          <div class="Form__fieldCtn ml-3 flex-grow-1">
+            <label class="Form__label">{{ $t('forms.banoc.url') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banocUrl.value.value"
+                :error-messages="form.banocUrl.errorMessage.value"
+                @blur="form.banocUrl.handleChange"
+              />
+            </div>
+          </div>
+        </div>
+
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
 
         <FormSectionTitle :text="$t('actors.form.location')" />
@@ -291,19 +298,15 @@ import Modal from '@/components/global/Modal.vue'
 import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { ODD } from '@/models/enums/contents/ODD'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
 import { type Actor, type ActorSubmission } from '@/models/interfaces/Actor'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import type {
-  Admin1Boundary,
-  Admin2Boundary,
-  Admin3Boundary
-} from '@/models/interfaces/AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { ActorsFormService } from '@/services/actors/ActorsForm'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -311,21 +314,17 @@ import { addNotification } from '@/services/notifications/NotificationService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, ref, type Ref } from 'vue'
 
 const appStore = useApplicationStore()
 const actorsStore = useActorsStore()
-const thematicsStore = useThematicStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 
 const actorToEdit: Actor | null = actorsStore.actorEdition.actor
 const { form, handleSubmit, isSubmitting } = ActorsFormService.getActorsForm(actorToEdit)
 
 const categoryItems = Object.values(ActorsCategories)
-const expertisesItems = actorsStore.actorsExpertises
-const thematicsItems = computed(() => thematicsStore.thematics)
 const submitLabel = computed(() => {
   if (actorToEdit) {
     return !actorToEdit.isValidated ? i18n.t('forms.validate') : i18n.t('forms.edit')
@@ -334,15 +333,9 @@ const submitLabel = computed(() => {
   }
 })
 
-const otherExpertiseIsSelected = computed(() => {
-  if (form.expertises.value?.value && Array.isArray(form.expertises.value?.value)) {
-    return (form.expertises.value?.value as ActorExpertise[]).map((x) => x.name).includes('Autre')
-  }
-  return false
-})
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })
@@ -355,9 +348,6 @@ const activeAdminLevels = computed(() => {
     return {
       admin1: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.REGIONAL
-      ),
-      admin2: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
-        AdministrativeScope.STATE
       ),
       admin3: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.CITY
@@ -373,12 +363,7 @@ let existingHostedImages: FileObject[] = []
 let existingExternalImages: string[] = []
 
 onMounted(async () => {
-  await Promise.all([
-    thematicsStore.getAll(),
-    adminBoundariesStore.getAdmin1(),
-    adminBoundariesStore.getAdmin2(),
-    adminBoundariesStore.getAdmin3()
-  ])
+  await Promise.all([adminBoundariesStore.getAdmin1(), adminBoundariesStore.getAdmin3()])
 
   if (actorToEdit) {
     existingLogo.value = actorToEdit.logo ? [actorToEdit.logo] : []

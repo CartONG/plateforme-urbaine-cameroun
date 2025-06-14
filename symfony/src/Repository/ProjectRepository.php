@@ -52,19 +52,33 @@ class ProjectRepository extends ServiceEntityRepository
 
     public function findTwoSimilarProjectsByThematics(Project $project): array
     {
-        return $this->createQueryBuilder('p')
-            ->leftJoin('p.thematics', 't')
-            ->addSelect('t')
+        $projectThematics = $project->getThematics();
+
+        if (empty($projectThematics)) {
+            return [];
+        }
+
+        $thematicValues = array_map(fn ($thematic) => $thematic->value, $projectThematics);
+
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.id != :id')
-            ->andWhere('t.id IN (:thematicIds)')
-            ->setParameter('thematicIds', $project->getThematics()->map(fn ($thematic) => $thematic->getId()))
             ->setParameter('id', $project->getId())
             ->orderBy('p.updatedAt', 'DESC')
-            ->setMaxResults(2)
-            ->getQuery()
-            ->getResult()
-        ;
+            ->setMaxResults(2);
+
+        $orConditions = [];
+        foreach ($thematicValues as $index => $value) {
+            $orConditions[] = "p.thematics LIKE :thematic_$index";
+            $qb->setParameter("thematic_$index", "%$value%");
+        }
+
+        if (!empty($orConditions)) {
+            $qb->andWhere('('.implode(' OR ', $orConditions).')');
+        }
+
+        return $qb->getQuery()->getResult();
     }
+
     //    /**
     //     * @return Project[] Returns an array of Project objects
     //     */

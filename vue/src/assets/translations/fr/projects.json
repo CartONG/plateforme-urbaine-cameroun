@@ -139,10 +139,7 @@
       "city": "Communale",
       "international": "Internationale",
       "national": "Nationale",
-      "regional": "Régionale",
-      "state": "Départementale",
-      "neighborhood": "Quartier",
-      "borough": "Arrondissement"
+      "regional": "Régionale"
     },
     "status": {
       "finalized": "Finalisé",

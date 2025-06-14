@@ -13,7 +13,8 @@ App\Entity\Project:
     beneficiaryTypes: ['<randomElement(<(App\Enum\BeneficiaryType::toArray())>)>']
     financingTypes:  ['<(App\Enum\ProjectFinancingType::OWN_FUNDS)>']
     actor: '@actor_*'
-    thematics: '<numberBetween(1, 12)>x @thematic_*'
+    thematics: ['<randomElement(<(App\Enum\Thematic::cases())>)>']
+    odds: ['<randomElement(<(App\Enum\ODD::cases())>)>']
     focalPointName: <firstName()> <lastName()>
     focalPointPosition: <jobTitle()>
     focalPointEmail: <email()>

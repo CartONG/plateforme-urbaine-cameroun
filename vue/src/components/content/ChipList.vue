@@ -1,19 +1,14 @@
 <template>
   <div class="ChipList" :align="align">
-    <Chip v-for="item in items" :key="item.id" :text="item.name" />
+    <Chip v-for="item in items" :key="item" :text="item" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Chip from '@/components/content/Chip.vue'
-interface Item {
-  id: any
-  name: string
-  [key: string]: any
-}
+import Chip from '@/components/content/Chip.vue';
 
 defineProps<{
-  items: Item[]
+  items: string[]
   align?: string
 }>()
 </script>

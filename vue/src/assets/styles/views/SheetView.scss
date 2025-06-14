@@ -78,6 +78,11 @@
         }
     }
 
+    .SheetView__ODD {
+        height: 5rem;
+        width: 5rem;
+    }
+
     .SheetView__block {
         display: flex;
         flex-flow: column wrap;
