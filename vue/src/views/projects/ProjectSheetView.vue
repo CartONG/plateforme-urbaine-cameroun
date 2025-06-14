@@ -66,7 +66,7 @@
             class="SheetView__ODD mr-2"
             :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
             :alt="odd"
-            v-for="odd in project.odds.sort((a, b) => parseInt(a) - parseInt(b))"
+            v-for="odd in project.odds?.sort((a, b) => parseInt(a) - parseInt(b))"
             :key="odd"
           />
         </div>
