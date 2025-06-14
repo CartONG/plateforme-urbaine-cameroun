@@ -151,11 +151,7 @@ export class CommonZodSchema {
             message: i18n.t('forms.errorMessages.email')
           }
         ),
-      description: z
-        .string({ required_error: i18n.t('forms.errorMessages.required') })
-        .min(1, { message: i18n.t('forms.errorMessages.required') })
-        .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) })
-        .optional(),
+      description: z.string({ required_error: i18n.t('forms.errorMessages.required') }).optional(),
       descriptionRequired: z
         .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(50, { message: i18n.t('forms.errorMessages.minlength', { min: 50 }) }),
@@ -164,7 +160,7 @@ export class CommonZodSchema {
         .max(100, { message: i18n.t('forms.errorMessages.maxlength', { max: 100 }) }),
       maxDescription: z
         .string()
-        .max(500, { message: i18n.t('forms.errorMessages.maxlength', { max: 500 }) })
+        .max(1000, { message: i18n.t('forms.errorMessages.maxlength', { max: 1000 }) })
         .optional(),
       phone: z.string().optional(),
       latString: LatitudeSchema,

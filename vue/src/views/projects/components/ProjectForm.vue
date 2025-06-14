@@ -43,7 +43,6 @@
             v-model:content-model="form.deliverables.value.value"
             :parent-form-error="formError"
             :min-length="0"
-            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -52,7 +51,6 @@
             v-model:content-model="form.calendar.value.value"
             :parent-form-error="formError"
             :min-length="0"
-            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">

@@ -16,9 +16,9 @@ export class ProjectFormService {
     const projectSchema: z.ZodType<Partial<Project>> = z
       .object({
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
-        description: zodModels.description,
-        calendar: zodModels.maxDescription,
-        deliverables: zodModels.maxDescription,
+        description: zodModels.descriptionRequired,
+        calendar: zodModels.description,
+        deliverables: zodModels.description,
         focalPointName: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         focalPointPosition: zodModels.maxLabel.optional(),
         focalPointEmail: zodModels.email,

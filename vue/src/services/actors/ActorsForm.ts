@@ -16,6 +16,7 @@ export class ActorsFormService {
         .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(3, { message: i18n.t('forms.errorMessages.minlength', { min: 3 }) }),
       acronym: z.string().optional(),
+      description: zodModels.descriptionRequired,
       category: z.string({ required_error: i18n.t('forms.errorMessages.required') }),
       otherCategory: z.string().optional(),
       expertises: zodModels.symfonyRelations,
@@ -28,7 +29,6 @@ export class ActorsFormService {
       admin1List: zodModels.admin1Boundaries.optional(),
       admin2List: zodModels.admin2Boundaries.optional(),
       admin3List: zodModels.admin3Boundaries.optional(),
-      description: zodModels.description,
 
       ///////// Contact \\\\\\\\\
       officeName: z.string().optional(),
