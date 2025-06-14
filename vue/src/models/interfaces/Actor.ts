@@ -1,7 +1,7 @@
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { ActorsCategories } from '../enums/contents/actors/ActorsCategories'
 import type { Thematic } from '../enums/contents/Thematic'
-import type { Admin1Boundary, Admin2Boundary, Admin3Boundary } from './AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { BanocItem } from './common/BanocItem'
 import type { Blameable } from './common/Blameable'
 import type { ODDItem } from './common/ODDItem'
@@ -32,7 +32,6 @@ export interface Actor
   description: string
   administrativeScopes: AdministrativeScope[]
   admin1List?: Admin1Boundary[]
-  admin2List?: Admin2Boundary[]
   admin3List?: Admin3Boundary[]
   officeName: string
   officeAddress: string

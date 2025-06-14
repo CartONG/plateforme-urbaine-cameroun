@@ -63,7 +63,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN")'
         ),
     ],
-    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::ACTOR_WRITE]],
 )]
 class Actor
@@ -89,7 +89,6 @@ class Actor
         $this->administrativeScopes = [];
         $this->images = new ArrayCollection();
         $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
         $this->admin3List = new ArrayCollection();
     }
 
@@ -186,13 +185,6 @@ class Actor
     #[ORM\ManyToMany(targetEntity: Admin1Boundary::class)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $admin1List;
-
-    /**
-     * @var Collection<int, Admin2Boundary>
-     */
-    #[ORM\ManyToMany(targetEntity: Admin2Boundary::class)]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $admin2List;
 
     /**
      * @var Collection<int, Admin3Boundary>
@@ -494,29 +486,6 @@ class Actor
         return $this;
     }
 
-    /**
-     * @return Collection<int, Admin2Boundary>
-     */
-    public function getAdmin2List(): Collection
-    {
-        return $this->admin2List;
-    }
-
-    public function addAdmin2List(Admin2Boundary $admin2List): static
-    {
-        if (!$this->admin2List->contains($admin2List)) {
-            $this->admin2List->add($admin2List);
-        }
-
-        return $this;
-    }
-
-    public function removeAdmin2List(Admin2Boundary $admin2List): static
-    {
-        $this->admin2List->removeElement($admin2List);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Admin3Boundary>

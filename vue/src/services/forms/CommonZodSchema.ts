@@ -1,10 +1,6 @@
 import { ODD } from '@/models/enums/contents/ODD'
 import { Thematic } from '@/models/enums/contents/Thematic'
-import type {
-  Admin1Boundary,
-  Admin2Boundary,
-  Admin3Boundary
-} from '@/models/interfaces/AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import type { SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
@@ -24,13 +20,6 @@ export class CommonZodSchema {
       adm1Name: z.string(),
       adm1Pcode: z.string()
     }) satisfies ZodType<Admin1Boundary>
-
-    const Admin2BoundarySchema = z.object({
-      id: number(),
-      '@id': z.string(),
-      adm2Name: z.string(),
-      adm2Pcode: z.string()
-    }) satisfies ZodType<Admin2Boundary>
 
     const Admin3BoundarySchema = z.object({
       id: number(),

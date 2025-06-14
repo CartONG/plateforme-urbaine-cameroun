@@ -13,9 +13,7 @@ export class AdminBoundariesService {
       .then((response) => response.data['hydra:member'])
   }
 
-  static getGeoJsonfromAdminBoundaries(
-    adminBoundaries: Admin1Boundary[] | Admin2Boundary[] | Admin3Boundary[]
-  ) {
+  static getGeoJsonfromAdminBoundaries(adminBoundaries: Admin1Boundary[] | Admin3Boundary[]) {
     const features: { type: string; geometry: any; properties: {} }[] = []
     adminBoundaries.forEach((obj) => {
       const copy: any = { ...obj }

@@ -8,10 +8,6 @@
           <span>{{ $t('adminBoundaries.admin1') }}</span>
         </div>
         <div class="adminBoundariesViewer__legendItem">
-          <div class="adminBoundariesViewer__legendColor" style="border: 2px solid #adc178"></div>
-          <span>{{ $t('adminBoundaries.admin2') }}</span>
-        </div>
-        <div class="adminBoundariesViewer__legendItem">
           <div class="adminBoundariesViewer__legendColor" style="border: 2px solid #fca311"></div>
           <span>{{ $t('adminBoundaries.admin3') }}</span>
         </div>
@@ -21,13 +17,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import Modal from '@/components/global/Modal.vue'
+import type { Actor } from '@/models/interfaces/Actor'
+import type { Project } from '@/models/interfaces/Project'
+import { AdminBoundariesService } from '@/services/adminBoundaries/AdminBoundariesService'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import Modal from '@/components/global/Modal.vue'
-import { AdminBoundariesService } from '@/services/adminBoundaries/AdminBoundariesService'
-import type { Project } from '@/models/interfaces/Project'
-import type { Actor } from '@/models/interfaces/Actor'
+import { onMounted } from 'vue'
 
 const props = defineProps<{
   entity: Actor | Project
@@ -65,7 +61,6 @@ function initMap() {
 function addAdminLayers() {
   const adminLayersConfigs: AdminBoundariesConfig[] = [
     { list: props.entity.admin1List, key: 'admin1', color: '#a98467', nameField: 'adm1Name' },
-    { list: props.entity.admin2List, key: 'admin2', color: '#adc178', nameField: 'adm2Name' },
     { list: props.entity.admin3List, key: 'admin3', color: '#fca311', nameField: 'adm3Name' }
   ]
 

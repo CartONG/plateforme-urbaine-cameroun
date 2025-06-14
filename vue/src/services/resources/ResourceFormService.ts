@@ -94,7 +94,6 @@ export class ResourceFormService {
       format: useField('format'),
       administrativeScopes: useField('administrativeScopes'),
       admin1List: useField('admin1List'),
-      admin2List: useField('admin2List'),
       admin3List: useField('admin3List'),
       geoData: useField('geoData'),
       startAt: useField('startAt'),
