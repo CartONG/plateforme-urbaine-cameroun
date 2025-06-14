@@ -17,7 +17,7 @@ final class Version20250613222052 extends AbstractMigration
         return 'Fix refresh_tokens auto-increment';
     }
 
-     public function up(Schema $schema): void
+    public function up(Schema $schema): void
     {
         $this->addSql('ALTER TABLE refresh_tokens ALTER COLUMN id SET DEFAULT nextval(\'refresh_tokens_id_seq\')');
         $this->addSql('ALTER SEQUENCE refresh_tokens_id_seq OWNED BY refresh_tokens.id');
