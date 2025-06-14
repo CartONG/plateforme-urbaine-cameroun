@@ -486,7 +486,6 @@ class Actor
         return $this;
     }
 
-
     /**
      * @return Collection<int, Admin3Boundary>
      */
