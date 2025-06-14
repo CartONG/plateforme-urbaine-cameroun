@@ -36,6 +36,7 @@
     "atlases": {
       "thematicData": "Données thématiques",
       "predefinedData": "Cartes prédéfinies",
+      "searchData": "Rechercher des données",
       "data": "Donnée | Données",
       "map": "Carte | Cartes",
       "dataNotFetchable": "Cette couche contient des données au format Raster qui ne peuvent être téléchargées.",

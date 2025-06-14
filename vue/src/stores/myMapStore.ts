@@ -54,6 +54,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const activeItemCoords: Ref<LngLat | null> = ref(null)
 
   const atlasMaps: Ref<AtlasMap[]> = ref([])
+  const atlasSearchText: Ref<string> = ref('')
   const activeAtlas: AtlasActive = reactive({
     leftPanel: {
       active: false,
@@ -232,6 +233,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     resourceLayer,
     resourceSubLayers,
     atlasMaps,
+    atlasSearchText,
     activeAtlas,
     initMapLayers,
     updateAtlasLayersVisibility,

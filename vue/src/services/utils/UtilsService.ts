@@ -9,6 +9,11 @@ export const normalizeUrl = (url: string) => {
   return `https://${url}`
 }
 
+export const formatHTMLForSheetView = (rawHTML: string): string => {
+  if (!rawHTML) return ''
+  return rawHTML.replace(/<p><\/p>/g, '<br />')
+}
+
 export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
 }

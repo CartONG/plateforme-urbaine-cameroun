@@ -100,7 +100,6 @@ class Resource
     #[ORM\Column(type: Types::TEXT)]
     #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 500)]
     private ?string $description = null;
 
     #[ORM\Column(enumType: ResourceFormat::class)]

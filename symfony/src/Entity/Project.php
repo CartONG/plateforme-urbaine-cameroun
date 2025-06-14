@@ -124,7 +124,6 @@ class Project
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Length(max: 500)]
     private ?string $description = null;
 
     #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
@@ -191,12 +190,10 @@ class Project
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Length(max: 500)]
     private ?string $deliverables = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
-    #[Assert\Length(max: 500)]
     private ?string $calendar = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]

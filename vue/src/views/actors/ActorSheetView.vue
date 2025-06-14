@@ -126,7 +126,7 @@ import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBou
 import PrintButton from '@/components/global/PrintButton.vue'
 import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
-import { normalizeUrl } from '@/services/utils/UtilsService'
+import { formatHTMLForSheetView, normalizeUrl } from '@/services/utils/UtilsService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useUserStore } from '@/stores/userStore'
@@ -192,9 +192,9 @@ function editActor() {
   actorsStore.setActorEditionMode(actor.value)
 }
 
-const formattedDescription = computed(() => {
-  return actor.value?.description ? actor.value.description.replace(/<p><\/p>/g, '<br />') : ''
-})
+const formattedDescription = computed(() =>
+  formatHTMLForSheetView(actor.value?.description as string)
+)
 </script>
 <style lang="scss">
 @import '@/assets/styles/views/SheetView';
