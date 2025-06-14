@@ -142,7 +142,7 @@ export class AppLayersService {
         }
       })
     }
-    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics as any, true)
+    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics as any)
     myMapStore!.actorSubLayers = LayerService.initSubLayer(actorsThematics as any)
     myMapStore!.resourceSubLayers = LayerService.initSubLayer(resourcesThematics)
   }
@@ -181,7 +181,7 @@ export class AppLayersService {
       case ItemType.ACTOR:
         return MapService.getGeojson(this.filteredActors.value)
       case ItemType.PROJECT:
-        return MapService.getGeojson(this.filteredProjects.value, true)
+        return MapService.getGeojson(this.filteredProjects.value)
       case ItemType.RESOURCE:
         return MapService.getGeojson(this.filteredResources.value)
     }
