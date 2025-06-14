@@ -13,7 +13,7 @@ trait ODDEntity
 {
     #[ORM\Column(type: 'json', enumType: ODD::class, nullable: true)]
     #[Groups([Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, Actor::ACTOR_WRITE, Project::GET_FULL, Project::GET_PARTIAL, Project::WRITE, Resource::GET_FULL, Resource::WRITE])]
-    private array $odds = [];
+    private ?array $odds = [];
 
     public function getOdds(): ?array
     {
