@@ -49,7 +49,7 @@
       </div>
       <ChipList :items="actor.thematics" />
 
-      <div v-if="actor.odds">
+      <div v-if="actor.odds && Array.isArray(project.odds) && project.odds.length > 0"">
         <div class="SheetView__title SheetView__title--divider">
           <span>{{ $t('forms.odds.title') }}</span>
         </div>
