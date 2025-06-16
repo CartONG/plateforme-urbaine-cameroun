@@ -69,6 +69,7 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
         error as string
       )
     }
+    useApplicationStore().isLoading = false
   }
 
   return {

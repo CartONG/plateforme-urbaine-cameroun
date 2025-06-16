@@ -64,10 +64,12 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   }
 
   async function loadProjectBySlug(slug: string | string[]): Promise<void> {
+    applicationStore.isLoading = true
     if (project.value?.slug !== slug && typeof slug === 'string') {
       applicationStore.currentContentPage = ContentPagesList.PROJECT
       project.value = await ProjectService.getBySlug(slug)
     }
+    applicationStore.isLoading = false
   }
 
   async function loadSimilarProjects(): Promise<void> {

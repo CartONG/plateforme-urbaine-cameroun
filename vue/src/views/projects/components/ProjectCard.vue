@@ -2,6 +2,7 @@
   <InfoCard
     class="ProjectCard"
     v-if="project != null"
+    @click="applicationStore.isLoading = true"
     :to="{ name: 'projectPage', params: { slug: project.slug } }"
     :map="map"
   >
@@ -55,6 +56,8 @@ import ShareButton from '@/components/global/ShareButton.vue'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
 import { localizeDate } from '@/services/utils/UtilsService'
+import { useApplicationStore } from '@/stores/applicationStore'
+const applicationStore = useApplicationStore()
 
 defineProps<{
   project: Project | null
