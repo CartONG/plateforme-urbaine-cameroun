@@ -129,6 +129,12 @@
         "thematics": {
           "label": "Thématiques"
         },
+        "odd": {
+          "label": "ODD"
+        },
+        "financing": {
+          "label": "Type de financement"
+        },
         "title": "Filtres"
       },
       "showTheProjects": "Afficher les {count} projets"
