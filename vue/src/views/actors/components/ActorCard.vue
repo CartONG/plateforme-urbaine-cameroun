@@ -1,5 +1,10 @@
 <template>
-  <InfoCard class="ActorCard" :to="actorProfileRoute" v-if="actor">
+  <InfoCard
+    class="ActorCard"
+    :to="actorProfileRoute"
+    v-if="actor"
+    @click="applicationStore.isLoading = true"
+  >
     <template #content>
       <span class="InfoCard__subTitle">{{ actor.acronym }}</span>
       <span class="InfoCard__title">{{ actor.name }}</span>
@@ -33,8 +38,11 @@ import InfoCard from '@/components/global/InfoCard.vue'
 import LikeButton from '@/components/global/LikeButton.vue'
 import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
+import { useApplicationStore } from '@/stores/applicationStore'
 import { computed, type ComputedRef } from 'vue'
 import type { RouteLocationAsRelativeGeneric } from 'vue-router'
+const applicationStore = useApplicationStore()
+
 const props = defineProps<{
   actor: Actor
 }>()
