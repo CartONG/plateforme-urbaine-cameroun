@@ -148,10 +148,13 @@ export class CommonZodSchema {
       maxLabel: z
         .string()
         .max(100, { message: i18n.t('forms.errorMessages.maxlength', { max: 100 }) }),
-      maxDescription: z
-        .string()
-        .max(1000, { message: i18n.t('forms.errorMessages.maxlength', { max: 1000 }) })
-        .optional(),
+      maxDescription: z.preprocess(
+        (val) => (val === '' ? undefined : val),
+        z
+          .string()
+          .max(1000, { message: i18n.t('forms.errorMessages.maxlength', { max: 1000 }) })
+          .optional()
+      ),
       phone: z.string().optional(),
       latString: LatitudeSchema,
       lngString: LongitudeSchema,
@@ -161,11 +164,14 @@ export class CommonZodSchema {
       odds: z.array(z.nativeEnum(ODD), {
         required_error: i18n.t('forms.errorMessages.required')
       }),
-      banoc: z
-        .string()
-        .min(1, { message: i18n.t('forms.errorMessages.minlength', { min: 1 }) })
-        .max(6, { message: i18n.t('forms.errorMessages.maxlength', { max: 6 }) })
-        .optional(),
+      banoc: z.preprocess(
+        (val) => (val === '' ? undefined : val),
+        z
+          .string()
+          .min(1, { message: i18n.t('forms.errorMessages.minlength', { min: 1 }) })
+          .max(6, { message: i18n.t('forms.errorMessages.maxlength', { max: 6 }) })
+          .optional()
+      ),
       banocUrl: z.string().optional()
     }
   }

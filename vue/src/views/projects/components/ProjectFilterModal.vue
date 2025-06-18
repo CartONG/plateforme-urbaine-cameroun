@@ -56,9 +56,9 @@
       </div>
 
       <div class="Modal__block">
-        <label class="Modal__label">{{ $t('projects.popup.filters.thematics.label') }}</label>
+        <label class="Modal__label">{{ $t('projects.popup.filters.financing.label') }}</label>
         <v-chip-group
-          v-model="projectStore.filters.thematics"
+          v-model="projectStore.filters.financingTypes"
           column
           multiple
           class="Modal__chipGroup"
@@ -74,7 +74,7 @@
       </div>
 
       <div class="Modal__block">
-        <label class="Modal__label">{{ $t('projects.popup.filters.beneficiaries.label') }}</label>
+        <label class="Modal__label">{{ $t('projects.popup.filters.odd.label') }}</label>
         <v-chip-group v-model="projectStore.filters.odds" column multiple class="Modal__chipGroup">
           <v-chip v-for="odd in Object.values(ODD)" :key="odd" :value="odd" variant="outlined">{{
             $t(`forms.odds.${odd}`)

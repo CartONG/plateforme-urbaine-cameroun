@@ -7,11 +7,11 @@
       </template>
     </div>
   </div>
-  <div class="SheetView__contentCtn" v-if="project.calendar">
+  <div class="SheetView__contentCtn" v-if="formatedCalendar">
     <SectionBanner :text="$t('projectPage.projectCalendar')" />
     <span v-html="formatedCalendar"></span>
   </div>
-  <div class="SheetView__contentCtn" v-if="project.deliverables">
+  <div class="SheetView__contentCtn" v-if="formatedDeliverable">
     <SectionBanner :text="$t('projectPage.projectDeliverables')" />
     <span v-html="formatedDeliverable"></span>
   </div>
@@ -23,10 +23,14 @@ import Kpi from '@/components/content/Kpi.vue'
 import { KpiKey } from '@/models/enums/app/KpiKey'
 import type { Project } from '@/models/interfaces/Project'
 import { formatHTMLForSheetView } from '@/services/utils/UtilsService'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 const props = defineProps<{
   project: Project
 }>()
+
+onMounted(() => {
+  console.log('ProjectRelatedContent mounted with project:', props.project)
+})
 
 const hasOneNonEmptyKpi = computed(() => kpis.some((kpi) => kpi.count > 0))
 
