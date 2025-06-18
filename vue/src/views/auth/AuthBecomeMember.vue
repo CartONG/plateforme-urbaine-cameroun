@@ -100,9 +100,13 @@ import { I18nT } from 'vue-i18n'
 const { form, handleSubmit } = UserProfileForm.getSignUpForm()
 const userStore = useUserStore()
 
+const debouncedSignUp = debounce((values: any) => {
+  userStore.signUp(values)
+}, 500)
+
 const onSubmit = handleSubmit(
   (values) => {
-    debounce(() => userStore.signUp(values), 500)()
+    debouncedSignUp(values)
   },
   (errors) => {
     console.error('Form validation failed:', errors)
