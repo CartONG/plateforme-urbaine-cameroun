@@ -26,7 +26,6 @@ export class ResourceService {
 
   static async patch(resource: Resource): Promise<Resource> {
     resource = await handleFileUpload(resource)
-    console.log(resource)
     const updatedResource = await apiClient
       .patch('/api/resources/' + resource.id, transformSymfonyRelationToIRIs(resource))
       .then((response) => response.data)
