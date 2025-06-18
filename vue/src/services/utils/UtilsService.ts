@@ -11,6 +11,7 @@ export const normalizeUrl = (url: string) => {
 
 export const formatHTMLForSheetView = (rawHTML: string): string => {
   if (!rawHTML) return ''
+  if (rawHTML === '<p></p>') return ''
   return rawHTML.replace(/<p><\/p>/g, '<br />')
 }
 
