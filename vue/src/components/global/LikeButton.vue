@@ -5,7 +5,7 @@
       density="comfortable"
       :icon="likeId > 0 ? '$heart' : '$heartOutline'"
       color="main-blue"
-      @click.prevent="switchLike()"
+      @click.stop.prevent="switchLike()"
     >
     </v-btn>
     <span class="LikeButton__count" v-if="count > 0">{{ count }}</span>
