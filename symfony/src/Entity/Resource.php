@@ -2,36 +2,37 @@
 
 namespace App\Entity;
 
+use App\Enum\ResourceType;
+use App\Enum\ResourceFormat;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Model\Enums\UserRoles;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Entity\File\FileObject;
+use App\Entity\Trait\ODDEntity;
+use Symfony\Component\Uid\Uuid;
+use ApiPlatform\Metadata\Delete;
+use App\Entity\File\MediaObject;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Trait\BanocEntity;
+use App\Enum\AdministrativeScope;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\File\FileObject;
-use App\Entity\File\MediaObject;
-use App\Entity\Trait\BanocEntity;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use App\Entity\Trait\LocalizableEntity;
-use App\Entity\Trait\ODDEntity;
 use App\Entity\Trait\ThematizedEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Enum\ResourceFormat;
-use App\Enum\ResourceType;
-use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
+use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Trait\LocalizableEntity;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Trait\ValidateableEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -84,6 +85,13 @@ class Resource
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
+
+    public function __construct()
+    {
+        $this->administrativeScopes = [];
+        $this->admin1List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -143,6 +151,11 @@ class Resource
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $otherThematic = null;
+
+
+    #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private array $administrativeScopes = [];
     /**
      * @var Collection<int, Admin1Boundary>
      */
@@ -156,12 +169,6 @@ class Resource
     #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private Collection $admin3List;
-
-    public function __construct()
-    {
-        $this->admin1List = new ArrayCollection();
-        $this->admin3List = new ArrayCollection();
-    }
 
     public function getId(): ?string
     {
@@ -309,6 +316,36 @@ class Resource
     public function setOtherType(?string $otherType): static
     {
         $this->otherType = $otherType;
+
+        return $this;
+    }
+
+    public function getAdministrativeScopes(): ?array
+    {
+        return $this->administrativeScopes;
+    }
+
+    public function setAdministrativeScopes(?array $administrativeScopes): self
+    {
+        $this->administrativeScopes = $administrativeScopes;
+
+        return $this;
+    }
+
+    public function addAdministrativeScope(AdministrativeScope $scope): self
+    {
+        if (!in_array($scope, $this->administrativeScopes ?? [], true)) {
+            $this->administrativeScopes[] = $scope;
+        }
+
+        return $this;
+    }
+
+    public function removeAdministrativeScope(AdministrativeScope $scope): self
+    {
+        if (($key = array_search($scope, $this->administrativeScopes ?? [], true)) !== false) {
+            unset($this->administrativeScopes[$key]);
+        }
 
         return $this;
     }
