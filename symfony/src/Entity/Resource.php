@@ -36,18 +36,18 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationEnabled: false,
     operations: [
         new GetCollection(
-            normalizationContext: ['groups' => [self::GET_FULL]],
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]],
             parameters: [
                 'order[:property]' => new QueryParameter(filter: 'offer.order_filter'),
             ]
         ),
         new Get(
-            normalizationContext: ['groups' => [self::GET_FULL]],
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]],
         ),
         new GetCollection(
             uriTemplate: '/resources/events/nearest',
             provider: NearestEventProvider::class,
-            normalizationContext: ['groups' => [self::GET_FULL]]
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]]
         ),
     ]
 )]
@@ -65,7 +65,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN") or object.getCreatedBy() == user',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Resource

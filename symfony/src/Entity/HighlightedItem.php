@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [
         new GetCollection(
             uriTemplate: '/highlighted_items/main',
-            normalizationContext: ['groups' => [HighlightedItem::GET_FULL]],
+            normalizationContext: ['groups' => [HighlightedItem::GET_FULL, MediaObject::READ]],
             provider: MainHighlightedItemsProvider::class,
         ),
     ]
@@ -34,7 +34,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     security: "is_granted('ROLE_ADMIN')",
     operations: [
         new GetCollection(
-            normalizationContext: ['groups' => [HighlightedItem::GET_FULL]],
+            normalizationContext: ['groups' => [HighlightedItem::GET_FULL, MediaObject::READ]],
             provider: HighlightedItemProvider::class,
         ),
         new Post(
