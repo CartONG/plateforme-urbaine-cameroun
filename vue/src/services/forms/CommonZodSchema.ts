@@ -105,7 +105,7 @@ export class CommonZodSchema {
       }),
       qgisProject: this.createFileSchema({
         allowedTypes: ['application/zip', 'application/x-zip-compressed'],
-        maxSize: 20000000
+        maxSize: 50000000
       }),
       website: z
         .string()
