@@ -9,24 +9,38 @@
     <div class="ListView__filters">
       <ListFilterBox>
         <ListFilterSelect
-          v-model="selectedExpertise"
-          :items="expertisesItems"
-          :label="$t('actors.expertise')"
-        />
-        <ListFilterSelect
           v-model="selectedThematic"
-          :items="thematicsItems"
+          :items="Object.values(Thematic)"
           :label="$t('actors.thematic')"
         />
-        <ListFilterSelect
-          v-model="selectedAdminScope"
-          :items="Object.values(AdministrativeScope)"
-          :label="$t('actors.adminScope')"
+        <v-select
+          class="ListFilterSelect"
+          v-model="selectedODD"
+          density="compact"
+          variant="outlined"
+          :label="$t('forms.odds.title')"
+          :items="Object.values(ODD)"
+          :item-title="(item) => $t('forms.odds.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
         <ListFilterSelect
           v-model="selectedCategory"
           :items="categoryItems"
           :label="$t('actors.category')"
+        />
+        <v-select
+          class="ListFilterSelect"
+          v-model="selectedAdminScope"
+          density="compact"
+          variant="outlined"
+          :label="$t('actors.adminScope')"
+          :items="Object.values(AdministrativeScope)"
+          :item-title="(item) => $t('actors.scope.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
       </ListFilterBox>
 
@@ -68,12 +82,11 @@
 <script setup lang="ts">
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { ActorsCategories } from '@/models/enums/contents/actors/ActorsCategories'
+import { ODD } from '@/models/enums/contents/ODD'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
-import type { ActorExpertise } from '@/models/interfaces/ActorExpertise'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
 import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
@@ -86,23 +99,18 @@ import { computed, onBeforeMount, ref, type Ref } from 'vue'
 
 const actorsStore = useActorsStore()
 const userStore = useUserStore()
-const thematicsStore = useThematicStore()
 const applicationStore = useApplicationStore()
 
 onBeforeMount(async () => {
   applicationStore.isLoading = true
   await actorsStore.getActors()
-  await actorsStore.getActorsSelectListContent()
-  await thematicsStore.getAll()
   applicationStore.isLoading = false
 })
 
 const searchQuery = ref('')
-const expertisesItems = actorsStore.actorsExpertises
-const selectedExpertise: Ref<string[] | null> = ref(null)
-const thematicsItems = computed(() => thematicsStore.thematics)
 const selectedThematic: Ref<string[] | null> = ref(null)
-const selectedAdminScope: Ref<string[] | null> = ref(null)
+const selectedODD: Ref<ODD[] | null> = ref(null)
+const selectedAdminScope: Ref<AdministrativeScope[] | null> = ref(null)
 const categoryItems = Object.values(ActorsCategories)
 const selectedCategory: Ref<ActorsCategories[] | null> = ref(null)
 
@@ -113,18 +121,17 @@ const filteredActors = computed(() => {
     filteredActors = searchActors(filteredActors)
   }
 
-  if (selectedExpertise.value && selectedExpertise.value.length > 0) {
-    filteredActors = filteredActors.filter((actor: Actor) => {
-      return actor.expertises.some((exp) =>
-        (selectedExpertise.value as string[]).includes(exp['@id'])
-      )
-    })
-  }
   if (selectedThematic.value && selectedThematic.value.length > 0) {
     filteredActors = filteredActors.filter((actor: Actor) => {
       return actor.thematics.some((thematic) =>
-        (selectedThematic.value as string[]).includes(thematic['@id'])
+        (selectedThematic.value as string[]).includes(thematic)
       )
+    })
+  }
+
+  if (selectedODD.value && selectedODD.value.length > 0) {
+    filteredActors = filteredActors.filter((actor: Actor) => {
+      return actor.odds.some((odd) => (selectedODD.value as ODD[]).includes(odd))
     })
   }
   if (selectedAdminScope.value && selectedAdminScope.value.length > 0) {
@@ -144,7 +151,7 @@ const filteredActors = computed(() => {
 
 function resetFilters() {
   searchQuery.value = ''
-  selectedExpertise.value = null
+  selectedODD.value = null
   selectedThematic.value = null
   selectedAdminScope.value = null
   selectedCategory.value = null
@@ -176,12 +183,6 @@ function searchActors(actors: Actor[]) {
       actor.name?.toLowerCase().indexOf(searchText) > -1 ||
       actor.acronym?.toLowerCase().indexOf(searchText) > -1 ||
       actor.category.toLowerCase().indexOf(searchText) > -1 ||
-      actor.expertises?.some((exp: ActorExpertise) =>
-        exp.name.toLowerCase().includes(searchText)
-      ) ||
-      actor.thematics.some((thematic: Thematic) =>
-        thematic.name.toLowerCase().includes(searchText)
-      ) ||
       actor.administrativeScopes.some((scope: AdministrativeScope) =>
         scope.toLowerCase().includes(searchText)
       ) ||

@@ -50,6 +50,7 @@ import {
   mdiContentCopy,
   mdiCrosshairs,
   mdiCrosshairsGps,
+  mdiCrosshairsQuestion,
   mdiDatabaseArrowDown,
   mdiDatabaseSearch,
   mdiDeleteOffOutline,
@@ -106,6 +107,7 @@ export default createVuetify({
     aliases: {
       ...aliases,
       formatItalic: mdiFormatItalic,
+      crosshairsQuestion: mdiCrosshairsQuestion,
       phone: mdiPhone,
       folder: mdiFolder,
       commentText: mdiCommentText,

@@ -162,19 +162,6 @@
               return-object
             ></v-autocomplete>
           </div>
-          <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin2">
-            <label class="Form__label">{{ $t('actors.form.admin2') }}</label>
-            <v-autocomplete
-              multiple
-              density="compact"
-              :items="adminBoundariesStore.admin2Boundaries"
-              item-title="adm2Name"
-              item-value="@id"
-              variant="outlined"
-              v-model="form.admin2List.value.value as Admin2Boundary[]"
-              return-object
-            ></v-autocomplete>
-          </div>
           <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin3">
             <label class="Form__label">{{ $t('actors.form.admin3') }}</label>
             <v-autocomplete
@@ -190,6 +177,35 @@
           </div>
           <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         </template>
+
+        <label class="Form__label">{{ $t('forms.banoc.title') }}</label>
+        <div class="d-flex">
+          <div class="Form__fieldCtn flex-shrink-0">
+            <label class="Form__label">{{ $t('forms.banoc.code') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banoc.value.value"
+                :error-messages="form.banoc.errorMessage.value"
+                @blur="form.banoc.handleChange"
+              />
+            </div>
+          </div>
+          <div class="Form__fieldCtn ml-3 flex-grow-1">
+            <label class="Form__label">{{ $t('forms.banoc.url') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banocUrl.value.value"
+                :error-messages="form.banocUrl.errorMessage.value"
+                @blur="form.banocUrl.handleChange"
+              />
+            </div>
+          </div>
+        </div>
+
         <template v-if="showLocation || showAdminScope">
           <FormSectionTitle v-if="showLocation" :text="$t('resources.form.section.location')" />
           <label class="Form__label" v-if="showAdminScope">{{
@@ -210,10 +226,10 @@
           variant="outlined"
           multiple
           v-model="form.thematics.value.value as Thematic[]"
-          :items="thematics"
+          :items="Object.values(Thematic)"
+          :item-title="(item) => $t('forms.thematics.' + item)"
+          :item-value="(item) => item"
           :placeholder="$t('resources.form.section.thematics')"
-          item-title="name"
-          item-value="@id"
           :error-messages="form.thematics.errorMessage.value"
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
@@ -229,6 +245,22 @@
             :placeholder="$t('resources.form.fields.otherThematics.placeholder')"
             :error-messages="form.otherThematic.errorMessage.value"
             @blur="form.otherThematic.handleChange"
+          />
+        </div>
+
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
           />
         </div>
       </v-form>
@@ -255,17 +287,14 @@ import FormSectionTitle from '@/components/text-elements/FormSectionTitle.vue'
 import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { FormType } from '@/models/enums/app/FormType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
-import type {
-  Admin1Boundary,
-  Admin2Boundary,
-  Admin3Boundary
-} from '@/models/interfaces/AdminBoundaries'
+import { Thematic } from '@/models/enums/contents/Thematic'
+import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { FileObject } from '@/models/interfaces/object/FileObject'
 import { type Resource } from '@/models/interfaces/Resource'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -273,7 +302,6 @@ import { addNotification } from '@/services/notifications/NotificationService'
 import { ResourceFormService } from '@/services/resources/ResourceFormService'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import type { Ref } from 'vue'
@@ -281,7 +309,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const resourceStore = useResourceStore()
-const thematicsStore = useThematicStore()
 const userStore = useUserStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 
@@ -294,12 +321,7 @@ const props = defineProps<{
 }>()
 
 onMounted(async () => {
-  await Promise.all([
-    thematicsStore.getAll(),
-    adminBoundariesStore.getAdmin1(),
-    adminBoundariesStore.getAdmin2(),
-    adminBoundariesStore.getAdmin3()
-  ])
+  await Promise.all([adminBoundariesStore.getAdmin1(), adminBoundariesStore.getAdmin3()])
   existingImagePreview.value = props.resource?.previewImage ? [props.resource.previewImage] : []
 })
 
@@ -325,9 +347,6 @@ const activeAdminLevels = computed(() => {
       admin1: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.REGIONAL
       ),
-      admin2: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
-        AdministrativeScope.STATE
-      ),
       admin3: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.CITY
       )
@@ -346,7 +365,7 @@ const otherRessourceTypeIsSelected = computed(() => {
 })
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })
@@ -369,7 +388,6 @@ const handleDateChange = () => {
 }
 
 const emit = defineEmits(['submitted', 'close'])
-const thematics = computed(() => thematicsStore.thematics)
 watch(
   () => form.type.value.value,
   () => {

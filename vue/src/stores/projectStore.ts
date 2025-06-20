@@ -7,9 +7,11 @@ import { ItemType } from '@/models/enums/app/ItemType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { StoresList } from '@/models/enums/app/StoresList'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import type { ODD } from '@/models/enums/contents/ODD'
+import type { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import type { Status } from '@/models/enums/contents/Status'
+import type { Thematic } from '@/models/enums/contents/Thematic'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { ProjectService } from '@/services/projects/ProjectService'
@@ -38,16 +40,20 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
 
   const filters: Reactive<{
     searchValue: string
-    thematics: Thematic['id'][]
+    thematics: Thematic[]
     statuses: Status[]
     administrativeScopes: AdministrativeScope[]
+    odds: ODD[]
     beneficiaryTypes: BeneficiaryType[]
+    financingTypes: ProjectFinancingType[]
   }> = reactive({
     searchValue: '',
     thematics: [],
     statuses: [],
     administrativeScopes: [],
-    beneficiaryTypes: []
+    odds: [],
+    beneficiaryTypes: [],
+    financingTypes: []
   })
 
   async function getAll(): Promise<void> {
@@ -58,10 +64,12 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   }
 
   async function loadProjectBySlug(slug: string | string[]): Promise<void> {
+    applicationStore.isLoading = true
     if (project.value?.slug !== slug && typeof slug === 'string') {
       applicationStore.currentContentPage = ContentPagesList.PROJECT
       project.value = await ProjectService.getBySlug(slug)
     }
+    applicationStore.isLoading = false
   }
 
   async function loadSimilarProjects(): Promise<void> {
@@ -104,7 +112,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   type filteringTrigger = 'filters' | 'map'
   const filterProjects = (from: filteringTrigger = 'filters') => {
     const projectsList = projects.value.filter((project) => {
-      const projectThematicIds = project.thematics.map((projectThematic) => projectThematic.id)
+      const projectThematicIds = project.thematics.map((projectThematic) => projectThematic)
 
       return (
         (filters.searchValue === '' ||
@@ -118,6 +126,20 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
         (filters.administrativeScopes.length === 0 ||
           filters.administrativeScopes.some((interventionZone) =>
             project.administrativeScopes.some((scope) => scope === interventionZone)
+          )) &&
+        (filters.odds.length === 0 ||
+          filters.odds.some((odd) => project.odds.some((projectOdd) => projectOdd === odd))) &&
+        (filters.beneficiaryTypes.length === 0 ||
+          filters.beneficiaryTypes.some((beneficiaryType) =>
+            project.beneficiaryTypes.some(
+              (projectBeneficiaryType) => projectBeneficiaryType === beneficiaryType
+            )
+          )) &&
+        (filters.financingTypes.length === 0 ||
+          filters.financingTypes.some((financingType) =>
+            project.financingTypes.some(
+              (projectFinancingType) => projectFinancingType === financingType
+            )
           ))
       )
     })
@@ -151,7 +173,7 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           project.administrativeScopes,
           i18n.t(`projects.status.${project.status}`),
           project.focalPointName,
-          ...project.thematics.map((thematic) => thematic.name),
+          ...project.thematics,
           ...project.beneficiaryTypes.map((beneficiaryType) =>
             i18n.t(`beneficiaryType.${beneficiaryType}`)
           )
@@ -244,7 +266,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.thematics = []
     filters.statuses = []
     filters.administrativeScopes = []
+    filters.odds = []
     filters.beneficiaryTypes = []
+    filters.financingTypes = []
   }
 
   return {

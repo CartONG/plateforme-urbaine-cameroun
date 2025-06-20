@@ -38,7 +38,7 @@
       />
       <div class="SheetView__contentCtn my-6">
         <div class="SheetView__title SheetView__title--divider">{{ $t('projectPage.about') }}</div>
-        <span v-html="project.description"></span>
+        <span v-html="formattedDescription"></span>
       </div>
       <ProjectRelatedContent :project="project" />
     </div>
@@ -56,11 +56,56 @@
         />
       </div>
       <ChipList :items="project.thematics" />
-      <div class="SheetView__title SheetView__title--divider mt-lg-12">
-        <span>{{ $t('actorPage.adminScope') }}</span>
+
+      <div v-if="project.odds && Array.isArray(project.odds) && project.odds.length > 0">
+        <div class="SheetView__title SheetView__title--divider">
+          <span>{{ $t('forms.odds.title') }}</span>
+        </div>
+        <div>
+          <template
+            v-for="odd in project.odds?.sort((a, b) => parseInt(a) - parseInt(b))"
+            :key="odd"
+          >
+            <img
+              class="SheetView__ODD mr-2"
+              :src="`/img/odd/F-WEB-Goal-${odd}.webp`"
+              :alt="odd"
+              v-if="parseInt(odd) >= 1 && parseInt(odd) <= 17"
+            />
+            <span v-else>{{ $t('forms.odds.' + odd) }}</span>
+          </template>
+        </div>
       </div>
-      <span>{{ project.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ') }}</span>
-      <AdminBoundariesButton :entity="project" />
+
+      <div>
+        <div class="SheetView__title SheetView__title--divider">
+          <span>{{ $t('actorPage.adminScope') }}</span>
+        </div>
+        <span>{{
+          project.administrativeScopes.map((x) => $t('actors.scope.' + x)).join(', ')
+        }}</span>
+        <AdminBoundariesButton :entity="project" />
+      </div>
+
+      <div>
+        <div
+          class="SheetView__title SheetView__title--divider"
+          v-if="project.banoc || project.banocUrl"
+        >
+          <span>{{ $t('forms.banoc.title') }}</span>
+        </div>
+        <div class="d-flex flex-column">
+          <p v-if="project.banoc">
+            <span class="font-weight-bold">{{ $t('forms.banoc.code') + ':' }}</span>
+            {{ project.banoc }}
+          </p>
+          <p v-if="project.banocUrl">
+            <span class="font-weight-bold">{{ $t('forms.banoc.url') + ':' }}</span>
+            <a :href="normalizeUrl(project.banocUrl)" target="_blank">{{ project.banocUrl }}</a>
+          </p>
+        </div>
+      </div>
+
       <div class="SheetView__infoCard">
         <div class="SheetView__infoCardBlock">
           <h5 class="SheetView__title">{{ $t('projectPage.projectOwner') }}</h5>
@@ -114,6 +159,7 @@ import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
 import router from '@/router'
+import { formatHTMLForSheetView, normalizeUrl } from '@/services/utils/UtilsService'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
@@ -190,6 +236,10 @@ const isEditable = computed(() => {
 const editProject = () => {
   isFormShown.value = true
 }
+
+const formattedDescription = computed(() =>
+  formatHTMLForSheetView(project.value?.description as string)
+)
 </script>
 
 <style lang="scss">

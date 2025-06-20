@@ -69,7 +69,7 @@ class QgisProject
     #[Vich\UploadableField(mapping: 'qgis_project', fileNameProperty: 'filePath')]
     #[Assert\NotNull]
     #[Assert\File(
-        maxSize: '30M',
+        maxSize: '50M',
         extensions: ['zip'],
         extensionsMessage: 'Please upload a valid file (zip)',
     )]

@@ -24,7 +24,6 @@ export class ResourceFormService {
         otherType: z.string().optional(),
         administrativeScopes: z.array(z.nativeEnum(AdministrativeScope)).optional(),
         admin1List: zodModels.admin1Boundaries.optional(),
-        admin2List: zodModels.admin2Boundaries.optional(),
         admin3List: zodModels.admin3Boundaries.optional(),
         geoData: zodModels.geoDataNullable.optional(),
         startAt: z.coerce.date().nullable().optional(),
@@ -37,8 +36,11 @@ export class ResourceFormService {
         author: z
           .string({ required_error: i18n.t('forms.errorMessages.required') })
           .min(1, { message: i18n.t('forms.errorMessages.required') }),
-        thematics: zodModels.symfonyRelations,
-        otherThematic: z.string().optional()
+        thematics: zodModels.thematics,
+        otherThematic: z.string().optional(),
+        odds: zodModels.odds,
+        banoc: zodModels.banoc,
+        banocUrl: zodModels.banocUrl
       })
       .refine((data) => data.type !== ResourceType.EVENTS || Boolean(data.startAt), {
         message: i18n.t('forms.errorMessages.required'),
@@ -92,7 +94,6 @@ export class ResourceFormService {
       format: useField('format'),
       administrativeScopes: useField('administrativeScopes'),
       admin1List: useField('admin1List'),
-      admin2List: useField('admin2List'),
       admin3List: useField('admin3List'),
       geoData: useField('geoData'),
       startAt: useField('startAt'),
@@ -100,7 +101,10 @@ export class ResourceFormService {
       author: useField('author'),
       thematics: useField('thematics'),
       otherThematic: useField('otherThematic'),
-      link: useField('link')
+      odds: useField('odds'),
+      link: useField('link'),
+      banoc: useField('banoc'),
+      banocUrl: useField('banocUrl')
     }
 
     return { form, errors, handleSubmit, isSubmitting }

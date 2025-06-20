@@ -9,20 +9,22 @@
   </div>
 </template>
 <script setup lang="ts">
+import { LayerType } from '@/models/enums/geo/LayerType'
+import { AppLayersService } from '@/services/map/AppLayersService'
+import MapService from '@/services/map/MapService'
+import { useMyMapStore } from '@/stores/myMapStore'
 import MyMap from '@/views/map/components/MyMap.vue'
 import MyMapHeader from '@/views/map/components/MyMapHeader.vue'
 import MyMapLeftSideBar from '@/views/map/components/MyMapLeftSideBar.vue'
 import MyMapRightSideBar from '@/views/map/components/MyMapRightSideBar.vue'
-import { useMyMapStore } from '@/stores/myMapStore'
 import { computed, onMounted } from 'vue'
-import { LayerType } from '@/models/enums/geo/LayerType'
 import { useRoute } from 'vue-router'
-import { AppLayersService } from '@/services/map/AppLayersService'
-import MapService from '@/services/map/MapService'
 
 const myMapStore = useMyMapStore()
+
 const map = computed(() => myMapStore.myMap?.map)
 const route = useRoute()
+
 onMounted(() => {
   if (route.query.mapState) {
     myMapStore.serializedMapState = route.query.mapState as string

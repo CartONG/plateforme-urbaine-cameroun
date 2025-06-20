@@ -89,19 +89,24 @@
 </template>
 
 <script setup lang="ts">
-import AuthDialog from '@/views/auth/AuthDialog.vue'
 import Form from '@/components/forms/Form.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
-import { I18nT } from 'vue-i18n'
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
+import { debounce } from '@/services/utils/UtilsService'
 import { useUserStore } from '@/stores/userStore'
+import AuthDialog from '@/views/auth/AuthDialog.vue'
+import { I18nT } from 'vue-i18n'
 
 const { form, handleSubmit } = UserProfileForm.getSignUpForm()
 const userStore = useUserStore()
 
+const debouncedSignUp = debounce((values: any) => {
+  userStore.signUp(values)
+}, 500)
+
 const onSubmit = handleSubmit(
   (values) => {
-    userStore.signUp(values)
+    debouncedSignUp(values)
   },
   (errors) => {
     console.error('Form validation failed:', errors)

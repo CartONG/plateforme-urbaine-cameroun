@@ -2,33 +2,37 @@
 
 namespace App\Entity;
 
+use App\Enum\ResourceType;
+use App\Enum\ResourceFormat;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use App\Model\Enums\UserRoles;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use App\Entity\File\FileObject;
+use App\Entity\Trait\ODDEntity;
+use Symfony\Component\Uid\Uuid;
+use ApiPlatform\Metadata\Delete;
+use App\Entity\File\MediaObject;
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Trait\BanocEntity;
+use App\Enum\AdministrativeScope;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\File\FileObject;
-use App\Entity\File\MediaObject;
 use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\CreatorMessageEntity;
-use App\Entity\Trait\LocalizableEntity;
-use App\Entity\Trait\TimestampableEntity;
-use App\Entity\Trait\ValidateableEntity;
-use App\Enum\ResourceFormat;
-use App\Enum\ResourceType;
-use App\Model\Enums\UserRoles;
+use App\Entity\Trait\ThematizedEntity;
 use App\Repository\ResourceRepository;
+use ApiPlatform\Metadata\GetCollection;
+use App\Entity\Trait\LocalizableEntity;
+use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\Trait\ValidateableEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\CreatorMessageEntity;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -65,7 +69,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN") or object.getCreatedBy() == user',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Resource
@@ -75,9 +79,19 @@ class Resource
     use ValidateableEntity;
     use LocalizableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const GET_FULL = 'resource:get:full';
     public const WRITE = 'resource:write';
+
+    public function __construct()
+    {
+        $this->administrativeScopes = [];
+        $this->admin1List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -94,19 +108,11 @@ class Resource
     #[ORM\Column(type: Types::TEXT)]
     #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 500)]
     private ?string $description = null;
 
     #[ORM\Column(enumType: ResourceFormat::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?ResourceFormat $format = null;
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'resources')]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
@@ -145,6 +151,11 @@ class Resource
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $otherThematic = null;
+
+
+    #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private array $administrativeScopes = [];
     /**
      * @var Collection<int, Admin1Boundary>
      */
@@ -153,26 +164,11 @@ class Resource
     private Collection $admin1List;
 
     /**
-     * @var Collection<int, Admin2Boundary>
-     */
-    #[ORM\ManyToMany(targetEntity: Admin2Boundary::class)]
-    #[Groups([self::GET_FULL, self::WRITE])]
-    private Collection $admin2List;
-
-    /**
      * @var Collection<int, Admin3Boundary>
      */
     #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private Collection $admin3List;
-
-    public function __construct()
-    {
-        $this->thematics = new ArrayCollection();
-        $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
-        $this->admin3List = new ArrayCollection();
-    }
 
     public function getId(): ?string
     {
@@ -235,30 +231,6 @@ class Resource
     public function setLink(?string $link): static
     {
         $this->link = $link;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }
@@ -348,6 +320,36 @@ class Resource
         return $this;
     }
 
+    public function getAdministrativeScopes(): ?array
+    {
+        return $this->administrativeScopes;
+    }
+
+    public function setAdministrativeScopes(?array $administrativeScopes): self
+    {
+        $this->administrativeScopes = $administrativeScopes;
+
+        return $this;
+    }
+
+    public function addAdministrativeScope(AdministrativeScope $scope): self
+    {
+        if (!in_array($scope, $this->administrativeScopes ?? [], true)) {
+            $this->administrativeScopes[] = $scope;
+        }
+
+        return $this;
+    }
+
+    public function removeAdministrativeScope(AdministrativeScope $scope): self
+    {
+        if (($key = array_search($scope, $this->administrativeScopes ?? [], true)) !== false) {
+            unset($this->administrativeScopes[$key]);
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Admin1Boundary>
      */
@@ -380,30 +382,6 @@ class Resource
     public function setOtherThematic(?string $otherThematic): static
     {
         $this->otherThematic = $otherThematic;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Admin2Boundary>
-     */
-    public function getAdmin2List(): Collection
-    {
-        return $this->admin2List;
-    }
-
-    public function addAdmin2List(Admin2Boundary $admin2List): static
-    {
-        if (!$this->admin2List->contains($admin2List)) {
-            $this->admin2List->add($admin2List);
-        }
-
-        return $this;
-    }
-
-    public function removeAdmin2List(Admin2Boundary $admin2List): static
-    {
-        $this->admin2List->removeElement($admin2List);
 
         return $this;
     }

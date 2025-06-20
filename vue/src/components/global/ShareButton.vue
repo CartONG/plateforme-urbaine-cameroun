@@ -1,5 +1,5 @@
 <template>
-  <v-btn variant="text" density="comfortable" icon="" color="main-blue" @click.prevent>
+  <v-btn variant="text" density="comfortable" icon="" color="main-blue" @click.stop.prevent>
     <v-icon icon="$shareVariant"></v-icon>
     <ShareMenu :url="url" location="right" :body="body" />
   </v-btn>

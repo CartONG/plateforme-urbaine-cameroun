@@ -129,6 +129,12 @@
         "thematics": {
           "label": "Thématiques"
         },
+        "odd": {
+          "label": "ODD"
+        },
+        "financing": {
+          "label": "Type de financement"
+        },
         "title": "Filtres"
       },
       "showTheProjects": "Afficher les {count} projets"
@@ -139,10 +145,7 @@
       "city": "Communale",
       "international": "Internationale",
       "national": "Nationale",
-      "regional": "Régionale",
-      "state": "Départementale",
-      "neighborhood": "Quartier",
-      "borough": "Arrondissement"
+      "regional": "Régionale"
     },
     "status": {
       "finalized": "Finalisé",

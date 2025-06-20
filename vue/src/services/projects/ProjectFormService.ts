@@ -16,9 +16,9 @@ export class ProjectFormService {
     const projectSchema: z.ZodType<Partial<Project>> = z
       .object({
         name: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
-        description: zodModels.description,
-        calendar: zodModels.maxDescription,
-        deliverables: zodModels.maxDescription,
+        description: zodModels.descriptionRequired,
+        calendar: zodModels.description,
+        deliverables: zodModels.description,
         focalPointName: z.string().min(1, { message: i18n.t('forms.errorMessages.required') }),
         focalPointPosition: zodModels.maxLabel.optional(),
         focalPointEmail: zodModels.email,
@@ -26,7 +26,6 @@ export class ProjectFormService {
           message: i18n.t('forms.errorMessages.required')
         }),
         admin1List: zodModels.admin1Boundaries.optional(),
-        admin2List: zodModels.admin2Boundaries.optional(),
         admin3List: zodModels.admin3Boundaries.optional(),
         focalPointTel: zodModels.phone,
         geoData: zodModels.geoDataNullable.optional(),
@@ -39,13 +38,16 @@ export class ProjectFormService {
         otherFinancingType: z.string().optional(),
         actorsInCharge: z.array(zodModels.symfonyRelation).optional(),
         otherActorInCharge: z.string().optional(),
-        thematics: zodModels.symfonyRelations,
+        thematics: zodModels.thematics,
         otherThematic: z.string().optional(),
+        odds: zodModels.odds,
         beneficiaryTypes: z.array(z.nativeEnum(BeneficiaryType), {
           required_error: i18n.t('forms.errorMessages.required')
         }),
         otherBeneficiary: z.string().optional(),
-        website: zodModels.website
+        website: zodModels.website,
+        banoc: zodModels.banoc,
+        banocUrl: zodModels.banocUrl
       })
       .refine(
         (data) => {
@@ -88,7 +90,10 @@ export class ProjectFormService {
       status: undefined,
       geoData: undefined,
       thematics: undefined,
-      website: ''
+      odds: undefined,
+      website: '',
+      banoc: undefined,
+      banocUrl: undefined
     }
 
     const { errors, handleSubmit, isSubmitting } = useForm<Partial<Project | ProjectSubmission>>({
@@ -110,7 +115,6 @@ export class ProjectFormService {
       otherFinancingType: useField('otherFinancingType'),
       administrativeScopes: useField('administrativeScopes'),
       admin1List: useField('admin1List'),
-      admin2List: useField('admin2List'),
       admin3List: useField('admin3List'),
       focalPointName: useField('focalPointName'),
       focalPointPosition: useField('focalPointPosition'),
@@ -124,7 +128,10 @@ export class ProjectFormService {
       geoData: useField('geoData'),
       thematics: useField('thematics'),
       otherThematic: useField('otherThematic'),
-      website: useField('website')
+      odds: useField('odds'),
+      website: useField('website'),
+      banoc: useField('banoc'),
+      banocUrl: useField('banocUrl')
     }
 
     return { form, errors, handleSubmit, isSubmitting }

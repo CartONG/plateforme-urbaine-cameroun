@@ -16,19 +16,17 @@ export class ActorsFormService {
         .string({ required_error: i18n.t('forms.errorMessages.required') })
         .min(3, { message: i18n.t('forms.errorMessages.minlength', { min: 3 }) }),
       acronym: z.string().optional(),
+      description: zodModels.descriptionRequired,
       category: z.string({ required_error: i18n.t('forms.errorMessages.required') }),
       otherCategory: z.string().optional(),
-      expertises: zodModels.symfonyRelations,
-      otherExpertise: z.string().optional(),
-      thematics: zodModels.symfonyRelations,
+      thematics: zodModels.thematics,
       otherThematic: z.string().optional(),
+      odds: zodModels.odds,
       administrativeScopes: z.array(z.nativeEnum(AdministrativeScope), {
         required_error: i18n.t('forms.errorMessages.required')
       }),
       admin1List: zodModels.admin1Boundaries.optional(),
-      admin2List: zodModels.admin2Boundaries.optional(),
       admin3List: zodModels.admin3Boundaries.optional(),
-      description: zodModels.description,
 
       ///////// Contact \\\\\\\\\
       officeName: z.string().optional(),
@@ -38,7 +36,9 @@ export class ActorsFormService {
       contactPosition: z.string().optional(),
       website: zodModels.website,
       email: zodModels.email,
-      phone: zodModels.phone
+      phone: zodModels.phone,
+      banoc: zodModels.banoc,
+      banocUrl: zodModels.banocUrl
     })
     const { errors, handleSubmit, isSubmitting } = useForm<Actor>({
       initialValues: actorToEdit,
@@ -49,13 +49,11 @@ export class ActorsFormService {
       acronym: useField('acronym', '', { validateOnValueUpdate: false }),
       category: useField('category', '', { validateOnValueUpdate: false }),
       otherCategory: useField('otherCategory', '', { validateOnValueUpdate: false }),
-      expertises: useField('expertises', '', { validateOnValueUpdate: false }),
-      otherExpertise: useField('otherExpertise', '', { validateOnValueUpdate: false }),
       thematics: useField('thematics', '', { validateOnValueUpdate: false }),
       otherThematic: useField('otherThematic', '', { validateOnValueUpdate: false }),
+      odds: useField('odds', '', { validateOnValueUpdate: false }),
       administrativeScopes: useField('administrativeScopes', '', { validateOnValueUpdate: false }),
       admin1List: useField('admin1List', '', { validateOnValueUpdate: false }),
-      admin2List: useField('admin2List', '', { validateOnValueUpdate: false }),
       admin3List: useField('admin3List', '', { validateOnValueUpdate: false }),
       description: useField('description', '', { validateOnValueUpdate: false }),
       officeName: useField('officeName', '', { validateOnValueUpdate: false }),
@@ -65,7 +63,9 @@ export class ActorsFormService {
       contactPosition: useField('contactPosition', '', { validateOnValueUpdate: false }),
       website: useField('website', '', { validateOnValueUpdate: false }),
       email: useField('email', '', { validateOnValueUpdate: false }),
-      phone: useField('phone', '', { validateOnValueUpdate: false })
+      phone: useField('phone', '', { validateOnValueUpdate: false }),
+      banoc: useField('banoc', '', { validateOnValueUpdate: false }),
+      banocUrl: useField('banocUrl', '', { validateOnValueUpdate: false })
     }
     return { form, errors, handleSubmit, isSubmitting }
   }

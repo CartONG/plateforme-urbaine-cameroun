@@ -1,6 +1,6 @@
 <template>
   <v-btn
-    @click.prevent="highlight"
+    @click.stop.prevent="highlight"
     v-if="userStore.userIsAdmin()"
     variant="text"
     density="comfortable"

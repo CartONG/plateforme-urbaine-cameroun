@@ -10,7 +10,7 @@
       <img
         loading="lazy"
         :src="atlas.logo.contentUrl"
-        v-if="atlas.logo"
+        v-if="atlas.logo?.contentUrl"
         class="AdminTable__item__logo"
       />
       {{ atlas.name }}
@@ -54,7 +54,12 @@
       :style="{ gridTemplateColumns: ['30%', '70%'].join(' ') }"
     >
       <div class="AdminTable__item">
-        <img loading="lazy" class="AdminTable__mapImg" :src="map.logo.contentUrl" alt="" />
+        <img
+          loading="lazy"
+          class="AdminTable__mapImg"
+          :src="map.logo.contentUrl"
+          v-if="map.logo?.contentUrl"
+        />
         {{ map.name }}
       </div>
       <div class="AdminTable__item">

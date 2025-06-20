@@ -43,7 +43,6 @@
             v-model:content-model="form.deliverables.value.value"
             :parent-form-error="formError"
             :min-length="0"
-            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -52,7 +51,6 @@
             v-model:content-model="form.calendar.value.value"
             :parent-form-error="formError"
             :min-length="0"
-            :max-length="500"
           />
         </div>
         <div class="Form__fieldCtn">
@@ -66,6 +64,7 @@
             @blur="form.website.handleChange"
           />
         </div>
+
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
           <v-select
@@ -111,19 +110,6 @@
             return-object
           ></v-autocomplete>
         </div>
-        <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin2">
-          <label class="Form__label">{{ $t('actors.form.admin2') }}</label>
-          <v-autocomplete
-            multiple
-            density="compact"
-            :items="adminBoundariesStore.admin2Boundaries"
-            item-title="adm2Name"
-            item-value="@id"
-            variant="outlined"
-            v-model="form.admin2List.value.value as Admin2Boundary[]"
-            return-object
-          ></v-autocomplete>
-        </div>
         <div class="Form__fieldCtn" v-if="activeAdminLevels && activeAdminLevels.admin3">
           <label class="Form__label">{{ $t('actors.form.admin3') }}</label>
           <v-autocomplete
@@ -136,6 +122,34 @@
             v-model="form.admin3List.value.value as Admin3Boundary[]"
             return-object
           ></v-autocomplete>
+        </div>
+
+        <label class="Form__label">{{ $t('forms.banoc.title') }}</label>
+        <div class="d-flex">
+          <div class="Form__fieldCtn flex-shrink-0">
+            <label class="Form__label">{{ $t('forms.banoc.code') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banoc.value.value"
+                :error-messages="form.banoc.errorMessage.value"
+                @blur="form.banoc.handleChange"
+              />
+            </div>
+          </div>
+          <div class="Form__fieldCtn ml-3 flex-grow-1">
+            <label class="Form__label">{{ $t('forms.banoc.url') }}</label>
+            <div>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                v-model="form.banocUrl.value.value"
+                :error-messages="form.banocUrl.errorMessage.value"
+                @blur="form.banocUrl.handleChange"
+              />
+            </div>
+          </div>
         </div>
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
@@ -152,10 +166,10 @@
           variant="outlined"
           multiple
           v-model="form.thematics.value.value as Thematic[]"
-          :items="thematics"
+          :items="Object.values(Thematic)"
+          :item-title="(item) => $t('forms.thematics.' + item)"
+          :item-value="(item) => item"
           :placeholder="$t('projects.form.section.thematics')"
-          item-title="name"
-          item-value="@id"
           :error-messages="form.thematics.errorMessage.value"
           @blur="form.thematics.handleChange(form.thematics.value.value)"
           return-object
@@ -170,6 +184,22 @@
             v-model="form.otherThematic.value.value"
             :error-messages="form.otherThematic.errorMessage.value"
             @blur="form.otherThematic.handleChange"
+          />
+        </div>
+
+        <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('forms.odds.title') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            multiple
+            v-model="form.odds.value.value as ODD[]"
+            :items="Object.values(ODD)"
+            :item-title="(item) => $t('forms.odds.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.odds.errorMessage.value"
+            @blur="form.odds.handleChange(form.odds.value.value)"
+            return-object
           />
         </div>
 
@@ -399,19 +429,16 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { FormType } from '@/models/enums/app/FormType'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
-import type {
-  Admin1Boundary,
-  Admin2Boundary,
-  Admin3Boundary
-} from '@/models/interfaces/AdminBoundaries'
+import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { GeoData } from '@/models/interfaces/geo/GeoData'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
 import { type Project, type ProjectSubmission } from '@/models/interfaces/Project'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { nestedObjectsToIri } from '@/services/api/ApiPlatformService'
 import { onInvalidSubmit } from '@/services/forms/FormService'
@@ -420,14 +447,12 @@ import { ProjectFormService } from '@/services/projects/ProjectFormService'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useAdminBoundariesStore } from '@/stores/adminBoundariesStore'
 import { useProjectStore } from '@/stores/projectStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, type Ref, ref } from 'vue'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
-const thematicsStore = useThematicStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 const userStore = useUserStore()
 
@@ -456,12 +481,11 @@ const submitLabel = computed(() => {
   return i18n.t('forms.' + props.type)
 })
 
-const thematics = computed(() => thematicsStore.thematics)
 const actors = computed(() => actorsStore.actorsList)
 
 const otherThematicIsSelected = computed(() => {
   if (form.thematics.value?.value && Array.isArray(form.thematics.value?.value)) {
-    return (form.thematics.value?.value as Thematic[]).map((x) => x.name).includes('Autre')
+    return (form.thematics.value?.value as Thematic[]).includes(Thematic.OTHERS)
   }
   return false
 })
@@ -496,9 +520,6 @@ const activeAdminLevels = computed(() => {
       admin1: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.REGIONAL
       ),
-      admin2: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
-        AdministrativeScope.STATE
-      ),
       admin3: (form.administrativeScopes.value?.value as AdministrativeScope[]).includes(
         AdministrativeScope.CITY
       )
@@ -509,10 +530,8 @@ const activeAdminLevels = computed(() => {
 
 onMounted(async () => {
   await Promise.all([
-    thematicsStore.getAll(),
     actorsStore.getAll(),
     adminBoundariesStore.getAdmin1(),
-    adminBoundariesStore.getAdmin2(),
     adminBoundariesStore.getAdmin3()
   ])
   if (props.project) {

@@ -6,7 +6,8 @@ App\Entity\Resource:
     description: <text(500)>
     startAt: '<dateTimeBetween("now", "+100 days")>'
     endAt: '<dateTimeBetween($startAt, $startAt)>'
-    thematics: '<numberBetween(1, 3)>x @thematic_*'
+    thematics: ['<randomElement(<(App\Enum\Thematic::cases())>)>']
+    odds: ['<randomElement(<(App\Enum\ODD::cases())>)>']
     link: https://<domainName()>
     geoData: '@geoData_<current()>'
     createdBy: '@user_*'

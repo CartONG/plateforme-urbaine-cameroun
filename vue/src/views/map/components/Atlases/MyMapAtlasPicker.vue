@@ -11,7 +11,12 @@
       @update:modelValue="(newValue) => handleCheckboxChange(atlasMap.id, newValue as boolean)"
     />
     <div class="MyMapAtlasPicker__descCtn ml-2">
-      <img loading="lazy" :src="atlasMap.mainLayer.icon" :alt="atlas.name" />
+      <img
+        loading="lazy"
+        :src="atlasMap.mainLayer.icon"
+        :alt="atlas.name"
+        v-if="atlasMap.mainLayer.icon"
+      />
       <div class="MyMapAtlasPicker__desc ml-2">
         <span>{{ atlasMap.mainLayer.name }}</span>
         <span>

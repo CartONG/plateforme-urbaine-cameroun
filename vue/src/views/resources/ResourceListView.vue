@@ -10,8 +10,20 @@
       <ListFilterBox>
         <ListFilterSelect
           v-model="selectedThematic"
-          :items="thematicsItems"
+          :items="Object.values(Thematic)"
           :label="$t('resources.thematic')"
+        />
+        <v-select
+          class="ListFilterSelect"
+          v-model="selectedODD"
+          density="compact"
+          variant="outlined"
+          :label="$t('forms.odds.title')"
+          :items="Object.values(ODD)"
+          :item-title="(item) => $t('forms.odds.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
         <ListFilterSelect
           v-model="selectedResourceFormats"
@@ -26,6 +38,18 @@
           :item-title="(item: ResourceType) => $t('resources.resourceType.' + item)"
           :item-value="(item: ResourceType) => item"
           :label="$t('resources.type')"
+        />
+        <v-select
+          class="ListFilterSelect"
+          v-model="selectedAdminScope"
+          density="compact"
+          variant="outlined"
+          :label="$t('actors.adminScope')"
+          :items="Object.values(AdministrativeScope)"
+          :item-title="(item) => $t('actors.scope.' + item)"
+          :item-value="(item) => item"
+          multiple
+          clearable
         />
       </ListFilterBox>
       <div class="ListView__actions">
@@ -78,13 +102,15 @@
 </template>
 
 <script setup lang="ts">
+import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { UserRoles } from '@/models/enums/auth/UserRoles'
+import { ODD } from '@/models/enums/contents/ODD'
 import { ResourceFormat } from '@/models/enums/contents/ResourceFormat'
 import { ResourceType } from '@/models/enums/contents/ResourceType'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Resource } from '@/models/interfaces/Resource'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { useUserStore } from '@/stores/userStore'
 import ListFilterBox from '@/views/_layout/list/ListFilterBox.vue'
 import ListFilterResetButton from '@/views/_layout/list/ListFilterResetButton.vue'
@@ -98,20 +124,19 @@ import { useRoute } from 'vue-router'
 
 const resourceStore = useResourceStore()
 const userStore = useUserStore()
-const thematicsStore = useThematicStore()
 const appStore = useApplicationStore()
 const route = useRoute()
 
-const thematicsItems = computed(() => thematicsStore.thematics)
 const searchQuery = ref('')
 const arePassedEventsShown = ref(false)
 const selectedThematic: Ref<string[]> = ref([])
+const selectedODD: Ref<ODD[] | null> = ref(null)
 const selectedResourceFormats: Ref<ResourceFormat[]> = ref([])
 const selectedResourceTypes: Ref<ResourceType[]> = ref([])
+const selectedAdminScope: Ref<AdministrativeScope[] | null> = ref(null)
 
 onMounted(async () => {
   await resourceStore.getAll()
-  await thematicsStore.getAll()
   appStore.isLoading = false
 
   initRouteFilters()
@@ -138,8 +163,14 @@ const filteredResources = computed(() => {
   if (selectedThematic.value && selectedThematic.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
       return resource.thematics.some((thematic) =>
-        (selectedThematic.value as string[]).includes(thematic['@id'])
+        (selectedThematic.value as string[]).includes(thematic)
       )
+    })
+  }
+
+  if (selectedODD.value && selectedODD.value.length > 0) {
+    filteredResources = filteredResources.filter((resource: Resource) => {
+      return resource.odds.some((odd) => (selectedODD.value as ODD[]).includes(odd))
     })
   }
 
@@ -152,6 +183,13 @@ const filteredResources = computed(() => {
   if (selectedResourceTypes.value && selectedResourceTypes.value.length > 0) {
     filteredResources = filteredResources.filter((resource: Resource) => {
       return selectedResourceTypes.value.includes(resource.type)
+    })
+  }
+  if (selectedAdminScope.value && selectedAdminScope.value.length > 0) {
+    filteredResources = filteredResources.filter((resource: Resource) => {
+      return resource.administrativeScopes?.some((scope) =>
+        (selectedAdminScope.value as string[]).includes(scope)
+      )
     })
   }
   return filteredResources
@@ -214,6 +252,8 @@ const searchResources = (resources: Resource[]) => {
 const resetFilters = () => {
   searchQuery.value = ''
   arePassedEventsShown.value = false
+  selectedODD.value = null
+  selectedAdminScope.value = null
   selectedThematic.value = []
   selectedResourceFormats.value = []
   selectedResourceTypes.value = []

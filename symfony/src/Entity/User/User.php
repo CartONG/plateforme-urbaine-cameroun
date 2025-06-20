@@ -116,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, AppContentComment::COMMENT_READ])]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Groups([self::GROUP_READ, self::GROUP_GETME, self::GROUP_WRITE, UserPasswordToken::GROUP_READ, AppContentComment::COMMENT_READ])]

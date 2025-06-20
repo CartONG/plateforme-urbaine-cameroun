@@ -3,7 +3,7 @@
     <v-btn
       v-if="position === 'Sheet'"
       :icon="isFormCommentVisible ? '$commentText' : '$commentTextOutline'"
-      @click.stop="isFormCommentVisible = true"
+      @click.stop.prevent="isFormCommentVisible = true"
       :class="{
         'text-white': isFormCommentVisible,
         'text-main-red': !isFormCommentVisible
@@ -16,7 +16,7 @@
       density="comfortable"
       :icon="isFormCommentVisible ? '$commentText' : '$commentTextOutline'"
       color="main-red"
-      @click.prevent="isFormCommentVisible = true"
+      @click.stop.prevent="isFormCommentVisible = true"
     >
     </v-btn>
     <CommentForm

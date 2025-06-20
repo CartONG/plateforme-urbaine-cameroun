@@ -1,6 +1,17 @@
 <template>
   <div class="MyMapAtlases">
     <div class="MyMapAtlases__title" v-show="isShown">{{ title }}</div>
+    <div v-if="searchBox">
+      <v-text-field
+        variant="outlined"
+        v-model="mapStore.atlasSearchText"
+        :label="$t('myMap.atlases.searchData')"
+        prepend-inner-icon="$magnify"
+        clearable
+        color="main-blue"
+        icon-color="main-blue"
+      />
+    </div>
     <MyMapAtlas v-for="atlas in atlases" :key="atlas.id" :atlas="atlas" :type="type" />
   </div>
 </template>
@@ -16,6 +27,7 @@ const props = defineProps<{
   title: string
   atlases: Atlas[]
   type: AtlasGroup
+  searchBox?: boolean
 }>()
 
 const mapStore = useMyMapStore()

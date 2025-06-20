@@ -20,10 +20,10 @@
 
 <script setup lang="ts">
 import { ItemType } from '@/models/enums/app/ItemType'
+import { AppLayersService } from '@/services/map/AppLayersService'
+import { useMyMapStore } from '@/stores/myMapStore'
 import MyMapLayerPicker from '@/views/map/components/MyMapLayerPicker.vue'
 import { computed } from 'vue'
-import { useMyMapStore } from '@/stores/myMapStore'
-import { AppLayersService } from '@/services/map/AppLayersService'
 
 const myMapStore = useMyMapStore()
 const myMap = computed(() => myMapStore.myMap)

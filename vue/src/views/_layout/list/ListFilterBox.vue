@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import SectionTitle from '@/components/text-elements/SectionTitle.vue'
+import SectionTitle from '@/components/text-elements/SectionTitle.vue';
 </script>
 
 <style lang="scss">
@@ -20,7 +20,7 @@ import SectionTitle from '@/components/text-elements/SectionTitle.vue'
 
   .ListFilterBox__filterCtn {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: flex-start;
     $dim-filter-gap: 0.5rem;
     gap: $dim-filter-gap;

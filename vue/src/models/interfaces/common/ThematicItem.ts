@@ -1,4 +1,4 @@
-import type { Thematic } from '@/models/interfaces/Thematic'
+import type { Thematic } from '@/models/enums/contents/Thematic'
 
 export interface ThematicItem {
   thematics: Thematic[]

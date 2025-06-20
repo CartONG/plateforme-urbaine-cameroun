@@ -11,10 +11,13 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\File\MediaObject;
+use App\Entity\Trait\BanocEntity;
 use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\CreatorMessageEntity;
 use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ODDEntity;
 use App\Entity\Trait\SluggableEntity;
+use App\Entity\Trait\ThematizedEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Entity\User\User;
@@ -35,7 +38,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin2Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::ACTOR_WRITE]],
     operations: [
         new GetCollection(
@@ -73,11 +76,23 @@ class Actor
     use BlameableEntity;
     use ValidateableEntity;
     use CreatorMessageEntity;
+    use ThematizedEntity;
+    use ODDEntity;
+    use BanocEntity;
 
     public const ACTOR_READ_COLLECTION = 'actor:read_collection';
     public const ACTOR_READ_COLLECTION_ALL = 'actor:read_collection:all';
     public const ACTOR_READ_ITEM = 'actor:read_item';
     public const ACTOR_WRITE = 'actor:write';
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+        $this->administrativeScopes = [];
+        $this->images = new ArrayCollection();
+        $this->admin1List = new ArrayCollection();
+        $this->admin3List = new ArrayCollection();
+    }
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -97,20 +112,6 @@ class Actor
     #[ORM\Column(enumType: ActorCategory::class)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::GET_FULL])]
     private ?ActorCategory $category = null;
-
-    /**
-     * @var Collection<int, ActorExpertise>
-     */
-    #[ORM\ManyToMany(targetEntity: ActorExpertise::class, inversedBy: 'actors')]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $expertises;
-
-    /**
-     * @var Collection<int, Thematic>
-     */
-    #[ORM\ManyToMany(targetEntity: Thematic::class, inversedBy: 'actors')]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $thematics;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
@@ -179,10 +180,6 @@ class Actor
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private ?string $otherExpertise = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?string $otherThematic = null;
     /**
      * @var Collection<int, Admin1Boundary>
@@ -190,13 +187,6 @@ class Actor
     #[ORM\ManyToMany(targetEntity: Admin1Boundary::class)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $admin1List;
-
-    /**
-     * @var Collection<int, Admin2Boundary>
-     */
-    #[ORM\ManyToMany(targetEntity: Admin2Boundary::class)]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
-    private Collection $admin2List;
 
     /**
      * @var Collection<int, Admin3Boundary>
@@ -232,18 +222,6 @@ class Actor
     protected ?User $createdBy;
 
     // End traits groups
-
-    public function __construct()
-    {
-        $this->expertises = new ArrayCollection();
-        $this->thematics = new ArrayCollection();
-        $this->projects = new ArrayCollection();
-        $this->administrativeScopes = [];
-        $this->images = new ArrayCollection();
-        $this->admin1List = new ArrayCollection();
-        $this->admin2List = new ArrayCollection();
-        $this->admin3List = new ArrayCollection();
-    }
 
     public function getId(): ?Uuid
     {
@@ -282,54 +260,6 @@ class Actor
     public function setCategory(ActorCategory $category): static
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ActorExpertise>
-     */
-    public function getExpertises(): Collection
-    {
-        return $this->expertises;
-    }
-
-    public function addExpertise(ActorExpertise $expertise): static
-    {
-        if (!$this->expertises->contains($expertise)) {
-            $this->expertises->add($expertise);
-        }
-
-        return $this;
-    }
-
-    public function removeExpertise(ActorExpertise $expertise): static
-    {
-        $this->expertises->removeElement($expertise);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Thematic>
-     */
-    public function getThematics(): Collection
-    {
-        return $this->thematics;
-    }
-
-    public function addThematic(Thematic $thematic): static
-    {
-        if (!$this->thematics->contains($thematic)) {
-            $this->thematics->add($thematic);
-        }
-
-        return $this;
-    }
-
-    public function removeThematic(Thematic $thematic): static
-    {
-        $this->thematics->removeElement($thematic);
 
         return $this;
     }
@@ -574,18 +504,6 @@ class Actor
         return $this;
     }
 
-    public function getOtherExpertise(): ?string
-    {
-        return $this->otherExpertise;
-    }
-
-    public function setOtherExpertise(?string $otherExpertise): static
-    {
-        $this->otherExpertise = $otherExpertise;
-
-        return $this;
-    }
-
     public function getOtherThematic(): ?string
     {
         return $this->otherThematic;
@@ -594,30 +512,6 @@ class Actor
     public function setOtherThematic(?string $otherThematic): static
     {
         $this->otherThematic = $otherThematic;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Admin2Boundary>
-     */
-    public function getAdmin2List(): Collection
-    {
-        return $this->admin2List;
-    }
-
-    public function addAdmin2List(Admin2Boundary $admin2List): static
-    {
-        if (!$this->admin2List->contains($admin2List)) {
-            $this->admin2List->add($admin2List);
-        }
-
-        return $this;
-    }
-
-    public function removeAdmin2List(Admin2Boundary $admin2List): static
-    {
-        $this->admin2List->removeElement($admin2List);
 
         return $this;
     }

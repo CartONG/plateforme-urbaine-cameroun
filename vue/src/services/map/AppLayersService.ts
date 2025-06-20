@@ -2,21 +2,27 @@ import actorLayerIcon from '@/assets/images/icons/map/actor_icon.png'
 import projectLayerIcon from '@/assets/images/icons/map/project_icon.png'
 import resourceLayerIcon from '@/assets/images/icons/map/resource_icon.png'
 import { ItemType } from '@/models/enums/app/ItemType'
+import { Thematic } from '@/models/enums/contents/Thematic'
 import type { ThematicItem } from '@/models/interfaces/common/ThematicItem'
 import type { Layer } from '@/models/interfaces/map/Layer'
-import type { Thematic } from '@/models/interfaces/Thematic'
 import { i18n } from '@/plugins/i18n'
 import { useActorsStore } from '@/stores/actorsStore'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
-import { useThematicStore } from '@/stores/thematicStore'
 import { computed } from 'vue'
 import LayerService from './LayerService'
 import MapService from './MapService'
 
 export class AppLayersService {
+  private static mapThematics = Object.values(Thematic).map((t, i) => {
+    return {
+      id: i,
+      name: t,
+      isShown: true
+    }
+  })
   static filteredProjects = computed(() => {
     const projectStore = useProjectStore()
     const myMapStore = useMyMapStore()
@@ -36,19 +42,15 @@ export class AppLayersService {
   static async initApplicationLayers(): Promise<void> {
     const projectStore = useProjectStore()
     const resourceStore = useResourceStore()
-    const thematicStore = useThematicStore()
     const applicationStore = useApplicationStore()
     const myMapStore = useMyMapStore()
     const actorStore = useActorsStore()
     try {
-      await thematicStore.getAll()
-
+      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
       if (!myMapStore.isMapAlreadyBeenMounted) {
         this.initMainLayers()
         this.initSubLayers()
       }
-
-      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
 
       if (myMapStore.map == null) return
       MapService.isLoaded(myMapStore.map, async () => {
@@ -105,35 +107,43 @@ export class AppLayersService {
   }
 
   static initSubLayers() {
-    const thematicStore = useThematicStore()
     const myMapStore = useMyMapStore()
-    let projectThematics = thematicStore.thematics
-    let actorsThematics = thematicStore.thematics
-    let resourcesThematics = thematicStore.thematics
+    const mapThematics = Object.values(Thematic).map((t, i) => {
+      return {
+        id: i,
+        name: t,
+        isShown: true
+      }
+    })
+
+    let projectThematics = this.mapThematics
+    let actorsThematics = this.mapThematics
+    let resourcesThematics = this.mapThematics
+
     if (myMapStore?.deserializedMapState) {
-      projectThematics = projectThematics.map((x) => {
+      projectThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.projects?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.projects?.includes(x.id) as boolean
         }
       })
 
-      actorsThematics = actorsThematics.map((x) => {
+      actorsThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.actors?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.actors?.includes(x.id) as boolean
         }
       })
 
-      resourcesThematics = resourcesThematics.map((x) => {
+      resourcesThematics = mapThematics.map((x) => {
         return {
           ...x,
-          isShown: myMapStore?.deserializedMapState?.layers?.resources?.includes(x.id)
+          isShown: myMapStore?.deserializedMapState?.layers?.resources?.includes(x.id) as boolean
         }
       })
     }
-    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics)
-    myMapStore!.actorSubLayers = LayerService.initSubLayer(actorsThematics)
+    myMapStore!.projectSubLayers = LayerService.initSubLayer(projectThematics as any)
+    myMapStore!.actorSubLayers = LayerService.initSubLayer(actorsThematics as any)
     myMapStore!.resourceSubLayers = LayerService.initSubLayer(resourcesThematics)
   }
 
@@ -178,14 +188,11 @@ export class AppLayersService {
   }
 
   static filterByThematic(items: ThematicItem[], subLayers: Layer[]) {
-    const activeThematics: Layer['id'][] = subLayers
+    const activeThematics: Layer['name'][] = subLayers
       .filter((layer: Layer) => layer.isShown)
-      .map((layer: Layer) => layer.id)
+      .map((layer: Layer) => layer.name)
     return items.filter((item) => {
-      const itemThematicIds = item.thematics.map((itemThematic: Thematic) => itemThematic.id)
-      return activeThematics.some(
-        (thematic) => typeof thematic !== 'string' && itemThematicIds.includes(thematic)
-      )
+      return activeThematics.some((thematic) => item.thematics.includes(thematic as Thematic))
     })
   }
 }
