@@ -12,13 +12,13 @@
 </template>
 
 <script setup lang="ts">
-import type Basemap from '@/models/interfaces/map/Basemap'
+import type Basemap from '@/models/interfaces/map/Basemap';
 
 const basemap = defineModel<Basemap | null>({
   default: {
     id: 'openstreetmap',
     name: 'OpenStreetMap',
-    style: 'https://api.maptiler.com/maps/openstreetmap/style.json'
+    style: 'https://api.maptiler.com/maps/streets-v2/style.json'
   }
 })
 
@@ -26,7 +26,7 @@ const basemaps: Basemap[] = [
   {
     id: 'openstreetmap',
     name: 'OpenStreetMap',
-    style: 'https://api.maptiler.com/maps/openstreetmap/style.json'
+    style: 'https://api.maptiler.com/maps/streets-v2/style.json'
   },
   {
     id: 'satellite',

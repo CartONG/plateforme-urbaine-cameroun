@@ -56,7 +56,7 @@ const filteredAtlases = computed(() => {
 .MyMapRightSideBar {
   display: flex;
   flex-flow: column nowrap;
-  width: 35rem;
+  width: 38rem;
   background: #fff;
   padding: 1rem;
   gap: 1rem;

@@ -29,9 +29,11 @@ const atlasesList = computed(() =>
 .MyMapLeftSideBar {
   display: flex;
   flex-flow: column nowrap;
-  width: 21rem;
+  width: 23rem;
   flex: 1 0 auto;
   background: #fff;
   padding: 1rem;
+  overflow: auto;
+  max-height: calc(100vh - 4rem);
 }
 </style>

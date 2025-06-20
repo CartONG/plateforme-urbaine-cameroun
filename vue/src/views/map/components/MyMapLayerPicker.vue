@@ -11,7 +11,7 @@
       >
         <template v-slot:label>
           <div class="MyMapLayerPicker__descCtn">
-            <img loading="lazy" :src="mainLayer.icon" :alt="mainLayer.name" />
+            <img loading="lazy" :src="mainLayer.icon" :alt="mainLayer.name" v-if="mainLayer.icon" />
             <v-tooltip :text="mainLayer.name" location="top" v-if="mainLayer.name.length > 15">
               <template v-slot:activator="{ props }">
                 <span v-bind="props">{{ reduceText(mainLayer.name, 15) }}</span>

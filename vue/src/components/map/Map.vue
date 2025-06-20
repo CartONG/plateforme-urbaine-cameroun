@@ -39,7 +39,7 @@ onMounted(() => {
   const apiKey = import.meta.env.VITE_MAPTILER_API_KEY
   map.value = new maplibregl.Map({
     container: props.mapId,
-    style: `https://api.maptiler.com/maps/openstreetmap/style.json?key=${apiKey}`,
+    style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${apiKey}`,
     center: [0, 0],
     zoom: 1,
     attributionControl: false
