@@ -31,10 +31,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
@@ -194,7 +194,7 @@ class Actor
     #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $admin3List;
-    
+
     // Override Traits groups
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -214,7 +214,7 @@ class Actor
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups([Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
     protected ?\DateTimeInterface $updatedAt;
-    
+
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL', name: 'created_by')]
     #[Gedmo\Blameable(on: 'create')]
