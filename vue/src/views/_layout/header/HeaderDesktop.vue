@@ -2,7 +2,7 @@
   <div class="Header Header--desktop">
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
-        <div class="Header__bannerLink">
+        <div class="Header__bannerLink" @click="openPDF">
           <v-icon icon="$helpCircleOutline" />
           <span class="mr-6">{{ $t('header.help') }}</span>
         </div>
@@ -58,6 +58,11 @@ import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
 const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
+
+function openPDF() {
+  const pdfUrl = '/docs/FAQ.pdf'
+  window.open(pdfUrl, '_blank')
+}
 </script>
 
 <style lang="scss">

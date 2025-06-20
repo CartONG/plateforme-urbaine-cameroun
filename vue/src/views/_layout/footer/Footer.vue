@@ -101,11 +101,11 @@
         </div>
       </div>
       <div class="Footer__links">
-        <router-link :to="{ name: 'home' }">{{ $t('footer.legal') }}</router-link>
-        <router-link :to="{ name: 'home' }">{{ $t('footer.privacy') }}</router-link>
-        <router-link :to="{ name: 'home' }">{{ $t('footer.cgu') }}</router-link>
-        <router-link :to="{ name: 'home' }">{{ $t('footer.plan') }}</router-link>
-        <router-link :to="{ name: 'home' }">{{ $t('footer.cookies') }}</router-link>
+        <span @click="openLegal">{{ $t('footer.legal') }}</span>
+        <span>{{ $t('footer.privacy') }}</span>
+        <span>{{ $t('footer.cgu') }}</span>
+        <span>{{ $t('footer.plan') }}</span>
+        <span>{{ $t('footer.cookies') }}</span>
       </div>
     </div>
   </footer>
@@ -120,6 +120,10 @@ function openLinkedIn() {
 }
 function openInstagram() {
   window.open('https://www.instagram.com/reel/DJKM01XqfN8/?igsh=MWNneGYxMDNyemdrOQ==', '_blank')
+}
+function openLegal() {
+  const pdfUrl = 'Mentions_legales.pdf'
+  window.open(pdfUrl, '_blank')
 }
 </script>
 
