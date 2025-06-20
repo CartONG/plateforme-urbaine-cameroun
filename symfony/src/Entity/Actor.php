@@ -39,11 +39,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
-    denormalizationContext: ['groups' => [self::ACTOR_WRITE]],
+    denormalizationContext: ['groups' => [self::ACTOR_WRITE, MediaObject::READ]],
     operations: [
         new GetCollection(
             paginationEnabled: false,
-            normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION, MediaObject::READ]
+            normalizationContext: ['groups' => [self::ACTOR_READ_COLLECTION, MediaObject::READ]]
         ),
         new GetCollection(
             uriTemplate: '/actors/all',
@@ -159,7 +159,7 @@ class Actor
 
     #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?MediaObject $logo = null;
 
     /**
@@ -167,7 +167,7 @@ class Actor
      */
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $images;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
