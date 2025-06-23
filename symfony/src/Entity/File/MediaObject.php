@@ -8,10 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
-use App\Entity\Actor;
 use App\Entity\HighlightedItem;
-use App\Entity\Project;
-use App\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -51,14 +48,14 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject extends AbstractObject
 {
-    private const READ = 'media_object:read';
+    public const READ = 'media_object:read';
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
-    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, Project::GET_FULL, Project::GET_PARTIAL, Resource::GET_FULL, HighlightedItem::GET_FULL])]
+    #[Groups([self::READ, HighlightedItem::GET_FULL])]
     public ?string $contentUrl = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
-    #[Groups([self::READ, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_ITEM, Project::GET_FULL, Project::GET_PARTIAL, Resource::GET_FULL, HighlightedItem::GET_FULL])]
+    #[Groups([self::READ, HighlightedItem::GET_FULL])]
     public ?array $contentsFilteredUrl = null;
 
     #[Vich\UploadableField(
