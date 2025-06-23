@@ -46,19 +46,19 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/projects/all',
-            normalizationContext: ['groups' => [self::GET_PARTIAL]]
+            normalizationContext: ['groups' => [self::GET_PARTIAL, MediaObject::READ]]
         ),
         new GetCollection(
             uriTemplate: '/projects/{id}/similar',
             controller: SimilarProjectsAction::class,
-            normalizationContext: ['groups' => [self::GET_PARTIAL]]
+            normalizationContext: ['groups' => [self::GET_PARTIAL, MediaObject::READ]]
         ),
         new GetCollection(
             uriTemplate: '/projects',
-            normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
         ),
         new Get(
-            normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
+            normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]]
         ),
     ]
 )]
@@ -76,7 +76,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN")',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL]],
+    normalizationContext: ['groups' => [self::GET_FULL, self::GET_PARTIAL, MediaObject::READ]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Project
@@ -130,7 +130,7 @@ class Project
     private array $administrativeScopes = [];
 
     #[ORM\Column(length: 255)]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     #[Assert\Length(max: 100)]
     private ?string $focalPointName = null;
 

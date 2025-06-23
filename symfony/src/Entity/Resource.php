@@ -2,37 +2,37 @@
 
 namespace App\Entity;
 
-use App\Enum\ResourceType;
-use App\Enum\ResourceFormat;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Post;
-use App\Model\Enums\UserRoles;
-use Doctrine\DBAL\Types\Types;
-use ApiPlatform\Metadata\Patch;
-use App\Entity\File\FileObject;
-use App\Entity\Trait\ODDEntity;
-use Symfony\Component\Uid\Uuid;
-use ApiPlatform\Metadata\Delete;
-use App\Entity\File\MediaObject;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Trait\BanocEntity;
-use App\Enum\AdministrativeScope;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use App\Entity\Trait\BlameableEntity;
-use App\Entity\Trait\ThematizedEntity;
-use App\Repository\ResourceRepository;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use App\Entity\Trait\LocalizableEntity;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Entity\Trait\ValidateableEntity;
-use App\Entity\Trait\TimestampableEntity;
+use App\Entity\File\FileObject;
+use App\Entity\File\MediaObject;
+use App\Entity\Trait\BanocEntity;
+use App\Entity\Trait\BlameableEntity;
 use App\Entity\Trait\CreatorMessageEntity;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Attribute\Groups;
+use App\Entity\Trait\LocalizableEntity;
+use App\Entity\Trait\ODDEntity;
+use App\Entity\Trait\ThematizedEntity;
+use App\Entity\Trait\TimestampableEntity;
+use App\Entity\Trait\ValidateableEntity;
+use App\Enum\AdministrativeScope;
+use App\Enum\ResourceFormat;
+use App\Enum\ResourceType;
+use App\Model\Enums\UserRoles;
+use App\Repository\ResourceRepository;
 use App\Services\State\Processor\ResourceProcessor;
 use App\Services\State\Provider\NearestEventProvider;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -40,18 +40,18 @@ use Symfony\Component\Validator\Constraints as Assert;
     paginationEnabled: false,
     operations: [
         new GetCollection(
-            normalizationContext: ['groups' => [self::GET_FULL]],
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]],
             parameters: [
                 'order[:property]' => new QueryParameter(filter: 'offer.order_filter'),
             ]
         ),
         new Get(
-            normalizationContext: ['groups' => [self::GET_FULL]],
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]],
         ),
         new GetCollection(
             uriTemplate: '/resources/events/nearest',
             provider: NearestEventProvider::class,
-            normalizationContext: ['groups' => [self::GET_FULL]]
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]]
         ),
     ]
 )]
@@ -69,7 +69,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN") or object.getCreatedBy() == user',
         ),
     ],
-    normalizationContext: ['groups' => [self::GET_FULL, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
     denormalizationContext: ['groups' => [self::WRITE]],
 )]
 class Resource
@@ -151,7 +151,6 @@ class Resource
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $otherThematic = null;
-
 
     #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
     #[Groups([self::GET_FULL, self::WRITE])]

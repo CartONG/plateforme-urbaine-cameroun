@@ -20,6 +20,7 @@ use App\Entity\Trait\SluggableEntity;
 use App\Entity\Trait\ThematizedEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
+use App\Entity\User\User;
 use App\Enum\ActorCategory;
 use App\Enum\AdministrativeScope;
 use App\Model\Enums\UserRoles;
@@ -30,21 +31,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, MediaObject::READ, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
+    denormalizationContext: ['groups' => [self::ACTOR_WRITE, MediaObject::READ]],
     operations: [
         new GetCollection(
             paginationEnabled: false,
-            normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION]
+            normalizationContext: ['groups' => [self::ACTOR_READ_COLLECTION, MediaObject::READ]]
         ),
         new GetCollection(
             uriTemplate: '/actors/all',
             paginationEnabled: false,
-            normalizationContext: ['groups' => self::ACTOR_READ_COLLECTION_ALL]
+            normalizationContext: ['groups' => [self::ACTOR_READ_COLLECTION_ALL]]
         ),
         new Get(),
         new Post(
@@ -63,8 +67,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: 'is_granted("ROLE_ADMIN")'
         ),
     ],
-    normalizationContext: ['groups' => [self::ACTOR_READ_ITEM, Admin1Boundary::GET_WITH_GEOM, Admin3Boundary::GET_WITH_GEOM]],
-    denormalizationContext: ['groups' => [self::ACTOR_WRITE]],
 )]
 class Actor
 {
@@ -104,7 +106,7 @@ class Actor
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::GET_PARTIAL, Project::GET_FULL])]
+    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::GET_FULL])]
     private ?string $acronym = null;
 
     #[ORM\Column(enumType: ActorCategory::class)]
@@ -157,7 +159,7 @@ class Actor
 
     #[ORM\OneToOne(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE, Project::GET_FULL])]
+    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private ?MediaObject $logo = null;
 
     /**
@@ -165,7 +167,7 @@ class Actor
      */
     #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Groups([self::ACTOR_READ_COLLECTION, self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
+    #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $images;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
@@ -192,6 +194,34 @@ class Actor
     #[ORM\ManyToMany(targetEntity: Admin3Boundary::class)]
     #[Groups([self::ACTOR_READ_ITEM, self::ACTOR_WRITE])]
     private Collection $admin3List;
+
+    // Override Traits groups
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups([Actor::ACTOR_WRITE, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    private ?GeoData $geoData = null;
+
+    #[ORM\Column]
+    #[Groups([Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    private ?bool $isValidated = false;
+
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups([Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    protected ?\DateTimeInterface $createdAt;
+
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups([Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    protected ?\DateTimeInterface $updatedAt;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL', name: 'created_by')]
+    #[Gedmo\Blameable(on: 'create')]
+    #[Groups([Actor::ACTOR_READ_ITEM])]
+    protected ?User $createdBy;
+
+    // End traits groups
 
     public function getId(): ?Uuid
     {

@@ -57,6 +57,7 @@ const router = createRouter({
         const actor: Actor | undefined = actorsStore.actors.find(
           (actor) => actor.slug === to.params.slug
         )
+
         if (actor?.id) {
           await actorsStore.setSelectedActor(actor.id, false)
         }
