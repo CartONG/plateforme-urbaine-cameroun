@@ -57,8 +57,8 @@ class HighlightedItemProcessor implements ProcessorInterface
             return ItemType::ACTOR;
         } elseif ($resource) {
             return ItemType::RESOURCE;
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

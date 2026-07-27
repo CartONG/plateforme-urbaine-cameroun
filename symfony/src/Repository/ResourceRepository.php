@@ -10,7 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Resource>
+ * @extends ServiceEntityRepository<resource>
  */
 class ResourceRepository extends ServiceEntityRepository
 {
