@@ -39,6 +39,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 DATABASE_URL=$DATABASE_URL
 COPY --link docker/frankenphp/conf.d/app.ini $PHP_INI_DIR/conf.d/
 COPY --link --chmod=755 docker/frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 COPY --link ./docker/caddy/Caddyfile.base /etc/caddy/Caddyfile.base
+COPY --link ./docker/caddy/worker.Caddyfile /etc/caddy/worker.Caddyfile
 # COPY --link frankenphp/Caddyfile /etc/caddy/Caddyfile
 
 # CRONS ARE SET HERE
@@ -66,9 +67,6 @@ RUN set -eux; \
 COPY --link docker/frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]
-
-FROM vue:latest AS vue_prod
-FROM docs:latest AS docs_prod
 
 # Prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod
@@ -99,8 +97,7 @@ RUN if [ "$APP_ENV" = "dev" ]; then \
 
 # copy sources
 COPY --link . ./
-COPY --from=vue_prod --link /app/dist /var/www/vue
-COPY --from=docs_prod --link /app/.vitepress/dist /var/www/docs
+# The frontend and docs assets are mounted at runtime from their own services.
 # RUN rm -Rf docker/frankenphp/
 # RUN rm -Rf frankenphp/
 

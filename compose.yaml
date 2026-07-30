@@ -2,7 +2,7 @@ services:
   vue:
     build:
       context: ./vue
-      target: vue_dev
+      target: vue_prod
       args:
         - GOAT_COUNTER_NAMESPACE=${GOAT_COUNTER_NAMESPACE}
     image: vue:latest

@@ -15,4 +15,4 @@ CMD ["yarn", "docs:dev"]
 # for Production environnement
 FROM docs_base AS docs_prod
 
-RUN ["yarn", "docs:build"]
+RUN yarn docs:build && mkdir -p /app/.vitepress/dist
