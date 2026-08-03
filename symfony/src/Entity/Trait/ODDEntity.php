@@ -22,7 +22,7 @@ trait ODDEntity
 
     public function setOdds(?array $odds): self
     {
-        $this->odds = $odds !== null ? array_values($odds) : null;
+        $this->odds = null !== $odds ? array_values($odds) : null;
 
         return $this;
     }
