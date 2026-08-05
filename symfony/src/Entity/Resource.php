@@ -48,6 +48,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]],
         ),
+        
         new GetCollection(
             uriTemplate: '/resources/events/nearest',
             provider: NearestEventProvider::class,
