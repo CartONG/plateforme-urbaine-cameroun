@@ -7,8 +7,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Entity\Resource;
 use App\Entity\File\MediaObject;
+use App\Entity\Resource;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BookingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -164,7 +164,7 @@ class Booking
     private Collection $attachments;
 
     /**
-     * @var Collection<int, Resource>
+     * @var Collection<int, resource>
      */
     #[ORM\ManyToMany(targetEntity: Resource::class)]
     #[ORM\JoinTable(name: 'booking_resource', schema: 'divercity')]
@@ -473,7 +473,7 @@ class Booking
     }
 
     /**
-     * @return Collection<int, Resource>
+     * @return Collection<int, resource>
      */
     public function getResources(): Collection
     {

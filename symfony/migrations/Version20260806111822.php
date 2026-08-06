@@ -16,7 +16,8 @@ final class Version20260806111822 extends AbstractMigration
     {
         return 'Sync DiverCity module entities (Space, Booking, BlockedPeriod, EventActivityFavorite, Notification, SpaceAdmin, Status, EventActivityType, InformationSource) with existing divercity schema';
     }
-public function up(Schema $schema): void
+
+    public function up(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
             DROP INDEX divercity.idx_blocked_period_date
