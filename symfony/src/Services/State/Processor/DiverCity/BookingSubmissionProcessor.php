@@ -81,11 +81,7 @@ class BookingSubmissionProcessor implements ProcessorInterface
 
         // 4. Vérifie que le nombre de participants respecte la capacité de l'espace.
         if ($data->getParticipantCount() > $space->getMaxCapacity()) {
-            throw new UnprocessableEntityHttpException(sprintf(
-                'Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).',
-                $data->getParticipantCount(),
-                $space->getMaxCapacity(),
-            ));
+            throw new UnprocessableEntityHttpException(sprintf('Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).', $data->getParticipantCount(), $space->getMaxCapacity()));
         }
 
         // 5. Statut initial obligatoire : "En attente".
