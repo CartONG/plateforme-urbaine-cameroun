@@ -82,10 +82,7 @@ class BookingSubmissionProcessor implements ProcessorInterface
         }
 
         if ($bookingDateTime < $minimumBookingDateTime) {
-            throw new UnprocessableEntityHttpException(sprintf(
-                'Les réservations doivent être effectuées au moins 48h à l\'avance. Le créneau le plus proche disponible est le %s.',
-                $minimumBookingDateTime->format('d/m/Y à H:i'),
-            ));
+            throw new UnprocessableEntityHttpException(sprintf('Les réservations doivent être effectuées au moins 48h à l\'avance. Le créneau le plus proche disponible est le %s.', $minimumBookingDateTime->format('d/m/Y à H:i')));
         }
 
         // 3. Vérifie que le créneau n'est pas déjà pris par une réservation acceptée.
@@ -110,11 +107,7 @@ class BookingSubmissionProcessor implements ProcessorInterface
 
         // 5. Vérifie que le nombre de participants respecte la capacité de l'espace.
         if ($data->getParticipantCount() > $space->getMaxCapacity()) {
-            throw new UnprocessableEntityHttpException(sprintf(
-                'Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).',
-                $data->getParticipantCount(),
-                $space->getMaxCapacity(),
-            ));
+            throw new UnprocessableEntityHttpException(sprintf('Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).', $data->getParticipantCount(), $space->getMaxCapacity()));
         }
 
         // 6. Statut initial obligatoire : "En attente".
