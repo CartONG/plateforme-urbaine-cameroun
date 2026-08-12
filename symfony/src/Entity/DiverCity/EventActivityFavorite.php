@@ -19,7 +19,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventActivityFavoriteRepository::class)]
 #[ORM\Table(name: 'event_activity_favorite', schema: 'divercity')]
-#[ORM\Check('end_date IS NULL OR end_date >= start_date')]
 #[ApiResource(
     operations: [
         new GetCollection(),

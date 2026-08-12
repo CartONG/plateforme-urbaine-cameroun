@@ -17,7 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BlockedPeriodRepository::class)]
 #[ORM\Table(name: 'blocked_period', schema: 'divercity')]
-#[ORM\Check('end_time > start_time')]
 #[ApiResource(
     operations: [
         new GetCollection(),

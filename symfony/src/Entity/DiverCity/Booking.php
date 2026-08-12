@@ -7,10 +7,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Entity\File\MediaObject;
 use App\Entity\Resource;
+use App\Entity\File\MediaObject;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BookingRepository;
+use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
+use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
+use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -22,14 +25,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ORM\Table(name: 'booking', schema: 'divercity')]
-#[ORM\Check('end_time > start_time')]
-#[ORM\Check('participant_count > 0')]
 #[ApiResource(
     operations: [
         new GetCollection(security: "is_granted('ROLE_ADMIN')"),
         new Get(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
-        new Post(security: "is_granted('IS_AUTHENTICATED_FULLY')"),
-        new Patch(security: "is_granted('ROLE_ADMIN')"), // validation/refus par un admin
+        new Post(
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+            processor: BookingSubmissionProcessor::class
+        ),
+        new Patch(
+            security: "is_granted('ROLE_ADMIN')",
+            processor: BookingDecisionProcessor::class
+        ), // validation/refus par un admin
+        new Patch(
+            uriTemplate: '/divercity/bookings/{id}/cancel',
+            security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
+            processor: BookingCancellationProcessor::class
+        ), // annulation par le demandeur ou un admin
+
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
@@ -78,7 +91,8 @@ class Booking
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?InformationSource $informationSource = null;
 
-    #[ORM\Column(length: 200, nullable: true)]
+    #[ORM\Column(length: 200)]
+    #[Assert\NotBlank]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?string $title = null;
 
@@ -154,17 +168,14 @@ class Booking
     private ?\DateTimeInterface $processedAt = null;
 
     /**
-     * @var Collection<int, MediaObject>
+     * @var Collection<int, BookingAttachment>
      */
-    #[ORM\ManyToMany(targetEntity: MediaObject::class, cascade: ['remove'], orphanRemoval: true)]
-    #[ORM\JoinTable(name: 'booking_media_object', schema: 'divercity')]
-    #[ORM\JoinColumn(name: 'booking_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: BookingAttachment::class, mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
-    private Collection $attachments;
+    private Collection $bookingAttachments;
 
     /**
-     * @var Collection<int, resource>
+     * @var Collection<int, Resource>
      */
     #[ORM\ManyToMany(targetEntity: Resource::class)]
     #[ORM\JoinTable(name: 'booking_resource', schema: 'divercity')]
@@ -448,32 +459,49 @@ class Booking
         return $this;
     }
 
-    /**
-     * @return Collection<int, MediaObject>
+   /**
+     * @return Collection<int, BookingAttachment>
      */
-    public function getAttachments(): Collection
+    public function getBookingAttachments(): Collection
     {
-        return $this->attachments;
+        return $this->bookingAttachments;
     }
-
-    public function addAttachment(MediaObject $attachment): static
+ 
+    public function addBookingAttachment(BookingAttachment $bookingAttachment): static
     {
-        if (!$this->attachments->contains($attachment)) {
-            $this->attachments->add($attachment);
+        if (!$this->bookingAttachments->contains($bookingAttachment)) {
+            $this->bookingAttachments->add($bookingAttachment);
+            $bookingAttachment->setBooking($this);
         }
-
+ 
         return $this;
     }
-
-    public function removeAttachment(MediaObject $attachment): static
+ 
+    public function removeBookingAttachment(BookingAttachment $bookingAttachment): static
     {
-        $this->attachments->removeElement($attachment);
-
+        if ($this->bookingAttachments->removeElement($bookingAttachment)) {
+            if ($bookingAttachment->getBooking() === $this) {
+                $bookingAttachment->setBooking(null);
+            }
+        }
+ 
         return $this;
     }
+ 
+    /**
+     * @return Collection<int, BookingAttachment>
+     */
+    public function getAttachmentsByType(string $type): Collection
+    {
+        return $this->bookingAttachments->filter(
+            fn (BookingAttachment $attachment) => $attachment->getType() === $type
+        );
+    }
+
+    
 
     /**
-     * @return Collection<int, resource>
+     * @return Collection<int, Resource>
      */
     public function getResources(): Collection
     {

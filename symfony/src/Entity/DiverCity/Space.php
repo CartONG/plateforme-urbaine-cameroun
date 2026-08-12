@@ -31,7 +31,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'space', schema: 'divercity')]
 #[ApiResource(
     normalizationContext: ['groups' => [self::GROUP_READ]],
-    denormalizationContext: ['groups' => [self::GROUP_WRITE]],
+    denormalizationContext: [
+        'groups' => [self::GROUP_WRITE],
+        'disable_type_enforcement' => true,
+    ],
     operations: [
         new GetCollection(),
         new Get(),
