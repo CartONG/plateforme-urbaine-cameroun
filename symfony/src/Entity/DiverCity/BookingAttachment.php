@@ -45,7 +45,6 @@ class BookingAttachment
     #[Groups([Booking::GROUP_READ, Booking::GROUP_WRITE])]
     private ?string $type = null;
 
-
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups([Booking::GROUP_READ])]
@@ -91,8 +90,6 @@ class BookingAttachment
 
         return $this;
     }
-
-   
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

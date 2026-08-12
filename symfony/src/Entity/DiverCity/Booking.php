@@ -8,12 +8,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Resource;
-use App\Entity\File\MediaObject;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BookingRepository;
-use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
-use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
+use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
+use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -42,7 +41,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
             processor: BookingCancellationProcessor::class
         ), // annulation par le demandeur ou un admin
-
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
@@ -175,7 +173,7 @@ class Booking
     private Collection $bookingAttachments;
 
     /**
-     * @var Collection<int, Resource>
+     * @var Collection<int, resource>
      */
     #[ORM\ManyToMany(targetEntity: Resource::class)]
     #[ORM\JoinTable(name: 'booking_resource', schema: 'divercity')]
@@ -459,24 +457,24 @@ class Booking
         return $this;
     }
 
-   /**
+    /**
      * @return Collection<int, BookingAttachment>
      */
     public function getBookingAttachments(): Collection
     {
         return $this->bookingAttachments;
     }
- 
+
     public function addBookingAttachment(BookingAttachment $bookingAttachment): static
     {
         if (!$this->bookingAttachments->contains($bookingAttachment)) {
             $this->bookingAttachments->add($bookingAttachment);
             $bookingAttachment->setBooking($this);
         }
- 
+
         return $this;
     }
- 
+
     public function removeBookingAttachment(BookingAttachment $bookingAttachment): static
     {
         if ($this->bookingAttachments->removeElement($bookingAttachment)) {
@@ -484,10 +482,10 @@ class Booking
                 $bookingAttachment->setBooking(null);
             }
         }
- 
+
         return $this;
     }
- 
+
     /**
      * @return Collection<int, BookingAttachment>
      */
@@ -498,10 +496,8 @@ class Booking
         );
     }
 
-    
-
     /**
-     * @return Collection<int, Resource>
+     * @return Collection<int, resource>
      */
     public function getResources(): Collection
     {
