@@ -23,11 +23,11 @@
             :label="$t('filters.search')"
             density="comfortable"
           >
-            <template v-slot:prepend-inner>
-              <v-icon icon="$magnify" color="main-blue"></v-icon>
-            </template>
-          </v-text-field>
-          <v-select
+          <template v-slot:prepend-inner>
+            <v-icon icon="$magnify" color="main-blue"></v-icon>
+          </template>
+        </v-text-field>
+        <!-- <v-select
             class="ProjectsView__sortSelect fit"
             variant="outlined"
             hide-details="auto"
@@ -37,8 +37,28 @@
             @update:model-value="setSortKey"
             item-title="label"
             item-value="value"
-          ></v-select>
-        </div>
+          ></v-select> -->
+          <v-btn
+            class="ProjectsView__filterBtn"
+            variant="outlined"
+            color="main-blue"
+            @click="projectStore.isFilterModalShown = true"
+          >
+            <!-- <template v-slot:prepend> -->
+            <v-img :src="filterIcon" class="ProjectsView__filterBtnIcon" />
+            <!-- </template> -->
+            <span class="ProjectsView__filterBtnText">{{ $t('projects.map.filterProjects') }}</span>
+          </v-btn>
+
+          <v-btn
+            class="ProjectsView__resetFiltersBtn"
+            :icon="mdiRefresh"
+            variant="text"
+            density="comfortable"
+            @click="resetFilters"
+            :title="$t('labels.reset')"
+          ></v-btn>
+      </div>
       </div>
       <div class="ProjectsView__list">
         <ProjectCard
@@ -56,46 +76,51 @@
   </div>
 </template>
 <script setup lang="ts">
-import Pagination from '@/components/global/Pagination.vue'
-import { UserRoles } from '@/models/enums/auth/UserRoles'
-import { SortKey } from '@/models/enums/SortKey'
-import type { Project } from '@/models/interfaces/Project'
-import { i18n } from '@/plugins/i18n'
-import { useApplicationStore } from '@/stores/applicationStore'
-import { useProjectStore } from '@/stores/projectStore'
-import { useUserStore } from '@/stores/userStore'
-import ProjectCard from '@/views/projects/components/ProjectCard.vue'
-import ProjectMap from '@/views/projects/components/ProjectMap.vue'
-import { computed, onBeforeMount, ref, type Ref } from 'vue'
-const userStore = useUserStore()
-const applicationStore = useApplicationStore()
-const projectStore = useProjectStore()
+  import { mdiFilterVariant, mdiRefresh } from '@mdi/js'
+  import filterIcon from '@/assets/images/icons/map/mdi-filter.svg'
+  import Pagination from '@/components/global/Pagination.vue'
+  import { UserRoles } from '@/models/enums/auth/UserRoles'
+  // import { SortKey } from '@/models/enums/SortKey'
+  import type { Project } from '@/models/interfaces/Project'
+  import { i18n } from '@/plugins/i18n'
+  import { useApplicationStore } from '@/stores/applicationStore'
+  import { useProjectStore } from '@/stores/projectStore'
+  import { useUserStore } from '@/stores/userStore'
+  import ProjectCard from '@/views/projects/components/ProjectCard.vue'
+  import ProjectMap from '@/views/projects/components/ProjectMap.vue'
+  import { computed, onBeforeMount, ref, type Ref } from 'vue'
+  const userStore = useUserStore()
+  const applicationStore = useApplicationStore()
+  const projectStore = useProjectStore()
 
-const sortOptions = Object.values(SortKey).map((key) => {
-  return {
-    value: key,
-    label: i18n.t('filters.sortBy.options.' + key)
+  // const sortOptions = Object.values(SortKey).map((key) => {
+  //   return {
+  //     value: key,
+  //     label: i18n.t('filters.sortBy.options.' + key)
+  //   }
+  // })
+
+  const setHoveredProject = (id: string) => {
+    projectStore.hoveredProjectId = id
   }
-})
 
-const setHoveredProject = (id: string) => {
-  projectStore.hoveredProjectId = id
-}
+  // const setSortKey = (key: SortKey) => {
+  //   projectStore.sortingProjectsSelectedMethod = key
+  // }
 
-const setSortKey = (key: SortKey) => {
-  projectStore.sortingProjectsSelectedMethod = key
-}
+  onBeforeMount(async () => {
+    applicationStore.isLoading = true
+    await projectStore.getAll()
+    applicationStore.isLoading = false
+  })
 
-onBeforeMount(async () => {
-  applicationStore.isLoading = true
-  await projectStore.getAll()
-  applicationStore.isLoading = false
-})
-
-const orderedProjects = computed(() => projectStore.orderedProjects)
-const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)
-const projectsCount = computed(() => orderedProjects.value.length)
-const paginatedProjects: Ref<Project[]> = ref([])
+  const orderedProjects = computed(() => projectStore.orderedProjects)
+  const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)
+  const projectsCount = computed(() => orderedProjects.value.length)
+  const paginatedProjects: Ref<Project[]> = ref([])
+  const resetFilters = () => {
+    projectStore.resetFilters()
+  }
 </script>
 
 <style lang="scss">
@@ -146,6 +171,8 @@ const paginatedProjects: Ref<Project[]> = ref([])
         }
 
         &--bottom {
+          align-items: stretch; // au lieu de center, pour que tout ait la même hauteur
+
           .ProjectsView__searchBar {
             .v-field__prepend-inner > .v-icon,
             .v-field__append-inner > .v-icon,
@@ -153,8 +180,52 @@ const paginatedProjects: Ref<Project[]> = ref([])
               opacity: 1;
             }
           }
-          .ProjectsView__sortSelect {
-            max-width: 13rem;
+
+          .ProjectsView__filterBtn {
+            height: auto;
+
+            :deep(.v-btn__prepend) {
+              margin-inline-end: 0.5rem;
+            }
+
+            :deep(.v-btn__content) {
+              gap: 0;
+            }
+
+            .ProjectsView__filterBtnIcon {
+              width: 1.25rem;
+              height: 1.25rem;
+              flex: 0 0 auto;
+            }
+
+            @media (max-width: 960px) {
+              min-width: 0;
+              width: auto;
+              padding: 0.5rem;
+              aspect-ratio: 1 / 1; // bouton carré
+
+              .ProjectsView__filterBtnText {
+                display: none;
+              }
+
+              :deep(.v-btn__prepend) {
+                margin-inline-end: 0;
+              }
+
+              :deep(.v-btn__content) {
+                justify-content: center;
+              }
+
+              .ProjectsView__filterBtnIcon {
+                width: 1.25rem;
+                height: 1.25rem;
+              }
+            }
+          }
+
+          .ProjectsView__resetFiltersBtn {
+            align-self: center; // le bouton icône reste centré verticalement, pas étiré
+            flex: 0 0 auto;
           }
         }
       }
