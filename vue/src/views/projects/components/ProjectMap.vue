@@ -13,7 +13,7 @@
       ref="active-project-card"
     />
     <Map class="ProjectMap__map" ref="project-map" v-if="projectStore.projects != null" />
-    <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" />
+    <!-- <ShowProjectFiltersModalControl ref="show-project-filters-modal-control" /> -->
     <ToggleSidebarControl
       v-model="projectStore.isProjectMapFullWidth"
       ref="toggle-sidebar-control"
@@ -29,7 +29,7 @@ import Map from '@/components/map/Map.vue'
 import router from '@/router'
 import MapService, { IControl } from '@/services/map/MapService'
 import { useProjectStore } from '@/stores/projectStore'
-import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
+// import ShowProjectFiltersModalControl from '@/views/projects/components/map-controls/ShowProjectFiltersModalControl.vue'
 import ProjectCard from '@/views/projects/components/ProjectCard.vue'
 import ProjectFilterModal from '@/views/projects/components/ProjectFilterModal.vue'
 import { type ResolvedImageSpecification } from 'maplibre-gl'
@@ -42,7 +42,7 @@ const projectStore = useProjectStore()
 const projectMap = useTemplateRef<MapType>('project-map')
 const toggleSidebarControl = useTemplateRef('toggle-sidebar-control')
 const activeProjectCard = useTemplateRef<ProjectCard>('active-project-card')
-const showProjectFiltersModalControl = useTemplateRef('show-project-filters-modal-control')
+// const showProjectFiltersModalControl = useTemplateRef('show-project-filters-modal-control')
 const geojson = computed(() => MapService.getGeojson(projectStore.filteredProjects))
 const map = computed(() => projectMap.value?.map)
 const sources = {
@@ -106,7 +106,7 @@ const showPopupOnInit = () => {
 
 onMounted(() => {
   if (map.value != null) {
-    map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
+    // map.value.addControl(new IControl(showProjectFiltersModalControl), 'top-right')
     map.value.addControl(new IControl(toggleSidebarControl), 'top-left')
     projectStore.map = map.value
     map.value.on('load', async () => {
