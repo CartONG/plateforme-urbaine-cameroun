@@ -15,4 +15,13 @@ class StatusRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Status::class);
     }
+
+    /**
+     * Raccourci utilisé par les processors de réservation pour retrouver
+     * un statut par son code métier (EN_ATTENTE, ACCEPTEE, REFUSEE, ANNULEE...).
+     */
+    public function findOneByCode(string $code): ?Status
+    {
+        return $this->findOneBy(['code' => $code]);
+    }
 }

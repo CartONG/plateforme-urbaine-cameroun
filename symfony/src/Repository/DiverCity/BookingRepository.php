@@ -3,8 +3,10 @@
 namespace App\Repository\DiverCity;
 
 use App\Entity\DiverCity\Booking;
+use App\Entity\DiverCity\Space;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<Booking>
@@ -21,20 +23,20 @@ class BookingRepository extends ServiceEntityRepository
      * cet espace (utilisé avant validation d'une nouvelle demande).
      */
     public function hasConflictingBooking(
-        \Ramsey\Uuid\UuidInterface|string $spaceId,
+        Space $space,
         \DateTimeInterface $date,
         \DateTimeInterface $startTime,
         \DateTimeInterface $endTime,
-        ?string $excludeBookingId = null,
+        ?Uuid $excludeBookingId = null,
     ): bool {
         $qb = $this->createQueryBuilder('b')
             ->innerJoin('b.status', 's')
-            ->andWhere('b.space = :spaceId')
+            ->andWhere('b.space = :space')
             ->andWhere('b.date = :date')
             ->andWhere('s.code = :acceptedCode')
             ->andWhere('b.startTime < :endTime')
             ->andWhere('b.endTime > :startTime')
-            ->setParameter('spaceId', $spaceId)
+            ->setParameter('space', $space)
             ->setParameter('date', $date)
             ->setParameter('acceptedCode', 'ACCEPTEE')
             ->setParameter('startTime', $startTime)
@@ -45,5 +47,29 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         return null !== $qb->getQuery()->setMaxResults(1)->getOneOrNullResult();
+    }
+
+    /**
+     * Renvoie toutes les réservations acceptées sur un espace, dans une
+     * plage de dates donnée (utilisé pour l'endpoint de disponibilités).
+     *
+     * @return Booking[]
+     */
+    public function findAcceptedBetween(Space $space, \DateTimeInterface $dateFrom, \DateTimeInterface $dateTo): array
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.status', 's')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :dateFrom')
+            ->andWhere('b.date <= :dateTo')
+            ->andWhere('s.code = :acceptedCode')
+            ->setParameter('space', $space)
+            ->setParameter('dateFrom', $dateFrom)
+            ->setParameter('dateTo', $dateTo)
+            ->setParameter('acceptedCode', 'ACCEPTEE')
+            ->orderBy('b.date', 'ASC')
+            ->addOrderBy('b.startTime', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }

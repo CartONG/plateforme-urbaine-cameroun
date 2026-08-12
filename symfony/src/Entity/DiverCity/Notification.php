@@ -7,7 +7,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Entity\User\User;
 use App\Repository\DiverCity\NotificationRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
@@ -25,6 +27,7 @@ class Notification
 
     public const TYPE_SUBMISSION = 'SOUMISSION';
     public const TYPE_DECISION = 'DECISION';
+    public const TYPE_CANCELLATION = 'ANNULATION';
     public const TYPE_WAITING_LIST = 'LISTE_ATTENTE';
 
     #[ORM\Id]
@@ -99,6 +102,13 @@ class Notification
     public function getSentAt(): ?\DateTimeInterface
     {
         return $this->sentAt;
+    }
+
+    public function setSentAt(?\DateTimeInterface $sentAt): static
+    {
+        $this->sentAt = $sentAt;
+
+        return $this;
     }
 
     public function getContent(): ?string
