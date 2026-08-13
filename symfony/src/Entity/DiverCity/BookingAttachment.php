@@ -2,7 +2,7 @@
 
 namespace App\Entity\DiverCity;
 
-use App\Entity\File\MediaObject;
+use App\Entity\File\FileObject;
 use App\Repository\DiverCity\BookingAttachmentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,11 +34,11 @@ class BookingAttachment
     #[ORM\JoinColumn(name: 'booking_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Booking $booking = null;
 
-    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[ORM\JoinColumn(name: 'media_object_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: FileObject::class)]
+    #[ORM\JoinColumn(name: 'file_object_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull]
     #[Groups([Booking::GROUP_READ, Booking::GROUP_WRITE])]
-    private ?MediaObject $mediaObject = null;
+    private ?FileObject $fileObject = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\Choice(choices: self::TYPES)]
@@ -67,14 +67,14 @@ class BookingAttachment
         return $this;
     }
 
-    public function getMediaObject(): ?MediaObject
+    public function getFileObject(): ?FileObject
     {
-        return $this->mediaObject;
+        return $this->fileObject;
     }
 
-    public function setMediaObject(?MediaObject $mediaObject): static
+    public function setFileObject(?FileObject $fileObject): static
     {
-        $this->mediaObject = $mediaObject;
+        $this->fileObject = $fileObject;
 
         return $this;
     }

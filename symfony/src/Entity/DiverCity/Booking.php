@@ -20,10 +20,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ORM\Table(name: 'booking', schema: 'divercity')]
+#[Assert\Callback('validateRequiredAttachments')]
 #[ApiResource(
     operations: [
         new GetCollection(security: "is_granted('ROLE_ADMIN')"),
@@ -190,7 +192,7 @@ class Booking
 
     public function __construct()
     {
-        $this->attachments = new ArrayCollection();
+        $this->bookingAttachments = new ArrayCollection();
         $this->resources = new ArrayCollection();
         $this->notifications = new ArrayCollection();
     }
@@ -494,6 +496,38 @@ class Booking
         return $this->bookingAttachments->filter(
             fn (BookingAttachment $attachment) => $attachment->getType() === $type
         );
+    }
+
+
+    /**
+     * Vérifie qu'au moins un ordre du jour et un document ressource ont été
+     * fournis avant toute soumission de réservation.
+     */
+    public function validateRequiredAttachments(ExecutionContextInterface $context): void
+    {
+        $hasAgenda = false;
+        $hasResourceDocument = false;
+
+        foreach ($this->bookingAttachments as $attachment) {
+            if (BookingAttachment::TYPE_AGENDA === $attachment->getType()) {
+                $hasAgenda = true;
+            }
+            if (BookingAttachment::TYPE_RESOURCE_DOCUMENT === $attachment->getType()) {
+                $hasResourceDocument = true;
+            }
+        }
+
+        if (!$hasAgenda) {
+            $context->buildViolation('Un ordre du jour est obligatoire.')
+                ->atPath('bookingAttachments')
+                ->addViolation();
+        }
+
+        if (!$hasResourceDocument) {
+            $context->buildViolation('Un document ressource est obligatoire.')
+                ->atPath('bookingAttachments')
+                ->addViolation();
+        }
     }
 
     /**

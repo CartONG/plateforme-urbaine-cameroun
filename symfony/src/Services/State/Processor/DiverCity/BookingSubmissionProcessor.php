@@ -5,6 +5,7 @@ namespace App\Services\State\Processor\DiverCity;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\DiverCity\Booking;
+use App\Entity\DiverCity\Notification;
 use App\Repository\DiverCity\BlockedPeriodRepository;
 use App\Repository\DiverCity\BookingRepository;
 use App\Repository\DiverCity\StatusRepository;
@@ -18,14 +19,18 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
  *
  *   - le demandeur doit être un utilisateur connecté (pas de compte = pas de réservation)
  *   - le créneau ne doit pas être dans le passé
+ *   - le créneau doit être réservé au moins 48h à l'avance
  *   - le créneau ne doit pas être déjà occupé par une réservation acceptée
  *   - le créneau ne doit pas tomber dans une période bloquée par un admin
  *   - le nombre de participants ne doit pas dépasser la capacité de l'espace
+ *   - un ordre du jour et un document ressource sont obligatoires
  *   - le statut initial est toujours "En attente"
  *   - une notification de soumission est envoyée au demandeur (mail / WhatsApp)
  */
 class BookingSubmissionProcessor implements ProcessorInterface
 {
+    private const MINIMUM_ADVANCE_HOURS = 48;
+
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
@@ -75,14 +80,18 @@ class BookingSubmissionProcessor implements ProcessorInterface
         }
 
         $now = new \DateTimeImmutable();
-        $minimumBookingDateTime = $now->modify('+48 hours');
+        $minimumBookingDateTime = $now->modify(sprintf('+%d hours', self::MINIMUM_ADVANCE_HOURS));
 
         if ($bookingDateTime < $now) {
             throw new UnprocessableEntityHttpException('Impossible de réserver un créneau déjà passé.');
         }
 
         if ($bookingDateTime < $minimumBookingDateTime) {
-            throw new UnprocessableEntityHttpException(sprintf('Les réservations doivent être effectuées au moins 48h à l\'avance. Le créneau le plus proche disponible est le %s.', $minimumBookingDateTime->format('d/m/Y à H:i')));
+            throw new UnprocessableEntityHttpException(sprintf(
+                'Les réservations doivent être effectuées au moins %dh à l\'avance. Le créneau le plus proche disponible est le %s.',
+                self::MINIMUM_ADVANCE_HOURS,
+                $minimumBookingDateTime->format('d/m/Y à H:i'),
+            ));
         }
 
         // 3. Vérifie que le créneau n'est pas déjà pris par une réservation acceptée.
@@ -107,7 +116,11 @@ class BookingSubmissionProcessor implements ProcessorInterface
 
         // 5. Vérifie que le nombre de participants respecte la capacité de l'espace.
         if ($data->getParticipantCount() > $space->getMaxCapacity()) {
-            throw new UnprocessableEntityHttpException(sprintf('Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).', $data->getParticipantCount(), $space->getMaxCapacity()));
+            throw new UnprocessableEntityHttpException(sprintf(
+                'Le nombre de participants (%d) dépasse la capacité maximale de l\'espace (%d).',
+                $data->getParticipantCount(),
+                $space->getMaxCapacity(),
+            ));
         }
 
         // 6. Statut initial obligatoire : "En attente".
@@ -139,18 +152,6 @@ class BookingSubmissionProcessor implements ProcessorInterface
             //    Tant que le vrai service d'envoi n'est pas branché ici, on horodate à la
             //    persistance pour ne pas bloquer la colonne NOT NULL — à remplacer dès que
             //    le dispatcher réel est disponible (voir TODO dans le constructeur).
-            //
-            // Exemple d'intégration une fois le service prêt :
-            //
-            // try {
-            //     $this->notificationDispatcher->send($notification, $currentUser);
-            //     $notification->setSentAt(new \DateTimeImmutable());
-            // } catch (\Throwable $e) {
-            //     // log l'échec d'envoi, mais ne bloque pas la réservation :
-            //     // la notification reste en base avec sentAt renseigné à défaut,
-            //     // ou passe par une colonne "status" (PENDING/SENT/FAILED) si tu veux
-            //     // distinguer proprement "créée" de "réellement envoyée".
-            // }
             $notification->setSentAt(new \DateTimeImmutable());
 
             $this->entityManager->persist($notification);
