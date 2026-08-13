@@ -20,8 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ORM\Table(name: 'booking', schema: 'divercity')]
@@ -497,7 +497,6 @@ class Booking
             fn (BookingAttachment $attachment) => $attachment->getType() === $type
         );
     }
-
 
     /**
      * Vérifie qu'au moins un ordre du jour et un document ressource ont été
