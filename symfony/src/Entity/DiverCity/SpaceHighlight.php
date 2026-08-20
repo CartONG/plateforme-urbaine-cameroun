@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Entity\File\MediaObject;
 use App\Entity\File\FileObject;
 use App\Repository\DiverCity\SpaceHighlightRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -59,7 +58,7 @@ class SpaceHighlight
     #[ORM\ManyToOne(targetEntity: Space::class, inversedBy: 'highlights')]
     #[ORM\JoinColumn(name: 'space_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_WRITE])]  // pas besoin de le renvoyer en lecture, déjà implicite via Space
+    #[Groups([self::GROUP_WRITE])] // pas besoin de le renvoyer en lecture, déjà implicite via Space
     private ?Space $space = null;
 
     #[ORM\Column]
