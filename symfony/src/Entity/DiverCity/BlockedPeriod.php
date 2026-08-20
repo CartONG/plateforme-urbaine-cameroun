@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BlockedPeriodRepository;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -21,8 +22,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(),
         new Get(),
-        new Post(security: 'is_granted("ROLE_ADMIN")'),
-        new Delete(security: 'is_granted("ROLE_ADMIN")'),
+        new Post(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)"),
+        new Delete(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)"),
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
