@@ -13,6 +13,9 @@ use App\Repository\DiverCity\BookingRepository;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
+use App\Services\State\Provider\DiverCity\MyBookingsProvider;
+use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -29,18 +32,28 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ApiResource(
     operations: [
         new GetCollection(security: "is_granted('ROLE_ADMIN')"),
-        new Get(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+        new GetCollection(
+            uriTemplate: '/divercity/bookings/managed',
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+            provider: ManagedBookingsProvider::class,
+        ),
+        new GetCollection(
+            uriTemplate: '/divercity/bookings/mine',
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+            provider: MyBookingsProvider::class,
+        ),
+        new Get(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object) or object.getUser() == user"),
         new Post(
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
             processor: BookingSubmissionProcessor::class
         ),
         new Patch(
-            security: "is_granted('ROLE_ADMIN')",
+            security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)",
             processor: BookingDecisionProcessor::class
-        ), // validation/refus par un admin
+        ),
         new Patch(
             uriTemplate: '/divercity/bookings/{id}/cancel',
-            security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
+            security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object) or object.getUser() == user",
             processor: BookingCancellationProcessor::class
         ), // annulation par le demandeur ou un admin
     ],

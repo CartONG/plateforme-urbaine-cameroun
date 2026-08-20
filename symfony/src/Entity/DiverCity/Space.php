@@ -17,6 +17,7 @@ use App\Entity\Trait\SluggableEntity;
 use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Entity\User\User;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Repository\DiverCity\SpaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,9 +39,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(),
         new Get(),
-        new Post(security: 'is_granted("ROLE_ADMIN")'),
-        new Put(security: 'is_granted("ROLE_ADMIN")'),
-        new Patch(security: 'is_granted("ROLE_ADMIN")'),
+        new Post(security: 'is_granted("ROLE_ADMIN")'), // création reste PDC uniquement
+        new Put(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)"),
+        new Patch(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)"),
         new Delete(security: 'is_granted("ROLE_ADMIN")'),
     ],
 )]
@@ -62,6 +63,7 @@ class Space
         $this->bookings = new ArrayCollection();
         $this->admins = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->highlights = new ArrayCollection();
     }
 
     #[ORM\Id]
@@ -76,6 +78,10 @@ class Space
     #[Groups([self::GROUP_READ, self::GROUP_WRITE, Booking::GROUP_READ])]
     private ?string $name = null;
 
+    /**
+     * Contenu HTML riche (couleur, police, taille...) édité par l'admin,
+     * affiché tel quel sur la page d'accueil.
+     */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?string $description = null;
@@ -138,6 +144,13 @@ class Space
      */
     #[ORM\OneToMany(targetEntity: EventActivityFavorite::class, mappedBy: 'space', orphanRemoval: true)]
     private Collection $favorites;
+
+    /**
+     * @var Collection<int, SpaceHighlight>
+     */
+    #[ORM\OneToMany(targetEntity: SpaceHighlight::class, mappedBy: 'space', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups([self::GROUP_READ])]
+    private Collection $highlights;
 
     // --- Override traits groups (même pattern que Actor.php) ---
 
@@ -342,5 +355,34 @@ class Space
     public function getFavorites(): Collection
     {
         return $this->favorites;
+    }
+
+    /**
+     * @return Collection<int, SpaceHighlight>
+     */
+    public function getHighlights(): Collection
+    {
+        return $this->highlights;
+    }
+
+    public function addHighlight(SpaceHighlight $highlight): static
+    {
+        if (!$this->highlights->contains($highlight)) {
+            $this->highlights->add($highlight);
+            $highlight->setSpace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHighlight(SpaceHighlight $highlight): static
+    {
+        if ($this->highlights->removeElement($highlight)) {
+            if ($highlight->getSpace() === $this) {
+                $highlight->setSpace(null);
+            }
+        }
+
+        return $this;
     }
 }
