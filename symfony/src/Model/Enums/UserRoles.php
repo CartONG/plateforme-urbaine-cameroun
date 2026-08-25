@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Model\Enums;
+
 class UserRoles
 {
     public const ROLE_USER = 'ROLE_USER';

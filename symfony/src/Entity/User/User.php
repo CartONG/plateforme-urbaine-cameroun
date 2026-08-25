@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Entity\Actor;
 use App\Entity\AppContentComment;
+use App\Entity\DiverCity\SpaceAdmin;
 use App\Entity\File\FileObject;
 use App\Entity\Project;
 use App\Entity\Resource;
@@ -21,7 +22,6 @@ use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
-use App\Entity\DiverCity\SpaceAdmin;
 use App\Services\Service\EmailVerifier\Dto\EmailVerifierSendDto;
 use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
@@ -218,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-     /**
+    /**
      * @return Collection<int, SpaceAdmin>
      */
     public function getSpaceAdmins(): Collection
@@ -235,8 +235,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
-    
-   
 
     /**
      * @see UserInterface

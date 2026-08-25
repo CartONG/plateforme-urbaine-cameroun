@@ -2,6 +2,7 @@
 
 namespace App\Entity\DiverCity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -27,9 +28,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Metadata\ApiProperty;
-
-
 
 #[ORM\Entity(repositoryClass: SpaceRepository::class)]
 #[ORM\Table(name: 'space', schema: 'divercity')]
