@@ -15,7 +15,8 @@ use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
-use App\Services\State\Provider\DiverCity\MyBookingsProvider;
+use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -42,6 +43,11 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
             provider: MyBookingsProvider::class,
         ),
+        new GetCollection(
+            uriTemplate: '/divercity/bookings/public',
+            normalizationContext: ['groups' => [self::GROUP_PUBLIC]],
+            provider: PublicBookingsProvider::class,
+        ),
         new Get(security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object) or object.getUser() == user"),
         new Post(
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
@@ -65,6 +71,7 @@ class Booking
     public const GROUP_READ = 'divercity_booking:read';
     public const GROUP_WRITE = 'divercity_booking:write';
     public const GROUP_ADMIN = 'divercity_booking:admin'; // décision (statut, motifs, traitant)
+    public const GROUP_PUBLIC = 'divercity_booking:public';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -96,7 +103,7 @@ class Booking
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'event_activity_type_id', referencedColumnName: 'id')]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
     private ?EventActivityType $eventActivityType = null;
 
     #[ORM\ManyToOne]
@@ -106,7 +113,7 @@ class Booking
 
     #[ORM\Column(length: 200)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
     private ?string $title = null;
 
     #[ORM\Column(length: 100)]
@@ -120,7 +127,7 @@ class Booking
     private ?string $firstName = null;
 
     #[ORM\Column(length: 150, nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
     private ?string $organization = null;
 
     #[ORM\Column(length: 150)]
@@ -141,22 +148,22 @@ class Booking
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: 'time')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_WRITE])]
     private ?\DateTimeInterface $startTime = null;
 
     #[ORM\Column(type: 'time')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_WRITE])]
     private ?\DateTimeInterface $endTime = null;
 
     #[ORM\Column]
     #[Assert\Positive]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
     private ?int $participantCount = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -388,6 +395,13 @@ class Booking
         return $this->startTime;
     }
 
+    #[Groups([self::GROUP_READ, self::GROUP_PUBLIC])]
+    #[SerializedName('startTime')]
+    public function getStartTimeFormat(): ?string
+    {
+        return $this->startTime?->format('H:i');
+    }
+
     public function setStartTime(\DateTimeInterface $startTime): static
     {
         $this->startTime = $startTime;
@@ -398,6 +412,12 @@ class Booking
     public function getEndTime(): ?\DateTimeInterface
     {
         return $this->endTime;
+    }
+    #[Groups([self::GROUP_READ, self::GROUP_PUBLIC])]
+    #[SerializedName('endTime')]
+    public function getEndTimeFormat(): ?string
+    {
+        return $this->endTime?->format('H:i');
     }
 
     public function setEndTime(\DateTimeInterface $endTime): static

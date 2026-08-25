@@ -31,6 +31,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     userIsLogged.value && currentUser.value?.roles.includes(role)
   const userIsAdmin = () => userIsLogged.value && userHasRole(UserRoles.ADMIN)
   const userIsActorEditor = () => userHasRole(UserRoles.EDITOR_ACTORS)
+  const userIsDiverCitySpaceAdmin = () => userHasRole(UserRoles.DIVERCITY_SPACE_ADMIN)
   const userIsEditor = () => {
     return (
       userIsLogged.value &&
@@ -134,6 +135,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     userIsEditor,
     userHasRole,
     userIsActorEditor,
+    userIsDiverCitySpaceAdmin,
     currentUser,
     errorWhileSignInOrSignUp,
     invalidAccount,

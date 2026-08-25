@@ -10,6 +10,7 @@ import { useApplicationStore } from '@/stores/applicationStore'
 import { useMyMapStore } from '@/stores/myMapStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
+import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import AdminComments from '@/views/admin/components/AdminComments.vue'
 import AdminContent from '@/views/admin/components/AdminContent.vue'
 import AdminMaps from '@/views/admin/components/AdminMaps.vue'
@@ -103,6 +104,25 @@ const router = createRouter({
       }
     },
     {
+      path: `/${i18n.t('routes.divercitySpace')}`,
+      name: 'divercitySpace',
+      component: () => {
+        const applicationStore = useApplicationStore(pinia)
+        applicationStore.isLoading = true
+        return import('@/views/divercity/SpaceSheetView.vue')
+      },
+      beforeEnter: async (to, from, next) => {
+        const spacesStore = useSpacesStore(pinia)
+        try {
+          await spacesStore.getMainSpace()
+          await spacesStore.getPublicBookings()
+        } catch (error) {
+          console.error('Erreur lors du chargement de l\'espace DiverCity', error)
+        }
+        next()
+      }
+    },
+    {
       path: `/${i18n.t('routes.services')}`,
       name: 'services',
       component: () => import('@/views/services/ServicesView.vue')
@@ -148,10 +168,13 @@ const router = createRouter({
       name: 'admin',
       redirect: () => {
         const adminStore = useAdminStore(pinia)
-        adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS
-        return {
-          name: 'adminUsers'
+        const userStore = useUserStore(pinia)
+        if (userStore.userIsAdmin()) {
+          adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS
+          return { name: 'adminUsers' }
         }
+        adminStore.selectedAdminPanel = AdministrationPanels.DIVERCITY
+        return { name: 'adminDiverCitySpace' }
       },
       component: () => {
         const applicationStore = useApplicationStore(pinia)
@@ -163,7 +186,7 @@ const router = createRouter({
         if (!userStore.loginCheck) {
           await userStore.checkAuthenticated()
         }
-        if (!userStore.userIsAdmin()) {
+        if (!userStore.userIsAdmin() && !userStore.userIsDiverCitySpaceAdmin()) {
           next({ path: '/' })
         } else {
           next()
@@ -174,6 +197,11 @@ const router = createRouter({
           path: 'users',
           name: 'adminUsers',
           component: AdminMembers
+        },
+        {
+          name: 'adminDiverCitySpace',
+          path: 'divercity-space',
+          component: () => import('@/views/admin/components/admin-divercity/SpaceManagementPanel.vue')
         },
         {
           path: 'content',

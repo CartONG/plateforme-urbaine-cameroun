@@ -72,4 +72,25 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Renvoie les réservations acceptées à venir (date >= aujourd'hui),
+     * triées par date croissante, pour affichage public.
+     *
+     * @return Booking[]
+     */
+    public function findAcceptedUpcoming(int $limit = 20): array
+    {
+        return $this->createQueryBuilder('b')
+            ->innerJoin('b.status', 's')
+            ->andWhere('s.code = :acceptedCode')
+            ->andWhere('b.date >= :today')
+            ->setParameter('acceptedCode', 'ACCEPTEE')
+            ->setParameter('today', new \DateTime('today'))
+            ->orderBy('b.date', 'ASC')
+            ->addOrderBy('b.startTime', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

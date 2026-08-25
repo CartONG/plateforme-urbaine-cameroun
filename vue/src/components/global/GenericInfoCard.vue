@@ -1,5 +1,5 @@
 <template>
-  <InfoCard class="GenericInfoCard" :to="to" :href="href" :target="href ? '_blank' : undefined">
+  <InfoCard class="GenericInfoCard" :class="{ 'GenericInfoCard--static': disableHoverEffect }" :to="to" :href="href" :target="href ? '_blank' : undefined">
     <template #content>
       <div class="GenericInfoCard__imgCtn">
         <img
@@ -21,35 +21,38 @@
       </div>
     </template>
     <template #footer-left>
-      <v-btn
-        v-if="mapRoute"
-        :to="mapRoute"
-        variant="text"
-        density="comfortable"
-        icon="$mapOutline"
-        class="hide-sm"
-        color="main-blue"
-      />
-      <ShareButton
-        :additionnal-path="additionnalPath as string"
-        :external-link="sharedLinkIsExternalToPlatform"
-      />
-      <HighlightButton :item-id="id" />
-      <LikeButton :id="id" />
-      <v-btn
-        class="GenericInfoCard__editBtn"
-        v-if="isEditable"
-        variant="text"
-        density="comfortable"
-        icon="$pencilOutline"
-        color="main-blue"
-        @click.prevent="editFunction"
-      >
-      </v-btn>
+      <template v-if="!hideActions">
+        <v-btn
+          v-if="mapRoute"
+          :to="mapRoute"
+          variant="text"
+          density="comfortable"
+          icon="$mapOutline"
+          class="hide-sm"
+          color="main-blue"
+        />
+        <ShareButton
+          :additionnal-path="additionnalPath as string"
+          :external-link="sharedLinkIsExternalToPlatform"
+        />
+        <HighlightButton :item-id="id" />
+        <LikeButton :id="id" />
+        <v-btn
+          class="GenericInfoCard__editBtn"
+          v-if="isEditable"
+          variant="text"
+          density="comfortable"
+          icon="$pencilOutline"
+          color="main-blue"
+          @click.prevent="editFunction"
+        >
+        </v-btn>
+      </template>
       <slot name="comment"></slot>
     </template>
     <template #footer-right>
       <v-icon
+        v-if="!hideActionIcon"
         class="InfoCard__actionIcon"
         :icon="actionIcon ?? '$openInNew'"
         color="light-blue"
@@ -81,6 +84,10 @@ const props = defineProps<{
   editFunction?: () => void
   mapRoute?: RouteLocationAsRelative | null
   href?: string
+  hideActions?: boolean
+  hideActionIcon?: boolean
+  disableHoverEffect?: boolean
+
 }>()
 
 const to = computed(() => {
@@ -138,6 +145,24 @@ const additionnalPath = computed(() => {
       opacity: 1;
     }
   }
+
+  &--static {
+    &:hover {
+      .GenericInfoCard__imgCtn {
+        height: $dim-img-h;
+        min-height: $dim-img-h;
+        opacity: 1;
+      }
+      .GenericInfoCard__infoCtn {
+        margin-top: $dim-img-h;
+
+        .InfoCard__description {
+          max-height: $dim-text-max-h;
+        }
+      }
+    }
+  }
+
   .GenericInfoCard__editBtn {
     opacity: 0;
     transition: all 0.15s ease-in;

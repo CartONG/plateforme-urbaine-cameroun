@@ -1,0 +1,28 @@
+{
+  "divercity": {
+    "space": {
+      "checkAvailability": "Vérifier les disponibilités",
+      "bookSpace": "Réserver cet espace",
+      "featured": "À la Une",
+      "upcoming": "Activités à venir",
+      "statistics": "Statistiques {year}",
+      "downloadReport": "Rapport du DiverCity Space {year}"
+    },
+    "form": {
+      "name": "Nom de l'espace",
+      "description": "Description",
+      "maxCapacity": "Capacité maximale",
+      "photos": "Photos (carrousel)",
+      "highlightSection": "Temps fort {year}",
+      "year": "Année",
+      "report": "Rapport annuel",
+      "existingReportPlaceholder": "Un rapport est déjà en ligne",
+      "statistics": "Statistiques",
+      "statLabel": "Nom de la statistique",
+      "statValue": "Valeur",
+      "addStatistic": "Ajouter une statistique",
+      "submitSuccess": "Les informations ont bien été enregistrées",
+      "submitError": "Une erreur est survenue lors de l'enregistrement"
+    }
+  }
+}

@@ -7,6 +7,7 @@ use App\Entity\File\MediaObject;
 use App\Entity\HighlightedItem;
 use App\Entity\Project;
 use App\Entity\Resource;
+use App\Entity\DiverCity\Space;
 use App\Enum\Config\ImagineFilter;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -29,7 +30,8 @@ class MediaObjectNormalizer implements NormalizerInterface
     {
         $context[self::ALREADY_CALLED] = true;
         /* @var MediaObject $object */
-        if ($this->isActor($context) || $this->isProject($context) || $this->isResource($context) || $this->isHighlightedItem($context)) {
+        if ($this->isActor($context) || $this->isProject($context) || $this->isResource($context) 
+            || $this->isHighlightedItem($context) || $this->isSpace($context)) {
             $object->contentsFilteredUrl = [
                 ImagineFilter::THUMBNAIL => $this->imagineCacheManager->getBrowserPath(
                     $this->storage->resolveUri($object, 'file'),
@@ -54,6 +56,7 @@ class MediaObjectNormalizer implements NormalizerInterface
             || $this->isProject($context)
             || $this->isResource($context)
             || $this->isHighlightedItem($context)
+            || $this->isSpace($context)
         );
     }
 
@@ -75,6 +78,11 @@ class MediaObjectNormalizer implements NormalizerInterface
     private function isHighlightedItem(array $context = []): bool
     {
         return $this->hasObjectcontext($context) && $context['object'] instanceof HighlightedItem;
+    }
+
+    private function isSpace(array $context = []): bool
+    {
+        return $this->hasObjectContext($context) && $context['object'] instanceof Space;
     }
 
     private function hasObjectContext(array $context = []): bool
