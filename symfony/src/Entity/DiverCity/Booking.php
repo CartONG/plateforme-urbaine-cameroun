@@ -11,12 +11,12 @@ use App\Entity\Resource;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BookingRepository;
 use App\Security\Voter\DiverCity\SpaceScopedVoter;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
 use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
-use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -413,6 +413,7 @@ class Booking
     {
         return $this->endTime;
     }
+
     #[Groups([self::GROUP_READ, self::GROUP_PUBLIC])]
     #[SerializedName('endTime')]
     public function getEndTimeFormat(): ?string

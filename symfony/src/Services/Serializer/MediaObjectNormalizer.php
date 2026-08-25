@@ -3,11 +3,11 @@
 namespace App\Services\Serializer;
 
 use App\Entity\Actor;
+use App\Entity\DiverCity\Space;
 use App\Entity\File\MediaObject;
 use App\Entity\HighlightedItem;
 use App\Entity\Project;
 use App\Entity\Resource;
-use App\Entity\DiverCity\Space;
 use App\Enum\Config\ImagineFilter;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -30,7 +30,7 @@ class MediaObjectNormalizer implements NormalizerInterface
     {
         $context[self::ALREADY_CALLED] = true;
         /* @var MediaObject $object */
-        if ($this->isActor($context) || $this->isProject($context) || $this->isResource($context) 
+        if ($this->isActor($context) || $this->isProject($context) || $this->isResource($context)
             || $this->isHighlightedItem($context) || $this->isSpace($context)) {
             $object->contentsFilteredUrl = [
                 ImagineFilter::THUMBNAIL => $this->imagineCacheManager->getBrowserPath(
