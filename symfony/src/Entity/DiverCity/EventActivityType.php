@@ -37,7 +37,7 @@ class EventActivityType
     private ?int $id = null;
 
     #[ORM\Column(length: 150, unique: true)]
-    #[Groups([self::GROUP_READ, Booking::GROUP_READ])]
+    #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
     private ?string $label = null;
 
     public function getId(): ?int

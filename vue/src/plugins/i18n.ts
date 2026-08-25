@@ -9,6 +9,7 @@ import homeFR from '@/assets/translations/fr/home.json'
 import myMapFR from '@/assets/translations/fr/myMap.json'
 import routesFR from '@/assets/translations/fr/routes.json'
 import qgisFR from '@/assets/translations/fr/qgisMapAndAtlas.json'
+import divercityFR from '@/assets/translations/fr/divercity.json'
 
 export const i18nInstance = createI18n({
   legacy: false,
@@ -25,7 +26,8 @@ export const i18nInstance = createI18n({
       ...resourcesFR,
       ...myMapFR,
       ...routesFR,
-      ...qgisFR
+      ...qgisFR,
+      ...divercityFR
     }
   }
 })

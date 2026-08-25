@@ -21,6 +21,7 @@ use App\Entity\Trait\ValidateableEntity;
 use App\Model\Enums\UserRoles;
 use App\Repository\User\UserRepository;
 use App\Security\Voter\UserVoter;
+use App\Entity\DiverCity\SpaceAdmin;
 use App\Services\Service\EmailVerifier\Dto\EmailVerifierSendDto;
 use App\Services\Service\EmailVerifier\Dto\EmailVerifierVerifyDto;
 use App\Services\Service\EmailVerifier\Exception\SignatureParamsException;
@@ -186,11 +187,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserLike::class, mappedBy: 'userId', orphanRemoval: true)]
     private Collection $userLikes;
 
+    /**
+     * @var Collection<int, SpaceAdmin>
+     */
+    #[ORM\OneToMany(targetEntity: SpaceAdmin::class, mappedBy: 'user')]
+    private Collection $spaceAdmins;
+
     public function __construct()
     {
         $this->actorsCreated = new ArrayCollection();
         $this->setRoles([UserRoles::ROLE_USER]);
         $this->userLikes = new ArrayCollection();
+        $this->spaceAdmins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -210,6 +218,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+     /**
+     * @return Collection<int, SpaceAdmin>
+     */
+    public function getSpaceAdmins(): Collection
+    {
+        return $this->spaceAdmins;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -219,6 +235,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+    
+   
 
     /**
      * @see UserInterface
@@ -230,6 +248,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = UserRoles::ROLE_USER;
+
+        if ($this->spaceAdmins->count() > 0) {
+            $roles[] = UserRoles::ROLE_DIVERCITY_SPACE_ADMIN;
+        }
 
         return array_unique($roles);
     }

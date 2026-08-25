@@ -3,11 +3,11 @@
     <PageBanner
       :title="$t('admin.title')"
       class="mt-10"
-      v-if="userStore.currentUser?.roles.includes(UserRoles.ADMIN)"
+      v-if="userStore.userIsAdmin() || userStore.userIsDiverCitySpaceAdmin()"
     />
     <div
       class="AdminView__content mt-10"
-      v-if="userStore.currentUser?.roles.includes(UserRoles.ADMIN)"
+      v-if="userStore.userIsAdmin() || userStore.userIsDiverCitySpaceAdmin()"
     >
       <AdminPanelsSelector class="AdminView__tab" />
       <router-view />
@@ -27,9 +27,11 @@ import { useHighlightStore } from '@/stores/highlightStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useQgisMapStore } from '@/stores/qgisMapStore'
 import { useResourceStore } from '@/stores/resourceStore'
+import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { useUserStore } from '@/stores/userStore'
 import AdminPanelsSelector from '@/views/admin/components/AdminPanelsSelector.vue'
 import { onMounted } from 'vue'
+
 const userStore = useUserStore()
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
@@ -40,19 +42,25 @@ const highlightStore = useHighlightStore()
 const qgisMapStore = useQgisMapStore()
 const resourceStore = useResourceStore()
 const adminStore = useAdminStore()
+const spacesStore = useSpacesStore()
 
 onMounted(async () => {
-  const promises = [
-    actorsStore.getActors(),
-    projectStore.getAll(),
-    commentStore.getAll(),
-    atlasStore.getAll(),
-    highlightStore.getAll(),
-    qgisMapStore.getAll(),
-    resourceStore.getAll(),
-    adminStore.getMembers()
-  ]
-  await Promise.all(promises)
+  // Un SpaceAdmin pur (sans ROLE_ADMIN) n'a besoin que des données DiverCity :
+  // on évite de charger tout le reste inutilement (acteurs, projets, cartes, etc.)
+  if (userStore.userIsAdmin()) {
+    const promises = [
+      actorsStore.getActors(),
+      projectStore.getAll(),
+      commentStore.getAll(),
+      atlasStore.getAll(),
+      highlightStore.getAll(),
+      qgisMapStore.getAll(),
+      resourceStore.getAll(),
+      adminStore.getMembers()
+    ]
+    await Promise.all(promises)
+  }
+  await spacesStore.getMainSpace()
   applicationStore.isLoading = false
 })
 </script>

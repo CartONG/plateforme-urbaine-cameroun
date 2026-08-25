@@ -27,11 +27,21 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\ApiProperty;
+
+
 
 #[ORM\Entity(repositoryClass: SpaceRepository::class)]
 #[ORM\Table(name: 'space', schema: 'divercity')]
 #[ApiResource(
-    normalizationContext: ['groups' => [self::GROUP_READ]],
+    normalizationContext: [
+        'groups' => [
+            self::GROUP_READ,
+            MediaObject::READ,
+            SpaceHighlight::GROUP_READ,
+            'file_object:read',
+        ],
+    ],
     denormalizationContext: [
         'groups' => [self::GROUP_WRITE],
         'disable_type_enforcement' => true,
@@ -118,6 +128,7 @@ class Space
     #[ORM\JoinTable(name: 'space_media_object', schema: 'divercity')]
     #[ORM\JoinColumn(name: 'space_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'media_object_id', referencedColumnName: 'id')]
+    #[ApiProperty(readableLink: true)]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private Collection $photos;
 

@@ -39,6 +39,8 @@
     "projects": "Projets",
     "resources": "Ressources",
     "services": "Services",
+    "divercitySpace": "DiverCity Space",
+    "panelDiverCity": "DiverCity Space",
     "map": "Ma carte",
     "login": "Connectez-vous",
     "account": "Mon compte",
@@ -121,6 +123,7 @@
   },
   "forms": {
     "test": "Test",
+    "save": "Enregistrer",
     "modify": "Modifier",
     "edit": "Modifier",
     "submit": "Valider",

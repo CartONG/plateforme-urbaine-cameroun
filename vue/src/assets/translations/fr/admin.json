@@ -16,6 +16,7 @@
     "member": "Utilisateur | Utilisateurs",
     "add": "Ajouter",
     "search": "Rechercher",
+    "panelDiverCity": "DiverCity Space",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },

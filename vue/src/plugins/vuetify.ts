@@ -98,7 +98,9 @@ import {
   mdiStarOutline,
   mdiTrashCanOutline,
   mdiTune,
-  mdiWhatsapp
+  mdiWhatsapp,
+  mdiChartBar,
+  mdiClockOutline
 } from '@mdi/js'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -140,6 +142,7 @@ export default createVuetify({
       helpCircleOutline: mdiHelpCircleOutline,
       accountCircle: mdiAccountCircle,
       accountGroup: mdiAccountGroup,
+      clockOutline: mdiClockOutline,
       emailOutline: mdiEmailOutline,
       emailPlusOutline: mdiEmailPlusOutline,
       minus: mdiMinus,
@@ -175,7 +178,8 @@ export default createVuetify({
       circleSmall: mdiCircleSmall,
       crosshairsGps: mdiCrosshairsGps,
       crosshairs: mdiCrosshairs,
-      trashCanOutlines: mdiTrashCanOutline
+      trashCanOutlines: mdiTrashCanOutline,
+      chartBar: mdiChartBar
     },
     sets: {
       mdi

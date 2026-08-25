@@ -2,6 +2,7 @@
   <div class="Admin__panelSelector_container">
     <v-expansion-panels variant="accordion" v-model="adminStore.selectedAdminPanel" elevation="0">
       <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :readonly="true"
         :value="AdministrationPanels.MEMBERS"
         @click="adminStore.selectedAdminPanel = AdministrationPanels.MEMBERS"
@@ -19,6 +20,7 @@
       </v-expansion-panel>
 
       <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :title="$t('admin.panelContent')"
         :value="AdministrationPanels.CONTENT"
         :class="{
@@ -52,6 +54,7 @@
       </v-expansion-panel>
 
       <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :title="$t('admin.panelMap')"
         :value="AdministrationPanels.MAPS"
         :class="{
@@ -76,6 +79,7 @@
       </v-expansion-panel>
 
       <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :value="AdministrationPanels.HIGHLIGHTS"
         :class="{
           Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.HIGHLIGHTS
@@ -93,6 +97,7 @@
       </v-expansion-panel>
 
       <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :title="$t('admin.panelComments')"
         :value="AdministrationPanels.COMMENTS"
         :class="{
@@ -131,6 +136,23 @@
           </router-link>
         </v-expansion-panel-text>
       </v-expansion-panel>
+
+      <v-expansion-panel
+        :value="AdministrationPanels.DIVERCITY"
+        :class="{
+          Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY
+        }"
+        class="text-main-blue"
+      >
+        <router-link :to="{ name: 'adminDiverCitySpace' }">
+          <v-expansion-panel-title>
+            {{ $t('admin.panelDiverCity') }}
+            <template v-slot:actions>
+              <v-icon color="main-blue" icon="$chevronRight"></v-icon>
+            </template>
+          </v-expansion-panel-title>
+        </router-link>
+      </v-expansion-panel>
     </v-expansion-panels>
   </div>
 </template>
@@ -142,14 +164,18 @@ import { useAdminStore } from '@/stores/adminStore'
 import { useCommentStore } from '@/stores/commentStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
+import { useUserStore } from '@/stores/userStore'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
 const adminStore = useAdminStore()
 const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
 const commentStore = useCommentStore()
+const userStore = useUserStore()
 const router = useRouter()
+
 watch(
   () => adminStore.selectedAdminPanel,
   () => {
@@ -162,12 +188,16 @@ watch(
     } else if (adminStore.selectedAdminPanel === AdministrationPanels.MAPS) {
       router.push({ name: 'adminPredefinedMaps' })
       adminStore.selectedAdminItem = AdministrationPanels.MAP_ATLAS
+    } else if (adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY) {
+      router.push({ name: 'adminDiverCitySpace' })
+      adminStore.selectedAdminItem = null
     } else {
       router.push({ name: 'actorsComments' })
       adminStore.selectedAdminItem = AdministrationPanels.COMMENTS_ACTORS
     }
   }
 )
+
 const actorsToValidate = computed(() => actorsStore.actors.filter((x) => !x.isValidated).length)
 const projectsToValidate = computed(
   () => projectStore.projects.filter((x) => !x.isValidated).length
