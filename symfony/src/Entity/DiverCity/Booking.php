@@ -24,10 +24,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ORM\Table(name: 'booking', schema: 'divercity')]
@@ -57,7 +57,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
         ),
         new Patch(
             uriTemplate: '/divercity/bookings/{id}/information-source',
-            security: "object.getUser() == user",
+            security: 'object.getUser() == user',
             processor: BookingInformationSourceProcessor::class
         ),
         new Patch(
@@ -354,7 +354,7 @@ class Booking
         return $this;
     }
 
-        public function getRole(): ?string
+    public function getRole(): ?string
     {
         return $this->role;
     }
