@@ -22,7 +22,94 @@
       "statValue": "Valeur",
       "addStatistic": "Ajouter une statistique",
       "submitSuccess": "Les informations ont bien été enregistrées",
-      "submitError": "Une erreur est survenue lors de l'enregistrement"
+      "submitError": "Une erreur est survenue lors de l'enregistrement",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "finish": "Terminé",
+      "close": "Fermer",
+      "cancel": "Annuler"
+    },
+    "booking":{
+      "title": "Formulaire de réservation",
+      "step1": "Identification du demandeur",
+      "step2": "Informations sur l'évènement / activité",
+      "step3": "Créneau horaire souhaité",
+      "fields": {         
+        "lastName": "Nom",
+        "firstName": "Prénom",
+        "organization": "Organisme",
+        "role": "Rôle du demandeur",
+        "email": "Email",
+        "phone": "Contact",
+        "title": "Titre",
+        "eventActivityType": "Type d'évènement / activité",
+        "agenda": "Ordre du jour",
+        "resourceDocument": "Documents ressources",
+        "bookingPurpose": "Motif de la réservation",
+        "additionalInformation": "Informations complémentaires",
+        "participantCount": "Nombre de participants",
+        "date": "Date",
+        "startTime": "Heure de début",
+        "endTime": "Heure de fin",
+        "duration": "Durée totale"
+      },
+      "placeholders": {
+        "lastName": "Nom de famille",
+        "firstName": "Prénom",
+        "organization": "Nom de votre structure",
+        "role": "Votre fonction",
+        "email": "adresse{'@'}exemple.com",
+        "phone": "+237 6XX XXX XXX",
+        "title": "Titre de l'événement",
+        "eventActivityType": "Sélectionnez un type",
+        "agenda": "Sélectionnez un fichier PDF",
+        "resourceDocument": "Sélectionnez un ou plusieurs fichiers PDF",
+        "bookingPurpose": "Décrivez l'objet de la réservation",
+        "additionalInformation": "Informations complémentaires (optionnel)",
+        "participantCount": "Nombre de participants"
+      },
+      "availability": {
+        "title": "Créneaux déjà occupés ce jour-là :",
+        "blocked": "période bloquée",
+        "free": "Aucune réservation ce jour-là.",
+        "conflict": "Ce créneau chevauche une réservation ou une période bloquée existante.",
+        "timeline": {
+          "title": "Créneaux occupés ce jour"
+        },
+        "legend": {
+          "booking": "Réservation"
+        }
+      },
+      "done": {
+        "title": "Terminé",
+        "message": "Votre demande de réservation a bien été enregistrée. Elle est en attente de validation par un administrateur. Vous serez informé(e) de la décision par e-mail.",
+        "informationSourceQuestion": "Comment avez-vous entendu parler de DiverCity ?"
+      },
+      "cancelConfirm": {
+        "title": "Quitter le formulaire ?",
+        "message": "Les informations saisies n'ont pas été enregistrées et seront perdues si vous quittez maintenant.",
+        "stay": "Rester sur le formulaire",
+        "leave": "Quitter sans enregistrer"
+      },
+      "errors": {
+        "submit": "Une erreur est survenue lors de l'envoi de votre demande de réservation."
+      }
+    },
+    "availability": {
+      "title": "Disponibilité de l'espace",
+      "legend": {
+        "free": "Libre",
+        "partial": "Partiellement occupé",
+        "full": "Complet",
+        "blockedPeriod": "Période bloquée",
+        "booking": "Réservation"
+      },
+      "timeline": {
+        "title": "Créneaux occupés ce jour"
+      },
+      "dayFree": "Aucune réservation ce jour, l'espace est disponible.",
+      "pickSlot": "Choisissez un créneau",
+      "bookThisSlot": "Réserver ce créneau"
     }
   }
 }

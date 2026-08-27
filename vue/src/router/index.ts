@@ -123,6 +123,46 @@ const router = createRouter({
       }
     },
     {
+      path: `/${i18n.t('routes.divercitySpace')}/booking`,
+      name: 'divercitySpaceBooking',
+      component: () => {
+        const applicationStore = useApplicationStore(pinia)
+        applicationStore.isLoading = true
+        return import('@/views/divercity/BookingFormView.vue')
+      },
+      beforeEnter: async (to, from, next) => {
+        const spacesStore = useSpacesStore(pinia)
+        if (!spacesStore.mainSpace) {
+          try {
+            await spacesStore.getMainSpace()
+          } catch (error) {
+            console.error('Erreur lors du chargement de l\'espace DiverCity', error)
+          }
+        }
+        next()
+      }
+    },
+    {
+      path: `/${i18n.t('routes.divercitySpace')}/availability`,
+      name: 'divercitySpaceAvailability',
+      component: () => {
+        const applicationStore = useApplicationStore(pinia)
+        applicationStore.isLoading = true
+        return import('@/views/divercity/SpaceAvailabilityView.vue')
+      },
+      beforeEnter: async (to, from, next) => {
+        const spacesStore = useSpacesStore(pinia)
+        if (!spacesStore.mainSpace) {
+          try {
+            await spacesStore.getMainSpace()
+          } catch (error) {
+            console.error('Erreur lors du chargement de l\'espace DiverCity', error)
+          }
+        }
+        next()
+      }
+    },
+    {
       path: `/${i18n.t('routes.services')}`,
       name: 'services',
       component: () => import('@/views/services/ServicesView.vue')

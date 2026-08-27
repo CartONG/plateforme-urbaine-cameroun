@@ -14,6 +14,7 @@ use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
+use App\Services\State\Processor\DiverCity\BookingInformationSourceProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
 use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
@@ -26,6 +27,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 #[ORM\Table(name: 'booking', schema: 'divercity')]
@@ -54,6 +56,11 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             processor: BookingSubmissionProcessor::class
         ),
         new Patch(
+            uriTemplate: '/divercity/bookings/{id}/information-source',
+            security: "object.getUser() == user",
+            processor: BookingInformationSourceProcessor::class
+        ),
+        new Patch(
             security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)",
             processor: BookingDecisionProcessor::class
         ),
@@ -77,7 +84,7 @@ class Booking
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator('doctrine.uuid_generator')]
-    #[Groups([self::GROUP_READ])]
+    #[Groups([self::GROUP_READ, self::GROUP_PUBLIC])]
     private ?Uuid $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
@@ -132,6 +139,11 @@ class Booking
 
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $role = null;
+
+    #[ORM\Column(length: 150)]
+    #[Assert\NotBlank]
     #[Assert\Email]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?string $email = null;
@@ -148,7 +160,7 @@ class Booking
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
+    #[Groups([self::GROUP_WRITE])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: 'time')]
@@ -342,6 +354,18 @@ class Booking
         return $this;
     }
 
+        public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -381,6 +405,13 @@ class Booking
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
+    }
+
+    #[Groups([self::GROUP_READ, self::GROUP_PUBLIC])]
+    #[SerializedName('date')]
+    public function getDateFormat(): ?string
+    {
+        return $this->date?->format('Y-m-d');
     }
 
     public function setDate(\DateTimeInterface $date): static
