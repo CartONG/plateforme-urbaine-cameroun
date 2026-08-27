@@ -10,6 +10,7 @@ use App\Repository\DiverCity\BookingRepository;
 use App\Repository\DiverCity\SpaceRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Calcule les indisponibilités d'un espace (réservations acceptées +
@@ -34,7 +35,9 @@ class SpaceAvailabilityProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {
-        $space = $this->spaceRepository->find($uriVariables['spaceId']);
+        error_log('SpaceAvailabilityProvider::provide appelé avec spaceId=' . ($uriVariables['spaceId'] ?? 'ABSENT'));
+
+        $space = $this->spaceRepository->find(Uuid::fromString($uriVariables['spaceId']));
         if (null === $space) {
             throw new NotFoundHttpException('Espace introuvable.');
         }
@@ -52,6 +55,8 @@ class SpaceAvailabilityProvider implements ProviderInterface
             $availability->setStartTime($booking->getStartTime());
             $availability->setEndTime($booking->getEndTime());
             $availability->setType(SpaceAvailability::TYPE_BOOKING);
+            $availability->setTitle($booking->getTitle());
+            $availability->setEventActivityTypeLabel($booking->getEventActivityType()?->getLabel());
             $availabilities[] = $availability;
         }
 
@@ -62,6 +67,7 @@ class SpaceAvailabilityProvider implements ProviderInterface
             $availability->setStartTime($blockedPeriod->getStartTime());
             $availability->setEndTime($blockedPeriod->getEndTime());
             $availability->setType(SpaceAvailability::TYPE_BLOCKED_PERIOD);
+            $availability->setTitle($blockedPeriod->getReason());
             $availabilities[] = $availability;
         }
 

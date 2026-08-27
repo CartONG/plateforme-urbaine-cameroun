@@ -8,6 +8,8 @@ import { StoresList } from '@/models/enums/app/StoresList'
 export const useSpacesStore = defineStore(StoresList.DIVERCITY_SPACES, () => {
   const mainSpace = ref<Space | null>(null)
   const publicBookings = ref<PublicBooking[]>([])
+  const preselectedSlot = ref<{ date: string; startTime: string; endTime: string } | null>(null)
+
 
   async function getMainSpace(): Promise<void> {
     const spaces = await SpacesService.getSpaces()
@@ -21,6 +23,7 @@ export const useSpacesStore = defineStore(StoresList.DIVERCITY_SPACES, () => {
   return {
     mainSpace,
     publicBookings,
+    preselectedSlot,
     getMainSpace,
     getPublicBookings
   }

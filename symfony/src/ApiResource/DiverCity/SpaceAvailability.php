@@ -5,23 +5,21 @@ namespace App\ApiResource\DiverCity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\QueryParameter;
+use App\Entity\DiverCity\Space;
 use App\Services\State\Provider\DiverCity\SpaceAvailabilityProvider;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
-/**
- * Représente une période d'indisponibilité sur un espace : soit une
- * réservation déjà acceptée, soit une période bloquée par un administrateur.
- *
- * N'est stocké dans aucune table : calculé à la volée par
- * SpaceAvailabilityProvider à partir de divercity.booking et
- * divercity.blocked_period.
- */
 #[ApiResource(
     paginationEnabled: false,
     operations: [
         new GetCollection(
             uriTemplate: '/divercity/spaces/{spaceId}/availability',
+            uriVariables: [
+                'spaceId' => new Link(fromClass: Space::class, identifiers: ['id']),
+            ],
             provider: SpaceAvailabilityProvider::class,
             normalizationContext: ['groups' => [self::GROUP_READ]],
             parameters: [
@@ -42,21 +40,25 @@ class SpaceAvailability
     #[Groups([self::GROUP_READ])]
     private string $id;
 
-    #[Groups([self::GROUP_READ])]
     private \DateTimeInterface $date;
 
-    #[Groups([self::GROUP_READ])]
     private \DateTimeInterface $startTime;
 
-    #[Groups([self::GROUP_READ])]
     private \DateTimeInterface $endTime;
 
-    /**
-     * TYPE_BOOKING ou TYPE_BLOCKED_PERIOD — permet au front de distinguer
-     * une réservation d'une indisponibilité administrative.
-     */
     #[Groups([self::GROUP_READ])]
     private string $type;
+
+    /**
+     * Titre de la réservation (type=booking) ou motif de la période bloquée
+     * (type=blocked_period). Nullable : le motif d'une période bloquée est
+     * optionnel côté admin.
+     */
+    #[Groups([self::GROUP_READ])]
+    private ?string $title = null;
+
+    #[Groups([self::GROUP_READ])]
+    private ?string $eventActivityTypeLabel = null;
 
     public function getId(): string
     {
@@ -75,6 +77,13 @@ class SpaceAvailability
         return $this->date;
     }
 
+    #[Groups([self::GROUP_READ])]
+    #[SerializedName('date')]
+    public function getDateFormat(): ?string
+    {
+        return $this->date?->format('Y-m-d');
+    }
+
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
@@ -87,6 +96,13 @@ class SpaceAvailability
         return $this->startTime;
     }
 
+    #[Groups([self::GROUP_READ])]
+    #[SerializedName('startTime')]
+    public function getStartTimeFormat(): ?string
+    {
+        return $this->startTime?->format('H:i');
+    }
+
     public function setStartTime(\DateTimeInterface $startTime): self
     {
         $this->startTime = $startTime;
@@ -97,6 +113,13 @@ class SpaceAvailability
     public function getEndTime(): \DateTimeInterface
     {
         return $this->endTime;
+    }
+
+    #[Groups([self::GROUP_READ])]
+    #[SerializedName('endTime')]
+    public function getEndTimeFormat(): ?string
+    {
+        return $this->endTime?->format('H:i');
     }
 
     public function setEndTime(\DateTimeInterface $endTime): self
@@ -114,6 +137,30 @@ class SpaceAvailability
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getEventActivityTypeLabel(): ?string
+    {
+        return $this->eventActivityTypeLabel;
+    }
+
+    public function setEventActivityTypeLabel(?string $eventActivityTypeLabel): self
+    {
+        $this->eventActivityTypeLabel = $eventActivityTypeLabel;
 
         return $this;
     }
