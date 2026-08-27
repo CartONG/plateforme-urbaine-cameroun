@@ -35,7 +35,7 @@ class SpaceAvailabilityProvider implements ProviderInterface
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array
     {
-        error_log('SpaceAvailabilityProvider::provide appelé avec spaceId=' . ($uriVariables['spaceId'] ?? 'ABSENT'));
+        error_log('SpaceAvailabilityProvider::provide appelé avec spaceId='.($uriVariables['spaceId'] ?? 'ABSENT'));
 
         $space = $this->spaceRepository->find(Uuid::fromString($uriVariables['spaceId']));
         if (null === $space) {
