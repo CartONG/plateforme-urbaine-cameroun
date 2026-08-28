@@ -1,5 +1,47 @@
 {
   "divercity": {
+    "admin": {
+      "detail": {
+        "requester": "Demandeur",
+        "name": "Nom",
+        "role": "Fonction",
+        "organization": "Organisation",
+        "email": "Email",
+        "phone": "Téléphone",
+        "event": "Événement",
+        "title": "Titre",
+        "activityType": "Type d'activité",
+        "purpose": "Objet de la réservation",
+        "additionalInfo": "Informations complémentaires",
+        "slot": "Créneau",
+        "date": "Date",
+        "time": "Horaire",
+        "participants": "{count} participant | {count} participants",
+        "attachments": "Pièces jointes",
+        "agendaFile": "Ordre du jour",
+        "resourceFile": "Document ressource",
+        "otherFile": "Autre document",
+        "refusalReason": "Motif du refus",
+        "cancellationReason": "Motif de l'annulation",
+        "submittedAt": "Soumise le {date}"
+      },
+      
+      "bookings": "réservation | réservation | réservations",
+      "sortPending": "En attente d'abord",
+      "sortDate": "Date",
+      "accept": "Accepter",
+      "refuse": "Refuser",
+      "cancel": "Annuler",
+      "refuseDialogTitle": "Motif du refus",
+      "refusalReason": "Expliquez le motif du refus",
+      "cancelDialogTitle": "Motif de l'annulation",
+      "cancellationReason": "Expliquez le motif de l'annulation (optionnel)",
+      "decisionSuccess": "La décision a bien été enregistrée",
+      "decisionError": "Une erreur est survenue",
+      "cancelSuccess": "La réservation a bien été annulée",
+      "cancelError": "Une erreur est survenue"
+      
+    },
     "space": {
       "checkAvailability": "Vérifier les disponibilités",
       "bookSpace": "Réserver cet espace",

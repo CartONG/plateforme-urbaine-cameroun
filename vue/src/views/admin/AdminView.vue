@@ -30,6 +30,7 @@ import { useResourceStore } from '@/stores/resourceStore'
 import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { useUserStore } from '@/stores/userStore'
 import AdminPanelsSelector from '@/views/admin/components/AdminPanelsSelector.vue'
+import { useBookingsStore } from '@/stores/divercity/bookingsStore'
 import { onMounted } from 'vue'
 
 const userStore = useUserStore()
@@ -43,6 +44,8 @@ const qgisMapStore = useQgisMapStore()
 const resourceStore = useResourceStore()
 const adminStore = useAdminStore()
 const spacesStore = useSpacesStore()
+const bookingsStore = useBookingsStore()
+
 
 onMounted(async () => {
   // Un SpaceAdmin pur (sans ROLE_ADMIN) n'a besoin que des données DiverCity :
@@ -60,7 +63,11 @@ onMounted(async () => {
     ]
     await Promise.all(promises)
   }
-  await spacesStore.getMainSpace()
+  if (userStore.userIsAdmin() || userStore.userIsDiverCitySpaceAdmin()) {
+    await spacesStore.getMainSpace()
+    await bookingsStore.getManagedBookings()
+    await bookingsStore.getStatuses()
+  }
   applicationStore.isLoading = false
 })
 </script>

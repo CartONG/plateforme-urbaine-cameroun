@@ -21,6 +21,9 @@ export interface BookingAttachment extends SymfonyRelation {
 export interface Booking extends SymfonyRelation {
   id: string
   space: Space | string
+  user?: BookingUser | string
+  processingUser?: BookingUser | string | null
+  status?: BookingStatus | string
   eventActivityType?: EventActivityType | string | null
   informationSource?: InformationSource | string | null
   title: string
@@ -36,8 +39,11 @@ export interface Booking extends SymfonyRelation {
   endTime: string
   participantCount: number
   additionalInformation?: string
+  refusalReason?: string | null
+  cancellationReason?: string | null
   bookingAttachments: BookingAttachment[]
   submittedAt?: string
+  processedAt?: string | null
 }
 
 // Payload envoyé au POST — mêmes champs, attachments déjà résolus en IRI
@@ -68,6 +74,18 @@ export interface SpaceAvailability {
   type: 'booking' | 'blocked_period'
   title?: string | null
   eventActivityTypeLabel?: string | null
+}
+
+export interface BookingStatus extends SymfonyRelation {
+  id: number
+  code: string
+  label: string
+}
+
+export interface BookingUser extends SymfonyRelation {
+  id: number
+  fullName: string
+  email: string
 }
 
 export interface PublicBooking extends SymfonyRelation {

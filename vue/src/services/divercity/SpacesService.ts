@@ -1,7 +1,8 @@
 import { apiClient } from '@/plugins/axios/api'
 import type { Space, SpaceHighlight, SpaceHighlightSubmission} from '@/models/interfaces/divercity/Space'
-import type { EventActivityType, InformationSource, Booking, BookingSubmission, SpaceAvailability } from '@/models/interfaces/divercity/Booking'
+import type { EventActivityType, InformationSource, Booking, BookingSubmission, SpaceAvailability, BookingStatus } from '@/models/interfaces/divercity/Booking'
 import type { PublicBooking } from '@/models/interfaces/divercity/Booking'
+
 
 export class SpacesService {
   static async getSpaces(): Promise<Space[]> {
@@ -71,4 +72,42 @@ export class SpacesService {
     ).data
     return data['hydra:member'] as SpaceAvailability[]
   }
+
+  static async getManagedBookings(): Promise<Booking[]> {
+    const data = (
+      await apiClient.get('/api/divercity/bookings/managed', {
+        headers: { accept: 'application/ld+json' }
+      })
+    ).data
+    return data['hydra:member'] as Booking[]
+  }
+
+  static async getStatuses(): Promise<BookingStatus[]> {
+    const data = (
+      await apiClient.get('/api/statuses', { headers: { accept: 'application/ld+json' } })
+    ).data
+    return data['hydra:member'] as BookingStatus[]
+  }
+
+  static async patchBookingDecision(
+    bookingId: string,
+    status: string,
+    refusalReason?: string
+  ): Promise<Booking> {
+    return (
+      await apiClient.patch(`/api/bookings/${bookingId}`, {
+        status,
+        ...(refusalReason ? { refusalReason } : {})
+      })
+    ).data
+  }
+
+  static async patchBookingCancellation(bookingId: string, cancellationReason?: string): Promise<Booking> {
+    return (
+      await apiClient.patch(`/api/divercity/bookings/${bookingId}/cancel`, {
+        ...(cancellationReason ? { cancellationReason } : {})
+      })
+    ).data
+  }
 }
+

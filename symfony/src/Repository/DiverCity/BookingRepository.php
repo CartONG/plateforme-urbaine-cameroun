@@ -93,4 +93,17 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getCurrentStatusCode(Uuid $bookingId): ?string
+    {
+        $result = $this->createQueryBuilder('b')
+            ->select('s.code')
+            ->join('b.status', 's')
+            ->where('b.id = :id')
+            ->setParameter('id', $bookingId)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $result['code'] ?? null;
+    }
 }

@@ -244,6 +244,11 @@ const router = createRouter({
           component: () => import('@/views/admin/components/admin-divercity/SpaceManagementPanel.vue')
         },
         {
+          name: 'adminDiverCityBookings',
+          path: 'divercity-bookings',
+          component: () => import('@/views/admin/components/admin-divercity/BookingsPanel.vue')
+        },
+        {
           path: 'content',
           name: 'adminContent',
           component: AdminContent,

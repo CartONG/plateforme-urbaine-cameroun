@@ -9,6 +9,8 @@ use App\Entity\User\User;
 use App\Repository\DiverCity\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ORM\Table(name: 'notification', schema: 'divercity')]
@@ -48,6 +50,7 @@ class Notification
     #[Groups([self::GROUP_READ])]
     private ?string $type = null;
 
+    #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: 'datetime')]
     #[Groups([self::GROUP_READ])]
     private ?\DateTimeInterface $sentAt = null;
