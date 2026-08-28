@@ -31,7 +31,7 @@ class MediaObjectNormalizer implements NormalizerInterface
         $context[self::ALREADY_CALLED] = true;
         /* @var MediaObject $object */
         if ($this->isActor($context) || $this->isProject($context) || $this->isResource($context)
-            || $this->isHighlightedItem($context) || $this->isSpace($context)) {
+            || $this->isHighlightedItem($context) || $this->isSpace($context) || $this->isBooking($context)) {
             $object->contentsFilteredUrl = [
                 ImagineFilter::THUMBNAIL => $this->imagineCacheManager->getBrowserPath(
                     $this->storage->resolveUri($object, 'file'),
@@ -57,6 +57,7 @@ class MediaObjectNormalizer implements NormalizerInterface
             || $this->isResource($context)
             || $this->isHighlightedItem($context)
             || $this->isSpace($context)
+            || $this->isBooking($context)
         );
     }
 
@@ -83,6 +84,11 @@ class MediaObjectNormalizer implements NormalizerInterface
     private function isSpace(array $context = []): bool
     {
         return $this->hasObjectContext($context) && $context['object'] instanceof Space;
+    }
+
+    private function isBooking(array $context = []): bool
+    {
+        return $this->hasObjectContext($context) && $context['object'] instanceof Booking;
     }
 
     private function hasObjectContext(array $context = []): bool

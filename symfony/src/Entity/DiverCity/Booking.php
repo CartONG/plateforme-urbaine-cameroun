@@ -11,7 +11,6 @@ use App\Entity\Resource;
 use App\Entity\User\User;
 use App\Repository\DiverCity\BookingRepository;
 use App\Security\Voter\DiverCity\SpaceScopedVoter;
-use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
 use App\Services\State\Processor\DiverCity\BookingInformationSourceProcessor;
@@ -62,11 +61,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         ),
         new Patch(
             security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)",
+            denormalizationContext: ['groups' => [self::GROUP_ADMIN]],
             processor: BookingDecisionProcessor::class
         ),
         new Patch(
             uriTemplate: '/divercity/bookings/{id}/cancel',
             security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object) or object.getUser() == user",
+            denormalizationContext: ['groups' => [self::GROUP_ADMIN]],
             processor: BookingCancellationProcessor::class
         ), // annulation par le demandeur ou un admin
     ],

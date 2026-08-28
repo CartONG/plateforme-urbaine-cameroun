@@ -17,6 +17,8 @@
     "add": "Ajouter",
     "search": "Rechercher",
     "panelDiverCity": "DiverCity Space",
+    "panelDiverCitySpace": "Gérer l'espace",
+    "panelDiverCityBookings": "Réservations",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },

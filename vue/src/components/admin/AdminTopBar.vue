@@ -55,6 +55,7 @@ type AdminPages =
   | AtlasGroup.THEMATIC_DATA
   | 'QgisMaps'
   | 'Comments'
+  | 'Bookings'
 const props = defineProps<{
   page: AdminPages
   items: Actor[] | User[]
@@ -87,6 +88,8 @@ const title = computed(() => {
       return `${props.items.length} ${i18n.t('actors.actors', props.items.length)}`
     case 'Comments':
       return `${props.items.length} ${i18n.t('admin.comments.title', props.items.length)}`
+    case 'Bookings':
+      return `${props.items.length} ${i18n.t('divercity.admin.bookings', props.items.length)}`
     default:
       return null
   }

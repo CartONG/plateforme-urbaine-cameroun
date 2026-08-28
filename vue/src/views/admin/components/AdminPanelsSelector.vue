@@ -138,20 +138,26 @@
       </v-expansion-panel>
 
       <v-expansion-panel
+        :title="$t('admin.panelDiverCity')"
         :value="AdministrationPanels.DIVERCITY"
         :class="{
           Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY
         }"
         class="text-main-blue"
       >
-        <router-link :to="{ name: 'adminDiverCitySpace' }">
-          <v-expansion-panel-title>
-            {{ $t('admin.panelDiverCity') }}
-            <template v-slot:actions>
-              <v-icon color="main-blue" icon="$chevronRight"></v-icon>
-            </template>
-          </v-expansion-panel-title>
-        </router-link>
+        <v-expansion-panel-text>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCitySpace' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCitySpace') }}
+          </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityBookings' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCityBookings') }}
+            <div class="Admin__itemToValidateCounter" v-if="pendingBookingsCount > 0">
+              {{ pendingBookingsCount }}
+            </div>
+          </router-link>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
@@ -165,6 +171,7 @@ import { useCommentStore } from '@/stores/commentStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
 import { useUserStore } from '@/stores/userStore'
+import { useBookingsStore } from '@/stores/divercity/bookingsStore'
 import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -173,8 +180,11 @@ const actorsStore = useActorsStore()
 const projectStore = useProjectStore()
 const resourceStore = useResourceStore()
 const commentStore = useCommentStore()
+const bookingsStore = useBookingsStore()
 const userStore = useUserStore()
 const router = useRouter()
+
+
 
 watch(
   () => adminStore.selectedAdminPanel,
@@ -190,7 +200,7 @@ watch(
       adminStore.selectedAdminItem = AdministrationPanels.MAP_ATLAS
     } else if (adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY) {
       router.push({ name: 'adminDiverCitySpace' })
-      adminStore.selectedAdminItem = null
+      adminStore.selectedAdminItem = AdministrationPanels.DIVERCITY_SPACE
     } else {
       router.push({ name: 'actorsComments' })
       adminStore.selectedAdminItem = AdministrationPanels.COMMENTS_ACTORS
@@ -220,6 +230,10 @@ const resourcesCommentsToRead = computed(
 )
 const mapCommentsToRead = computed(
   () => commentStore.comments.filter((x) => !x.readByAdmin && x.origin === CommentOrigin.MAP).length
+)
+
+const pendingBookingsCount = computed(
+  () => bookingsStore.bookings.filter((b) => (b.status as any)?.code === 'EN_ATTENTE').length
 )
 </script>
 
