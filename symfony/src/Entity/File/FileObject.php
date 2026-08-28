@@ -56,23 +56,23 @@ class FileObject extends AbstractObject
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups([
-        self::READ, 
-        User::GROUP_GETME, 
-        Resource::GET_FULL, 
-        Atlas::GET_FULL, 
-        QgisMap::GET_FULL, 
-        Booking::GROUP_READ // <--- Groupe ajouté ici
+        self::READ,
+        User::GROUP_GETME,
+        Resource::GET_FULL,
+        Atlas::GET_FULL,
+        QgisMap::GET_FULL,
+        Booking::GROUP_READ, // <--- Groupe ajouté ici
     ])]
     public ?string $contentUrl = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups([
-        self::READ, 
-        User::GROUP_GETME, 
-        Resource::GET_FULL, 
-        Atlas::GET_FULL, 
-        QgisMap::GET_FULL, 
-        Booking::GROUP_READ // <--- Groupe ajouté ici
+        self::READ,
+        User::GROUP_GETME,
+        Resource::GET_FULL,
+        Atlas::GET_FULL,
+        QgisMap::GET_FULL,
+        Booking::GROUP_READ, // <--- Groupe ajouté ici
     ])]
     public ?array $contentsUrl = null;
 

@@ -8,9 +8,8 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Entity\User\User;
 use App\Repository\DiverCity\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ORM\Table(name: 'notification', schema: 'divercity')]
