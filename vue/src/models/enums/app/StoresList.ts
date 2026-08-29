@@ -14,5 +14,6 @@ export enum StoresList {
   ADMINISTRATIVE_BOUNDARIES = 'administrativeBoundaries',
   COMMENT = 'comment',
   DIVERCITY_SPACES = 'divercitySpaces',
-  DIVERCITY_BOOKINGS = 'divercityBookings'
+  DIVERCITY_BOOKINGS = 'divercityBookings',
+  DIVERCITY_BLOCKED_PERIODS = 'divercityBlockedPeriods'
 }

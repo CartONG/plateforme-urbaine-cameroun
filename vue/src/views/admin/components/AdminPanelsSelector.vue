@@ -157,6 +157,10 @@
               {{ pendingBookingsCount }}
             </div>
           </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityBlockedPeriods' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCityBlockedPeriods') }}
+          </router-link>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>

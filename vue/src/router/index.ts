@@ -249,6 +249,11 @@ const router = createRouter({
           component: () => import('@/views/admin/components/admin-divercity/BookingsPanel.vue')
         },
         {
+          name: 'adminDiverCityBlockedPeriods',
+          path: 'divercity-blocked-periods',
+          component: () => import('@/views/admin/components/admin-divercity/BlockedPeriodsPanel.vue')
+        },
+        {
           path: 'content',
           name: 'adminContent',
           component: AdminContent,

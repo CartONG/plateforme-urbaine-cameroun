@@ -57,6 +57,14 @@ export const useUserStore = defineStore(StoresList.USER, () => {
         })
       }
       if (hideDialog) {
+        const isClosingSignInDialog = route.query.dialog === DialogKey.AUTH_SIGN_IN
+        const redirectTo = route.query.redirect as string | undefined
+        if (isClosingSignInDialog && redirectTo) {
+          return await router.replace({
+            name: redirectTo,
+            query: { ...route.query, dialog: undefined, redirect: undefined }
+          })
+        }
         await router.replace({ query: { ...route.query, dialog: undefined } })
       }
     } catch (err) {
@@ -126,6 +134,15 @@ export const useUserStore = defineStore(StoresList.USER, () => {
     }
     await UserService.patchUser(values as User, currentUser.value!.id)
     setCurrentUser()
+
+    const isClosingBecomeMemberRolesDialog = route.query.dialog === DialogKey.AUTH_BECOME_MEMBER_ROLES
+    const redirectTo = route.query.redirect as string | undefined
+    if (isClosingBecomeMemberRolesDialog && redirectTo) {
+      return router.replace({
+        name: redirectTo,
+        query: { ...route.query, dialog: undefined, redirect: undefined }
+      })
+    }
     router.replace({ query: { ...route.query, dialog: undefined } })
   }
   return {
