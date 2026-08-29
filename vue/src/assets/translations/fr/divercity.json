@@ -152,6 +152,41 @@
       "dayFree": "Aucune réservation ce jour, l'espace est disponible.",
       "pickSlot": "Choisissez un créneau",
       "bookThisSlot": "Réserver ce créneau"
+    },
+    "blockedPeriods": {
+      "addTitle": "Bloquer une période",
+      "fields": {
+        "date": "Date",
+        "reason": "Motif (facultatif)"
+      },
+      "recurrence": {
+        "enable": "Répéter chaque semaine",
+        "info": "Se répétera chaque {weekday}",
+        "untilDate": "Jusqu'au",
+        "occurrenceCount": "Nombre d'occurrences",
+        "seriesTag": "Série",
+        "unblockThisOne": "Débloquer cette date",
+        "unblockWholeSeries": "Débloquer toute la série",
+        "conflictWarning": "Certaines dates chevauchent une réservation et empêchent le blocage : {dates}",
+        "errors": {
+          "missingEndDate": "Merci de choisir une date de fin pour la récurrence"
+        }
+      },
+      "filteredBy": "Périodes bloquées le {date}",
+      "clearFilter": "Voir toutes les dates",
+      "unblockSeriesSuccess": "Toute la série a été débloquée",
+      "unblockSeriesError": "Une erreur est survenue lors du déblocage de la série",
+      "submit": "Bloquer cette période",
+      "empty": "Aucune période bloquée pour le moment",
+      "submitSuccess": "La période a bien été bloquée",
+      "submitError": "Une erreur est survenue lors du blocage de la période",
+      "unblockSuccess": "La période a bien été débloquée",
+      "unblockError": "Une erreur est survenue lors du déblocage de la période",
+      "errors": {
+        "missingFields": "Merci de renseigner une date et des horaires de début et de fin",
+        "invalidRange": "L'heure de fin doit être après l'heure de début",
+        "bookingConflict": "Ce créneau chevauche une réservation existante et ne peut pas être bloqué"
+      }
     }
   }
 }

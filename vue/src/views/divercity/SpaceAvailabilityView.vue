@@ -51,33 +51,35 @@
 
           <v-divider class="my-4" />
 
-          <p class="Form__label">{{ $t('divercity.availability.pickSlot') }}</p>
-          <div class="SpaceAvailabilityView__slotPicker">
-            <v-text-field
-              type="time"
-              density="compact"
-              variant="outlined"
-              v-model="pickedStartTime"
-              :label="$t('divercity.booking.fields.startTime')"
-            />
-            <v-text-field
-              type="time"
-              density="compact"
-              variant="outlined"
-              v-model="pickedEndTime"
-              :label="$t('divercity.booking.fields.endTime')"
-            />
+          <div class="SpaceAvailabilityView__slotPickerCtn">
+            <p class="Form__label">{{ $t('divercity.availability.pickSlot') }}</p>
+            <div class="SpaceAvailabilityView__slotPicker">
+              <v-text-field
+                type="time"
+                density="compact"
+                variant="outlined"
+                v-model="pickedStartTime"
+                :label="$t('divercity.booking.fields.startTime')"
+              />
+              <v-text-field
+                type="time"
+                density="compact"
+                variant="outlined"
+                v-model="pickedEndTime"
+                :label="$t('divercity.booking.fields.endTime')"
+              />
+            </div>
+            <v-alert v-if="pickedSlotConflict" type="warning" variant="tonal" density="compact">
+              {{ $t('divercity.booking.availability.conflict') }}
+            </v-alert>
+            <v-btn
+              color="main-red"
+              :disabled="!pickedStartTime || !pickedEndTime || pickedSlotConflict"
+              @click="bookThisSlot"
+            >
+              {{ $t('divercity.availability.bookThisSlot') }}
+            </v-btn>
           </div>
-          <v-alert v-if="pickedSlotConflict" type="warning" variant="tonal" density="compact" class="mb-3">
-            {{ $t('divercity.booking.availability.conflict') }}
-          </v-alert>
-          <v-btn
-            color="main-red"
-            :disabled="!pickedStartTime || !pickedEndTime || pickedSlotConflict"
-            @click="bookThisSlot"
-          >
-            {{ $t('divercity.availability.bookThisSlot') }}
-          </v-btn>
         </template>
       </div>
     </div>
@@ -280,16 +282,33 @@ function bookThisSlot() {
     gap: 0.5rem;
   }
 
+  &__slotPickerCtn {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+  }
+
   &__slotPicker {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 1rem;
+
+    > * {
+      flex: 1 1 10rem;
+      min-width: 9rem;
+    }
   }
 }
 
 @media (max-width: $bp-xl) {
   .SpaceAvailabilityView__layout {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .SpaceAvailabilityView__slotPicker > * {
+    flex-basis: 100%;
   }
 }
 </style>

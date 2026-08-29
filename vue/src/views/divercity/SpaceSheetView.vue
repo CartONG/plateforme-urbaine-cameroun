@@ -75,14 +75,18 @@ import BookingActivityCard from '@/views/divercity/components/BookingActivityCar
 import { formatHTMLForSheetView } from '@/services/utils/UtilsService'
 import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useApplicationStore } from '@/stores/applicationStore'
 import DiverCityStaticKpi from '@/components/content/DiverCityStaticKpi.vue'
+import { DialogKey } from '@/models/enums/app/DialogKey'
+import { useUserStore } from '@/stores/userStore'
 
 
 const applicationStore = useApplicationStore()
 const spacesStore = useSpacesStore()
 const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
 const space = computed(() => spacesStore.mainSpace)
 
@@ -99,12 +103,23 @@ const formattedDescription = computed(() => formatHTMLForSheetView(space.value?.
 const featuredBookings = computed(() => spacesStore.publicBookings.slice(0, 3))
 const upcomingBookings = computed(() => spacesStore.publicBookings.slice(0, 5))
 
+
 function checkAvailability() {
-  router.push({ name: 'divercitySpaceAvailability' })
+  goToOrAskLogin('divercitySpaceAvailability')
 }
 
 function bookSpace() {
-  router.push({ name: 'divercitySpaceBooking' })
+  goToOrAskLogin('divercitySpaceBooking')
+}
+
+function goToOrAskLogin(routeName: string) {
+  if (!userStore.userIsLogged) {
+    router.replace({
+      query: { ...route.query, dialog: DialogKey.AUTH_SIGN_IN, redirect: routeName }
+    })
+    return
+  }
+  router.push({ name: routeName })
 }
 </script>
 

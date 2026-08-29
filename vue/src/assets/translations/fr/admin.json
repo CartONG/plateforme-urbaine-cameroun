@@ -19,6 +19,7 @@
     "panelDiverCity": "DiverCity Space",
     "panelDiverCitySpace": "Gérer l'espace",
     "panelDiverCityBookings": "Réservations",
+    "panelDiverCityBlockedPeriods": "Périodes bloquées",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },

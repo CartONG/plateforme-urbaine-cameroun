@@ -2,6 +2,8 @@ import { apiClient } from '@/plugins/axios/api'
 import type { Space, SpaceHighlight, SpaceHighlightSubmission} from '@/models/interfaces/divercity/Space'
 import type { EventActivityType, InformationSource, Booking, BookingSubmission, SpaceAvailability, BookingStatus } from '@/models/interfaces/divercity/Booking'
 import type { PublicBooking } from '@/models/interfaces/divercity/Booking'
+import type { BlockedPeriod, BlockedPeriodSubmission } from '@/models/interfaces/divercity/BlockedPeriod'
+
 
 
 export class SpacesService {
@@ -108,6 +110,28 @@ export class SpacesService {
         ...(cancellationReason ? { cancellationReason } : {})
       })
     ).data
+  }
+
+  static async getBlockedPeriods(spaceId: string): Promise<BlockedPeriod[]> {
+    const data = (
+      await apiClient.get('/api/blocked_periods', {
+        params: { space: `/api/spaces/${spaceId}`, isUnblocked: false },
+        headers: { accept: 'application/ld+json' }
+      })
+    ).data
+    return data['hydra:member'] as BlockedPeriod[]
+  }
+
+  static async postBlockedPeriod(blockedPeriod: BlockedPeriodSubmission): Promise<BlockedPeriod> {
+    return (await apiClient.post('/api/blocked_periods', blockedPeriod)).data
+  }
+
+  static async deleteBlockedPeriod(id: string): Promise<void> {
+    await apiClient.delete(`/api/blocked_periods/${id}`)
+  }
+
+  static async unblockBlockedPeriod(id: string): Promise<BlockedPeriod> {
+    return (await apiClient.patch(`/api/blocked_periods/${id}`, { isUnblocked: true })).data
   }
 }
 

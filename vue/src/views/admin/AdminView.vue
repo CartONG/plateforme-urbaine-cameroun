@@ -31,6 +31,7 @@ import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { useUserStore } from '@/stores/userStore'
 import AdminPanelsSelector from '@/views/admin/components/AdminPanelsSelector.vue'
 import { useBookingsStore } from '@/stores/divercity/bookingsStore'
+import { useBlockedPeriodsStore } from '@/stores/divercity/blockedPeriodsStore'
 import { onMounted } from 'vue'
 
 const userStore = useUserStore()
@@ -45,6 +46,8 @@ const resourceStore = useResourceStore()
 const adminStore = useAdminStore()
 const spacesStore = useSpacesStore()
 const bookingsStore = useBookingsStore()
+const blockedPeriodsStore = useBlockedPeriodsStore()
+
 
 
 onMounted(async () => {
@@ -67,7 +70,12 @@ onMounted(async () => {
     await spacesStore.getMainSpace()
     await bookingsStore.getManagedBookings()
     await bookingsStore.getStatuses()
+    if (spacesStore.mainSpace) {
+      await blockedPeriodsStore.getBlockedPeriods(spacesStore.mainSpace.id)
+    }
   }
+
+  
   applicationStore.isLoading = false
 })
 </script>
