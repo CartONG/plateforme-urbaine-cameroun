@@ -13,12 +13,12 @@ use App\Repository\DiverCity\BookingRepository;
 use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Services\State\Processor\DiverCity\BookingCancellationProcessor;
 use App\Services\State\Processor\DiverCity\BookingDecisionProcessor;
+use App\Services\State\Processor\DiverCity\BookingEditProcessor;
 use App\Services\State\Processor\DiverCity\BookingInformationSourceProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
-use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
-use App\Services\State\Processor\DiverCity\BookingEditProcessor;
 use App\Services\State\Provider\DiverCity\MyBookingsProvider;
+use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -76,7 +76,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         ), // annulation par le demandeur ou un admin
         new Patch(
             uriTemplate: '/divercity/bookings/{id}/edit',
-            security: "object.getUser() == user",
+            security: 'object.getUser() == user',
             denormalizationContext: ['groups' => [self::GROUP_EDIT]],
             processor: BookingEditProcessor::class
         ),
@@ -143,11 +143,11 @@ class Booking
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT ])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 150, nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT ])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT])]
     private ?string $organization = null;
 
     #[ORM\Column(length: 150)]

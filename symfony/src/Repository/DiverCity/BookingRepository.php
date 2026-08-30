@@ -2,16 +2,14 @@
 
 namespace App\Repository\DiverCity;
 
+use ApiPlatform\Doctrine\Orm\Paginator as ApiPlatformPaginator;
 use App\Entity\DiverCity\Booking;
 use App\Entity\DiverCity\Space;
+use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
-use App\Entity\User\User;
-use ApiPlatform\Doctrine\Orm\Paginator as ApiPlatformPaginator;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-
-
 
 /**
  * @extends ServiceEntityRepository<Booking>
@@ -111,8 +109,6 @@ class BookingRepository extends ServiceEntityRepository
 
         return $result['code'] ?? null;
     }
-
-
 
     /**
      * Renvoie les réservations d'un utilisateur, tous statuts confondus,
