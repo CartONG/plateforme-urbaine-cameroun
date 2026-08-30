@@ -43,7 +43,7 @@ class BookingEditProcessor implements ProcessorInterface
             throw new UnprocessableEntityHttpException('Seule une réservation en attente peut être modifiée.');
         }
 
-        /** @var Booking $booking */
+        /* @var Booking $booking */
         return $this->persistProcessor->process($data, $operation, $uriVariables, $context);
     }
 }
