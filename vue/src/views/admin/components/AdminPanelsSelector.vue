@@ -146,10 +146,6 @@
         class="text-main-blue"
       >
         <v-expansion-panel-text>
-          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCitySpace' }">
-            <v-icon icon="$circleSmall" size="large"></v-icon>
-            {{ $t('admin.panelDiverCitySpace') }}
-          </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityBookings' }">
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCityBookings') }}
@@ -160,6 +156,10 @@
           <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityBlockedPeriods' }">
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCityBlockedPeriods') }}
+          </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCitySpace' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCitySpace') }}
           </router-link>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -203,7 +203,7 @@ watch(
       router.push({ name: 'adminPredefinedMaps' })
       adminStore.selectedAdminItem = AdministrationPanels.MAP_ATLAS
     } else if (adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY) {
-      router.push({ name: 'adminDiverCitySpace' })
+      router.push({ name: 'adminDiverCityBookings' })
       adminStore.selectedAdminItem = AdministrationPanels.DIVERCITY_SPACE
     } else {
       router.push({ name: 'actorsComments' })

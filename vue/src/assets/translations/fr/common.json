@@ -50,6 +50,7 @@
     "addData": "Ajouter une donnée",
     "administration": "Espace d'administration",
     "content": "Mes contributions",
+    "myBookings": "Mes réservations",
     "logout": "Déconnexion"
   },
   "inputs": {
@@ -127,6 +128,7 @@
     "modify": "Modifier",
     "edit": "Modifier",
     "submit": "Valider",
+    "close": "Fermer",
     "validate": "Valider",
     "continue": "Continuer",
     "return": "Retour",

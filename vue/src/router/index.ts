@@ -123,7 +123,7 @@ const router = createRouter({
       }
     },
     {
-      path: `/${i18n.t('routes.divercitySpace')}/booking`,
+      path: `/${i18n.t('routes.divercitySpace')}/${i18n.t('routes.bookingForm')}`,
       name: 'divercitySpaceBooking',
       component: () => {
         const applicationStore = useApplicationStore(pinia)
@@ -143,7 +143,7 @@ const router = createRouter({
       }
     },
     {
-      path: `/${i18n.t('routes.divercitySpace')}/availability`,
+      path: `/${i18n.t('routes.divercitySpace')}/${i18n.t('routes.divercitySpaceAvailability')}`,
       name: 'divercitySpaceAvailability',
       component: () => {
         const applicationStore = useApplicationStore(pinia)
@@ -160,6 +160,28 @@ const router = createRouter({
           }
         }
         next()
+      }
+    },
+    {
+      path: `/${i18n.t('routes.divercitySpace')}/${i18n.t('routes.myBookings')}`,
+      name: 'myDiverCityBookings',
+      component: () => {
+        const applicationStore = useApplicationStore(pinia)
+        applicationStore.isLoading = true
+        return import('@/views/divercity/MyBookingsView.vue')
+      },
+      beforeEnter: async (to, from, next) => {
+        const userStore = useUserStore(pinia)
+        if (!userStore.loginCheck) {
+          await userStore.checkAuthenticated()
+        }
+        const applicationStore = useApplicationStore(pinia)
+        if (!userStore.userIsLogged) {
+          applicationStore.isLoading = false
+          next({ path: '/' })
+        } else {
+          next()
+        }
       }
     },
     {
@@ -214,7 +236,7 @@ const router = createRouter({
           return { name: 'adminUsers' }
         }
         adminStore.selectedAdminPanel = AdministrationPanels.DIVERCITY
-        return { name: 'adminDiverCitySpace' }
+        return { name: 'adminDiverCityBookings' }
       },
       component: () => {
         const applicationStore = useApplicationStore(pinia)
@@ -240,17 +262,17 @@ const router = createRouter({
         },
         {
           name: 'adminDiverCitySpace',
-          path: 'divercity-space',
+          path: i18n.t('routes.divercitySpace'),
           component: () => import('@/views/admin/components/admin-divercity/SpaceManagementPanel.vue')
         },
         {
           name: 'adminDiverCityBookings',
-          path: 'divercity-bookings',
+          path: i18n.t('routes.adminDivercityBookings'),
           component: () => import('@/views/admin/components/admin-divercity/BookingsPanel.vue')
         },
         {
           name: 'adminDiverCityBlockedPeriods',
-          path: 'divercity-blocked-periods',
+          path: i18n.t('routes.adminDivercityBlockedPeriods'),
           component: () => import('@/views/admin/components/admin-divercity/BlockedPeriodsPanel.vue')
         },
         {

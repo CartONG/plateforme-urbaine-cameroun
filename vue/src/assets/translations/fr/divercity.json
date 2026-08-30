@@ -187,6 +187,20 @@
         "invalidRange": "L'heure de fin doit être après l'heure de début",
         "bookingConflict": "Ce créneau chevauche une réservation existante et ne peut pas être bloqué"
       }
+    },
+    "myBookings": {
+      "title": "Mes réservations",
+      "count": "{count} réservation | {count} réservations",
+      "newBooking": "Nouvelle réservation",
+      "empty": "Vous n'avez encore aucune réservation.",
+      "cancel": "Annuler",
+      "edit": "Modifier",
+      "cancelDialogTitle": "Annuler la réservation",
+      "cancelDialogConfirm": "Confirmez-vous l'annulation de \"{title}\" ?",
+      "cancellationReasonOptional": "Motif (facultatif)",
+      "confirmCancel": "Confirmer l'annulation",
+      "cancelSuccess": "Réservation annulée avec succès.",
+      "cancelError": "Une erreur est survenue lors de l'annulation."
     }
   }
 }

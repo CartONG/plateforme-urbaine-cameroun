@@ -23,6 +23,13 @@ export class SpacesService {
     return data['hydra:member'] as PublicBooking[]
   }
 
+  static async getBooking(id: string): Promise<Booking> {
+    return (
+      await apiClient.get(`/api/bookings/${id}`, { headers: { accept: 'application/ld+json' } })
+    ).data
+  }
+
+
   static async patchSpace(id: string, values: Partial<Space>): Promise<Space> {
     return (await apiClient.patch(`/api/spaces/${id}`, values)).data
   }
@@ -133,5 +140,33 @@ export class SpacesService {
   static async unblockBlockedPeriod(id: string): Promise<BlockedPeriod> {
     return (await apiClient.patch(`/api/blocked_periods/${id}`, { isUnblocked: true })).data
   }
+
+  static async getMyBookings(page = 1): Promise<PaginatedResult<Booking>> {
+    const data = (
+      await apiClient.get('/api/divercity/bookings/mine', {
+        params: { page },
+        headers: { accept: 'application/ld+json' }
+      })
+    ).data
+
+    return {
+      items: data['hydra:member'] as Booking[],
+      totalItems: data['hydra:totalItems'] ?? (data['hydra:member'] as Booking[]).length,
+      currentPage: page,
+      itemsPerPage: 20
+    }
+  }
+
+  static async patchBookingEdit(bookingId: string, values: Record<string, any>): Promise<Booking> {
+    return (await apiClient.patch(`/api/divercity/bookings/${bookingId}/edit`, values)).data
+  }
 }
+
+export interface PaginatedResult<T> {
+  items: T[]
+  totalItems: number
+  currentPage: number
+  itemsPerPage: number
+}
+
 

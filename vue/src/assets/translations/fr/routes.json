@@ -6,6 +6,11 @@
         "resources": "ressources",
         "map": "ma-carte",
         "myAccount": "mon-compte",
-        "divercitySpace": "divercity-space"
+        "divercitySpace": "divercity-space",
+        "myBookings": "mes-reservations",
+        "bookingForm": "formulaire-de-reservation",
+        "adminDivercityBookings": "reservations",
+        "adminDivercityBlockedPeriods": "periodes-bloquees",
+        "divercitySpaceAvailability": "disponibilites-divercity-space"
     }
 }

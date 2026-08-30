@@ -17,6 +17,8 @@ use App\Services\State\Processor\DiverCity\BookingInformationSourceProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
 use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
+use App\Services\State\Processor\DiverCity\BookingEditProcessor;
+use App\Services\State\Provider\DiverCity\MyBookingsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -43,6 +45,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             uriTemplate: '/divercity/bookings/mine',
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
             provider: MyBookingsProvider::class,
+            paginationItemsPerPage: 20,
         ),
         new GetCollection(
             uriTemplate: '/divercity/bookings/public',
@@ -67,9 +70,16 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
         new Patch(
             uriTemplate: '/divercity/bookings/{id}/cancel',
             security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object) or object.getUser() == user",
-            denormalizationContext: ['groups' => [self::GROUP_ADMIN]],
+            // denormalizationContext: ['groups' => [self::GROUP_ADMIN]],
+            denormalizationContext: ['groups' => [self::GROUP_CANCEL]],
             processor: BookingCancellationProcessor::class
         ), // annulation par le demandeur ou un admin
+        new Patch(
+            uriTemplate: '/divercity/bookings/{id}/edit',
+            security: "object.getUser() == user",
+            denormalizationContext: ['groups' => [self::GROUP_EDIT]],
+            processor: BookingEditProcessor::class
+        ),
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
@@ -80,6 +90,8 @@ class Booking
     public const GROUP_WRITE = 'divercity_booking:write';
     public const GROUP_ADMIN = 'divercity_booking:admin'; // décision (statut, motifs, traitant)
     public const GROUP_PUBLIC = 'divercity_booking:public';
+    public const GROUP_CANCEL = 'divercity_booking:cancel';
+    public const GROUP_EDIT = 'divercity_booking:edit';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -111,7 +123,7 @@ class Booking
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'event_activity_type_id', referencedColumnName: 'id')]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT])]
     private ?EventActivityType $eventActivityType = null;
 
     #[ORM\ManyToOne]
@@ -121,66 +133,66 @@ class Booking
 
     #[ORM\Column(length: 200)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT])]
     private ?string $title = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT ])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 150, nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT ])]
     private ?string $organization = null;
 
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $role = null;
 
     #[ORM\Column(length: 150)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $email = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $bookingPurpose = null;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_WRITE])]
+    #[Groups([self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: 'time')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_WRITE])]
+    #[Groups([self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?\DateTimeInterface $startTime = null;
 
     #[ORM\Column(type: 'time')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_WRITE])]
+    #[Groups([self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?\DateTimeInterface $endTime = null;
 
     #[ORM\Column]
     #[Assert\Positive]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT])]
     private ?int $participantCount = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $additionalInformation = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -188,7 +200,7 @@ class Booking
     private ?string $refusalReason = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_ADMIN])]
+    #[Groups([self::GROUP_READ, self::GROUP_ADMIN, self::GROUP_CANCEL])]
     private ?string $cancellationReason = null;
 
     #[Gedmo\Timestampable(on: 'create')]
@@ -204,7 +216,7 @@ class Booking
      * @var Collection<int, BookingAttachment>
      */
     #[ORM\OneToMany(targetEntity: BookingAttachment::class, mappedBy: 'booking', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private Collection $bookingAttachments;
 
     /**
