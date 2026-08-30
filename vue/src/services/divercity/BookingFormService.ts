@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { CommonZodSchema } from '@/services/forms/CommonZodSchema'
 
 export class BookingFormService {
-  static getBookingForm(defaults: Record<string, any> = {}) {
+  static getBookingForm(defaults: Record<string, any> = {}, isEditMode = false) {
     const zodModels = CommonZodSchema.getDefinitions()
 
     const bookingSchema = z.object({
@@ -20,10 +20,15 @@ export class BookingFormService {
       // Étape 2 — Informations sur l'évènement / activité
       title: z.string({ required_error: i18n.t('forms.errorMessages.required') }).min(1),
       eventActivityType: z.string().optional().nullable(),
-      agenda: z.instanceof(File, { message: i18n.t('forms.errorMessages.required') }),
-      resourceDocument: z
-        .array(z.instanceof(File))
-        .min(1, { message: i18n.t('forms.errorMessages.required') }),
+      // En édition, l'utilisateur n'est pas obligé de re-téléverser ses pièces
+      // jointes existantes : ces champs deviennent optionnels, seule une
+      // nouvelle sélection de fichier les remplace.
+      agenda: isEditMode
+        ? z.instanceof(File).optional().nullable()
+        : z.instanceof(File, { message: i18n.t('forms.errorMessages.required') }),
+      resourceDocument: isEditMode
+        ? z.array(z.instanceof(File)).optional().nullable()
+        : z.array(z.instanceof(File)).min(1, { message: i18n.t('forms.errorMessages.required') }),
       otherDocument: z.array(z.instanceof(File)).optional().nullable(),
       additionalInformation: z.string().optional(),
       bookingPurpose: z.string({ required_error: i18n.t('forms.errorMessages.required') }).min(1),
@@ -37,7 +42,7 @@ export class BookingFormService {
       endTime: z.string({ required_error: i18n.t('forms.errorMessages.required') })
     })
 
-    const { errors, handleSubmit, isSubmitting, values } = useForm({
+    const { errors, handleSubmit, isSubmitting, values, setValues } = useForm({
       initialValues: defaults,
       validationSchema: toTypedSchema(bookingSchema)
     })
@@ -68,7 +73,6 @@ export class BookingFormService {
       endTime: useField('endTime', '', { validateOnValueUpdate: false })
     }
 
-    // Regroupement des champs par étape, pour valider avant de passer à "Suivant"
     const stepFields: Record<number, (keyof typeof form)[]> = {
       1: ['lastName', 'firstName', 'organization', 'role', 'email', 'phone'],
       2: [
@@ -84,10 +88,9 @@ export class BookingFormService {
       3: ['date', 'startTime', 'endTime']
     }
 
-    return { form, errors, handleSubmit, isSubmitting, values, stepFields }
+    return { form, errors, handleSubmit, isSubmitting, values, setValues, stepFields }
   }
 
-  // Formulaire (mini) affiché sur l'écran "Terminé"
   static getInformationSourceForm() {
     const schema = z.object({
       informationSource: z.string({ required_error: i18n.t('forms.errorMessages.required') })

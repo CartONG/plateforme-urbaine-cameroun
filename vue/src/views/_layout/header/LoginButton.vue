@@ -65,6 +65,12 @@
           $t('header.account')
         }}</v-list-item-title>
       </v-list-item>
+      <v-list-item :to="{ name: 'myDiverCityBookings' }">
+        <template v-slot:prepend>
+          <v-icon color="main-blue" icon="$calendar"></v-icon>
+        </template>
+        <v-list-item-title>{{ $t('header.myBookings') }}</v-list-item-title>
+      </v-list-item>
       <v-list-item v-if="userStore.userIsAdmin()" :to="{ name: 'admin' }">
         <template v-slot:prepend>
           <v-icon color="main-blue" icon="$tune"></v-icon>

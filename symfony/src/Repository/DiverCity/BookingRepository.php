@@ -7,6 +7,11 @@ use App\Entity\DiverCity\Space;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
+use App\Entity\User\User;
+use ApiPlatform\Doctrine\Orm\Paginator as ApiPlatformPaginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+
+
 
 /**
  * @extends ServiceEntityRepository<Booking>
@@ -105,5 +110,25 @@ class BookingRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return $result['code'] ?? null;
+    }
+
+
+
+    /**
+     * Renvoie les réservations d'un utilisateur, tous statuts confondus,
+     * triées par date décroissante, avec pagination Doctrine/API Platform.
+     */
+    public function findByUserOrderedByDate(User $user, int $page = 1, int $itemsPerPage = 20): ApiPlatformPaginator
+    {
+        $query = $this->createQueryBuilder('b')
+            ->andWhere('b.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('b.date', 'DESC')
+            ->addOrderBy('b.startTime', 'DESC')
+            ->setFirstResult(($page - 1) * $itemsPerPage)
+            ->setMaxResults($itemsPerPage)
+            ->getQuery();
+
+        return new ApiPlatformPaginator(new DoctrinePaginator($query));
     }
 }
