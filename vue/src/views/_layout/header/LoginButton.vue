@@ -71,7 +71,10 @@
         </template>
         <v-list-item-title>{{ $t('header.myBookings') }}</v-list-item-title>
       </v-list-item>
-      <v-list-item v-if="userStore.userIsAdmin()" :to="{ name: 'admin' }">
+      <v-list-item
+        v-if="userStore.userIsAdmin() || userStore.userIsDiverCitySpaceAdmin()"
+        :to="{ name: 'admin' }"
+      >
         <template v-slot:prepend>
           <v-icon color="main-blue" icon="$tune"></v-icon>
         </template>
