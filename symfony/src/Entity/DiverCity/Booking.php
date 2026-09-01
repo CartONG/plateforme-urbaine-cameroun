@@ -17,8 +17,9 @@ use App\Services\State\Processor\DiverCity\BookingEditProcessor;
 use App\Services\State\Processor\DiverCity\BookingInformationSourceProcessor;
 use App\Services\State\Processor\DiverCity\BookingSubmissionProcessor;
 use App\Services\State\Provider\DiverCity\ManagedBookingsProvider;
-use App\Services\State\Provider\DiverCity\MyBookingsProvider;
 use App\Services\State\Provider\DiverCity\PublicBookingsProvider;
+use App\Services\State\Processor\DiverCity\BookingResourcesProcessor;
+use App\Services\State\Provider\DiverCity\MyBookingsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -80,6 +81,12 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
             denormalizationContext: ['groups' => [self::GROUP_EDIT]],
             processor: BookingEditProcessor::class
         ),
+        new Patch(
+            uriTemplate: '/divercity/bookings/{id}/resources',
+            security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."', object)",
+            denormalizationContext: ['groups' => [self::GROUP_RESOURCES]],
+            processor: BookingResourcesProcessor::class
+        ),
     ],
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
@@ -92,6 +99,7 @@ class Booking
     public const GROUP_PUBLIC = 'divercity_booking:public';
     public const GROUP_CANCEL = 'divercity_booking:cancel';
     public const GROUP_EDIT = 'divercity_booking:edit';
+    public const GROUP_RESOURCES = 'divercity_booking:resources';
 
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -226,7 +234,7 @@ class Booking
     #[ORM\JoinTable(name: 'booking_resource', schema: 'divercity')]
     #[ORM\JoinColumn(name: 'booking_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'resource_id', referencedColumnName: 'id')]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_RESOURCES])]
     private Collection $resources;
 
     /**

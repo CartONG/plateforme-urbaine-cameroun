@@ -157,6 +157,10 @@
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCityBlockedPeriods') }}
           </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityHighlights' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCityHighlights') }}
+          </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCitySpace' }">
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCitySpace') }}

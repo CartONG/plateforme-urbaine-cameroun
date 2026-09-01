@@ -29,11 +29,8 @@
       </v-carousel>
     </div>
 
-    <div class="SpaceSheetView__ctn" v-if="featuredBookings.length">
-      <SectionBanner :text="$t('divercity.space.featured')" />
-      <div class="SpaceSheetView__activityGrid SpaceSheetView__activityGrid--featured">
-        <BookingActivityCard v-for="booking in featuredBookings" :key="booking.id" :booking="booking" />
-      </div>
+    <div class="SpaceSheetView__ctn">
+      <DiverCityHighlights />
     </div>
 
     <div class="SpaceSheetView__ctn" v-if="upcomingBookings.length">
@@ -80,6 +77,7 @@ import { useApplicationStore } from '@/stores/applicationStore'
 import DiverCityStaticKpi from '@/components/content/DiverCityStaticKpi.vue'
 import { DialogKey } from '@/models/enums/app/DialogKey'
 import { useUserStore } from '@/stores/userStore'
+import DiverCityHighlights from './components/DiverCityHighlights.vue'
 
 
 const applicationStore = useApplicationStore()
@@ -101,7 +99,7 @@ const currentHighlight = computed(() => {
 
 const formattedDescription = computed(() => formatHTMLForSheetView(space.value?.description as string))
 const featuredBookings = computed(() => spacesStore.publicBookings.slice(0, 3))
-const upcomingBookings = computed(() => spacesStore.publicBookings.slice(0, 5))
+const upcomingBookings = computed(() => spacesStore.publicBookings.slice(0, 3))
 
 
 function checkAvailability() {

@@ -34,6 +34,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Services\State\Provider\DiverCity\EligibleHighlightResourcesProvider;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
+
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
 #[ApiResource(
@@ -51,6 +54,12 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/resources/events/nearest',
             provider: NearestEventProvider::class,
+            normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]]
+        ),
+        new GetCollection(
+            uriTemplate: '/divercity/resources/eligible-for-highlight',
+            security: "is_granted('".SpaceScopedVoter::MANAGE_SPACE."')",
+            provider: EligibleHighlightResourcesProvider::class,
             normalizationContext: ['groups' => [self::GET_FULL, MediaObject::READ]]
         ),
     ]
@@ -152,7 +161,7 @@ class Resource
     #[Groups([self::GET_FULL, self::WRITE])]
     private ?string $otherThematic = null;
 
-    #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class)]
+    #[ORM\Column(type: 'simple_array', enumType: AdministrativeScope::class, nullable: true)]
     #[Groups([self::GET_FULL, self::WRITE])]
     private array $administrativeScopes = [];
     /**
@@ -326,7 +335,7 @@ class Resource
 
     public function setAdministrativeScopes(?array $administrativeScopes): self
     {
-        $this->administrativeScopes = $administrativeScopes;
+        $this->administrativeScopes = $administrativeScopes ?? [];
 
         return $this;
     }

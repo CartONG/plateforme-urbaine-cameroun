@@ -23,7 +23,9 @@
     "observatory": "Observatoire",
     "catalog": "Catalogue",
     "data": "Données",
-    "comments": "Commentaires"
+    "comments": "Commentaires",
+    "divercity-space": "Espace DiverCity",
+    "reservations": "Réservations"
   },
   "dialog": {
     "close": "Fermer",

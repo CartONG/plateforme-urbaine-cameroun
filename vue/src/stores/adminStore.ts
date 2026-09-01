@@ -23,10 +23,11 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     appMembers.value = await UsersService.getMembers(false)
   }
 
-  async function createUser(user: Partial<User>) {
-    await UserService.createUser(user)
+  async function createUser(user: Partial<User>): Promise<User> {
+    const response = await UserService.createUser(user)
     await getMembers()
     userEdition.active = false
+    return response.data
   }
 
   const userEdition: Reactive<{ active: boolean; user: User | null }> = reactive({
@@ -45,10 +46,11 @@ export const useAdminStore = defineStore(StoresList.ADMIN, () => {
     useApplicationStore().showEditContentDialog = true
   }
 
-  async function editUser(values: Partial<User>) {
-    await UserService.patchUser(values, userEdition.user!.id)
+  async function editUser(values: Partial<User>): Promise<User> {
+    const response = await UserService.patchUser(values, userEdition.user!.id)
     await getMembers()
     userEdition.active = false
+    return response.data
   }
 
   async function deleteUser(user: Partial<User>) {

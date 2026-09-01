@@ -7,12 +7,12 @@
     "panelContentProjects": "Projets",
     "panelContentResources": "Ressources",
     "panelMap": "Gérer \"Ma carte\"",
-        "panelPredefinedMaps": "Observatoire",
-        "panelThematicMaps": "Catalogue",
-        "panelMapQGIS": "Données",
-        "panelComments": "Gérer les commentaires",
-        "panelCommentsMap": "Ma carte",
-        "panelHighlightedItems": "Gérer la rubrique à la une",
+    "panelPredefinedMaps": "Observatoire",
+    "panelThematicMaps": "Catalogue",
+    "panelMapQGIS": "Données",
+    "panelComments": "Gérer les commentaires",
+    "panelCommentsMap": "Ma carte",
+    "panelHighlightedItems": " Gérer la rubrique à la une",
     "member": "Utilisateur | Utilisateurs",
     "add": "Ajouter",
     "search": "Rechercher",
@@ -20,6 +20,7 @@
     "panelDiverCitySpace": "Gérer l'espace",
     "panelDiverCityBookings": "Réservations",
     "panelDiverCityBlockedPeriods": "Périodes bloquées",
+    "panelDiverCityHighlights": "À la une",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },
@@ -30,6 +31,10 @@
       "markAsUnread": "Marquer comme non lu",
       "delete": "Supprimer",
       "mapTitle": "Localisation du commentaire"
+    },
+    "editForm": {
+      "divercityAccess": "Accès DiverCity",
+      "spaceAdminLabel": "Administrateur de l'espace DiverCity"
     }
   }
 }

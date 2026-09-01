@@ -127,4 +127,5 @@ class BookingRepository extends ServiceEntityRepository
 
         return new ApiPlatformPaginator(new DoctrinePaginator($query));
     }
+
 }

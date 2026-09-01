@@ -25,6 +25,20 @@
         "cancellationReason": "Motif de l'annulation",
         "submittedAt": "Soumise le {date}"
       },
+
+      "highlights": {
+        "eligibleResources": "Ressources éligibles",
+        "currentOrder": "Ordre de mise en avant"
+      },
+
+      "resources": {
+        "title": "Ressources liées aux réservations",
+        "selectBooking": "Réservation",
+        "selectBookingPlaceholder": "Choisir une réservation",
+        "selectResources": "Ressources associées",
+        "saveSuccess": "Ressources mises à jour avec succès.",
+        "saveError": "Une erreur est survenue lors de la mise à jour."
+      },
       
       "bookings": "réservation | réservation | réservations",
       "sortPending": "En attente d'abord",
@@ -43,6 +57,7 @@
       
     },
     "space": {
+      "featuredResources": "Evénements à la une",
       "checkAvailability": "Vérifier les disponibilités",
       "bookSpace": "Réserver cet espace",
       "featured": "À la Une",
