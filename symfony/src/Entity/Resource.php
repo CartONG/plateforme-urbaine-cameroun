@@ -25,7 +25,9 @@ use App\Enum\ResourceFormat;
 use App\Enum\ResourceType;
 use App\Model\Enums\UserRoles;
 use App\Repository\ResourceRepository;
+use App\Security\Voter\DiverCity\SpaceScopedVoter;
 use App\Services\State\Processor\ResourceProcessor;
+use App\Services\State\Provider\DiverCity\EligibleHighlightResourcesProvider;
 use App\Services\State\Provider\NearestEventProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,9 +36,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Services\State\Provider\DiverCity\EligibleHighlightResourcesProvider;
-use App\Security\Voter\DiverCity\SpaceScopedVoter;
-
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
 #[ApiResource(

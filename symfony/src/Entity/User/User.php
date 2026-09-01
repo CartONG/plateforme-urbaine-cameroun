@@ -66,7 +66,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[ApiResource(
     operations: [
-        
         new Get(
             security: 'is_granted(\'IS_AUTHENTICATED_FULLY\')',
             uriTemplate: '/users/me',
