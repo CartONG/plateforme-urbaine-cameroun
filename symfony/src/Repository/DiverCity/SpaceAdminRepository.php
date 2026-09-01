@@ -38,4 +38,21 @@ class SpaceAdminRepository extends ServiceEntityRepository
 
         return array_map(fn (SpaceAdmin $spaceAdmin) => $spaceAdmin->getSpace(), $spaceAdmins);
     }
+
+    /**
+     * Renvoie la liste des utilisateurs administrateurs d'un espace donné.
+     *
+     * @return User[]
+     */
+    public function findAdminsOfSpace(Space $space): array
+    {
+        $spaceAdmins = $this->findBy(['space' => $space]);
+
+        return array_map(fn (SpaceAdmin $spaceAdmin) => $spaceAdmin->getUser(), $spaceAdmins);
+    }
+
+    public function isAdminOfAnySpace(User $user): bool
+    {
+        return $this->count(['user' => $user]) > 0;
+    }
 }

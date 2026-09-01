@@ -92,6 +92,16 @@
             />
           </div>
         </div>
+        <div class="ContentForm__rolesRequestCtn">
+          <span>{{ $t('admin.editForm.divercityAccess') }}</span>
+          <div class="ContentForm__rolesRequestItem">
+            <v-checkbox
+              v-model="isSpaceAdmin"
+              :label="$t('admin.editForm.spaceAdminLabel')"
+              hide-details="auto"
+            />
+          </div>
+        </div>
       </v-form>
     </template>
     <template #footer-left>
@@ -116,12 +126,20 @@ import { onInvalidSubmit } from '@/services/forms/FormService'
 import { UserProfileForm } from '@/services/userAndAuth/forms/UserProfileForm'
 import { useAdminStore } from '@/stores/adminStore'
 import { useApplicationStore } from '@/stores/applicationStore'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { UserRoles } from '@/models/enums/auth/UserRoles'
+import { SpaceAdminService } from '@/services/divercity/SpaceAdminService'
+import { useSpacesStore } from '@/stores/divercity/spacesStore'
+
 const appStore = useApplicationStore()
 const adminStore = useAdminStore()
 const userToEdit: User | null = adminStore.userEdition.user
 const { form, handleSubmit, isSubmitting } = UserProfileForm.getUserEditionForm(userToEdit)
 const requestedRoles = UserProfileForm.getRolesList()
+const spacesStore = useSpacesStore()
+
+const isSpaceAdmin = ref(false)
+const initialIsSpaceAdmin = ref(false)
 
 const submitLabel = computed(() => {
   if (userToEdit) {
@@ -130,6 +148,19 @@ const submitLabel = computed(() => {
     return i18n.t('forms.create')
   }
 })
+
+watch(
+  () => appStore.showEditContentDialog,
+  (isOpen) => {
+    if (isOpen) {
+      const currentUser = adminStore.userEdition.user
+      const hasAccess = currentUser?.roles.includes(UserRoles.DIVERCITY_SPACE_ADMIN) ?? false
+      isSpaceAdmin.value = hasAccess
+      initialIsSpaceAdmin.value = hasAccess
+    }
+  },
+  { immediate: true }
+)
 
 if (userToEdit) {
   requestedRoles.map((x) => {
@@ -143,17 +174,29 @@ if (userToEdit) {
 }
 
 const submitForm = handleSubmit(
-  (values) => {
+  async (values) => {
     const userSubmission: Partial<User> = {
       ...values,
       roles: requestedRoles.filter((x) => x.selected.value).map((x) => x.value),
       requestedRoles: [],
       isValidated: true
     }
+
+    let savedUser: User
     if (userToEdit) {
-      adminStore.editUser(userSubmission)
+      savedUser = await adminStore.editUser(userSubmission)
     } else {
-      adminStore.createUser(userSubmission)
+      savedUser = await adminStore.createUser(userSubmission)
+    }
+
+    const spaceIri = spacesStore.mainSpace?.['@id']
+    const userIri = `/api/users/${savedUser.id}`
+    if (spaceIri && isSpaceAdmin.value !== initialIsSpaceAdmin.value) {
+      if (isSpaceAdmin.value) {
+        await SpaceAdminService.assign(userIri, spaceIri)
+      } else {
+        await SpaceAdminService.revoke(userIri, spaceIri)
+      }
     }
   },
   () => onInvalidSubmit

@@ -2,6 +2,8 @@
 
 namespace App\Entity\DiverCity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
@@ -24,6 +26,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact', 'space' => 'exact'])]
 class SpaceAdmin
 {
     public const GROUP_READ = 'divercity_space_admin:read';

@@ -12,6 +12,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use App\Services\Mailer\DiverCity\BookingAcceptedMailer;
+use App\Services\Mailer\DiverCity\BookingRejectedMailer;
+
 
 /**
  * Traite la décision d'un administrateur sur une réservation
@@ -41,6 +44,8 @@ class BookingDecisionProcessor implements ProcessorInterface
         private BookingRepository $bookingRepository,
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
+        private BookingAcceptedMailer $bookingAcceptedMailer,
+        private BookingRejectedMailer $bookingRejectedMailer,
     ) {
     }
 
@@ -115,6 +120,11 @@ class BookingDecisionProcessor implements ProcessorInterface
             );
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
+            if ('ACCEPTEE' === $newStatus->getCode()) {
+                $this->bookingAcceptedMailer->send($booking);
+            } else {
+                $this->bookingRejectedMailer->send($booking);
+            }
         } catch (\Throwable $e) {
             $this->logger->error('Échec de la création de la notification de décision pour la réservation {id} : {message}', [
                 'id' => (string) $booking->getId(),

@@ -271,6 +271,11 @@ const router = createRouter({
           component: () => import('@/views/admin/components/admin-divercity/BookingsPanel.vue')
         },
         {
+          name: 'adminDiverCityHighlights',
+          path: i18n.t('routes.adminDivercityHighlights'),
+          component: () => import('@/views/admin/components/admin-divercity/DiverCityHighlightsAdminPanel.vue')
+        },
+        {
           name: 'adminDiverCityBlockedPeriods',
           path: i18n.t('routes.adminDivercityBlockedPeriods'),
           component: () => import('@/views/admin/components/admin-divercity/BlockedPeriodsPanel.vue')

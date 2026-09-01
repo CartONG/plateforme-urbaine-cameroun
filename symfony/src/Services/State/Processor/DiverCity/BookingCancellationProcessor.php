@@ -13,6 +13,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use App\Repository\DiverCity\SpaceAdminRepository;
+use App\Services\Mailer\DiverCity\BookingCancelledByAdminMailer;
+use App\Services\Mailer\DiverCity\BookingCancelledByUserMailer;
 
 /**
  * Traite l'annulation d'une réservation, par le demandeur ou un administrateur
@@ -28,6 +31,9 @@ class BookingCancellationProcessor implements ProcessorInterface
         private StatusRepository $statusRepository,
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
+        private SpaceAdminRepository $spaceAdminRepository,
+        private BookingCancelledByAdminMailer $bookingCancelledByAdminMailer,
+        private BookingCancelledByUserMailer $bookingCancelledByUserMailer,
     ) {
     }
 
@@ -82,6 +88,14 @@ class BookingCancellationProcessor implements ProcessorInterface
             ));
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
+            $isCancelledByAdmin = $currentUser->getId() !== $booking->getUser()?->getId();
+
+            if ($isCancelledByAdmin) {
+                $this->bookingCancelledByAdminMailer->send($booking);
+            } else {
+                $admins = $this->spaceAdminRepository->findAdminsOfSpace($booking->getSpace());
+                $this->bookingCancelledByUserMailer->send($booking, $admins);
+            }
         } catch (\Throwable $e) {
             $this->logger->error('Échec de la création de la notification d\'annulation pour la réservation {id} : {message}', [
                 'id' => (string) $booking->getId(),

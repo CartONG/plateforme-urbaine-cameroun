@@ -160,6 +160,14 @@ export class SpacesService {
   static async patchBookingEdit(bookingId: string, values: Record<string, any>): Promise<Booking> {
     return (await apiClient.patch(`/api/divercity/bookings/${bookingId}/edit`, values)).data
   }
+
+  static async patchBookingResources(bookingId: string, resourceIris: string[]): Promise<Booking> {
+    return (
+      await apiClient.patch(`/api/divercity/bookings/${bookingId}/resources`, {
+        resources: resourceIris
+      })
+    ).data
+  }
 }
 
 export interface PaginatedResult<T> {

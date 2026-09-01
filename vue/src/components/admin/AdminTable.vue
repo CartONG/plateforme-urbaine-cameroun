@@ -61,8 +61,9 @@ import type { SortableEvent } from 'sortablejs'
 import { onMounted, ref, watch, type Ref } from 'vue'
 import { useDraggable } from 'vue-draggable-plus'
 import type { Booking } from '@/models/interfaces/divercity/Booking'
+import type { HighlightedResource } from '@/models/interfaces/divercity/HighlightedResource'
 
-type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment | Booking
+type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment | Booking  | HighlightedResource
 
 const props = withDefaults(
   defineProps<{

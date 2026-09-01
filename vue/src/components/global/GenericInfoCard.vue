@@ -35,7 +35,14 @@
           :additionnal-path="additionnalPath as string"
           :external-link="sharedLinkIsExternalToPlatform"
         />
-        <HighlightButton :item-id="id" />
+        <DiverCityHighlightButton
+          v-if="highlightMode === 'divercity'"
+          :resource-id="id"
+        />
+        <HighlightButton
+          v-else-if="highlightMode === 'default'"
+          :item-id="id"
+        />
         <LikeButton :id="id" />
         <v-btn
           class="GenericInfoCard__editBtn"
@@ -68,27 +75,34 @@ import LikeButton from '@/components/global/LikeButton.vue'
 import ShareButton from '@/components/global/ShareButton.vue'
 import { ItemType } from '@/models/enums/app/ItemType'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
+import DiverCityHighlightButton from '@/views/admin/components/admin-divercity/DiverCityHighlightButton.vue'
 import { computed } from 'vue'
 import type { RouteLocationAsRelative } from 'vue-router'
 
-const props = defineProps<{
-  id: string
-  title?: string
-  description?: string
-  image?: BaseMediaObject
-  typeLabel: string
-  type?: ItemType
-  slug?: string
-  actionIcon?: string
-  isEditable?: boolean
-  editFunction?: () => void
-  mapRoute?: RouteLocationAsRelative | null
-  href?: string
-  hideActions?: boolean
-  hideActionIcon?: boolean
-  disableHoverEffect?: boolean
-
-}>()
+const props = withDefaults(
+  defineProps<{
+    id: string
+    title?: string
+    description?: string
+    image?: BaseMediaObject
+    typeLabel: string
+    type?: ItemType
+    slug?: string
+    actionIcon?: string
+    isEditable?: boolean
+    editFunction?: () => void
+    mapRoute?: RouteLocationAsRelative | null
+    href?: string
+    hideActions?: boolean
+    hideActionIcon?: boolean
+    disableHoverEffect?: boolean
+    // NOUVELLE PROP : définit le type de bouton à utiliser ('default', 'divercity', ou 'none')
+    highlightMode?: 'default' | 'divercity' | 'none'
+  }>(),
+  {
+    highlightMode: 'default' // Valeur par défaut pour conserver le comportement actuel
+  }
+)
 
 const to = computed(() => {
   switch (props.type) {

@@ -31,9 +31,10 @@ class SpaceScopedVoter extends Voter
             return false;
         }
 
-        return $subject instanceof Space
-            || $subject instanceof Booking
-            || $subject instanceof BlockedPeriod;
+        return null === $subject
+                || $subject instanceof Space
+                || $subject instanceof Booking
+                || $subject instanceof BlockedPeriod;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -47,6 +48,13 @@ class SpaceScopedVoter extends Voter
         if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
             return true;
         }
+
+        // Pas d'objet précis (ex: GetCollection) : on vérifie juste que
+        // l'utilisateur administre au moins un Space.
+        if (null === $subject) {
+            return $this->spaceAdminRepository->isAdminOfAnySpace($user);
+        }
+
 
         $space = match (true) {
             $subject instanceof Booking, $subject instanceof BlockedPeriod => $subject->getSpace(),

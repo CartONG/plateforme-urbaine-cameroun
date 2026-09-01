@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Services\State\Provider\DiverCity;
+
+use ApiPlatform\Metadata\Operation;
+use ApiPlatform\State\ProviderInterface;
+use App\Repository\DiverCity\HighlightedResourceRepository;
+use App\Repository\ResourceRepository;
+
+class MainHighlightedResourcesProvider implements ProviderInterface
+{
+    public function __construct(
+        private HighlightedResourceRepository $highlightedResourceRepository,
+        private ResourceRepository $resourceRepository,
+    ) {
+    }
+
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable
+    {
+        $items = $this->highlightedResourceRepository->findMainHighlighted(3);
+
+        foreach ($items as $item) {
+            $resource = $this->resourceRepository->find($item->getResourceId());
+            if (null === $resource) {
+                continue;
+            }
+            $item->setName($resource->getName());
+            $item->setDescription($resource->getDescription());
+            $item->setImage($resource->getPreviewImage());
+            $item->setLink($resource->getLink());
+            $item->setUpdatedAt($resource->getUpdatedAt() ?? new \DateTimeImmutable());
+        }
+
+        return $items;
+    }
+}

@@ -423,6 +423,13 @@ const resourceFormats = computed(() => {
 const submitForm = handleSubmit(
   async (values) => {
     const resourceSubmission: Resource = nestedObjectsToIri(values)
+
+    // Le champ n'est affiché (et rempli) que pour RAPPORTS / REGULATIONS / OTHERS
+    // Pour les autres types, on force une valeur par défaut
+    if (!showAdminScope.value) {
+      resourceSubmission.administrativeScopes = []
+    }
+
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.resource) {
       resourceSubmission.id = props.resource.id
     }

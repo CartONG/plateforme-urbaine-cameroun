@@ -42,6 +42,7 @@ export interface Booking extends SymfonyRelation {
   refusalReason?: string | null
   cancellationReason?: string | null
   bookingAttachments: BookingAttachment[]
+  resources?: (string | { '@id': string; name?: string })[]
   submittedAt?: string
   processedAt?: string | null
 }
