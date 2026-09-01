@@ -7,14 +7,13 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\DiverCity\Booking;
 use App\Entity\DiverCity\Notification;
 use App\Repository\DiverCity\BookingRepository;
+use App\Services\Mailer\DiverCity\BookingAcceptedMailer;
+use App\Services\Mailer\DiverCity\BookingRejectedMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use App\Services\Mailer\DiverCity\BookingAcceptedMailer;
-use App\Services\Mailer\DiverCity\BookingRejectedMailer;
-
 
 /**
  * Traite la décision d'un administrateur sur une réservation

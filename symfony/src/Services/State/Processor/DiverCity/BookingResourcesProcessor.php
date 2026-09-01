@@ -32,7 +32,7 @@ class BookingResourcesProcessor implements ProcessorInterface
         if ($data instanceof Booking) {
             foreach ($data->getResources() as $resource) {
                 $resourceId = (string) $resource->getId();
-                
+
                 $highlighted = $this->highlightedResourceRepository->findOneByResourceId($resourceId);
 
                 if (!$highlighted) {

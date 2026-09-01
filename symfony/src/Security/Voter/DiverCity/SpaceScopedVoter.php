@@ -55,7 +55,6 @@ class SpaceScopedVoter extends Voter
             return $this->spaceAdminRepository->isAdminOfAnySpace($user);
         }
 
-
         $space = match (true) {
             $subject instanceof Booking, $subject instanceof BlockedPeriod => $subject->getSpace(),
             default => $subject,

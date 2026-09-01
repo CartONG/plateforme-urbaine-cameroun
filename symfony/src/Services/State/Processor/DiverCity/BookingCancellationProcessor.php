@@ -7,15 +7,15 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\DiverCity\Booking;
 use App\Entity\DiverCity\Notification;
 use App\Repository\DiverCity\BookingRepository;
+use App\Repository\DiverCity\SpaceAdminRepository;
 use App\Repository\DiverCity\StatusRepository;
+use App\Services\Mailer\DiverCity\BookingCancelledByAdminMailer;
+use App\Services\Mailer\DiverCity\BookingCancelledByUserMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use App\Repository\DiverCity\SpaceAdminRepository;
-use App\Services\Mailer\DiverCity\BookingCancelledByAdminMailer;
-use App\Services\Mailer\DiverCity\BookingCancelledByUserMailer;
 
 /**
  * Traite l'annulation d'une réservation, par le demandeur ou un administrateur
