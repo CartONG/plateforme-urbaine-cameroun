@@ -25,7 +25,12 @@
     "data": "Données",
     "comments": "Commentaires",
     "divercity-space": "Espace DiverCity",
-    "reservations": "Réservations"
+    "reservations": "Réservations",
+    "mes-reservations":"Mes réservations",
+    "periodes-bloquees":"Périodes bloquées",
+    "points-forts-divercity":"Points forts DiverCity",
+    "kpis": "Indicateurs"
+    
   },
   "dialog": {
     "close": "Fermer",

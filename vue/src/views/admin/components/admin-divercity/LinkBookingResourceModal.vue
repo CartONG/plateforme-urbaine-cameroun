@@ -1,5 +1,5 @@
 <template>
-  <Modal :title="$t('divercity.admin.resources.title')" :show="isShown" @close="$emit('close')">
+  <Modal :title="$t('divercity.admin.resources.title')" :show="isShown" @close="handleClose">
     <template #content>
       <v-form @submit.prevent="submitForm" id="booking-resource-form" class="Form">
         <div class="Form__fieldCtn">
@@ -33,7 +33,7 @@
     </template>
 
     <template #footer-left>
-      <span class="text-action" @click="$emit('close')">{{ $t('forms.cancel') }}</span>
+      <span class="text-action" @click="handleClose">{{ $t('forms.cancel') }}</span>
       <span v-show="isSubmitting" class="text-warning ml-3">{{ $t('forms.submitting') }}</span>
     </template>
 
@@ -88,23 +88,43 @@ watch(selectedBookingId, () => {
   )
 })
 
+const resetForm = () => {
+  selectedBookingId.value = null
+  selectedResourceIris.value = []
+}
+
+const handleClose = () => {
+  resetForm()
+  emit('close')
+}
+
+// Extrait le message d'erreur métier renvoyé par l'API (problem+json /
+// hydra), pour afficher une notification précise plutôt qu'un message générique.
+const extractErrorMessage = (error: unknown): string | null => {
+  const response = (error as any)?.response
+  return response?.data?.detail ?? response?.data?.['hydra:description'] ?? null
+}
+
 const submitForm = async () => {
   if (!selectedBookingId.value) return
   isSubmitting.value = true
   try {
     await SpacesService.patchBookingResources(selectedBookingId.value, selectedResourceIris.value)
-    
+
     // Rechargement direct des données
-    await Promise.all([
-      bookingsStore.getManagedBookings(),
-      highlightStore.getAll(true)
-    ])
+    await Promise.all([bookingsStore.getManagedBookings(), highlightStore.getAll(true)])
 
     addNotification(i18n.t('divercity.admin.resources.saveSuccess'), NotificationType.SUCCESS)
+    resetForm()
     emit('saved')
     emit('close')
   } catch (error) {
-    addNotification(i18n.t('divercity.admin.resources.saveError'), NotificationType.ERROR, error as string)
+    const backendMessage = extractErrorMessage(error)
+    addNotification(
+      backendMessage ?? i18n.t('divercity.admin.resources.saveError'),
+      NotificationType.ERROR,
+      error instanceof Error ? error.message : String(error)
+    )
   } finally {
     isSubmitting.value = false
   }

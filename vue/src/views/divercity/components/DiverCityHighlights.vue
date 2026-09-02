@@ -1,9 +1,9 @@
 <template>
-  <div class="DiverCityHighlights" v-if="highlightStore.orderedMainHighlights.length">
+  <div class="DiverCityHighlights" v-if="spacesStore.orderedMainHighlights.length">
     <SectionBanner :text="$t('divercity.space.featuredResources')" />
     <div class="DiverCityHighlights__grid">
       <GenericInfoCard
-        v-for="item in highlightStore.orderedMainHighlights"
+        v-for="item in spacesStore.orderedMainHighlights"
         :id="item.resourceId"
         :key="item.id"
         :title="item.name"
@@ -22,12 +22,12 @@
 import GenericInfoCard from '@/components/global/GenericInfoCard.vue'
 import SectionBanner from '@/components/banners/SectionBanner.vue'
 import { ItemType } from '@/models/enums/app/ItemType'
-import { useDiverCityHighlightStore } from '@/stores/divercity/divercityHighlightStore'
+import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { onMounted } from 'vue'
 
-const highlightStore = useDiverCityHighlightStore()
+const spacesStore = useSpacesStore()
 
-onMounted(async () => await highlightStore.getMainHighlights())
+onMounted(async () => await spacesStore.getMainHighlights())
 </script>
 
 <style lang="scss" scoped>
