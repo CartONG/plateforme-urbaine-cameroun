@@ -12,7 +12,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
-
 /**
  * @extends ServiceEntityRepository<Booking>
  */
