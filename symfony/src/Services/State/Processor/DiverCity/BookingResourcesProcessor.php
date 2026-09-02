@@ -6,9 +6,11 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\DiverCity\Booking;
 use App\Entity\DiverCity\HighlightedResource;
+use App\Repository\DiverCity\BookingRepository;
 use App\Repository\DiverCity\HighlightedResourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class BookingResourcesProcessor implements ProcessorInterface
 {
@@ -16,6 +18,7 @@ class BookingResourcesProcessor implements ProcessorInterface
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
         private HighlightedResourceRepository $highlightedResourceRepository,
+        private BookingRepository $bookingRepository,
         private EntityManagerInterface $entityManager,
     ) {
     }
@@ -25,6 +28,22 @@ class BookingResourcesProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
+        if ($data instanceof Booking) {
+            foreach ($data->getResources() as $resource) {
+                $conflictingBooking = $this->bookingRepository->findConflictingBookingResourceLink(
+                    $resource,
+                    $data->getId()
+                );
+
+                if (null !== $conflictingBooking) {
+                    throw new ConflictHttpException(sprintf(
+                        'La ressource "%s" est déjà liée à une autre réservation.',
+                        $resource->getName()
+                    ));
+                }
+            }
+        }
+
         // 1. Sauvegarde des ressources liées à la réservation
         $result = $this->persistProcessor->process($data, $operation, $uriVariables, $context);
 
@@ -40,7 +59,6 @@ class BookingResourcesProcessor implements ProcessorInterface
                     $highlighted->setResourceId($resourceId);
                 }
 
-                // Force l'activation à la une et initialise la date si nécessaire
                 $highlighted->setIsHighlighted(true);
                 if (null === $highlighted->getHighlightedAt()) {
                     $highlighted->setHighlightedAt(new \DateTimeImmutable());

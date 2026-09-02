@@ -5,11 +5,13 @@ namespace App\Repository\DiverCity;
 use ApiPlatform\Doctrine\Orm\Paginator as ApiPlatformPaginator;
 use App\Entity\DiverCity\Booking;
 use App\Entity\DiverCity\Space;
+use App\Entity\Resource;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
+
 
 /**
  * @extends ServiceEntityRepository<Booking>
@@ -108,6 +110,25 @@ class BookingRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         return $result['code'] ?? null;
+    }
+
+    /**
+     * Renvoie la réservation à laquelle une ressource est déjà liée, hors la
+     * réservation en cours d'édition le cas échéant (utilisé pour empêcher
+     * qu'une ressource soit liée à plusieurs réservations simultanément).
+     */
+    public function findConflictingBookingResourceLink(Resource $resource, ?Uuid $excludeBookingId = null): ?Booking
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->innerJoin('b.resources', 'r')
+            ->andWhere('r = :resource')
+            ->setParameter('resource', $resource);
+
+        if (null !== $excludeBookingId) {
+            $qb->andWhere('b.id != :excludeId')->setParameter('excludeId', $excludeBookingId);
+        }
+
+        return $qb->setMaxResults(1)->getQuery()->getOneOrNullResult();
     }
 
     /**
