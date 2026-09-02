@@ -93,8 +93,8 @@ export interface PublicBooking extends SymfonyRelation {
   id: string
   title: string
   date: string
-  startTimeFormat: string
-  endTimeFormat: string
+  startTime: string
+  endTime: string
   participantCount?: number
   organization?: string
   bookingPurpose?: string

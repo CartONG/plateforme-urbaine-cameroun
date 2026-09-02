@@ -56,8 +56,8 @@ const props = withDefaults(
     dayEndHour?: number
   }>(),
   {
-    dayStartHour: 7,
-    dayEndHour: 20
+    dayStartHour: 8,
+    dayEndHour: 18
   }
 )
 

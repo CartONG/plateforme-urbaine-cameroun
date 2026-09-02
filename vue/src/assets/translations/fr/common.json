@@ -29,7 +29,9 @@
     "mes-reservations":"Mes réservations",
     "periodes-bloquees":"Périodes bloquées",
     "points-forts-divercity":"Points forts DiverCity",
-    "kpis": "Indicateurs"
+    "kpis": "Indicateurs",
+    "disponibilites-divercity-space": "Disponibilités de l'espace",
+    "formulaire-de-reservation": "Formulaire de réservation"
     
   },
   "dialog": {

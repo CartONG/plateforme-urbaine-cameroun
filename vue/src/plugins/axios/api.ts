@@ -32,9 +32,11 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean }
+    const requestUrl = originalRequest?.url
+    const isAuthenticationRequest = requestUrl === '/auth' || requestUrl === '/api/token/refresh'
 
     // Verify if it's an authentication error (401) and that it's not already a refresh attempt
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !isAuthenticationRequest && !originalRequest._retry) {
       originalRequest._retry = true
 
       // If a refresh is already in progress, queue this request

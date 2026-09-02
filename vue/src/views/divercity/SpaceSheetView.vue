@@ -15,9 +15,10 @@
 
     <div class="SpaceSheetView__ctn" v-if="space.photos.length">
       <v-carousel
+        cycle
         hide-delimiter-background
         show-arrows="hover"
-        height="400"
+        height="500"
         class="SpaceSheetView__carousel"
       >
         <v-carousel-item

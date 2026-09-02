@@ -13,7 +13,7 @@ import { AuthenticationService } from '@/services/userAndAuth/AuthenticationServ
 import JwtCookie from '@/services/userAndAuth/JWTCookie'
 import { UserService } from '@/services/userAndAuth/UserService'
 import * as Sentry from '@sentry/browser'
-import { AxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -43,6 +43,8 @@ export const useUserStore = defineStore(StoresList.USER, () => {
   }
 
   const signIn = async (values: SignInValues, hideDialog = true) => {
+    errorWhileSignInOrSignUp.value = false
+    invalidAccount.value = false
     try {
       await AuthenticationService.signIn(values)
       if (!values.stayLoggedIn) {
@@ -50,6 +52,7 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       }
       await setCurrentUser()
       errorWhileSignInOrSignUp.value = false
+      invalidAccount.value = false
       if (currentUser.value?.hasSeenRequestedRoles === false) {
         await UserService.patchUser({ hasSeenRequestedRoles: true }, currentUser.value.id)
         return await router.replace({
@@ -69,8 +72,12 @@ export const useUserStore = defineStore(StoresList.USER, () => {
       }
     } catch (err) {
       Sentry.captureException(err)
-      if (err instanceof AxiosError && err.response?.status === 401) {
-        invalidAccount.value = true
+
+      if (isAxiosError(err) && err.response?.status === 401) {
+        const message = err.response.data?.message
+        invalidAccount.value =
+          typeof message === 'string' && message.toLowerCase().includes('not validated')
+        errorWhileSignInOrSignUp.value = !invalidAccount.value
         return
       }
       errorWhileSignInOrSignUp.value = true

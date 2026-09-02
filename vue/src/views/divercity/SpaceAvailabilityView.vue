@@ -9,6 +9,7 @@
           :attributes="calendarAttributes"
           @update:model-value="onDaySelected"
           :min-date="today"
+          expanded
         />
         <div class="SpaceAvailabilityView__legend">
           <span class="SpaceAvailabilityView__legendItem SpaceAvailabilityView__legendItem--free">
@@ -39,14 +40,14 @@
           <p v-if="!selectedDaySlots.length" class="text-success">
             {{ $t('divercity.availability.dayFree') }}
           </p>
-          <ul v-else class="SpaceAvailabilityView__occupiedList">
+          <!-- <ul v-else class="SpaceAvailabilityView__occupiedList">
             <li v-for="slot in selectedDaySlots" :key="slot.id">
               {{ slot.startTime }} - {{ slot.endTime }}
               <span v-if="slot.type === 'blocked_period'">
                 ({{ $t('divercity.availability.legend.blockedPeriod') }})
               </span>
             </li>
-          </ul>
+          </ul> -->
 
           <v-divider class="my-4" />
 
@@ -58,6 +59,8 @@
                 density="compact"
                 variant="outlined"
                 v-model="pickedStartTime"
+                min="08:30"
+                max="17:30"
                 :label="$t('divercity.booking.fields.startTime')"
               />
               <v-text-field
@@ -65,6 +68,8 @@
                 density="compact"
                 variant="outlined"
                 v-model="pickedEndTime"
+                min="08:30"
+                max="17:30"
                 :label="$t('divercity.booking.fields.endTime')"
               />
             </div>
@@ -234,22 +239,24 @@ function bookThisSlot() {
   }
 
   &__timelineLabel {
-    font-weight: 700;
-    font-size: $font-size-sm;
-    margin-bottom: 0.5rem;
- }
+      font-weight: 700;
+      font-size: $font-size-sm;
+      margin-bottom: 0.5rem;
+  }
 
   &__layout {
     display: grid;
-    grid-template-columns: minmax(20rem, 24rem) 1fr;
+    grid-template-columns: minmax(28rem, 38rem) 1fr;
     gap: 2rem;
     align-items: start;
+    margin-top: 2rem;
   }
 
   &__calendar {
     // v-calendar utilise ses propres custom properties, pas le thème Vuetify
     --vc-accent-600: rgb(var(--v-theme-main-blue));
     --vc-font-family: inherit;
+    width: 100%;
   }
 
   &__legend {
@@ -287,6 +294,8 @@ function bookThisSlot() {
     border: 1px solid rgb(var(--v-theme-main-grey));
     border-radius: $dim-radius;
     padding: 1.5rem;
+    min-height: 28rem; // taille fixe, ne dépend plus du contenu
+    overflow-y: auto;  // au cas où le contenu dépasse (liste de créneaux longue)
   }
 
   &__occupiedList {
