@@ -2,18 +2,32 @@
   <div class="BookingFormView" v-if="space">
     <div class="BookingFormView__header">
       <PageTitle :title="isEditMode ? $t('divercity.booking.editTitle') : $t('divercity.booking.title')" />
-      <v-btn variant="text" color="main-blue" @click="handleCancelClick">
+      <v-btn variant="text" color="main-red" @click="handleCancelClick">
         {{ $t('divercity.form.cancel') }}
       </v-btn>
     </div>
 
     <v-stepper v-if="!isDone" v-model="currentStep" class="BookingFormView__stepper" flat non-linear>
       <v-stepper-header>
-        <v-stepper-item :title="$t('divercity.booking.step1')" :value="1" :complete="currentStep > 1" />
+        <v-stepper-item
+          :title="$t('divercity.booking.step1')"
+          :value="1"
+          :complete="currentStep > 1"
+          :color="currentStep > 1 ? 'success' : 'main-blue'"
+        />
         <v-divider />
-        <v-stepper-item :title="$t('divercity.booking.step2')" :value="2" :complete="currentStep > 2" />
+        <v-stepper-item
+          :title="$t('divercity.booking.step2')"
+          :value="2"
+          :complete="currentStep > 2"
+          :color="currentStep > 2 ? 'success' : 'main-blue'"
+        />
         <v-divider />
-        <v-stepper-item :title="$t('divercity.booking.step3')" :value="3" />
+        <v-stepper-item
+          :title="$t('divercity.booking.step3')"
+          :value="3"
+          :color="currentStep > 3 ? 'success' : 'main-blue'"
+        />
       </v-stepper-header>
 
       <v-form @submit.prevent>
@@ -403,7 +417,8 @@ const { form, handleSubmit, isSubmitting, stepFields, setValues } = BookingFormS
   {
     lastName: userStore.currentUser?.lastName ?? '',
     firstName: userStore.currentUser?.firstName ?? '',
-    email: userStore.currentUser?.email ?? ''
+    email: userStore.currentUser?.email ?? '',
+    organization: userStore.currentUser?.organisation ?? '',
   },
   isEditMode.value
 )

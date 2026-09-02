@@ -26,7 +26,7 @@
         </span>
         <span>
           <v-icon icon="$clockOutline" />
-          <span>{{ booking.startTimeFormat }} - {{ booking.endTimeFormat }}</span>
+          <span>{{ booking.startTime }} - {{ booking.endTime }}</span>
         </span>
         <span v-if="booking.participantCount">
           <v-icon icon="$accountGroup" />
