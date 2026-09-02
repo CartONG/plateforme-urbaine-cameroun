@@ -36,10 +36,7 @@ class BookingResourcesProcessor implements ProcessorInterface
                 );
 
                 if (null !== $conflictingBooking) {
-                    throw new ConflictHttpException(sprintf(
-                        'La ressource "%s" est déjà liée à une autre réservation.',
-                        $resource->getName()
-                    ));
+                    throw new ConflictHttpException(sprintf('La ressource "%s" est déjà liée à une autre réservation.', $resource->getName()));
                 }
             }
         }
