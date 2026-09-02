@@ -31,6 +31,25 @@
         "currentOrder": "Ordre de mise en avant"
       },
 
+      "kpis": {
+        "from": "Du",
+        "to": "Au",
+        "bookingsCount": "Réservations totales",
+        "acceptedBookingsCount": "Réservations acceptées",
+        "pendingBookingsCount": "Réservations en attente",
+        "cancelledRate": "Taux d'annulation",
+        "occupancyRate": "Taux d'occupation",
+        "activeUsersCount": "Utilisateurs actifs",
+        "repeatUsersRate": "Taux de récurrence",
+        "averageLeadTimeHours": "Délai moyen de réservation",
+        "spaceAdminsCount": "Administrateurs de l'espace",
+        "groups": {
+          "bookings": "Réservations",
+          "rates": "Taux & occupation",
+          "users": "Utilisateurs"
+        }
+      },
+
       "resources": {
         "title": "Ressources liées aux réservations",
         "selectBooking": "Réservation",

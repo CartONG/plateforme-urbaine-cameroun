@@ -17,5 +17,6 @@ export enum StoresList {
   DIVERCITY_BOOKINGS = 'divercityBookings',
   DIVERCITY_BLOCKED_PERIODS = 'divercityBlockedPeriods',
   DIVERCITY_MY_BOOKINGS = 'divercityMyBookings',
-  DIVERCITY_HIGHLIGHTS = 'divercityHighlights'
+  DIVERCITY_HIGHLIGHTS = 'divercityHighlights',
+  KPIS = 'kpis'
 }
