@@ -4,7 +4,7 @@
 
     <div class="BlockedPeriodsPanel__layout">
       <div class="BlockedPeriodsPanel__calendar">
-        <v-date-picker v-model="selectedDate" :attributes="calendarAttributes" hide-header />
+        <VCDatePicker v-model="selectedDate" :attributes="calendarAttributes" />
       </div>
 
       <div class="BlockedPeriodsPanel__form">
@@ -134,6 +134,8 @@ import { i18n } from '@/plugins/i18n'
 import type { SpaceAvailability } from '@/models/interfaces/divercity/Booking'
 import { SpacesService } from '@/services/divercity/SpacesService'
 import { computed, onMounted, ref, watch } from 'vue'
+import { DatePicker as VCDatePicker } from 'v-calendar'
+import 'v-calendar/style.css'
 
 const MAX_RECURRENCE_OCCURRENCES = 104 // ~2 ans en hebdomadaire, garde-fou anti-boucle infinie
 
@@ -187,6 +189,14 @@ const sortedBlockedPeriods = computed(() =>
   )
 )
 
+  const calendarAttributes = computed(() =>
+    blockedPeriodsStore.blockedPeriods.map((period) => ({
+      key: period.id,
+      dates: new Date(period.date),
+      dot: { style: { backgroundColor: 'rgb(var(--v-theme-main-blue))' } }
+    }))
+  )
+
 // Ne compare qu'aux réservations existantes (type 'booking'), pas aux autres périodes bloquées
 const bookingConflict = computed(() => {
   if (!form.value.startTime || !form.value.endTime) return false
@@ -198,12 +208,6 @@ const bookingConflict = computed(() => {
   )
 })
 
-const calendarAttributes = computed(() =>
-  blockedPeriodsStore.blockedPeriods.map((period) => ({
-    dates: [new Date(period.date)],
-    dot: { color: 'main-blue' }
-  }))
-)
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' })
@@ -388,6 +392,11 @@ async function submit() {
     display: flex;
     flex-flow: column nowrap;
     gap: 1.25rem;
+  }
+  &__calendar {
+    // v-calendar utilise ses propres custom properties, pas le thème Vuetify
+    --vc-accent-600: rgb(var(--v-theme-main-blue));
+    --vc-font-family: inherit;
   }
   &__timeRow {
     display: flex;

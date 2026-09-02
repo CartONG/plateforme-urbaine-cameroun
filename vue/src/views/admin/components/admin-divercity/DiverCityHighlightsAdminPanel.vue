@@ -1,17 +1,10 @@
 <template>
   <div class="AdminPanel AdminPanel--highlight">
-    <AdminTopBar
-      page="Highlights"
-      :items="highlightsStore.highlights"
-      searchKey="name"
-      @update-search-query="(e) => (searchQuery = e)"
-    >
-      <template #right-buttons>
-        <v-btn @click="isModalShown = true" color="main-red">
-          {{ $t('admin.add') }}
-        </v-btn>
-      </template>
-    </AdminTopBar>
+    <div class="AdminPanel__actions">
+      <v-btn @click="isModalShown = true" color="main-red">
+        {{ $t('admin.add') }}
+      </v-btn>
+    </div>
 
     <AdminTable
       :items="orderedHighlights"
@@ -42,7 +35,6 @@
 import { useDiverCityHighlightStore } from '@/stores/divercity/divercityHighlightStore'
 import { computed, onMounted, ref } from 'vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
-import AdminTopBar from '@/components/admin/AdminTopBar.vue'
 import type { HighlightedResource } from '@/models/interfaces/divercity/HighlightedResource'
 import DiverCityHighlightButton from './DiverCityHighlightButton.vue'
 import LinkBookingResourceModal from './LinkBookingResourceModal.vue'
@@ -52,20 +44,14 @@ import { localizeDate } from '@/services/utils/UtilsService'
 const highlightsStore = useDiverCityHighlightStore()
 
 const isModalShown = ref(false)
-const searchQuery = ref('')
 
 const highlights = computed(() => highlightsStore.highlights)
 
-const filteredHighlights = computed(() => {
-  if (!searchQuery.value) return highlightsStore.orderedHighlights
-  return highlightsStore.orderedHighlights.filter((item) =>
-    item.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
-})
 
 const orderedHighlights = computed(() =>
-  filteredHighlights.value.map((item) => ({
+  highlightsStore.orderedHighlights.map((item) => ({
     ...item,
+    name: item.name ?? '',
     highlightedAt: item.highlightedAt ? localizeDate(item.highlightedAt) : ''
   }))
 )

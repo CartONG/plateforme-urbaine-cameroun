@@ -11,17 +11,15 @@ import { useApplicationStore } from '../applicationStore'
 
 export const useDiverCityHighlightStore = defineStore(StoresList.DIVERCITY_HIGHLIGHTS, () => {
   const highlights: Ref<HighlightedResource[]> = ref([])
-  const mainHighlights: Ref<HighlightedResource[]> = ref([])
 
-  const orderedHighlights = computed(() =>
-    highlights.value
-      .filter((item) => item.isHighlighted)
-      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-  )
-
-  const orderedMainHighlights = computed(() => {
-    return mainHighlights.value.sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+  const orderedHighlights = computed(() => {
+    return highlights.value
+      .filter((highlightedItem) => highlightedItem?.isHighlighted)
+      .sort((a, b) => {
+        return (a.position ?? 0) - (b.position ?? 0)
+      })
   })
+
 
   async function getAll(force = false): Promise<void> {
     if (force) {
@@ -37,26 +35,34 @@ export const useDiverCityHighlightStore = defineStore(StoresList.DIVERCITY_HIGHL
     }
   }, 100)
 
-  async function getMainHighlights(): Promise<void> {
-    mainHighlights.value = await DiverCityHighlightedResourceService.getMainHighlights()
-  }
 
-  const updateHighlightedResource = (updated: HighlightedResource) => {
-  const index = highlights.value.findIndex((item) => item.resourceId === updated.resourceId)
-  if (index !== -1) {
-    highlights.value[index] = updated
-  } else {
-    highlights.value.push(updated)
+  const updateHighlightedResource = (updatedHighlightedResource: HighlightedResource) => {
+    useApplicationStore().isLoading = true
+    try {
+      let found = false
+      highlights.value.forEach((resource, key) => {
+        if (resource.resourceId === updatedHighlightedResource.resourceId) {
+          highlights.value[key] = updatedHighlightedResource
+          found = true
+        }
+      })
+      if (!found) {
+        highlights.value.push(updatedHighlightedResource)
+      }
+    } catch (error) {
+      addNotification(
+        i18n.t('notifications.common.error.500'),
+        NotificationType.ERROR,
+        error as string
+      )
+    }
+    useApplicationStore().isLoading = false
   }
-}
 
   return {
     highlights,
-    mainHighlights,
     orderedHighlights,
-    orderedMainHighlights,
     getAll,
-    getMainHighlights,
     updateHighlightedResource
   }
 })

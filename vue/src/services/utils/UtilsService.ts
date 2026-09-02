@@ -19,11 +19,16 @@ export const uniqueArray = (array: any[], key = 'id') => {
   return array.filter((obj1, i, arr) => arr.findIndex((obj2) => obj2[key] === obj1[key]) === i)
 }
 
-export const reduceText = (text: string, length: number) => {
-  if (text.length > length && text != null) {
-    return text.slice(0, length) + '...'
-  }
-  return text
+// export const reduceText = (text: string, length: number) => {
+//   if (text.length > length && text != null) {
+//     return text.slice(0, length) + '...'
+//   }
+//   return text
+// }
+// UtilsService.ts, ligne ~23
+export function reduceText(text: string | null | undefined, maxLength: number): string {
+  if (!text) return ''
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text
 }
 
 export const debounce = (func: any, wait = 500) => {

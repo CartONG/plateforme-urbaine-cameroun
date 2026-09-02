@@ -4,12 +4,11 @@
 
     <div class="SpaceAvailabilityView__layout">
       <div class="SpaceAvailabilityView__calendar">
-        <v-date-picker
+        <VCDatePicker
           v-model="selectedDate"
           :attributes="calendarAttributes"
           @update:model-value="onDaySelected"
-          hide-header
-          :min="today"
+          :min-date="today"
         />
         <div class="SpaceAvailabilityView__legend">
           <span class="SpaceAvailabilityView__legendItem SpaceAvailabilityView__legendItem--free">
@@ -96,6 +95,8 @@ import { i18n } from '@/plugins/i18n'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import SpaceOccupiedTimeline from '@/views/divercity/components/SpaceOccupiedTimeline.vue'
+import { DatePicker as VCDatePicker } from 'v-calendar'
+import 'v-calendar/style.css'
 
 const applicationStore = useApplicationStore()
 const spacesStore = useSpacesStore()
@@ -164,15 +165,21 @@ function dayStatus(dateKey: string): 'free' | 'partial' | 'full' {
   return totalMinutes >= FULL_DAY_THRESHOLD_MINUTES ? 'full' : 'partial'
 }
 
-// Attributs de couleur pour v-date-picker (Vuetify Labs)
-const calendarAttributes = computed(() => {
-  return Array.from(availabilityByDay.value.keys()).map((dateKey) => ({
-    dates: [new Date(dateKey)],
-    dot: {
-      color: dayStatus(dateKey) === 'full' ? 'main-red' : 'main-yellow'
-    }
-  }))
-})
+// Attributs de couleur pour v-calendar
+ const calendarAttributes = computed(() => {
+   return Array.from(availabilityByDay.value.keys()).map((dateKey) => ({
+    key: dateKey,
+    dates: new Date(dateKey),
+     dot: {
+      style: {
+        backgroundColor:
+          dayStatus(dateKey) === 'full'
+            ? 'rgb(var(--v-theme-main-red))'
+            : 'rgb(var(--v-theme-main-yellow))'
+      }
+     }
+   }))
+ })
 
 async function onDaySelected(date: Date | null) {
   if (!date || !space.value) {
@@ -237,6 +244,12 @@ function bookThisSlot() {
     grid-template-columns: minmax(20rem, 24rem) 1fr;
     gap: 2rem;
     align-items: start;
+  }
+
+  &__calendar {
+    // v-calendar utilise ses propres custom properties, pas le thème Vuetify
+    --vc-accent-600: rgb(var(--v-theme-main-blue));
+    --vc-font-family: inherit;
   }
 
   &__legend {
