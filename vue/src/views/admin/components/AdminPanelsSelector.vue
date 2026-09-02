@@ -161,6 +161,10 @@
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCityHighlights') }}
           </router-link>
+          <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCityKpis' }">
+            <v-icon icon="$circleSmall" size="large"></v-icon>
+            {{ $t('admin.panelDiverCityKpis') }}
+          </router-link>
           <router-link class="Admin__itemSelector" :to="{ name: 'adminDiverCitySpace' }">
             <v-icon icon="$circleSmall" size="large"></v-icon>
             {{ $t('admin.panelDiverCitySpace') }}

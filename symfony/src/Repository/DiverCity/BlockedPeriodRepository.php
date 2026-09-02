@@ -62,4 +62,36 @@ class BlockedPeriodRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Pour chaque date de la période, renvoie la variation nette de disponibilité :
+     * positif = heures retirées (bloqué), négatif = heures ajoutées (débloqué exceptionnellement).
+     *
+     * @return array<string, float> date (Y-m-d) => heures
+     */
+    public function getAvailabilityAdjustmentPerDay(Space $space, \DateTimeInterface $from, \DateTimeInterface $to): array
+    {
+        $periods = $this->createQueryBuilder('bp')
+            ->andWhere('bp.space = :space')
+            ->andWhere('bp.date >= :from')
+            ->andWhere('bp.date <= :to')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()
+            ->getResult();
+
+        $adjustments = [];
+        foreach ($periods as $period) {
+            $start = (int) $period->getStartTime()->format('H') + ((int) $period->getStartTime()->format('i') / 60);
+            $end = (int) $period->getEndTime()->format('H') + ((int) $period->getEndTime()->format('i') / 60);
+            $hours = max(0, $end - $start);
+            $dateKey = $period->getDate()->format('Y-m-d');
+
+            $sign = $period->isUnblocked() ? -1 : 1;
+            $adjustments[$dateKey] = ($adjustments[$dateKey] ?? 0) + $sign * $hours;
+        }
+
+        return $adjustments;
+    }
 }

@@ -21,6 +21,7 @@
     "panelDiverCityBookings": "Réservations",
     "panelDiverCityBlockedPeriods": "Périodes bloquées",
     "panelDiverCityHighlights": "À la une",
+    "panelDiverCityKpis": "KPIs",
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },

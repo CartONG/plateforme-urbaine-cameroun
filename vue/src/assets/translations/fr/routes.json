@@ -12,6 +12,7 @@
         "adminDivercityBookings": "reservations",
         "adminDivercityBlockedPeriods": "periodes-bloquees",
         "divercitySpaceAvailability": "disponibilites-divercity-space",
-        "adminDivercityHighlights": "points-forts-divercity"
+        "adminDivercityHighlights": "points-forts-divercity",
+        "adminDivercityKpis": "kpis"
     }
 }

@@ -16,6 +16,7 @@ use Symfony\Component\Uid\Uuid;
  */
 class BookingRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Booking::class);
@@ -126,5 +127,180 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery();
 
         return new ApiPlatformPaginator(new DoctrinePaginator($query));
+    }
+
+    /**
+     * Nombre total de réservations sur un espace, dans une plage de dates,
+     * éventuellement filtré par statut.
+     */
+    public function countForSpaceBetween(Space $space, \DateTimeInterface $from, \DateTimeInterface $to, ?string $statusCode = null): int
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->select('COUNT(b.id)')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :from')
+            ->andWhere('b.date <= :to')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to);
+
+        if (null !== $statusCode) {
+            $qb->innerJoin('b.status', 's')
+                ->andWhere('s.code = :code')
+                ->setParameter('code', $statusCode);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Taux d'annulation sur la période (réservations ANNULEE / total).
+     */
+    public function cancelledRateForSpace(Space $space, \DateTimeInterface $from, \DateTimeInterface $to): float
+    {
+        $total = $this->countForSpaceBetween($space, $from, $to);
+        if (0 === $total) {
+            return 0.0;
+        }
+        $cancelled = $this->countForSpaceBetween($space, $from, $to, 'ANNULEE');
+
+        return round($cancelled / $total, 4);
+    }
+
+    /**
+     * Nombre d'utilisateurs distincts ayant réservé sur la période.
+     */
+    public function distinctUsersCountForSpace(Space $space, \DateTimeInterface $from, \DateTimeInterface $to): int
+    {
+        return (int) $this->createQueryBuilder('b')
+            ->select('COUNT(DISTINCT b.user)')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :from')
+            ->andWhere('b.date <= :to')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Réservations en attente (toutes dates confondues) — file d'attente actuelle.
+     */
+    public function countPendingForSpace(Space $space): int
+    {
+        return $this->countForSpaceBetween($space, new \DateTimeImmutable('1970-01-01'), new \DateTimeImmutable('2100-01-01'), 'EN_ATTENTE');
+    }
+
+    /**
+     * Délai moyen (en heures) entre la création de la demande et la date de créneau réservé,
+     * sur les réservations acceptées.
+     */
+    public function averageLeadTimeHoursForSpace(Space $space, \DateTimeInterface $from, \DateTimeInterface $to): ?float
+    {
+        $bookings = $this->createQueryBuilder('b')
+            ->innerJoin('b.status', 's')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :from')
+            ->andWhere('b.date <= :to')
+            ->andWhere('s.code = :code')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->setParameter('code', 'ACCEPTEE')
+            ->getQuery()
+            ->getResult();
+
+        if (empty($bookings)) {
+            return null;
+        }
+
+        $totalHours = 0;
+        foreach ($bookings as $booking) {
+            $slotStart = \DateTime::createFromInterface($booking->getDate())
+                ->setTime((int) $booking->getStartTime()->format('H'), (int) $booking->getStartTime()->format('i'));
+            $diff = $slotStart->getTimestamp() - $booking->getSubmittedAt()->getTimestamp();
+            $totalHours += $diff / 3600;
+        }
+
+        return round($totalHours / count($bookings), 1);
+    }
+
+    /**
+     * Taux de réservations récurrentes : part des utilisateurs ayant réservé
+     * plus d'une fois sur la période.
+     */
+    public function repeatUsersRateForSpace(Space $space, \DateTimeInterface $from, \DateTimeInterface $to): float
+    {
+        $rows = $this->createQueryBuilder('b')
+            ->select('IDENTITY(b.user) as userId', 'COUNT(b.id) as bookingCount')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :from')
+            ->andWhere('b.date <= :to')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->groupBy('b.user')
+            ->getQuery()
+            ->getResult();
+
+        if (empty($rows)) {
+            return 0.0;
+        }
+
+        $repeatCount = count(array_filter($rows, fn ($r) => $r['bookingCount'] > 1));
+
+        return round($repeatCount / count($rows), 4);
+    }
+
+    private const OPENING_HOUR = 8.5;  // 8h30
+    private const CLOSING_HOUR = 17.5; // 17h30
+    private const DAILY_HOURS = self::CLOSING_HOUR - self::OPENING_HOUR; // 9h
+
+    public function occupancyRateForSpace(Space $space, \DateTimeInterface $from, \DateTimeInterface $to, BlockedPeriodRepository $blockedPeriodRepository): float
+    {
+        $bookings = $this->createQueryBuilder('b')
+            ->innerJoin('b.status', 's')
+            ->andWhere('b.space = :space')
+            ->andWhere('b.date >= :from')
+            ->andWhere('b.date <= :to')
+            ->andWhere('s.code = :code')
+            ->setParameter('space', $space)
+            ->setParameter('from', $from)
+            ->setParameter('to', $to)
+            ->setParameter('code', 'ACCEPTEE')
+            ->getQuery()
+            ->getResult();
+
+        $bookedHours = 0.0;
+        foreach ($bookings as $booking) {
+            $start = (int) $booking->getStartTime()->format('H') + ((int) $booking->getStartTime()->format('i') / 60);
+            $end = (int) $booking->getEndTime()->format('H') + ((int) $booking->getEndTime()->format('i') / 60);
+            $bookedHours += max(0, $end - $start);
+        }
+
+        $adjustments = $blockedPeriodRepository->getAvailabilityAdjustmentPerDay($space, $from, $to);
+
+        $availableHours = 0.0;
+        $cursor = \DateTime::createFromInterface($from);
+        $end = \DateTime::createFromInterface($to);
+        while ($cursor <= $end) {
+            $dateKey = $cursor->format('Y-m-d');
+            $isWeekday = (int) $cursor->format('N') <= 5;
+            $adjustment = $adjustments[$dateKey] ?? 0.0;
+
+            $dayHours = $isWeekday
+                ? max(0, min(self::DAILY_HOURS, self::DAILY_HOURS - $adjustment))
+                : max(0, -$adjustment); // week-end : uniquement les ouvertures exceptionnelles
+
+            $availableHours += $dayHours;
+            $cursor->modify('+1 day');
+        }
+
+        if (0.0 === $availableHours) {
+            return 0.0;
+        }
+
+        return round($bookedHours / $availableHours, 4);
     }
 }
