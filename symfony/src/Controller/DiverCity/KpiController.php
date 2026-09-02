@@ -3,8 +3,8 @@
 namespace App\Controller\DiverCity;
 
 use App\Repository\DiverCity\SpaceRepository;
-use App\Services\Service\DiverCity\KpiCalculator;
 use App\Security\Voter\DiverCity\KpiVoter;
+use App\Services\Service\DiverCity\KpiCalculator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
