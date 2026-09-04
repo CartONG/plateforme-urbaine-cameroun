@@ -3,26 +3,39 @@
     <h2 class="BlockedPeriodsPanel__title">{{ $t('admin.panelDiverCityBlockedPeriods') }}</h2>
 
     <div class="BlockedPeriodsPanel__layout">
-      <div class="BlockedPeriodsPanel__calendar">
+      <!-- Calendrier de vue globale des périodes bloquées -->
+      <div class="BlockedPeriodsPanel__calendarCtn">
         <VCDatePicker v-model="selectedDate" :attributes="calendarAttributes" />
       </div>
 
       <div class="BlockedPeriodsPanel__form">
         <h3>{{ $t('divercity.blockedPeriods.addTitle') }}</h3>
+        
         <div class="Form__fieldCtn">
           <label class="Form__label required">{{ $t('divercity.blockedPeriods.fields.date') }}</label>
           <v-text-field type="date" density="compact" variant="outlined" v-model="form.date" />
         </div>
+
+        <!-- Sélection des heures via v-select (08:30 à 17:30 par pas de 15m) -->
         <div class="BlockedPeriodsPanel__timeRow">
-          <v-text-field
-            type="time" density="compact" variant="outlined"
-            v-model="form.startTime" :label="$t('divercity.booking.fields.startTime')"
+          <v-select
+            v-model="form.startTime"
+            :items="timeOptions"
+            density="compact"
+            variant="outlined"
+            hide-details
+            :label="$t('divercity.booking.fields.startTime')"
           />
-          <v-text-field
-            type="time" density="compact" variant="outlined"
-            v-model="form.endTime" :label="$t('divercity.booking.fields.endTime')"
+          <v-select
+            v-model="form.endTime"
+            :items="timeOptions"
+            density="compact"
+            variant="outlined"
+            hide-details
+            :label="$t('divercity.booking.fields.endTime')"
           />
         </div>
+
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('divercity.blockedPeriods.fields.reason') }}</label>
           <v-text-field density="compact" variant="outlined" v-model="form.reason" />
@@ -33,6 +46,7 @@
           :label="$t('divercity.blockedPeriods.recurrence.enable')"
           hide-details
         />
+
         <template v-if="form.isRecurring">
           <p class="BlockedPeriodsPanel__recurrenceInfo" v-if="selectedWeekdayLabel">
             {{ $t('divercity.blockedPeriods.recurrence.info', { weekday: selectedWeekdayLabel }) }}
@@ -137,7 +151,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { DatePicker as VCDatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
 
-const MAX_RECURRENCE_OCCURRENCES = 104 // ~2 ans en hebdomadaire, garde-fou anti-boucle infinie
+const MAX_RECURRENCE_OCCURRENCES = 104
 
 const spacesStore = useSpacesStore()
 const blockedPeriodsStore = useBlockedPeriodsStore()
@@ -162,7 +176,22 @@ const deletingId = ref<string | null>(null)
 const unblockingSeriesId = ref<string | null>(null)
 const recurrenceConflictDates = ref<string[]>([])
 
-// Disponibilité du jour choisi, pour le contrôle de conflit en mode non récurrent
+// Heures restreintes de 08:30 à 17:30
+const timeOptions = computed(() => {
+  const options: string[] = []
+  const minutes = ['00', '15', '30', '45']
+  
+  for (let h = 8; h <= 17; h++) {
+    const hourStr = h.toString().padStart(2, '0')
+    for (const m of minutes) {
+      if (h === 8 && (m === '00' || m === '15')) continue
+      if (h === 17 && m === '45') continue
+      options.push(`${hourStr}:${m}`)
+    }
+  }
+  return options
+})
+
 watch(
   () => form.value.date,
   async (newDate) => {
@@ -189,15 +218,23 @@ const sortedBlockedPeriods = computed(() =>
   )
 )
 
-  const calendarAttributes = computed(() =>
-    blockedPeriodsStore.blockedPeriods.map((period) => ({
-      key: period.id,
-      dates: new Date(period.date),
-      dot: { style: { backgroundColor: 'rgb(var(--v-theme-main-blue))' } }
-    }))
-  )
+const calendarAttributes = computed(() =>
+  blockedPeriodsStore.blockedPeriods.map((period) => ({
+    key: period.id,
+    dates: new Date(period.date),
+    highlight: {
+      style: {
+        backgroundColor: '#F97316',
+        borderRadius: '50%'
+      },
+      contentStyle: {
+        color: '#ffffff',
+        fontWeight: '600'
+      }
+    }
+  }))
+)
 
-// Ne compare qu'aux réservations existantes (type 'booking'), pas aux autres périodes bloquées
 const bookingConflict = computed(() => {
   if (!form.value.startTime || !form.value.endTime) return false
   return dayAvailability.value.some(
@@ -207,7 +244,6 @@ const bookingConflict = computed(() => {
       slot.startTime < form.value.endTime
   )
 })
-
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' })
@@ -231,7 +267,6 @@ const selectedWeekdayLabel = computed(() => {
   return new Date(form.value.date).toLocaleDateString('fr-FR', { weekday: 'long' })
 })
 
-// Toutes les dates de la série (même jour de semaine que form.date, une entrée par occurrence)
 const recurrenceDates = computed<string[]>(() => {
   if (!form.value.date) return []
   if (!form.value.isRecurring) return [form.value.date]
@@ -387,17 +422,42 @@ async function submit() {
   background: white;
 
   &__title { font-size: $font-size-h3; margin-bottom: 1.5rem; }
-  &__layout { display: grid; grid-template-columns: minmax(18rem, 22rem) 1fr; gap: 2rem; align-items: start; }
+  &__layout { 
+    display: grid; 
+    grid-template-columns: minmax(18rem, 22rem) 1fr; 
+    gap: 2rem; 
+    align-items: start; 
+  }
+  
   &__form {
     display: flex;
     flex-flow: column nowrap;
     gap: 1.25rem;
+    position: relative;
+    z-index: 1;
+
+    /* Alignement et placement propre de l'icône calendrier native Vuetify/HTML */
+    :deep(input[type="date"]) {
+      position: relative;
+      
+      &::-webkit-calendar-picker-indicator {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+    }
   }
-  &__calendar {
-    // v-calendar utilise ses propres custom properties, pas le thème Vuetify
-    --vc-accent-600: rgb(var(--v-theme-main-blue));
+
+  &__calendarCtn {
+    position: relative;
+    z-index: 0;
+    --vc-accent-600: #F97316;
     --vc-font-family: inherit;
+    width: 100%;
   }
+
   &__timeRow {
     display: flex;
     flex-wrap: wrap;
@@ -408,34 +468,46 @@ async function submit() {
       min-width: 0;
     }
   }
+
   &__recurrenceInfo { font-size: $font-size-sm; color: rgb(var(--v-theme-main-grey-dark)); margin: 0; }
+  
   &__listHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
   }
+  
   &__listTitle {
     font-weight: 700;
     font-size: $font-size-sm;
   }
+
   &__list { display: flex; flex-flow: column nowrap; gap: 0.5rem; padding: 0; list-style: none; }
+  
   &__listItem {
-    display: flex; align-items: center; gap: 1rem; padding: 0.5rem 0.75rem;
-    border-left: 3px solid rgb(var(--v-theme-main-blue));
-    background: rgb(var(--v-theme-main-grey), 0.08);
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; 
+    padding: 0.5rem 0.75rem;
+    border-left: 3px solid #F97316;
+    background: rgba(249, 115, 22, 0.08);
     flex-wrap: wrap;
+    border-radius: 0 $dim-radius $dim-radius 0;
   }
+
   &__listDate { font-weight: 700; min-width: 9rem; }
   &__listReason { color: rgb(var(--v-theme-main-grey-dark)); flex: 1; }
+  
   &__seriesTag {
     font-size: $font-size-xs;
     font-weight: 700;
-    color: rgb(var(--v-theme-main-blue));
-    background: rgb(var(--v-theme-main-blue), 0.1);
+    color: #F97316;
+    background: rgba(249, 115, 22, 0.15);
     border-radius: 1rem;
     padding: 0.15rem 0.6rem;
   }
+
   &__empty { color: rgb(var(--v-theme-main-grey)); font-size: $font-size-sm; }
 }
 
