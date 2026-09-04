@@ -40,6 +40,10 @@ class EventActivityType
     #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
     private ?string $label = null;
 
+    #[ORM\Column(length: 7, options: ['default' => '#3B82F6'])]
+    #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
+    private ?string $color = '#3B82F6';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +57,18 @@ class EventActivityType
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }
