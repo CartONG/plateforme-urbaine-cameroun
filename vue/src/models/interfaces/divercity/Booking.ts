@@ -5,6 +5,7 @@ import type { FileObject } from '@/models/interfaces/object/FileObject'
 export interface EventActivityType extends SymfonyRelation {
   id: number
   label: string
+  color?: string
 }
 
 export interface InformationSource extends SymfonyRelation {
@@ -75,6 +76,7 @@ export interface SpaceAvailability {
   type: 'booking' | 'blocked_period'
   title?: string | null
   eventActivityTypeLabel?: string | null
+  eventActivityTypeColor?: string | null
 }
 
 export interface BookingStatus extends SymfonyRelation {

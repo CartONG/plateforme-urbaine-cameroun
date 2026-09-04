@@ -23,9 +23,21 @@
           :class="`SpaceOccupiedTimeline__detailItem--${slot.type}`"
         >
           <span class="SpaceOccupiedTimeline__detailTime">{{ slot.startTime }} - {{ slot.endTime }}</span>
-          <span class="SpaceOccupiedTimeline__detailLabel">
-            {{ slotLabel(slot) }}
-          </span>
+          
+          <div class="SpaceOccupiedTimeline__detailContent">
+            <!-- Titre de l'événement -->
+            <h4 class="SpaceOccupiedTimeline__detailTitle">
+              {{ slotTitle(slot) }}
+            </h4>
+            
+            <!-- Badge dynamique -->
+            <span 
+              class="SpaceOccupiedTimeline__activityBadge"
+              :style="badgeStyle(slot)"
+            >
+              {{ slotTypeLabel(slot) }}
+            </span>
+          </div>
         </li>
       </ul>
 
@@ -56,8 +68,8 @@ const props = withDefaults(
     dayEndHour?: number
   }>(),
   {
-    dayStartHour: 8,
-    dayEndHour: 18
+    dayStartHour: 8.5, // 08:30
+    dayEndHour: 17.5   // 17:30
   }
 )
 
@@ -77,30 +89,63 @@ function slotStyle(slot: SpaceAvailability) {
   return { left: `${left}%`, width: `${width}%` }
 }
 
-function typeLabel(slot: SpaceAvailability): string {
+function fallbackTypeLabel(slot: SpaceAvailability): string {
   return slot.type === 'blocked_period'
     ? i18n.t('divercity.availability.legend.blockedPeriod')
     : i18n.t('divercity.availability.legend.booking')
 }
 
-// Titre/motif si renseigné, sinon on retombe sur le libellé générique du type
-function slotLabel(slot: SpaceAvailability): string {
+function slotTitle(slot: SpaceAvailability): string {
+  return slot.title || fallbackTypeLabel(slot)
+}
+
+function slotTypeLabel(slot: SpaceAvailability): string {
   if (slot.type === 'booking' && slot.eventActivityTypeLabel) {
-    return slot.title ? `${slot.title} — ${slot.eventActivityTypeLabel}` : slot.eventActivityTypeLabel
+    return slot.eventActivityTypeLabel
   }
-  return slot.title || typeLabel(slot)
+  return fallbackTypeLabel(slot)
+}
+
+function badgeStyle(slot: SpaceAvailability) {
+  if (slot.type === 'blocked_period') {
+    return {
+      backgroundColor: 'rgba(249, 115, 22, 0.1)',
+      borderColor: 'rgba(249, 115, 22, 0.4)',
+      color: '#F97316'
+    }
+  }
+
+  const baseColor = slot.eventActivityTypeColor || '#3B82F6'
+
+  return {
+    backgroundColor: `${baseColor}1F`,
+    borderColor: `${baseColor}66`,
+    color: baseColor
+  }
 }
 
 function slotTooltip(slot: SpaceAvailability): string {
-  return `${slotLabel(slot)} : ${slot.startTime} - ${slot.endTime}`
+  return `${slotTitle(slot)} (${slotTypeLabel(slot)}) : ${slot.startTime} - ${slot.endTime}`
 }
 
+// Génération des repères d'heures (Ex: 08h30, 10h30, 12h30, 14h30, 16h30, 17h30)
 const hourMarks = computed(() => {
   const marks: string[] = []
-  const step = props.dayEndHour - props.dayStartHour > 10 ? 3 : 2
-  for (let h = props.dayStartHour; h <= props.dayEndHour; h += step) {
-    marks.push(`${h.toString().padStart(2, '0')}h`)
+  const startMins = props.dayStartHour * 60
+  const endMins = props.dayEndHour * 60
+  const stepMins = 120 // Pas de 2 heures
+
+  for (let m = startMins; m < endMins; m += stepMins) {
+    const hh = Math.floor(m / 60).toString().padStart(2, '0')
+    const mm = (m % 60).toString().padStart(2, '0')
+    marks.push(`${hh}h${mm}`)
   }
+
+  // Ajoute l'heure de fin exacte (17h30) à la fin
+  const endH = Math.floor(endMins / 60).toString().padStart(2, '0')
+  const endM = (endMins % 60).toString().padStart(2, '0')
+  marks.push(`${endH}h${endM}`)
+
   return marks
 })
 </script>
@@ -129,7 +174,7 @@ const hourMarks = computed(() => {
     }
 
     &--blocked_period {
-      background: rgb(var(--v-theme-main-blue));
+      background: #F97316;
     }
   }
 
@@ -144,7 +189,7 @@ const hourMarks = computed(() => {
   &__details {
     display: flex;
     flex-flow: column nowrap;
-    gap: 0.5rem;
+    gap: 1rem;
     margin-top: 1rem;
     padding: 0;
     list-style: none;
@@ -152,9 +197,8 @@ const hourMarks = computed(() => {
 
   &__detailItem {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: $font-size-sm;
+    align-items: flex-start;
+    gap: 1rem;
     padding-left: 0.75rem;
     border-left: 3px solid transparent;
 
@@ -163,23 +207,45 @@ const hourMarks = computed(() => {
     }
 
     &--blocked_period {
-      border-left-color: rgb(var(--v-theme-main-blue));
+      border-left-color: #F97316;
     }
   }
 
   &__detailTime {
+    font-size: $font-size-sm;
     font-weight: 700;
     white-space: nowrap;
+    margin-top: 0.15rem;
   }
 
-  &__detailLabel {
-    color: rgb(var(--v-theme-main-grey-dark));
+  &__detailContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  &__detailTitle {
+    font-size: $font-size-sm;
+    font-weight: 700;
+    margin: 0;
+    color: rgb(var(--v-theme-main-dark, 0, 0, 0));
+  }
+
+  &__activityBadge {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    font-size: $font-size-xs;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    border: 1px solid;
+    transition: all 0.2s ease;
   }
 
   &__legend {
     display: flex;
     gap: 1rem;
-    margin-top: 0.75rem;
+    margin-top: 1rem;
     font-size: $font-size-xs;
     list-style: none;
     padding: 0;
@@ -203,7 +269,7 @@ const hourMarks = computed(() => {
     }
 
     &--blocked_period::before {
-      background: rgb(var(--v-theme-main-blue));
+      background: #F97316;
     }
   }
 

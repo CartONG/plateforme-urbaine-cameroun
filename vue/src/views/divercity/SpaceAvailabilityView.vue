@@ -23,11 +23,11 @@
           </span>
         </div>
         <div class="SpaceAvailabilityView__timelineCtn" v-if="selectedDate">
-            <p class="SpaceAvailabilityView__timelineLabel">
-                {{ $t('divercity.availability.timeline.title') }}
-            </p>
-            <v-progress-circular v-if="isLoadingDay" indeterminate color="main-blue" size="20" />
-            <SpaceOccupiedTimeline v-else :slots="selectedDaySlots" />
+          <p class="SpaceAvailabilityView__timelineLabel">
+            {{ $t('divercity.availability.timeline.title') }}
+          </p>
+          <v-progress-circular v-if="isLoadingDay" indeterminate color="main-blue" size="20" />
+          <SpaceOccupiedTimeline v-else :slots="selectedDaySlots" />
         </div>
       </div>
 
@@ -40,42 +40,40 @@
           <p v-if="!selectedDaySlots.length" class="text-success">
             {{ $t('divercity.availability.dayFree') }}
           </p>
-          <!-- <ul v-else class="SpaceAvailabilityView__occupiedList">
-            <li v-for="slot in selectedDaySlots" :key="slot.id">
-              {{ slot.startTime }} - {{ slot.endTime }}
-              <span v-if="slot.type === 'blocked_period'">
-                ({{ $t('divercity.availability.legend.blockedPeriod') }})
-              </span>
-            </li>
-          </ul> -->
 
           <v-divider class="my-4" />
 
           <div class="SpaceAvailabilityView__slotPickerCtn">
-            <p class="Form__label">{{ $t('divercity.availability.pickSlot') }}</p>
+            <!-- Titre avec icône horloge -->
+            <p class="Form__label d-flex align-center">
+              <!-- <i class="mdi mdi-clock-outline me-2" aria-hidden="true"></i> -->
+              {{ $t('divercity.availability.pickSlot') }}
+            </p>
+
+            <!-- Sélection restreinte : De 08:00 à 17:45 par pas de 15 min -->
             <div class="SpaceAvailabilityView__slotPicker">
-              <v-text-field
-                type="time"
+              <v-select
+                v-model="pickedStartTime"
+                :items="timeOptions"
                 density="compact"
                 variant="outlined"
-                v-model="pickedStartTime"
-                min="08:30"
-                max="17:30"
+                hide-details
                 :label="$t('divercity.booking.fields.startTime')"
               />
-              <v-text-field
-                type="time"
+              <v-select
+                v-model="pickedEndTime"
+                :items="timeOptions"
                 density="compact"
                 variant="outlined"
-                v-model="pickedEndTime"
-                min="08:30"
-                max="17:30"
+                hide-details
                 :label="$t('divercity.booking.fields.endTime')"
               />
             </div>
+
             <v-alert v-if="pickedSlotConflict" type="warning" variant="tonal" density="compact">
               {{ $t('divercity.booking.availability.conflict') }}
             </v-alert>
+
             <v-btn
               color="main-red"
               :disabled="!pickedStartTime || !pickedEndTime || pickedSlotConflict"
@@ -96,7 +94,6 @@ import type { SpaceAvailability } from '@/models/interfaces/divercity/Booking'
 import { SpacesService } from '@/services/divercity/SpacesService'
 import { useApplicationStore } from '@/stores/applicationStore'
 import { useSpacesStore } from '@/stores/divercity/spacesStore'
-import { i18n } from '@/plugins/i18n'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import SpaceOccupiedTimeline from '@/views/divercity/components/SpaceOccupiedTimeline.vue'
@@ -114,11 +111,31 @@ const selectedDate = ref<Date | null>(null)
 const isLoadingDay = ref(false)
 const selectedDaySlots = ref<SpaceAvailability[]>([])
 
-// Cache mensuel : toutes les indisponibilités du mois affiché, pour colorer le calendrier
+// Cache mensuel
 const monthAvailability = ref<SpaceAvailability[]>([])
 
 const pickedStartTime = ref('')
 const pickedEndTime = ref('')
+
+// Génère les créneaux horaires de 08:30 à 17:30 avec un pas de 15 min
+const timeOptions = computed(() => {
+  const options: string[] = []
+  const minutes = ['00', '15', '30', '45']
+  
+  for (let h = 8; h <= 17; h++) {
+    const hourStr = h.toString().padStart(2, '0')
+    for (const m of minutes) {
+      // Exclut les créneaux avant 08:30
+      if (h === 8 && (m === '00' || m === '15')) continue
+      
+      // Exclut les créneaux après 17:30
+      if (h === 17 && (m === '45')) continue
+      
+      options.push(`${hourStr}:${m}`)
+    }
+  }
+  return options
+})
 
 onMounted(async () => {
   await loadMonth(today)
@@ -143,7 +160,20 @@ function toISODate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-// Regroupe les indisponibilités par jour, pour déterminer la couleur du calendrier
+function getDaysInMonth(reference: Date): string[] {
+  const year = reference.getFullYear()
+  const month = reference.getMonth()
+  const date = new Date(year, month, 1)
+  const days: string[] = []
+  
+  while (date.getMonth() === month) {
+    days.push(toISODate(date))
+    date.setDate(date.getDate() + 1)
+  }
+  
+  return days
+}
+
 const availabilityByDay = computed(() => {
   const map = new Map<string, SpaceAvailability[]>()
   for (const slot of monthAvailability.value) {
@@ -154,7 +184,6 @@ const availabilityByDay = computed(() => {
   return map
 })
 
-// Seuil arbitraire : au-delà de 6h cumulées d'indisponibilité sur un jour, on le considère "complet"
 const FULL_DAY_THRESHOLD_MINUTES = 360
 
 function slotMinutes(slot: SpaceAvailability): number {
@@ -170,21 +199,35 @@ function dayStatus(dateKey: string): 'free' | 'partial' | 'full' {
   return totalMinutes >= FULL_DAY_THRESHOLD_MINUTES ? 'full' : 'partial'
 }
 
-// Attributs de couleur pour v-calendar
- const calendarAttributes = computed(() => {
-   return Array.from(availabilityByDay.value.keys()).map((dateKey) => ({
-    key: dateKey,
-    dates: new Date(dateKey),
-     dot: {
-      style: {
-        backgroundColor:
-          dayStatus(dateKey) === 'full'
-            ? 'rgb(var(--v-theme-main-red))'
-            : 'rgb(var(--v-theme-main-yellow))'
+const calendarAttributes = computed(() => {
+  const allMonthDays = getDaysInMonth(today)
+
+  return allMonthDays.map((dateKey) => {
+    const status = dayStatus(dateKey)
+    let color = 'rgb(var(--v-theme-main-green))'
+
+    if (status === 'full') {
+      color = 'rgb(var(--v-theme-main-red))'
+    } else if (status === 'partial') {
+      color = '#F97316'
+    }
+
+    return {
+      key: dateKey,
+      dates: new Date(dateKey),
+      highlight: {
+        style: {
+          backgroundColor: color,
+          borderRadius: '50%',
+        },
+        contentStyle: {
+          color: '#ffffff',
+          fontWeight: '600'
+        }
       }
-     }
-   }))
- })
+    }
+  })
+})
 
 async function onDaySelected(date: Date | null) {
   if (!date || !space.value) {
@@ -239,9 +282,9 @@ function bookThisSlot() {
   }
 
   &__timelineLabel {
-      font-weight: 700;
-      font-size: $font-size-sm;
-      margin-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: $font-size-sm;
+    margin-bottom: 0.5rem;
   }
 
   &__layout {
@@ -253,7 +296,6 @@ function bookThisSlot() {
   }
 
   &__calendar {
-    // v-calendar utilise ses propres custom properties, pas le thème Vuetify
     --vc-accent-600: rgb(var(--v-theme-main-blue));
     --vc-font-family: inherit;
     width: 100%;
@@ -280,11 +322,13 @@ function bookThisSlot() {
     }
 
     &--free::before {
-      background: rgb(var(--v-theme-main-grey));
+      background: rgb(var(--v-theme-main-green));
     }
+
     &--partial::before {
-      background: rgb(var(--v-theme-main-yellow));
+      background: #F97316;
     }
+
     &--full::before {
       background: rgb(var(--v-theme-main-red));
     }
@@ -294,14 +338,8 @@ function bookThisSlot() {
     border: 1px solid rgb(var(--v-theme-main-grey));
     border-radius: $dim-radius;
     padding: 1.5rem;
-    min-height: 28rem; // taille fixe, ne dépend plus du contenu
-    overflow-y: auto;  // au cas où le contenu dépasse (liste de créneaux longue)
-  }
-
-  &__occupiedList {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 0.5rem;
+    min-height: 28rem;
+    overflow-y: auto;
   }
 
   &__slotPickerCtn {
