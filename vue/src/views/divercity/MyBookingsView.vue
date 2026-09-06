@@ -6,7 +6,7 @@
       <p class="MyBookingsView__count">
         {{ $t('divercity.myBookings.count', { count: myBookingsStore.totalItems }, myBookingsStore.totalItems) }}
       </p>
-      <v-btn color="main-blue" variant="flat" @click="goToBookingForm">
+      <v-btn color="main-red" variant="flat" @click="goToBookingForm">
         {{ $t('divercity.myBookings.newBooking') }}
       </v-btn>
     </div>
@@ -17,7 +17,7 @@
 
     <div v-else-if="myBookingsStore.bookings.length === 0" class="MyBookingsView__empty">
       <p>{{ $t('divercity.myBookings.empty') }}</p>
-      <v-btn color="main-blue" variant="tonal" @click="goToBookingForm">
+      <v-btn color="main-red" variant="tonal" @click="goToBookingForm">
         {{ $t('divercity.myBookings.newBooking') }}
       </v-btn>
     </div>
@@ -28,9 +28,8 @@
           v-for="booking in myBookingsStore.bookings"
           :key="booking.id"
           :booking="booking"
+          :event-type="booking.eventActivityType"
           @view="openDetail(booking)"
-          @edit="editBooking(booking)"
-          @cancel="openCancelDialog(booking)"
         />
       </div>
 

@@ -57,6 +57,7 @@ class SpaceAvailabilityProvider implements ProviderInterface
             $availability->setType(SpaceAvailability::TYPE_BOOKING);
             $availability->setTitle($booking->getTitle());
             $availability->setEventActivityTypeLabel($booking->getEventActivityType()?->getLabel());
+            $availability->setEventActivityTypeColor($booking->getEventActivityType()?->getColor());
             $availabilities[] = $availability;
         }
 

@@ -41,16 +41,33 @@
             {{ $t('divercity.availability.dayFree') }}
           </p>
 
+          <!-- Liste des créneaux déjà réservés, avec le type d'évènement -->
+          <!-- <div v-else class="SpaceAvailabilityView__slotsList">
+            <div
+              v-for="slot in selectedDaySlots"
+              :key="slot.id"
+              class="SpaceAvailabilityView__slotItem"
+            >
+              <span class="SpaceAvailabilityView__slotTime">
+                {{ slot.startTime }} - {{ slot.endTime }}
+              </span>
+              <span
+                v-if="slot.eventActivityTypeLabel"
+                class="SpaceAvailabilityView__slotEventType"
+                :style="{ backgroundColor: slot.eventActivityTypeColor || 'rgb(var(--v-theme-main-blue))' }"
+              >
+                {{ slot.eventActivityTypeLabel }}
+              </span>
+            </div>
+          </div> -->
+
           <v-divider class="my-4" />
 
           <div class="SpaceAvailabilityView__slotPickerCtn">
-            <!-- Titre avec icône horloge -->
             <p class="Form__label d-flex align-center">
-              <!-- <i class="mdi mdi-clock-outline me-2" aria-hidden="true"></i> -->
               {{ $t('divercity.availability.pickSlot') }}
             </p>
 
-            <!-- Sélection restreinte : De 08:00 à 17:45 par pas de 15 min -->
             <div class="SpaceAvailabilityView__slotPicker">
               <v-select
                 v-model="pickedStartTime"
@@ -125,11 +142,8 @@ const timeOptions = computed(() => {
   for (let h = 8; h <= 17; h++) {
     const hourStr = h.toString().padStart(2, '0')
     for (const m of minutes) {
-      // Exclut les créneaux avant 08:30
       if (h === 8 && (m === '00' || m === '15')) continue
-      
-      // Exclut les créneaux après 17:30
-      if (h === 17 && (m === '45')) continue
+      if (h === 17 && m === '45') continue
       
       options.push(`${hourStr}:${m}`)
     }
@@ -272,7 +286,7 @@ function bookThisSlot() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .SpaceAvailabilityView {
   max-width: $dim-container-w;
   margin: 4rem auto;
@@ -340,6 +354,44 @@ function bookThisSlot() {
     padding: 1.5rem;
     min-height: 28rem;
     overflow-y: auto;
+  }
+
+  &__slotsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  &__slotItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgb(var(--v-theme-main-grey));
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__slotTime {
+    font-weight: 600;
+    font-size: $font-size-sm;
+    color: rgb(var(--v-theme-dark-grey));
+  }
+
+  /* Rendu du badge de type d'événement avec display inline-block */
+  &__slotEventType {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: $font-size-xs;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.2;
   }
 
   &__slotPickerCtn {
