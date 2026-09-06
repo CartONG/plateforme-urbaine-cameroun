@@ -174,7 +174,6 @@ class Booking
     #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $phone = null;
 
-
     #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
     #[Groups([self::GROUP_WRITE, self::GROUP_EDIT])]
