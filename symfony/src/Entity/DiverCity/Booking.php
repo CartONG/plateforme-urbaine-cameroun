@@ -174,10 +174,6 @@ class Booking
     #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
     private ?string $phone = null;
 
-    #[ORM\Column(type: 'text')]
-    #[Assert\NotBlank]
-    #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_EDIT])]
-    private ?string $bookingPurpose = null;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
@@ -407,18 +403,6 @@ class Booking
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getBookingPurpose(): ?string
-    {
-        return $this->bookingPurpose;
-    }
-
-    public function setBookingPurpose(string $bookingPurpose): static
-    {
-        $this->bookingPurpose = $bookingPurpose;
 
         return $this;
     }

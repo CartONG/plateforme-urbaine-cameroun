@@ -31,7 +31,6 @@ export class BookingFormService {
         : z.array(z.instanceof(File)).min(1, { message: i18n.t('forms.errorMessages.required') }),
       otherDocument: z.array(z.instanceof(File)).optional().nullable(),
       additionalInformation: z.string().optional(),
-      bookingPurpose: z.string({ required_error: i18n.t('forms.errorMessages.required') }).min(1),
       participantCount: z
         .number({ required_error: i18n.t('forms.errorMessages.required') })
         .positive({ message: i18n.t('forms.errorMessages.positive') }),
@@ -48,14 +47,14 @@ export class BookingFormService {
     })
 
     const form = {
-      lastName: useField('lastName', '', { validateOnValueUpdate: false }),
-      firstName: useField('firstName', '', { validateOnValueUpdate: false }),
-      organization: useField('organization', '', { validateOnValueUpdate: false }),
-      role: useField('role', '', { validateOnValueUpdate: false }),
-      email: useField('email', '', { validateOnValueUpdate: false }),
-      phone: useField('phone', '', { validateOnValueUpdate: false }),
-      title: useField('title', '', { validateOnValueUpdate: false }),
-      eventActivityType: useField('eventActivityType', '', { validateOnValueUpdate: false }),
+      lastName: useField<string>('lastName', '', { validateOnValueUpdate: false }),
+      firstName: useField<string>('firstName', '', { validateOnValueUpdate: false }),
+      organization: useField<string>('organization', '', { validateOnValueUpdate: false }),
+      role: useField<string>('role', '', { validateOnValueUpdate: false }),
+      email: useField<string>('email', '', { validateOnValueUpdate: false }),
+      phone: useField<string>('phone', '', { validateOnValueUpdate: false }),
+      title: useField<string>('title', '', { validateOnValueUpdate: false }),
+      eventActivityType: useField<string | null>('eventActivityType', '', { validateOnValueUpdate: false }),
       agenda: useField<File | null>('agenda', '', { validateOnValueUpdate: false }),
       resourceDocument: useField<File[] | null>('resourceDocument', '', {
         validateOnValueUpdate: false
@@ -63,14 +62,13 @@ export class BookingFormService {
       otherDocument: useField<File[] | null>('otherDocument', '', {
         validateOnValueUpdate: false
       }),
-      additionalInformation: useField('additionalInformation', '', {
+      additionalInformation: useField<string>('additionalInformation', '', {
         validateOnValueUpdate: false
       }),
-      bookingPurpose: useField('bookingPurpose', '', { validateOnValueUpdate: false }),
-      participantCount: useField('participantCount', '', { validateOnValueUpdate: false }),
-      date: useField('date', '', { validateOnValueUpdate: false }),
-      startTime: useField('startTime', '', { validateOnValueUpdate: false }),
-      endTime: useField('endTime', '', { validateOnValueUpdate: false })
+      participantCount: useField<number>('participantCount', '', { validateOnValueUpdate: false }),
+      date: useField<string>('date', '', { validateOnValueUpdate: false }),
+      startTime: useField<string>('startTime', '', { validateOnValueUpdate: false }),
+      endTime: useField<string>('endTime', '', { validateOnValueUpdate: false })
     }
 
     const stepFields: Record<number, (keyof typeof form)[]> = {
@@ -82,7 +80,6 @@ export class BookingFormService {
         'resourceDocument',
         'otherDocument',
         'additionalInformation',
-        'bookingPurpose',
         'participantCount'
       ],
       3: ['date', 'startTime', 'endTime']

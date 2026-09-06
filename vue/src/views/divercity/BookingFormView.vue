@@ -1,8 +1,19 @@
 <template>
   <div class="BookingFormView" v-if="space">
-    <div class="BookingFormView__header">
+    <div class="BookingFormView__header" v-if="!isDone">
       <PageTitle :title="isEditMode ? $t('divercity.booking.editTitle') : $t('divercity.booking.title')" />
-      <v-btn variant="text" color="main-red" @click="handleCancelClick">
+    </div>
+
+    <div class="BookingFormView__topActions">
+      <v-btn
+        v-if="!isDone && currentStep > 1"
+        variant="outlined"
+        color="main-blue"
+        @click="currentStep--"
+      >
+        {{ $t('divercity.form.previous') }}
+      </v-btn>
+      <v-btn variant="elevated" color="main-red" class="ms-auto" v-if="!isDone" @click="handleCancelClick">
         {{ $t('divercity.form.cancel') }}
       </v-btn>
     </div>
@@ -134,6 +145,25 @@
                 />
               </div>
 
+              <div class="Form__fieldCtn">
+                <label class="Form__label required">
+                  {{ $t('divercity.booking.fields.participantCount') }}
+                  <span v-if="space?.maxCapacity"> ({{ $t('divercity.booking.fields.maxCapacityHint', { max: space.maxCapacity }) }})</span>
+                </label>
+                <v-text-field
+                  type="number"
+                  density="compact"
+                  variant="outlined"
+                  :placeholder="$t('divercity.booking.placeholders.participantCount')"
+                  v-model.number="form.participantCount.value.value"
+                  :error-messages="form.participantCount.errorMessage.value"
+                  @blur="form.participantCount.handleChange"
+                />
+                <v-alert v-if="hasParticipantCountExceeded" type="warning" variant="tonal" density="compact" class="mt-2">
+                  {{ $t('divercity.booking.errors.participantCountExceeded', { max: space.maxCapacity }) }}
+                </v-alert>
+              </div>
+
               <!-- Pièces jointes existantes, affichées uniquement en mode édition -->
               <div class="Form__fieldCtn" v-if="isEditMode && existingAgenda">
                 <label class="Form__label">{{ $t('divercity.booking.fields.currentAgenda') }}</label>
@@ -181,23 +211,16 @@
                   variant="outlined"
                   accept=".pdf"
                   multiple
+                  persistent-placeholder
                   :placeholder="$t('divercity.booking.placeholders.resourceDocument')"
+                  :hint="$t('divercity.booking.hints.resourceDocument')"
+                  persistent-hint
                   v-model="form.resourceDocument.value.value"
                   :error-messages="form.resourceDocument.errorMessage.value"
                   @update:model-value="form.resourceDocument.handleChange(form.resourceDocument.value.value)"
                 />
               </div>
 
-              <div class="Form__fieldCtn">
-                <label class="Form__label">{{ $t('divercity.booking.fields.bookingPurpose') }}</label>
-                <v-textarea
-                  variant="outlined"
-                  :placeholder="$t('divercity.booking.placeholders.bookingPurpose')"
-                  v-model="form.bookingPurpose.value.value"
-                  :error-messages="form.bookingPurpose.errorMessage.value"
-                  @blur="form.bookingPurpose.handleChange"
-                />
-              </div>
 
               <div class="Form__fieldCtn">
                 <label class="Form__label">{{ $t('divercity.booking.fields.additionalInformation') }}</label>
@@ -232,25 +255,13 @@
                 </div>
               </div>
 
-              <div class="Form__fieldCtn">
-                <label class="Form__label required">{{ $t('divercity.booking.fields.participantCount') }}</label>
-                <v-text-field
-                  type="number"
-                  density="compact"
-                  variant="outlined"
-                  :placeholder="$t('divercity.booking.placeholders.participantCount')"
-                  v-model.number="form.participantCount.value.value"
-                  :error-messages="form.participantCount.errorMessage.value"
-                  @blur="form.participantCount.handleChange"
-                />
-              </div>
             </div>
           </v-stepper-window-item>
 
           <!-- Étape 3 : Créneau souhaité -->
           <v-stepper-window-item :value="3">
             <div class="Form Form--booking">
-              <div class="Form__fieldCtn">
+              <div class="Form__fieldCtn BookingFormView__dateField">
                 <label class="Form__label required">{{ $t('divercity.booking.fields.date') }}</label>
                 <v-text-field
                   type="date"
@@ -282,24 +293,24 @@
 
               <div class="Form__fieldCtn">
                 <label class="Form__label required">{{ $t('divercity.booking.fields.startTime') }}</label>
-                <v-text-field
-                  type="time"
+                <v-select
                   density="compact"
                   variant="outlined"
+                  :items="timeOptions"
                   v-model="form.startTime.value.value"
                   :error-messages="form.startTime.errorMessage.value"
-                  @blur="form.startTime.handleChange"
+                  @blur="form.startTime.handleChange(form.startTime.value.value)"
                 />
               </div>
               <div class="Form__fieldCtn">
                 <label class="Form__label">{{ $t('divercity.booking.fields.endTime') }}</label>
-                <v-text-field
-                  type="time"
+                <v-select
                   density="compact"
                   variant="outlined"
+                  :items="timeOptions"
                   v-model="form.endTime.value.value"
                   :error-messages="form.endTime.errorMessage.value"
-                  @blur="form.endTime.handleChange"
+                  @blur="form.endTime.handleChange(form.endTime.value.value)"
                 />
               </div>
 
@@ -327,7 +338,7 @@
           v-else
           color="main-red"
           :loading="isSubmitting"
-          :disabled="hasAvailabilityConflict"
+          :disabled="hasAvailabilityConflict || hasParticipantCountExceeded"
           @click="isEditMode ? submitEdit() : submitBooking()"
         >
           {{ isEditMode ? $t('divercity.form.save') : $t('divercity.form.finish') }}
@@ -338,11 +349,16 @@
     <!-- Écran "Terminé" (uniquement pour une création) -->
     <div v-else class="BookingFormView__done">
       <h2>{{ $t('divercity.booking.done.title') }}</h2>
-      <p>{{ $t('divercity.booking.done.message') }}</p>
+      <p class="BookingFormView__doneMessage">{{ $t('divercity.booking.done.message') }}</p>
 
       <div class="Form Form--booking">
-        <label class="Form__label required">{{ $t('divercity.booking.done.informationSourceQuestion') }}</label>
-        <v-radio-group v-model="sourceForm.informationSource.value.value">
+        <label class="BookingFormView__informationSourceLabel">
+          {{ $t('divercity.booking.done.informationSourceQuestion') }}
+        </label>
+        <v-radio-group
+          v-model="sourceForm.informationSource.value.value"
+          class="BookingFormView__informationSourceGroup"
+        >
           <v-radio
             v-for="source in informationSources"
             :key="source['@id']"
@@ -390,6 +406,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useRoute, useRouter } from 'vue-router'
 import type { SpaceAvailability } from '@/models/interfaces/divercity/Booking'
 import { computed, onMounted, ref, watch } from 'vue'
+import { getQuarterHourTimeOptions } from '@/services/utils/divercity/timeSlots'
 
 
 
@@ -403,6 +420,8 @@ const space = computed(() => spacesStore.mainSpace)
 const currentStep = ref(1)
 const isDone = ref(false)
 const createdBookingId = ref<string | null>(null)
+
+const timeOptions = getQuarterHourTimeOptions()
 
 // Mode édition : présence de ?edit={id} dans l'URL.
 const editingBookingId = computed(() => (route.query.edit as string | undefined) ?? null)
@@ -513,7 +532,6 @@ onMounted(async () => {
         booking.eventActivityType && typeof booking.eventActivityType === 'object'
           ? (booking.eventActivityType as any)['@id']
           : booking.eventActivityType,
-      bookingPurpose: booking.bookingPurpose,
       additionalInformation: booking.additionalInformation ?? '',
       participantCount: booking.participantCount,
       date: booking.date,
@@ -575,7 +593,6 @@ const submitBooking = handleSubmit(
         role: values.role,
         email: values.email,
         phone: values.phone,
-        bookingPurpose: values.bookingPurpose,
         date: values.date,
         startTime: values.startTime,
         endTime: values.endTime,
@@ -612,7 +629,6 @@ const submitEdit = handleSubmit(
         role: values.role,
         email: values.email,
         phone: values.phone,
-        bookingPurpose: values.bookingPurpose,
         date: values.date,
         startTime: values.startTime,
         endTime: values.endTime,
@@ -742,12 +758,45 @@ const conflictingSlot = computed(() => {
 })
 
 const hasAvailabilityConflict = computed(() => conflictingSlot.value !== null)
+
+const hasParticipantCountExceeded = computed(() => {
+  const count = form.participantCount.value.value as number
+  const max = space.value?.maxCapacity
+  return !!count && !!max && count > max
+})
 </script>
 
 <style lang="scss">
 .BookingFormView {
   max-width: $dim-container-w;
   margin: 4rem auto;
+
+  &__informationSourceLabel {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  &__informationSourceGroup {
+    .v-label {
+      opacity: 1;
+      color: rgb(var(--v-theme-on-surface));
+    }
+
+    .v-selection-control {
+      align-items: flex-start;
+    }
+
+    .v-selection-control__wrapper {
+      margin-top: 0.15rem;
+    }
+  }
+
+
+  &__topActions {
+    display: flex;
+    margin-top: 1rem;
+  }
 
   &__attachedFiles {
     display: flex;
@@ -783,6 +832,29 @@ const hasAvailabilityConflict = computed(() => conflictingSlot.value !== null)
     text-align: center;
     max-width: 30rem;
     margin: 0 auto;
+
+    .Form--booking {
+      text-align: left;
+      margin-top: 2rem;
+    }
+  }
+
+  &__doneMessage {
+    white-space: pre-line;
+  }
+
+  &__dateField {
+    input[type='date'] {
+      position: relative;
+    }
+
+    input[type='date']::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
   }
 }
 </style>
