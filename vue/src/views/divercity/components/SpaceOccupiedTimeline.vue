@@ -73,6 +73,8 @@ const props = withDefaults(
   }
 )
 
+
+
 const totalMinutes = computed(() => (props.dayEndHour - props.dayStartHour) * 60)
 
 function toMinutes(time: string): number {

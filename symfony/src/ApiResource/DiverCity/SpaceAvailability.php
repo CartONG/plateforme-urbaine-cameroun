@@ -60,6 +60,9 @@ class SpaceAvailability
     #[Groups([self::GROUP_READ])]
     private ?string $eventActivityTypeLabel = null;
 
+    #[Groups([self::GROUP_READ])]
+    private ?string $eventActivityTypeColor = null;
+
     public function getId(): string
     {
         return $this->id;
@@ -161,6 +164,18 @@ class SpaceAvailability
     public function setEventActivityTypeLabel(?string $eventActivityTypeLabel): self
     {
         $this->eventActivityTypeLabel = $eventActivityTypeLabel;
+
+        return $this;
+    }
+
+    public function getEventActivityTypeColor(): ?string
+    {
+        return $this->eventActivityTypeColor;
+    }
+
+    public function setEventActivityTypeColor(?string $eventActivityTypeColor): self
+    {
+        $this->eventActivityTypeColor = $eventActivityTypeColor;
 
         return $this;
     }

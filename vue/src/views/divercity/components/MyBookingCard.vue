@@ -1,35 +1,36 @@
 <template>
-  <div class="MyBookingCard" @click="$emit('view')">
+  <div class="MyBookingCard">
     <div class="MyBookingCard__main">
       <div class="MyBookingCard__header">
         <h4 class="MyBookingCard__title">{{ booking.title }}</h4>
         <v-chip :color="statusColor" size="small">{{ statusLabel }}</v-chip>
       </div>
+
       <p class="MyBookingCard__space">{{ spaceName }}</p>
+
+      <!-- Affichage du type d'évènement juste sous le nom de l'espace -->
+      <span
+        v-if="eventType"
+        class="MyBookingCard__eventType"
+        :style="eventTypeStyle"
+      >
+        {{ eventType.label }}
+      </span>
+
       <p class="MyBookingCard__slot">
         {{ formattedDate }} · {{ booking.startTime }} - {{ booking.endTime }}
       </p>
     </div>
-    <div class="MyBookingCard__actions" @click.stop>
-        <v-btn
-            v-if="isEditable"
-            size="small"
-            color="main-blue"
-            variant="outlined"
-            class="mr-2"
-            @click="$emit('edit')"
-        >
-            {{ $t('divercity.myBookings.edit') }}
-        </v-btn>
-        <v-btn
-            v-if="isCancellable"
-            size="small"
-            color="main-red"
-            variant="outlined"
-            @click="$emit('cancel')"
-        >
-            {{ $t('divercity.myBookings.cancel') }}
-        </v-btn>
+
+    <!-- Unique bouton avec l'icône de l'œil -->
+    <div class="MyBookingCard__actions">
+      <v-btn
+        :icon="mdiEye"
+        variant="text"
+        color="main-blue"
+        density="comfortable"
+        @click="$emit('view')"
+      />
     </div>
   </div>
 </template>
@@ -37,11 +38,11 @@
 <script setup lang="ts">
 import type { Booking } from '@/models/interfaces/divercity/Booking'
 import { localizeDate } from '@/services/utils/UtilsService'
+import { mdiEye } from '@mdi/js'
 import { computed } from 'vue'
 
 const props = defineProps<{ booking: Booking }>()
-defineEmits(['view', 'edit', 'cancel'])
-
+defineEmits(['view'])
 
 const statusCode = computed(() => (props.booking.status as any)?.code)
 const statusLabel = computed(() => (props.booking.status as any)?.label ?? statusCode.value)
@@ -58,16 +59,25 @@ const statusColor = computed(() => {
   }
 })
 
-// Seules les réservations EN_ATTENTE ou ACCEPTEE restent annulables
-// (cohérent avec la règle appliquée côté BookingCancellationProcessor).
-const isEditable = computed(() => statusCode.value === 'EN_ATTENTE')
-const isCancellable = computed(() => ['EN_ATTENTE', 'ACCEPTEE'].includes(statusCode.value))
-
 const spaceName = computed(() => {
   const space = props.booking.space
   return space && typeof space === 'object' ? (space as any).name : ''
 })
 
+// eventActivityType peut être un objet (label + color) ou une IRI (string)
+const eventType = computed(() => {
+  const type = props.booking.eventActivityType
+  return type && typeof type === 'object' ? type : null
+})
+
+const eventTypeStyle = computed(() => {
+  const color = eventType.value?.color
+  if (!color) return {}
+  return {
+    backgroundColor: color,
+    color: '#fff'
+  }
+})
 
 const formattedDate = computed(() => (props.booking.date ? localizeDate(props.booking.date) : ''))
 </script>
@@ -81,12 +91,6 @@ const formattedDate = computed(() => (props.booking.date ? localizeDate(props.bo
   padding: 1rem 1.25rem;
   border: 1px solid rgb(var(--v-theme-main-grey));
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background-color: rgb(var(--v-theme-light-yellow));
-  }
 
   &__main {
     display: flex;
@@ -110,7 +114,22 @@ const formattedDate = computed(() => (props.booking.date ? localizeDate(props.bo
     white-space: nowrap;
   }
 
-  &__space,
+  &__space {
+    margin: 0;
+    color: rgb(var(--v-theme-dark-grey));
+    font-weight: 600;
+    font-size: $font-size-sm;
+  }
+
+  &__eventType {
+    align-self: flex-start;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: $font-size-sm;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
   &__slot {
     margin: 0;
     color: rgb(var(--v-theme-dark-grey));
@@ -122,13 +141,8 @@ const formattedDate = computed(() => (props.booking.date ? localizeDate(props.bo
   }
 
   @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: stretch;
-
-    &__actions {
-      display: flex;
-      justify-content: flex-end;
-    }
+    flex-direction: row;
+    align-items: center;
   }
 }
 </style>
