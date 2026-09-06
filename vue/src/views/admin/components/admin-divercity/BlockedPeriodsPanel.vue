@@ -150,6 +150,7 @@ import { SpacesService } from '@/services/divercity/SpacesService'
 import { computed, onMounted, ref, watch } from 'vue'
 import { DatePicker as VCDatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
+import { getQuarterHourTimeOptions } from '@/services/utils/divercity/timeSlots'
 
 const MAX_RECURRENCE_OCCURRENCES = 104
 
@@ -177,20 +178,7 @@ const unblockingSeriesId = ref<string | null>(null)
 const recurrenceConflictDates = ref<string[]>([])
 
 // Heures restreintes de 08:30 à 17:30
-const timeOptions = computed(() => {
-  const options: string[] = []
-  const minutes = ['00', '15', '30', '45']
-  
-  for (let h = 8; h <= 17; h++) {
-    const hourStr = h.toString().padStart(2, '0')
-    for (const m of minutes) {
-      if (h === 8 && (m === '00' || m === '15')) continue
-      if (h === 17 && m === '45') continue
-      options.push(`${hourStr}:${m}`)
-    }
-  }
-  return options
-})
+const timeOptions = getQuarterHourTimeOptions()
 
 watch(
   () => form.value.date,

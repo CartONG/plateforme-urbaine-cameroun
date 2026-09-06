@@ -34,7 +34,6 @@ export interface Booking extends SymfonyRelation {
   role: string
   email: string
   phone: string
-  bookingPurpose: string
   date: string
   startTime: string
   endTime: string
@@ -59,7 +58,6 @@ export interface BookingSubmission {
   role: string
   email: string
   phone: string
-  bookingPurpose: string
   date: string
   startTime: string
   endTime: string
@@ -99,7 +97,6 @@ export interface PublicBooking extends SymfonyRelation {
   endTime: string
   participantCount?: number
   organization?: string
-  bookingPurpose?: string
   eventActivityType?: {
     id: string
     label: string
