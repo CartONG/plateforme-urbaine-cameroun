@@ -41,28 +41,40 @@
       </div>
     </div>
 
-    <div class="SpaceSheetView__ctn" v-if="currentHighlight">
-        <!-- <SectionBanner :text="$t('divercity.space.statistics', { year: currentHighlight.year })" /> -->
-         <SectionBanner :text="$t('divercity.space.activityReports')" />
-        <div class="SpaceSheetView__kpisGrid">
-        <!-- <DiverCityStaticKpi
-        v-for="stat in currentHighlight.statistics"
-        :key="stat.id"
-        :label="stat.label"
-        :value="stat.value"
-        /> -->
-    </div>
-
-    <v-btn
-        v-if="currentHighlight.report"
-        variant="tonal"
-        color="main-blue"
-        :href="currentHighlight.report.contentUrl"
-        target="_blank"
-        class="mt-6"
-    >
-        {{ $t('divercity.space.downloadReport', { year: currentHighlight.year }) }}
-    </v-btn>
+    <div class="SpaceSheetView__ctn" v-if="recentReports.length">
+      <SectionBanner :text="$t('divercity.space.activityReports')" />
+      <div class="SpaceSheetView__reportsGrid">
+        <v-menu
+          v-for="highlight in recentReports"
+          :key="highlight.id"
+          open-on-hover
+          location="top"
+          :close-on-content-click="false"
+        >
+          <template v-slot:activator="{ props: menuProps }">
+            <a
+              v-bind="menuProps"
+              :href="highlight.report!.contentUrl"
+              target="_blank"
+              class="ReportCard"
+            >
+              <div class="ReportCard__icon">
+                <v-icon icon="$filePdfBox" size="24" color="main-blue" />
+              </div>
+              <div class="ReportCard__info">
+                <span class="ReportCard__year">{{ highlight.year }}</span>
+                <span class="ReportCard__label">
+                  {{ $t('divercity.space.reportLabel', { year: highlight.year }) }}
+                </span>
+              </div>
+              <v-icon icon="$downloadOutline" size="18" color="main-blue" class="ReportCard__download" />
+            </a>
+          </template>
+          <div class="SpaceSheetView__reportPreview">
+            <iframe :src="highlight.report!.contentUrl" title="Aperçu du rapport" />
+          </div>
+        </v-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -73,7 +85,7 @@ import SectionBanner from '@/components/banners/SectionBanner.vue'
 import BookingActivityCard from '@/views/divercity/components/BookingActivityCard.vue'
 import { formatHTMLForSheetView } from '@/services/utils/UtilsService'
 import { useSpacesStore } from '@/stores/divercity/spacesStore'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useApplicationStore } from '@/stores/applicationStore'
 import DiverCityStaticKpi from '@/components/content/DiverCityStaticKpi.vue'
@@ -90,6 +102,9 @@ const userStore = useUserStore()
 
 const space = computed(() => spacesStore.mainSpace)
 
+const isPreviewOpen = ref(false)
+const previewedReport = ref<(typeof recentReports.value)[number] | null>(null)
+
 onMounted(() => {
   applicationStore.isLoading = false
 })
@@ -99,10 +114,22 @@ const currentHighlight = computed(() => {
   return [...space.value.highlights].sort((a, b) => b.year - a.year)[0]
 })
 
+const recentReports = computed(() => {
+  if (!space.value?.highlights?.length) return []
+  const currentYear = new Date().getFullYear()
+  return [...space.value.highlights]
+    .filter((highlight) => highlight.report && highlight.year >= currentYear - 9)
+    .sort((a, b) => b.year - a.year)
+})
+
 const formattedDescription = computed(() => formatHTMLForSheetView(space.value?.description as string))
 const featuredBookings = computed(() => spacesStore.publicBookings.slice(0, 3))
 const upcomingBookings = computed(() => spacesStore.publicBookings.slice(0, 3))
 
+function openReportPreview(highlight: (typeof recentReports.value)[number]) {
+  previewedReport.value = highlight
+  isPreviewOpen.value = true
+}
 
 function checkAvailability() {
   goToOrAskLogin('divercitySpaceAvailability')
@@ -149,6 +176,13 @@ function goToOrAskLogin(routeName: string) {
     }
   }
 
+  &__reportsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
   &__actions {
     display: flex;
     gap: 1rem;
@@ -177,6 +211,80 @@ function goToOrAskLogin(routeName: string) {
     justify-content: flex-start;
     align-items: center;
   }
+
+  .ReportCard {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgb(var(--v-theme-main-grey));
+    border-radius: 12px;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    &__icon {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: rgba(var(--v-theme-main-blue), 0.08);
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    &__year {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: rgb(var(--v-theme-main-blue));
+    }
+
+    &__label {
+      font-size: 0.8rem;
+      color: rgba(0, 0, 0, 0.6);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__download {
+      flex: none;
+      opacity: 0.6;
+    }
+  }
+
+  .ReportPreviewDialog {
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__body {
+      padding: 0 !important;
+
+      iframe {
+        width: 100%;
+        height: 65vh;
+        border: none;
+      }
+    }
+  }
+  
 }
 
 @media (max-width: $bp-xl) {
@@ -187,6 +295,49 @@ function goToOrAskLogin(routeName: string) {
       &--banner {
         padding: 1rem;
         margin-bottom: 2rem;
+      }
+    }
+
+    &__reportsGrid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    &__reportCard {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid rgb(var(--v-theme-main-grey));
+      border-radius: 10px;
+      text-decoration: none;
+      color: rgb(var(--v-theme-main-blue));
+      font-weight: 600;
+      transition:
+        box-shadow 0.15s ease,
+        transform 0.15s ease;
+
+      &:hover {
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+      }
+    }
+
+     &__reportsGrid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    &__reportPreview {
+      width: 280px;
+      height: 360px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
       }
     }
 

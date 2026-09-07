@@ -24,57 +24,39 @@
       <ImagesLoader @updateFiles="handlePhotosUpdate" :existingImages="existingPhotos" />
     </div>
 
-    <v-btn color="main-red" class="mt-4" :loading="isSubmittingSpace" @click="submitSpace">
-      {{ $t('forms.save') }}
-    </v-btn>
-
     <v-divider class="my-6" />
 
-    <h3 class="SpaceManagementPanel__subtitle">{{ $t('divercity.form.highlightSection', { year: highlightForm.year }) }}</h3>
-
-    <div class="Form__fieldCtn">
-      <label class="Form__label">{{ $t('divercity.form.year') }}</label>
-      <v-text-field type="number" density="compact" variant="outlined" v-model.number="highlightForm.year" />
-    </div>
-
-    <div class="Form__fieldCtn">
-    <label class="Form__label">{{ $t('divercity.form.report') }}</label>
-    <v-file-input
-        density="compact"
-        variant="outlined"
-        accept=".pdf"
-        v-model="reportFile"
-        :placeholder="currentHighlight?.report ? $t('divercity.form.existingReportPlaceholder') : undefined"
-    />
-    </div>
-
-    <div class="Form__fieldCtn">
-      <label class="Form__label">{{ $t('divercity.form.statistics') }}</label>
-      <div
-        v-for="(stat, index) in highlightForm.statistics"
-        :key="index"
-        class="SpaceManagementPanel__statRow"
-      >
-        <v-text-field
-          density="compact"
-          variant="outlined"
-          :placeholder="$t('divercity.form.statLabel')"
-          v-model="stat.label"
-        />
-        <v-text-field
-          density="compact"
-          variant="outlined"
-          :placeholder="$t('divercity.form.statValue')"
-          v-model="stat.value"
-        />
-        <v-btn icon="$deleteOutline" density="comfortable" variant="text" @click="removeStat(index)" />
-      </div>
-      <v-btn variant="text" prepend-icon="$plus" @click="addStat">
-        {{ $t('divercity.form.addStatistic') }}
+    <div class="SpaceManagementPanel__reportsHeader">
+      <h3 class="SpaceManagementPanel__subtitle">{{ $t('divercity.form.reportsSection') }}</h3>
+      <v-btn variant="text" prepend-icon="$plus" @click="addReportRow">
+        {{ $t('divercity.form.addReportYear') }}
       </v-btn>
     </div>
 
-    <v-btn color="main-red" class="mt-4" :loading="isSubmittingHighlight" @click="submitHighlight">
+    <div
+      v-for="(row, index) in reportRows"
+      :key="row.id ?? `new-${index}`"
+      class="SpaceManagementPanel__reportRow"
+    >
+      <v-text-field
+        type="number"
+        density="compact"
+        variant="outlined"
+        :label="$t('divercity.form.year')"
+        v-model.number="row.year"
+        class="SpaceManagementPanel__reportYear"
+      />
+      <v-file-input
+        density="compact"
+        variant="outlined"
+        accept=".pdf"
+        :label="$t('divercity.form.report')"
+        v-model="row.reportFile"
+        :placeholder="row.existingReport ? $t('divercity.form.existingReportPlaceholder') : undefined"
+      />
+    </div>
+
+    <v-btn color="main-red" class="mt-4" :loading="isSubmitting" @click="submitAll">
       {{ $t('forms.save') }}
     </v-btn>
   </div>
@@ -85,21 +67,24 @@ import ImagesLoader from '@/components/forms/ImagesLoader.vue'
 import TextEditor from '@/components/forms/TextEditor.vue'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { BaseMediaObject } from '@/models/interfaces/object/MediaObject'
-import type { SpaceStatistic, SpaceHighlightSubmission, Space } from '@/models/interfaces/divercity/Space'
+import type {
+  Space,
+  SpaceHighlight,
+  SpaceHighlightSubmission
+} from '@/models/interfaces/divercity/Space'
 import { SpacesService } from '@/services/divercity/SpacesService'
 import FileUploader from '@/services/files/FileUploader'
 import { useSpacesStore } from '@/stores/divercity/spacesStore'
 import { NotificationType } from '@/models/enums/app/NotificationType'
 import { addNotification } from '@/services/notifications/NotificationService'
 import { i18n } from '@/plugins/i18n'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { transformSymfonyRelationToIRIs } from '@/services/utils/UtilsService'
-import { watch } from 'vue'
-
 
 const spacesStore = useSpacesStore()
 const space = computed(() => spacesStore.mainSpace)
 const descriptionError = ref(false)
+
 const form = ref({
   name: '',
   description: '',
@@ -114,95 +99,86 @@ function handlePhotosUpdate(list: any) {
   existingPhotos.value = list.existingImages
 }
 
-const currentHighlight = computed(() => {
-  if (!space.value?.highlights?.length) return null
-  return [...space.value.highlights].sort((a, b) => b.year - a.year)[0]
-})
+// Une ligne par année de rapport. Les statistiques existantes de chaque année
+// sont conservées telles quelles (non éditées ici, cf. masquage demandé) pour
+// ne pas les perdre lors de l'enregistrement.
+interface ReportRow {
+  id?: number
+  year: number
+  existingReport: SpaceHighlight['report'] | null
+  reportFile: File | null
+  statistics: SpaceHighlight['statistics']
+}
 
-const highlightForm = ref<{ year: number; statistics: SpaceStatistic[] }>({
-  year: new Date().getFullYear(),
-  statistics: []
-})
-const reportFile = ref<File | null>(null)
+const reportRows = ref<ReportRow[]>([])
 
 watch(
   space,
   (newSpace) => {
-    if (newSpace) {
-      form.value.name = newSpace.name
-      form.value.description = newSpace.description
-      form.value.maxCapacity = newSpace.maxCapacity
-      existingPhotos.value = newSpace.photos
-    }
+    if (!newSpace) return
+    form.value.name = newSpace.name
+    form.value.description = newSpace.description
+    form.value.maxCapacity = newSpace.maxCapacity
+    existingPhotos.value = newSpace.photos
+
+    reportRows.value = [...(newSpace.highlights ?? [])]
+      .sort((a, b) => b.year - a.year)
+      .map((highlight) => ({
+        id: highlight.id,
+        year: highlight.year,
+        existingReport: highlight.report ?? null,
+        reportFile: null,
+        statistics: highlight.statistics ?? []
+      }))
   },
   { immediate: true }
 )
 
-watch(
-  currentHighlight,
-  (newHighlight) => {
-    if (newHighlight) {
-      highlightForm.value.year = newHighlight.year
-      highlightForm.value.statistics = newHighlight.statistics.length
-        ? [...newHighlight.statistics]
-        : []
-    }
-  },
-  { immediate: true }
-)
-
-function addStat() {
-  highlightForm.value.statistics.push({ label: '', value: '', position: highlightForm.value.statistics.length })
+function addReportRow() {
+  const lastYear = reportRows.value[0]?.year ?? new Date().getFullYear()
+  reportRows.value.unshift({
+    year: lastYear + 1,
+    existingReport: null,
+    reportFile: null,
+    statistics: []
+  })
 }
 
-function removeStat(index: number) {
-  highlightForm.value.statistics.splice(index, 1)
-}
+const isSubmitting = ref(false)
 
-const isSubmittingSpace = ref(false)
-async function submitSpace() {
+async function submitAll() {
   if (!space.value) return
-  isSubmittingSpace.value = true
+  isSubmitting.value = true
   try {
     const uploadedPhotos = await Promise.all(
       photosToUpload.value.map((img) => FileUploader.uploadMedia(img.file))
     )
-   const payload = transformSymfonyRelationToIRIs<Partial<Space>>({
+    const spacePayload = transformSymfonyRelationToIRIs<Partial<Space>>({
       name: form.value.name,
       description: form.value.description,
       maxCapacity: form.value.maxCapacity,
       photos: [...existingPhotos.value, ...uploadedPhotos]
     })
-    await SpacesService.patchSpace(space.value.id, payload)
-    await spacesStore.getMainSpace()
-    addNotification(i18n.t('divercity.form.submitSuccess'), NotificationType.SUCCESS)
-  } catch (error) {
-    addNotification(i18n.t('divercity.form.submitError'), NotificationType.ERROR, error as string)
-  }
-  isSubmittingSpace.value = false
-}
+    await SpacesService.patchSpace(space.value.id, spacePayload)
 
-const isSubmittingHighlight = ref(false)
-async function submitHighlight() {
-  if (!space.value) return
-  isSubmittingHighlight.value = true
-  try {
-    let reportIri: string | undefined
-    if (reportFile.value) {
-      const uploaded = await FileUploader.uploadFile(reportFile.value)
-      reportIri = uploaded['@id']
-    }
+    for (const row of reportRows.value) {
+      let reportIri: string | undefined
+      if (row.reportFile) {
+        const uploaded = await FileUploader.uploadFile(row.reportFile)
+        reportIri = uploaded['@id']
+      }
 
-    const payload: SpaceHighlightSubmission = {
-      year: highlightForm.value.year,
-      statistics: highlightForm.value.statistics,
-      ...(reportIri ? { report: reportIri } : {})
-    }
+      const payload: SpaceHighlightSubmission = {
+        year: row.year,
+        statistics: row.statistics, // conservées telles quelles, non éditées dans cette interface
+        ...(reportIri ? { report: reportIri } : {})
+      }
 
-    if (currentHighlight.value && currentHighlight.value.year === highlightForm.value.year) {
-      await SpacesService.patchHighlight(currentHighlight.value.id, payload)
-    } else {
-      await SpacesService.postHighlight({ ...payload, space: `/api/spaces/${space.value.id}` })
+      if (row.id) {
+        await SpacesService.patchHighlight(row.id, payload)
+      } else {
+        await SpacesService.postHighlight({ ...payload, space: `/api/spaces/${space.value.id}` })
+      }
     }
 
     await spacesStore.getMainSpace()
@@ -210,7 +186,7 @@ async function submitHighlight() {
   } catch (error) {
     addNotification(i18n.t('divercity.form.submitError'), NotificationType.ERROR, error as string)
   }
-  isSubmittingHighlight.value = false
+  isSubmitting.value = false
 }
 </script>
 
@@ -226,14 +202,25 @@ async function submitHighlight() {
 
   &__subtitle {
     font-size: $font-size-h4;
+  }
+
+  &__reportsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
   }
 
-  &__statRow {
+  &__reportRow {
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  &__reportYear {
+    max-width: 120px;
+    flex: 0 0 auto;
   }
 }
 </style>
