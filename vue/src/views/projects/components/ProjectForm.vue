@@ -38,6 +38,97 @@
           />
         </div>
         <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            chips
+            v-model="form.status.value.value as Status"
+            :items="Object.values(Status)"
+            :placeholder="$t('projects.form.fields.status.label')"
+            :item-title="(item) => $t('projects.status.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.status.errorMessage.value"
+            @blur="form.status.handleChange(form.status.value.value)"
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="(form.status.value.value as Status) === Status.PLANNED">
+          <label class="Form__label">{{ $t('projects.form.fields.technicalMaturity.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            clearable
+            v-model="form.technicalMaturity.value.value as TechnicalMaturity"
+            :items="Object.values(TechnicalMaturity)"
+            :placeholder="$t('projects.form.fields.technicalMaturity.label')"
+            :item-title="(item) => $t('projects.technicalMaturity.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.technicalMaturity.errorMessage.value"
+            @blur="form.technicalMaturity.handleChange(form.technicalMaturity.value.value)"
+          />
+        </div>
+
+        <template v-if="showFinancialFields">
+          <div class="Form__fieldCtn">
+            <label class="Form__label">{{ $t('projects.form.fields.financialStatus.label') }}</label>
+            <v-select
+              density="compact"
+              variant="outlined"
+              clearable
+              v-model="form.financialStatus.value.value as FinancialStatus"
+              :items="Object.values(FinancialStatus)"
+              :placeholder="$t('projects.form.fields.financialStatus.label')"
+              :item-title="(item) => $t('projects.financialStatus.' + item)"
+              :item-value="(item) => item"
+              :error-messages="form.financialStatus.errorMessage.value"
+              @blur="form.financialStatus.handleChange(form.financialStatus.value.value)"
+            />
+          </div>
+
+          <div class="d-flex">
+            <div class="Form__fieldCtn flex-grow-1">
+              <label class="Form__label">{{ $t('projects.form.fields.totalBudget.label') }}</label>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                type="number"
+                min="0"
+                suffix="FCFA"
+                v-model="form.totalBudget.value.value"
+                :placeholder="$t('projects.form.fields.totalBudget.label')"
+                :error-messages="form.totalBudget.errorMessage.value"
+                @blur="form.totalBudget.handleChange(form.totalBudget.value.value)"
+              />
+            </div>
+            <div class="Form__fieldCtn ml-3 flex-grow-1">
+              <label class="Form__label">{{ $t('projects.form.fields.mobilizedFunds.label') }}</label>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                type="number"
+                min="0"
+                suffix="FCFA"
+                v-model="form.mobilizedFunds.value.value"
+                :placeholder="$t('projects.form.fields.mobilizedFunds.label')"
+                :error-messages="form.mobilizedFunds.errorMessage.value"
+                @blur="form.mobilizedFunds.handleChange(form.mobilizedFunds.value.value)"
+              />
+            </div>
+          </div>
+
+          <div class="Form__fieldCtn" v-if="residualGap !== null">
+            <label class="Form__label">{{ $t('projects.form.fields.residualGap.label') }}</label>
+            <v-text-field
+              density="compact"
+              variant="outlined"
+              suffix="FCFA"
+              :model-value="residualGap"
+              readonly
+              disabled
+            />
+          </div>
+        </template>
+        <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
           <TextEditor
             v-model:content-model="form.deliverables.value.value"
@@ -65,21 +156,7 @@
           />
         </div>
 
-        <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
-          <v-select
-            density="compact"
-            variant="outlined"
-            chips
-            v-model="form.status.value.value as Status"
-            :items="Object.values(Status)"
-            :placeholder="$t('projects.form.fields.status.label')"
-            :item-title="(item) => $t('projects.status.' + item)"
-            :item-value="(item) => item"
-            :error-messages="form.status.errorMessage.value"
-            @blur="form.status.handleChange(form.status.value.value)"
-          />
-        </div>
+        
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         <FormSectionTitle :text="$t('projects.form.section.adminScope')" />
@@ -432,6 +509,8 @@ import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { ODD } from '@/models/enums/contents/ODD'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
+import { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
@@ -504,6 +583,18 @@ const otherFinancialTypeIsSelected = computed(() => {
     )
   }
   return false
+})
+
+const showFinancialFields = computed(() => {
+  const status = form.status.value?.value as Status | undefined
+  return status === Status.PLANNED || status === Status.ONGOING
+})
+
+const residualGap = computed(() => {
+  const total = form.totalBudget.value?.value as number | null | undefined
+  const mobilized = form.mobilizedFunds.value?.value as number | null | undefined
+  if (total == null || mobilized == null) return null
+  return total - mobilized
 })
 
 const projectHasNoActorInCharge = ref(false)

@@ -2,6 +2,8 @@ import { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
+import { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
 import { i18n } from '@/plugins/i18n'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -47,7 +49,20 @@ export class ProjectFormService {
         otherBeneficiary: z.string().optional(),
         website: zodModels.website,
         banoc: zodModels.banoc,
-        banocUrl: zodModels.banocUrl
+        banocUrl: zodModels.banocUrl,
+        // --- Nouveaux champs ---
+        technicalMaturity: z.nativeEnum(TechnicalMaturity).nullable().optional(),
+        financialStatus: z.nativeEnum(FinancialStatus).nullable().optional(),
+        totalBudget: z.coerce
+          .number({ invalid_type_error: i18n.t('forms.errorMessages.invalidNumber') })
+          .nonnegative({ message: i18n.t('forms.errorMessages.invalidNumber') })
+          .nullable()
+          .optional(),
+        mobilizedFunds: z.coerce
+          .number({ invalid_type_error: i18n.t('forms.errorMessages.invalidNumber') })
+          .nonnegative({ message: i18n.t('forms.errorMessages.invalidNumber') })
+          .nullable()
+          .optional()
       })
       .refine(
         (data) => {
@@ -68,6 +83,19 @@ export class ProjectFormService {
         {
           message: i18n.t('projects.form.errorMessages.noActor'),
           path: ['actor', 'otherActor']
+        }
+      )
+      .refine(
+        (data) => {
+          // Si les deux montants sont renseignés, mobilizedFunds ne doit pas dépasser totalBudget
+          if (data.totalBudget != null && data.mobilizedFunds != null) {
+            return data.mobilizedFunds <= data.totalBudget
+          }
+          return true
+        },
+        {
+          message: i18n.t('projects.form.errorMessages.mobilizedExceedsTotal'),
+          path: ['mobilizedFunds']
         }
       )
 
@@ -93,7 +121,11 @@ export class ProjectFormService {
       odds: undefined,
       website: '',
       banoc: undefined,
-      banocUrl: undefined
+      banocUrl: undefined,
+      technicalMaturity: null,
+      financialStatus: null,
+      totalBudget: null,
+      mobilizedFunds: null
     }
 
     const { errors, handleSubmit, isSubmitting } = useForm<Partial<Project | ProjectSubmission>>({
@@ -131,7 +163,11 @@ export class ProjectFormService {
       odds: useField('odds'),
       website: useField('website'),
       banoc: useField('banoc'),
-      banocUrl: useField('banocUrl')
+      banocUrl: useField('banocUrl'),
+      technicalMaturity: useField('technicalMaturity'),
+      financialStatus: useField('financialStatus'),
+      totalBudget: useField('totalBudget'),
+      mobilizedFunds: useField('mobilizedFunds')
     }
 
     return { form, errors, handleSubmit, isSubmitting }

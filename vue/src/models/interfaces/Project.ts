@@ -1,6 +1,8 @@
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { Status } from '@/models/enums/contents/Status'
+import type { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import type { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { iri, SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
@@ -51,6 +53,12 @@ export interface Project
   actor: Partial<Actor>
   otherActor?: string
   creatorMessage?: string
+  // --- Nouveaux champs ---
+  technicalMaturity?: TechnicalMaturity | null
+  financialStatus?: FinancialStatus | null
+  totalBudget?: number | null
+  mobilizedFunds?: number | null
+  readonly residualGap?: number | null
 }
 
 export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {

@@ -25,8 +25,10 @@ use App\Entity\Trait\TimestampableEntity;
 use App\Entity\Trait\ValidateableEntity;
 use App\Enum\AdministrativeScope;
 use App\Enum\BeneficiaryType;
+use App\Enum\FinancialStatus;
 use App\Enum\ProjectFinancingType;
 use App\Enum\Status;
+use App\Enum\TechnicalMaturity;
 use App\Model\Enums\UserRoles;
 use App\Repository\ProjectRepository;
 use App\Services\State\Processor\ProjectProcessor;
@@ -196,7 +198,7 @@ class Project
     private ?string $calendar = null;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
-    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    #[Groups([self::GET_FULL, self::WRITE])]
     private ?array $beneficiaryTypes = null;
 
     #[ORM\Column(type: 'simple_array', enumType: ProjectFinancingType::class, options: ['default' => ProjectFinancingType::OTHER->value])]
@@ -222,6 +224,24 @@ class Project
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
     private ?string $otherActor = null;
+
+    // --- Nouveaux champs (fichier Excel) ---
+
+    #[ORM\Column(enumType: TechnicalMaturity::class, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?TechnicalMaturity $technicalMaturity = null;
+
+    #[ORM\Column(enumType: FinancialStatus::class, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?FinancialStatus $financialStatus = null;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?float $totalBudget = null;
+
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups([self::GET_FULL, self::GET_PARTIAL, self::WRITE])]
+    private ?float $mobilizedFunds = null;
 
     /**
      * @var Collection<int, Admin1Boundary>
@@ -670,5 +690,68 @@ class Project
         $this->actorsInCharge->removeElement($actorsInCharge);
 
         return $this;
+    }
+
+    // --- Nouveaux getters/setters ---
+
+    public function getTechnicalMaturity(): ?TechnicalMaturity
+    {
+        return $this->technicalMaturity;
+    }
+
+    public function setTechnicalMaturity(?TechnicalMaturity $technicalMaturity): static
+    {
+        $this->technicalMaturity = $technicalMaturity;
+
+        return $this;
+    }
+
+    public function getFinancialStatus(): ?FinancialStatus
+    {
+        return $this->financialStatus;
+    }
+
+    public function setFinancialStatus(?FinancialStatus $financialStatus): static
+    {
+        $this->financialStatus = $financialStatus;
+
+        return $this;
+    }
+
+    public function getTotalBudget(): ?float
+    {
+        return $this->totalBudget;
+    }
+
+    public function setTotalBudget(?float $totalBudget): static
+    {
+        $this->totalBudget = $totalBudget;
+
+        return $this;
+    }
+
+    public function getMobilizedFunds(): ?float
+    {
+        return $this->mobilizedFunds;
+    }
+
+    public function setMobilizedFunds(?float $mobilizedFunds): static
+    {
+        $this->mobilizedFunds = $mobilizedFunds;
+
+        return $this;
+    }
+
+    /**
+     * Calculé automatiquement : totalBudget - mobilizedFunds. Champ en lecture seule (pas dans WRITE).
+     */
+    #[Groups([self::GET_FULL, self::GET_PARTIAL])]
+    public function getResidualGap(): ?float
+    {
+        if (null === $this->totalBudget || null === $this->mobilizedFunds) {
+            return null;
+        }
+
+        return $this->totalBudget - $this->mobilizedFunds;
     }
 }

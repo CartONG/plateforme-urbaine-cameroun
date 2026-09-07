@@ -86,6 +86,33 @@
         }}</span>
         <AdminBoundariesButton :entity="project" />
       </div>
+      <div v-if="project.status === Status.PLANNED || project.status === Status.ONGOING">
+        <div class="SheetView__title SheetView__title--divider">
+          <span>{{ $t('projectPage.followUp') }}</span>
+        </div>
+        <div class="d-flex flex-column">
+          <p v-if="project.status === Status.PLANNED && project.technicalMaturity">
+            <span class="font-weight-bold">{{ $t('projects.form.fields.technicalMaturity.label') + ':' }}</span>
+            {{ $t('projects.technicalMaturity.' + project.technicalMaturity) }}
+          </p>
+          <p v-if="project.financialStatus">
+            <span class="font-weight-bold">{{ $t('projects.form.fields.financialStatus.label') + ':' }}</span>
+            {{ $t('projects.financialStatus.' + project.financialStatus) }}
+          </p>
+          <p v-if="project.totalBudget != null">
+            <span class="font-weight-bold">{{ $t('projects.form.fields.totalBudget.label') + ':' }}</span>
+            {{ project.totalBudget.toLocaleString('fr-FR') }} FCFA
+          </p>
+          <p v-if="project.mobilizedFunds != null">
+            <span class="font-weight-bold">{{ $t('projects.form.fields.mobilizedFunds.label') + ':' }}</span>
+            {{ project.mobilizedFunds.toLocaleString('fr-FR') }} FCFA
+          </p>
+          <p v-if="project.residualGap != null">
+            <span class="font-weight-bold">{{ $t('projects.form.fields.residualGap.label') + ':' }}</span>
+            {{ project.residualGap.toLocaleString('fr-FR') }} FCFA
+          </p>
+        </div>
+      </div>
 
       <div>
         <div
@@ -155,6 +182,7 @@ import AdminBoundariesButton from '@/components/content/adminBoundaries/AdminBou
 import PrintButton from '@/components/global/PrintButton.vue'
 import { FormType } from '@/models/enums/app/FormType'
 import { ProjectListDisplay } from '@/models/enums/app/ProjectListType'
+import { Status } from '@/models/enums/contents/Status'
 import type { Actor } from '@/models/interfaces/Actor'
 import { CommentOrigin } from '@/models/interfaces/Comment'
 import type { Project } from '@/models/interfaces/Project'
