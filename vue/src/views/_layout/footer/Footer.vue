@@ -29,32 +29,17 @@
               />
             </div>
           </div>
-          <!-- <div class="Footer__adressCtn">
-            <v-icon icon="$mapMarkerOutline"></v-icon>
-            <div class="Footer__adress">
-              <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
-              <span>Quartier Golf Bastos</span>
-              <span>Rue 6.083 Bld Jean Paul II</span>
-              <span>Yaoundé</span>
-            </div>
-          </div> -->
           
           <div class="Footer__adressCtn Footer__adressCtn--clickable" @click="openOfficeOnMap">
             <v-icon icon="$mapMarkerOutline"></v-icon>
             <div class="Footer__adress">
               <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
-              <span>Quartier Golf Bastos</span>
-              <span>Rue 6.083 Bld Jean Paul II</span>
+              <span>Quartier Bastos</span>
+              <span>Rue 1.828</span>
               <span>Yaoundé</span>
             </div>
             </div>
             <div class="Footer__adressCtn">
-            <v-icon icon="$phoneOutline"></v-icon>
-            <div class="Footer__adress">
-              <span>00 237 6 52 26 66 18</span>
-            </div>
-          </div>
-          <div class="Footer__adressCtn">
             <v-icon icon="$phoneOutline"></v-icon>
             <div class="Footer__adress">
               <span>00 237 6 52 26 66 18</span>
@@ -92,26 +77,29 @@
             <a href="https://www.minddevel.gov.cm" target="_blank"
               ><img loading="lazy" src="@/assets/images/footer/mindevel.png" alt="minddevel"
             /></a>
-            <a href="https://cvuc-uccc.com" target="_blank"
-              ><img loading="lazy" src="@/assets/images/footer/cvuc.png" alt="cvuc"
-            /></a>
-            <span
-              ><img
-                loading="lazy"
-                src="@/assets/images/footer/asso_cameroun.png"
-                alt="asso_cameroun"
-            /></span>
             <a href="https://minepat.gov.cm/fr/accueil" target="_blank"
               ><img loading="lazy" src="@/assets/images/footer/minepat.png" alt="minepat"
-            /></a>
-            <a href="https://yaounde.cm" target="_blank"
-              ><img loading="lazy" src="@/assets/images/footer/yaounde.png" alt="yaounde"
             /></a>
             <a href="https://tresorpublic.cm/fr/ministries/mindcaf" target="_blank"
               ><img loading="lazy" src="@/assets/images/footer/mindcaf.png" alt="mindcaf"
             /></a>
+            <a href="https://cvuc-uccc.com" target="_blank"
+              ><img loading="lazy" src="@/assets/images/footer/cvuc.png" alt="cvuc"
+            /></a>
+             <a href="https://www.osidimbea.cm" target="_blank"
+              ><img loading="lazy" src="@/assets/images/footer/amvc.png" alt="amvc"
+            /></a>
+            <a href="https://arc.cm" target="_blank"
+              ><img loading="lazy" src="@/assets/images/footer/arc.png" alt="arc"
+            /></a>
+            <a href="https://www.facebook.com/p/Communaut%C3%A9-Urbaine-de-Douala-100068953398194/?locale=fr_FR" target="_blank"
+              ><img loading="lazy" src="@/assets/images/footer/douala.png" alt="douala"
+            /></a>
             <a href="https://www.facebook.com/groups/2611030598941314" target="_blank"
               ><img loading="lazy" src="@/assets/images/footer/maroua.png" alt="maroua"
+            /></a>
+            <a href="https://yaounde.cm" target="_blank"
+              ><img loading="lazy" src="@/assets/images/footer/yaounde.png" alt="yaounde"
             /></a>
           </div>
         </div>
@@ -138,7 +126,7 @@ const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
 
 // Coordonnées du bureau (Quartier Golf Bastos, Yaoundé), trouvées via recherche —
 // à ajuster si vous avez une source plus précise (ex. relevé GPS interne).
-const OFFICE_COORDINATES = { lat: 3.9007199, lng: 11.5132397 }
+const OFFICE_COORDINATES = { lat: 3.900561, lng: 11.513224 }
 
 function openFacebook() {
   window.open('https://www.facebook.com/share/v/19H64XuEmM/?mibextid=wwXIfr', '_blank')
@@ -293,12 +281,21 @@ function openOfficeOnMap() {
         .Footer__secondaryPartnersLogos {
           margin-top: 3rem;
           display: flex;
-          flex-flow: row wrap;
+          flex-flow: row nowrap;
           align-items: center;
+          justify-content: space-between;
           gap: 1rem;
+
+          a {
+            flex: 1 1 0; // se répartissent l'espace dispo pour tenir sur une ligne sans déborder
+            display: flex;
+            justify-content: center;
+            min-width: 0;
+          }
 
           img {
             height: 3.5rem;
+            max-width: 100%;
             cursor: pointer;
           }
         }
@@ -388,10 +385,18 @@ function openOfficeOnMap() {
 
           .Footer__secondaryPartnersLogos {
             margin-top: 1rem;
-            height: 4rem;
+            height: auto;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
+
+            a {
+              flex: none; // on annule le "flex: 1 1 0" du desktop, chaque logo garde sa taille naturelle
+            }
+
+            img {
+              height: 3.5rem;
+            }
           }
         }
       }
