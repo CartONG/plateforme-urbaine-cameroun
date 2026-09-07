@@ -100,7 +100,9 @@ import {
   mdiTune,
   mdiWhatsapp,
   mdiChartBar,
-  mdiClockOutline
+  mdiClockOutline,
+  mdiCheckboxMarkedCircle,
+  mdiCheckboxBlankCircleOutline
 } from '@mdi/js'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -179,7 +181,9 @@ export default createVuetify({
       crosshairsGps: mdiCrosshairsGps,
       crosshairs: mdiCrosshairs,
       trashCanOutlines: mdiTrashCanOutline,
-      chartBar: mdiChartBar
+      chartBar: mdiChartBar,
+      checkboxMarkedCircle: mdiCheckboxMarkedCircle,
+      checkboxBlankCircleOutline: mdiCheckboxBlankCircleOutline
     },
     sets: {
       mdi

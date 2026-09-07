@@ -31,6 +31,20 @@
         "currentOrder": "Ordre de mise en avant"
       },
 
+      "calendar": {
+        "partial": "Partiellement occupé",
+        "full": "Totalement occupé",
+        "clearFilter": "Réinitialiser le filtre"
+      },
+
+      "headers": {
+        "title": "Titre",
+        "date": "Date",
+        "time": "Horaire",
+        "submittedAt": "Date de soumission",
+        "status": "Statut"
+      },
+
       "kpis": {
         "from": "Du",
         "to": "Au",
@@ -60,7 +74,9 @@
       },
       
       "bookings": "réservation | réservation | réservations",
-      "sortPending": "En attente d'abord",
+      "sortPending": "En attente",
+      "sortSubmittedAt": "Date de soumission",
+      "sortEventDate": "Date de l'évènement",
       "sortDate": "Date",
       "accept": "Accepter",
       "refuse": "Refuser",
