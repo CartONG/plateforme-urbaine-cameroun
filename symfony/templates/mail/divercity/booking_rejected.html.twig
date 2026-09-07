@@ -1,7 +1,7 @@
 {# booking_rejected.html.twig #}
 {{ 'mail.divercity.booking_rejected.content'|trans({
-    '%space_name%': booking.space.name,
-    '%date%': booking.date|date('d/m/Y'),
-    '%reason%': booking.refusalReason,
-    '%user_fullname%': booking.firstName ~ ' ' ~ booking.lastName,
+    'space_name': booking.space.name,
+    'date': booking.date|date('d/m/Y'),
+    'reason': booking.refusalReason,
+    'user_fullname': booking.firstName ~ ' ' ~ booking.lastName,
 })|raw }}

@@ -35,13 +35,13 @@ mail:
   divercity:
     booking_accepted:
         subject: 'Votre réservation a été acceptée'
-        content: 'Bonjour %user_fullname%, votre réservation pour "%space_name%" le %date% a été acceptée.'
+        content: 'Bonjour {user_fullname}, votre réservation pour "{space_name}" le {date} a été acceptée.'
     booking_rejected:
         subject: 'Votre réservation a été refusée'
-        content: 'Bonjour %user_fullname%, votre réservation pour "%space_name%" le %date% a été refusée. Motif : %reason%'
+        content: 'Bonjour {user_fullname}, votre réservation pour "{space_name}" le {date} a été refusée. Motif : {reason}'
     booking_cancelled_by_admin:
         subject: 'Votre réservation a été annulée'
-        content: 'Bonjour %user_fullname%, votre réservation pour "%space_name%" le %date% a été annulée par l''administration.'
+        content: 'Bonjour {user_fullname}, votre réservation pour "{space_name}" le {date} a été annulée par l''administration.'
     booking_cancelled_by_user:
         subject: 'Une réservation a été annulée'
-        content: 'L''utilisateur %user_fullname% a annulé sa réservation pour "%space_name%" le %date%.'
+        content: 'L''utilisateur {user_fullname} a annulé sa réservation pour "{space_name}" le {date}.'

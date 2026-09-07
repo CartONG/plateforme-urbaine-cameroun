@@ -1,6 +1,6 @@
 {# booking_accepted.html.twig #}
 {{ 'mail.divercity.booking_accepted.content'|trans({
-    '%space_name%': booking.space.name,
-    '%date%': booking.date|date('d/m/Y'),
-    '%user_fullname%': booking.firstName ~ ' ' ~ booking.lastName,
+    'space_name': booking.space.name,
+    'date': booking.date|date('d/m/Y'),
+    'user_fullname': booking.firstName ~ ' ' ~ booking.lastName,
 })|raw }}
