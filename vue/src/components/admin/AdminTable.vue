@@ -1,17 +1,42 @@
 <template>
   <div class="AdminTable" ref="el">
     <div
+      v-if="headers && headers.length"
+      class="AdminTable__row AdminTable__row--header"
+      :style="{ gridTemplateColumns: gridTemplateColumns }"
+    >
+      <div v-if="selectable" class="AdminTable__item"></div>
+      <div v-if="!!$slots.adminTableItemFirst" class="AdminTable__item AdminTable__item--first"></div>
+      <div class="AdminTable__item AdminTable__item--header" v-for="(header, index) in headers" :key="index">
+        {{ header }}
+      </div>
+      <div v-if="!!$slots.editContentCell" class="AdminTable__item AdminTable__item--last"></div>
+    </div>
+
+    <div
       class="AdminTable__row"
       v-for="item in paginatedItems"
       :key="item.id"
       :item-id="item.id"
       :class="{
         'AdminTable__row--overlay': isOverlayShownFunction ? isOverlayShownFunction(item) : false,
-        'AdminTable__row--clickable': rowClickable
+        'AdminTable__row--clickable': rowClickable,
+        'AdminTable__row--selected': selectable && selectedItemId === item.id
       }"
-      :style="{ gridTemplateColumns: columnWidths.join(' ') }"
-      @click="rowClickable && emits('row-click', item)"
+      :style="{ gridTemplateColumns: gridTemplateColumns }"
+      @click="handleRowClick(item)"
     >
+      <div
+        v-if="selectable"
+        class="AdminTable__item AdminTable__item--selector"
+        @click.stop="toggleSelect(item)"
+      >
+        <v-icon
+          :icon="selectedItemId === item.id ? '$checkboxMarkedCircle' : '$checkboxBlankCircleOutline'"
+          size="20"
+          :color="selectedItemId === item.id ? 'main-blue' : undefined"
+        />
+      </div>
       <div v-if="!!$slots.adminTableItemFirst" class="AdminTable__item AdminTable__item--first" @click.stop>
         <slot name="adminTableItemFirst" :item="item"></slot>
       </div>
@@ -58,17 +83,18 @@ import type { QgisMap } from '@/models/interfaces/QgisMap'
 import type { Resource } from '@/models/interfaces/Resource'
 import { getNestedObjectValue, reduceText } from '@/services/utils/UtilsService'
 import type { SortableEvent } from 'sortablejs'
-import { onMounted, ref, watch, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, type Ref } from 'vue'
 import { useDraggable } from 'vue-draggable-plus'
 import type { Booking } from '@/models/interfaces/divercity/Booking'
 import type { HighlightedResource } from '@/models/interfaces/divercity/HighlightedResource'
 
-type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment | Booking  | HighlightedResource
+type Item = Actor | User | Project | Resource | HighlightedItem | QgisMap | AppComment | Booking | HighlightedResource
 
 const props = withDefaults(
   defineProps<{
     items: Item[]
     tableKeys: string[]
+    headers?: string[]
     columnWidths?: string[]
     dateKeys?: string[]
     plainText?: boolean
@@ -77,15 +103,46 @@ const props = withDefaults(
     logoField?: string
     isOverlayShownFunction?: (item: Item) => boolean
     rowClickable?: boolean
+    // Quand true : le premier clic sur une ligne la sélectionne seulement (icône + surbrillance),
+    // c'est le second clic sur la ligne déjà sélectionnée qui émet 'row-click' pour ouvrir le détail.
+    // Évite d'ouvrir le popup par erreur et de perdre la ligne qu'on visait.
+    selectable?: boolean
   }>(),
   {
     rowClickable: false,
-    dateKeys: () => []
+    dateKeys: () => [],
+    selectable: false
   }
 )
+
 const defaultColumnWidths = ['15%', '40%', '25%', '20%']
 const columnWidths = props.columnWidths || defaultColumnWidths
+const gridTemplateColumns = computed(() =>
+  (props.selectable ? '2.5rem ' : '') + columnWidths.join(' ')
+)
 const paginatedItems: Ref<Item[]> = ref([])
+
+const selectedItemId = ref<Item['id'] | null>(null)
+
+function toggleSelect(item: Item) {
+  if (!props.selectable) return
+  selectedItemId.value = selectedItemId.value === item.id ? null : item.id
+}
+
+function handleRowClick(item: Item) {
+  if (!props.rowClickable) return
+
+  if (!props.selectable) {
+    emits('row-click', item)
+    return
+  }
+
+  if (selectedItemId.value === item.id) {
+    emits('row-click', item)
+  } else {
+    selectedItemId.value = item.id
+  }
+}
 
 /**
  * Détecte si une chaîne représente une date "réelle".
@@ -98,7 +155,6 @@ function isStringDate(candidate: string): boolean {
   const str = String(candidate).trim()
   if (str === '') return false
 
-  // Format ISO 8601 uniquement : YYYY-MM-DD, avec ou sans heure/timezone
   const isoDatePattern = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?(\.\d+)?(Z|[+-]\d{2}:\d{2})?)?$/
   if (!isoDatePattern.test(str)) return false
 
@@ -106,17 +162,10 @@ function isStringDate(candidate: string): boolean {
   return !isNaN(date.getTime())
 }
 
-/**
- * Détermine si une colonne doit être formatée comme une date.
- * - Si `dateKeys` déclare explicitement cette colonne -> on lui fait confiance, pas de sniffing.
- * - Sinon -> on retombe sur l'ancienne détection automatique (corrigée), pour ne rien casser
- *   sur les écrans qui n'ont pas encore été migrés vers `dateKeys`.
- */
 function isDateColumn(tableKey: string, item: Item): boolean {
   if (props.dateKeys.includes(tableKey)) return true
   return isStringDate(getNestedObjectValue(item, tableKey))
 }
-
 
 const el = ref<HTMLElement | null>(null)
 onMounted(() => {
@@ -200,6 +249,34 @@ const initDraggable = () => {
   }
 }
 
+.AdminTable__row--header {
+  min-height: 2.25rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-bottom: 2px solid rgb(var(--v-theme-main-grey));
+  cursor: default;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .AdminTable__item--header {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: rgb(var(--v-theme-main-grey));
+    white-space: nowrap;
+  }
+}
+
+.AdminTable__item--selector {
+  justify-content: center;
+}
+
+.AdminTable__row--selected {
+  background-color: rgb(var(--v-theme-light-yellow));
+}
+
 @media (max-width: 900px) {
   .AdminTable__row {
     grid-template-columns: 1fr !important;
@@ -214,6 +291,10 @@ const initDraggable = () => {
         margin-top: 6px;
       }
     }
+  }
+
+  .AdminTable__row--header {
+    display: none; // en-têtes peu utiles quand chaque ligne passe en 1 colonne
   }
 }
 
