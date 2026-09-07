@@ -99,7 +99,8 @@
       "upcoming": "Activités à venir",
       "statistics": "Statistiques {year}",
       "activityReports": "Rapports d'activité",
-      "downloadReport": "Rapport du DiverCity Space {year}"
+      "downloadReport": "Rapport du DiverCity Space {year}",
+      "reportLabel": "Rapport DiverCity {year}"
     },
     "form": {
       "name": "Nom de l'espace",
@@ -114,6 +115,8 @@
       "statLabel": "Nom de la statistique",
       "statValue": "Valeur",
       "addStatistic": "Ajouter une statistique",
+      "reportsSection": "Rapports annuels",
+      "addReportYear": "Ajouter une année",
       "submitSuccess": "Les informations ont bien été enregistrées",
       "submitError": "Une erreur est survenue lors de l'enregistrement",
       "previous": "Précédent",
