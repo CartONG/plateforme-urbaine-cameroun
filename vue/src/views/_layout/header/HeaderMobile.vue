@@ -47,14 +47,6 @@
             </RouterLink>
           </v-list-item>
           <v-list-item>
-            <span class="Header__tabsText">{{ $t('header.help') }}</span>
-          </v-list-item>
-          <v-list-item>
-            <a :href="whatsappLink" target="_blank" class="Header__tabsText">{{
-              $t('header.contact')
-            }}</a>
-          </v-list-item>
-          <v-list-item>
             <LoginButton />
           </v-list-item>
         </v-list>

@@ -29,13 +29,29 @@
               />
             </div>
           </div>
-          <div class="Footer__adressCtn">
+          <!-- <div class="Footer__adressCtn">
             <v-icon icon="$mapMarkerOutline"></v-icon>
             <div class="Footer__adress">
               <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
               <span>Quartier Golf Bastos</span>
               <span>Rue 6.083 Bld Jean Paul II</span>
               <span>Yaoundé</span>
+            </div>
+          </div> -->
+          
+          <div class="Footer__adressCtn Footer__adressCtn--clickable" @click="openOfficeOnMap">
+            <v-icon icon="$mapMarkerOutline"></v-icon>
+            <div class="Footer__adress">
+              <span class="font-weight-medium">Bureau d'Expertise France au Cameroun</span>
+              <span>Quartier Golf Bastos</span>
+              <span>Rue 6.083 Bld Jean Paul II</span>
+              <span>Yaoundé</span>
+            </div>
+            </div>
+            <div class="Footer__adressCtn">
+            <v-icon icon="$phoneOutline"></v-icon>
+            <div class="Footer__adress">
+              <span>00 237 6 52 26 66 18</span>
             </div>
           </div>
           <div class="Footer__adressCtn">
@@ -106,12 +122,24 @@
         <span>{{ $t('footer.cgu') }}</span>
         <span>{{ $t('footer.plan') }}</span>
         <span>{{ $t('footer.cookies') }}</span>
+        <span @click="openFAQ">{{ $t('header.help') }}</span>
+        <a :href="whatsappLink" target="_blank">{{ $t('header.contact') }}</a>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+
+const router = useRouter()
+const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
+
+// Coordonnées du bureau (Quartier Golf Bastos, Yaoundé), trouvées via recherche —
+// à ajuster si vous avez une source plus précise (ex. relevé GPS interne).
+const OFFICE_COORDINATES = { lat: 3.9007199, lng: 11.5132397 }
+
 function openFacebook() {
   window.open('https://www.facebook.com/share/v/19H64XuEmM/?mibextid=wwXIfr', '_blank')
 }
@@ -124,6 +152,20 @@ function openInstagram() {
 function openLegal() {
   const pdfUrl = 'Mentions_legales.pdf'
   window.open(pdfUrl, '_blank')
+}
+function openFAQ() {
+  const pdfUrl = '/docs/FAQ.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+function openOfficeOnMap() {
+  router.push({
+    name: 'map',
+    query: {
+      focusLat: String(OFFICE_COORDINATES.lat),
+      focusLng: String(OFFICE_COORDINATES.lng)
+    }
+  })
 }
 </script>
 
@@ -205,6 +247,16 @@ function openLegal() {
           gap: 0.25rem;
         }
 
+        .Footer__adressCtn--clickable {
+          cursor: pointer;
+
+          &:hover {
+            .Footer__adress span {
+              text-decoration: underline;
+            }
+          }
+        }
+
         .Footer__partner {
           height: 2.5rem;
           display: flex;
@@ -262,9 +314,15 @@ function openLegal() {
     gap: $dim-divider;
     align-items: center;
 
+    span,
+    a {
+      cursor: pointer;
+    }
+
     a {
       text-decoration: none;
       white-space: nowrap;
+      color: inherit;
     }
 
     & > *:not(:last-child) {

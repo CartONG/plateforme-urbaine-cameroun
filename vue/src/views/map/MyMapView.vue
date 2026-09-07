@@ -19,6 +19,7 @@ import MyMapLeftSideBar from '@/views/map/components/MyMapLeftSideBar.vue'
 import MyMapRightSideBar from '@/views/map/components/MyMapRightSideBar.vue'
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import maplibregl from 'maplibre-gl'
 
 const myMapStore = useMyMapStore()
 
@@ -39,6 +40,7 @@ onMounted(() => {
   } else {
     myMapStore.initMapLayers()
   }
+  focusOnQueryLocation()
 })
 
 function reloadAtlasMaps() {
@@ -48,6 +50,20 @@ function reloadAtlasMaps() {
     }
   }
   myMapStore.setMapLayersOrderOnMapReMount()
+}
+
+// Géolocalise la carte sur un point précis passé en query params (ex: clic sur
+// une adresse dans le Footer), et y pose un marqueur.
+function focusOnQueryLocation() {
+  const lat = parseFloat(route.query.focusLat as string)
+  const lng = parseFloat(route.query.focusLng as string)
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return
+
+  MapService.isLoaded(map.value, () => {
+    if (!map.value) return
+    map.value.flyTo({ center: [lng, lat], zoom: 17 })
+    new maplibregl.Marker({ color: '#E83323' }).setLngLat([lng, lat]).addTo(map.value)
+  })
 }
 </script>
 

@@ -42,14 +42,15 @@
     </div>
 
     <div class="SpaceSheetView__ctn" v-if="currentHighlight">
-        <SectionBanner :text="$t('divercity.space.statistics', { year: currentHighlight.year })" />
+        <!-- <SectionBanner :text="$t('divercity.space.statistics', { year: currentHighlight.year })" /> -->
+         <SectionBanner :text="$t('divercity.space.activityReports')" />
         <div class="SpaceSheetView__kpisGrid">
-        <DiverCityStaticKpi
+        <!-- <DiverCityStaticKpi
         v-for="stat in currentHighlight.statistics"
         :key="stat.id"
         :label="stat.label"
         :value="stat.value"
-        />
+        /> -->
     </div>
 
     <v-btn
