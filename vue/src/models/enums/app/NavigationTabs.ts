@@ -3,7 +3,7 @@ export enum NavigationTabs {
   ACTORS,
   PROJECTS,
   RESOURCES,
-  // SERVICES
+  SERVICES,
   DIVERCITY_SPACE
 
 }

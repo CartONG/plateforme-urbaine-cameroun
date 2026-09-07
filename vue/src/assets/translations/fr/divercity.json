@@ -92,12 +92,13 @@
       
     },
     "space": {
-      "featuredResources": "Evénements à la une",
+      "featuredResources": "Activités à la une",
       "checkAvailability": "Vérifier les disponibilités",
       "bookSpace": "Réserver cet espace",
       "featured": "À la Une",
       "upcoming": "Activités à venir",
       "statistics": "Statistiques {year}",
+      "activityReports": "Rapports d'activité",
       "downloadReport": "Rapport du DiverCity Space {year}"
     },
     "form": {

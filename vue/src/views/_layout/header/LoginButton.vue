@@ -3,14 +3,20 @@
     v-if="!userStore.userIsLogged"
     append
     :to="{ query: { ...$route.query, dialog: DialogKey.AUTH_SIGN_IN } }"
+    :class="{ Header__bannerLink: variant === 'link' }"
   >
-    <v-btn color="main-red" prepend-icon="$accountCircle" flat>
+    <v-btn v-if="variant === 'button'" color="main-red" prepend-icon="$accountCircle" flat>
       {{ $t('header.login') }}
     </v-btn>
+    <template v-else>
+      <v-icon icon="$accountCircle" />
+      <span>{{ $t('header.login') }}</span>
+    </template>
   </router-link>
   <v-menu location="bottom right" class="AuthMenu" v-else>
     <template v-slot:activator="{ props }">
       <v-btn
+        v-if="variant === 'button'"
         base-color="white"
         class="text-main-blue"
         prepend-icon="$accountCircle"
@@ -20,6 +26,11 @@
       >
         {{ $t('header.account') }}
       </v-btn>
+      <div v-else class="Header__bannerLink" v-bind="props">
+        <v-icon icon="$accountCircle" />
+        <span>{{ $t('header.account') }}</span>
+        <v-icon icon="$chevronDown" size="16" />
+      </div>
     </template>
 
     <v-list class="mt-2">
@@ -96,6 +107,10 @@ import { useActorsStore } from '@/stores/actorsStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useResourceStore } from '@/stores/resourceStore'
 import { useUserStore } from '@/stores/userStore'
+
+// 'button' (par défaut, comportement actuel) : bouton plein, utilisé dans le menu mobile.
+// 'link' : rendu en lien discret icône+texte, pour s'intégrer au Header__banner desktop.
+withDefaults(defineProps<{ variant?: 'button' | 'link' }>(), { variant: 'button' })
 
 const userStore = useUserStore()
 const actorsStore = useActorsStore()

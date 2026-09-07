@@ -30,14 +30,14 @@ export class NavigationTabsService {
           name: 'resources'
         }
       },
-      // {
-      //   name: i18n.t('header.services'),
-      //   value: NavigationTabs.SERVICES,
-      //   disabled: true,
-      //   route: {
-      //     name: 'services'
-      //   }
-      // }
+      {
+        name: i18n.t('header.services'),
+        value: NavigationTabs.SERVICES,
+        disabled: true,
+        route: {
+          name: 'services'
+        }
+      },
       {
         name: i18n.t('header.divercitySpace'),
         value: NavigationTabs.DIVERCITY_SPACE,

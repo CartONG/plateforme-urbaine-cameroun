@@ -2,14 +2,9 @@
   <div class="Header Header--desktop">
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
-        <div class="Header__bannerLink" @click="openPDF">
-          <v-icon icon="$helpCircleOutline" />
-          <span class="mr-6">{{ $t('header.help') }}</span>
+        <div class="Header__bannerContent container container--transition">
+          <LoginButton variant="link" />
         </div>
-        <a :href="whatsappLink" target="_blank" class="Header__bannerLink">
-          <v-icon icon="$emailOutline" />
-          <span>{{ $t('header.contact') }}</span>
-        </a>
       </div>
     </div>
     <div class="Header__nav">
@@ -27,7 +22,7 @@
         <nav class="Header__navBlock Header__navBlock--right">
           <v-tabs v-model="appStore.activeTab" align-tabs="end" color="main-red">
             <v-tab
-              v-for="(tab, index) in NavigationTabsService.getContent()"
+              v-for="(tab, index) in navigationTabs"
               :value="tab.value"
               :to="tab.route"
               :key="index"
@@ -36,6 +31,14 @@
               <span class="Header__tabsText">{{ tab.name }}</span>
             </v-tab>
           </v-tabs>
+          <v-btn
+            base-color="main-red"
+            class="text-white mr-3 gap-5"
+            :to="{ name: 'divercitySpace' }"
+            flat
+          >
+            {{ $t('header.divercitySpace') }}
+          </v-btn>
           <v-btn base-color="white" class="text-main-blue mr-3 gap-5" :to="{ name: 'map' }" flat>
             <img
               loading="lazy"
@@ -45,24 +48,25 @@
             />
             {{ $t('header.map') }}
           </v-btn>
-          <LoginButton />
         </nav>
       </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { NavigationTabsService } from '@/services/application/NavigationTabsService'
+import { NavigationTabs } from '@/models/enums/app/NavigationTabs'
 import { useApplicationStore } from '@/stores/applicationStore'
+import { computed } from 'vue'
 import LoginButton from './LoginButton.vue'
 
 const appStore = useApplicationStore()
-const whatsappLink = `https://wa.me/${'+237652266618'.replace(/\D/g, '')}`
 
-function openPDF() {
-  const pdfUrl = '/docs/FAQ.pdf'
-  window.open(pdfUrl, '_blank')
-}
+// "DiverCity Space" devient un bouton dédié (comme "Ma carte"), il sort donc de la liste des onglets
+const navigationTabs = computed(() =>
+  NavigationTabsService.getContent().filter((tab) => tab.value !== NavigationTabs.DIVERCITY_SPACE)
+)
 </script>
 
 <style lang="scss">
@@ -99,6 +103,23 @@ function openPDF() {
 
           span {
             margin-top: 0.125rem;
+          }
+        }
+
+        // Neutralise le style "bouton" par défaut de LoginButton pour qu'il ressemble
+        // au lien texte+icône qu'avaient FAQ/Hotline à cet emplacement.
+        .Header__bannerLink--auth {
+          :deep(.v-btn) {
+            background: transparent !important;
+            box-shadow: none;
+            color: rgb(var(--v-theme-main-blue));
+            padding: 0;
+            min-width: 0;
+            height: auto;
+            font-size: $font-size-xs;
+            font-weight: 400;
+            letter-spacing: normal;
+            text-transform: none;
           }
         }
       }
