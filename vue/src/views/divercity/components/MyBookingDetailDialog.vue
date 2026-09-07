@@ -9,7 +9,6 @@
         <p v-if="eventActivityTypeLabel">
           <strong>{{ $t('divercity.admin.detail.activityType') }} :</strong> {{ eventActivityTypeLabel }}
         </p>
-        <p><strong>{{ $t('divercity.admin.detail.purpose') }} :</strong> {{ booking.bookingPurpose }}</p>
         <p v-if="booking.additionalInformation">
           <strong>{{ $t('divercity.admin.detail.additionalInfo') }} :</strong> {{ booking.additionalInformation }}
         </p>

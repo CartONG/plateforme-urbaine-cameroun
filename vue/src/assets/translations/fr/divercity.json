@@ -141,7 +141,6 @@
         "eventActivityType": "Type d'évènement / activité",
         "agenda": "Ordre du jour",
         "resourceDocument": "Documents ressources",
-        "bookingPurpose": "Motif de la réservation",
         "additionalInformation": "Informations complémentaires",
         "participantCount": "Nombre de participants",
         "date": "Date",
@@ -161,7 +160,6 @@
         "eventActivityType": "Sélectionnez un type",
         "agenda": "Sélectionnez un fichier PDF",
         "resourceDocument": "Sélectionnez un ou plusieurs fichiers PDF",
-        "bookingPurpose": "Décrivez l'objet de la réservation",
         "additionalInformation": "Informations complémentaires (optionnel)",
         "participantCount": "Nombre de participants"
       },
