@@ -39,6 +39,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\File\FileObject;
+use App\Entity\ProjectResource;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Index(columns: ['slug', 'is_validated'], name: 'idx_project_slug_is_validated')]
@@ -102,6 +104,7 @@ class Project
         $this->financingTypes = [];
         $this->images = new ArrayCollection();
         $this->partners = new ArrayCollection();
+        $this->resources = new ArrayCollection();
         $this->administrativeScopes = [];
         $this->admin1List = new ArrayCollection();
         $this->admin3List = new ArrayCollection();
@@ -183,6 +186,13 @@ class Project
     #[ApiProperty(types: ['https://schema.org/image'])]
     #[Groups([self::GET_FULL, self::WRITE])]
     private Collection $partners;
+
+    /**
+     * @var Collection<int, ProjectResource>
+     */
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: ProjectResource::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups([self::GET_FULL, self::WRITE])]
+    private Collection $resources;
 
     #[ORM\ManyToOne(inversedBy: 'projects')]
     #[ORM\JoinColumn(nullable: true)]
@@ -358,6 +368,35 @@ class Project
     public function removePartner(MediaObject $image): static
     {
         $this->partners->removeElement($image);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectResource>
+     */
+    public function getResources(): Collection
+    {
+        return $this->resources;
+    }
+
+    public function addResource(ProjectResource $resource): static
+    {
+        if (!$this->resources->contains($resource)) {
+            $this->resources->add($resource);
+            $resource->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResource(ProjectResource $resource): static
+    {
+        if ($this->resources->removeElement($resource)) {
+            if ($resource->getProject() === $this) {
+                $resource->setProject(null);
+            }
+        }
 
         return $this;
     }

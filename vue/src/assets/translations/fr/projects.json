@@ -91,10 +91,11 @@
         }
       },
       "section": {
-        "beneficiaryTypes": "Bénéficiaires",
+        "beneficiaryTypes": "Bénéficiaires *",
         "actorInCharge": "Maîtrise d'ouvrage *",
         "actorInChargeDisclaimer": "Organisation qui commande et finance le projet",
         "financial": "Financement *",
+        "resources":"Ressources",
         "focalPoint": "Personne de référence",
         "localization": "Localisation centroïde de la zone d'intervention",
         "adminScope": "Localisation zone d'Intervention",

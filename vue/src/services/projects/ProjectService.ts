@@ -65,7 +65,6 @@ export class ProjectService {
     const images = await Promise.all(
       projectToSubmit.imagesToUpload.map(async (img) => await FileUploader.uploadMedia(img.file))
     )
-
     if (images.length > 0) {
       symfonyProject.images.push(...(images as BaseMediaObject[]))
     } else if (projectToSubmit.images.length === 0) {
@@ -82,10 +81,26 @@ export class ProjectService {
     } else if (projectToSubmit.partners.length === 0) {
       symfonyProject.partners = []
     }
+
+    // --- Ressources ---
+    const resources = await Promise.all(
+      projectToSubmit.resourcesToUpload.map(async (res) => await FileUploader.uploadFile(res.file))
+    )
+    if (resources.length > 0) {
+      symfonyProject.resources.push(
+        ...resources.map((f: any) => ({ fileObject: f['@id'] }))
+      )
+    } else if (projectToSubmit.resources.length === 0) {
+      symfonyProject.resources = []
+    }
+
     symfonyProject = transformSymfonyRelationToIRIs<Project>(symfonyProject)
     if (
       symfonyProject.id &&
-      (images.length > 0 || projectToSubmit.logoToUpload || partnerImages.length > 0)
+      (images.length > 0 ||
+        projectToSubmit.logoToUpload ||
+        partnerImages.length > 0 ||
+        resources.length > 0) // <-- ajouté
     ) {
       return await this.patchImages(symfonyProject)
     }
@@ -98,7 +113,8 @@ export class ProjectService {
       images: project.images,
       id: project.id,
       logo: project.logo,
-      partners: project.partners
+      partners: project.partners,
+      resources: project.resources // <-- ajouté
     })
   }
 }

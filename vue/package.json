@@ -27,6 +27,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "jwt-decode": "^4.0.0",
+    "libphonenumber-js": "^1.13.12",
     "maplibre-gl": "^4.7.1",
     "pinia": "^2.2.8",
     "v-calendar": "^3.1.2",

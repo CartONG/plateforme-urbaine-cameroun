@@ -47,6 +47,7 @@ export class ProjectFormService {
           required_error: i18n.t('forms.errorMessages.required')
         }),
         otherBeneficiary: z.string().optional(),
+        resources: z.array(zodModels.symfonyRelation).optional(),
         website: zodModels.website,
         banoc: zodModels.banoc,
         banocUrl: zodModels.banocUrl,
@@ -115,6 +116,7 @@ export class ProjectFormService {
       beneficiaryTypes: undefined,
       actor: undefined,
       otherActor: '',
+      resources: [],
       status: undefined,
       geoData: undefined,
       thematics: undefined,
@@ -154,6 +156,7 @@ export class ProjectFormService {
       focalPointTel: useField('focalPointTel'),
       beneficiaryTypes: useField('beneficiaryTypes'),
       otherBeneficiary: useField('otherBeneficiary'),
+      resources: useField('resources'),
       actor: useField('actor'),
       otherActor: useField('otherActor'),
       status: useField('status'),

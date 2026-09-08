@@ -17,6 +17,11 @@ import type { Admin1Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { BanocItem } from './common/BanocItem'
 import type { ODDItem } from './common/ODDItem'
 
+export interface ProjectResourceAttachment {
+  '@id'?: string
+  fileObject: BaseMediaObject | iri
+}
+
 export interface Project
   extends Timestampable,
     Validateable,
@@ -59,6 +64,7 @@ export interface Project
   totalBudget?: number | null
   mobilizedFunds?: number | null
   readonly residualGap?: number | null
+  resources: ProjectResourceAttachment[]
 }
 
 export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
@@ -67,4 +73,5 @@ export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
   logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]
   imagesPartnerToUpload: ContentImageFromUserFile[]
+  resourcesToUpload: ContentImageFromUserFile[]
 }

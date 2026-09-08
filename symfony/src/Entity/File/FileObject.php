@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Entity\Atlas;
 use App\Entity\DiverCity\Booking; // <--- Import à ajouter
+use App\Entity\Project;
 use App\Entity\QgisMap;
 use App\Entity\Resource;
 use App\Entity\User\User;
@@ -62,6 +63,7 @@ class FileObject extends AbstractObject
         Atlas::GET_FULL,
         QgisMap::GET_FULL,
         Booking::GROUP_READ, // <--- Groupe ajouté ici
+        Project::GET_FULL,
     ])]
     public ?string $contentUrl = null;
 
@@ -73,6 +75,7 @@ class FileObject extends AbstractObject
         Atlas::GET_FULL,
         QgisMap::GET_FULL,
         Booking::GROUP_READ, // <--- Groupe ajouté ici
+        Project::GET_FULL,
     ])]
     public ?array $contentsUrl = null;
 

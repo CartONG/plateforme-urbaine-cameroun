@@ -468,7 +468,7 @@
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.focalPointTel.label') }}</label>
           <vue-tel-input
-            v-model="form.focalPointTel.value.value"
+            v-model="(form.focalPointTel.value.value as string)"
             @validate="phoneValidation"
           ></vue-tel-input>
         </div>
@@ -482,6 +482,40 @@
           :existingImages="existingPartnerImages"
           :externalImagesLoader="false"
         />
+        <FormSectionTitle :text="$t('projects.form.section.resources')" />
+        <div class="Form__fieldCtn">
+          <div class="Form__attachedFiles" v-if="existingResources.length || resourceFilesToUpload.length">
+            <a
+              v-for="(res, index) in existingResources"
+              :key="res['@id'] ?? index"
+              :href="(res.fileObject as BaseMediaObject).contentUrl"
+              target="_blank"
+              class="Form__existingFile mr-2 mb-2"
+            >
+              <v-icon icon="$folder" size="small" class="mr-1" />
+              {{ $t('forms.file') }}
+              <v-icon icon="$close" size="x-small" class="ml-1" @click.prevent="existingResources.splice(index, 1)" />
+            </a>
+            <v-chip
+              v-for="(file, index) in resourceFilesToUpload"
+              :key="'new-' + index"
+              closable
+              size="small"
+              class="mr-2 mb-2"
+              @click:close="resourceFilesToUpload.splice(index, 1)"
+            >
+              {{ file.name }}
+            </v-chip>
+          </div>
+          <v-file-input
+            density="compact"
+            variant="outlined"
+            multiple
+            accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.svg"
+            :placeholder="$t('projects.form.fields.resources.label')"
+            @update:model-value="(files) => resourceFilesToUpload.push(...(Array.isArray(files) ? files : files ? [files] : []))"
+          />
+        </div>
       </v-form>
     </template>
     <template #footer-left>
@@ -529,11 +563,15 @@ import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, type Ref, ref } from 'vue'
+import FileUploader from '@/services/files/FileUploader'
+import type { ProjectResourceAttachment } from '@/models/interfaces/Project'
+import { useI18n } from 'vue-i18n'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 const userStore = useUserStore()
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
@@ -546,6 +584,8 @@ const projectHasNoOwner = ref(false)
 const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
 const existingPartnerImages = ref<BaseMediaObject[]>([])
+const existingResources = ref<ProjectResourceAttachment[]>([])
+const resourceFilesToUpload = ref<globalThis.File[]>([])
 let existingHostedImages: BaseMediaObject[] = []
 let existingExternalImages: string[] = []
 let existingHostedPartnerImages: BaseMediaObject[] = []
@@ -639,6 +679,7 @@ onMounted(async () => {
 
     existingPartnerImages.value = props.project.partners
     existingHostedPartnerImages = props.project.partners
+    existingResources.value = props.project.resources ?? []
   }
 })
 
@@ -652,6 +693,19 @@ function phoneValidation(phoneObject: any) {
 const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
     formError.value = false
+
+    const newResourceFiles = await Promise.all(
+      resourceFilesToUpload.value.map((file) => FileUploader.uploadFile(file))
+    )
+
+    const resources: ProjectResourceAttachment[] = [
+      ...existingResources.value.map((r) => ({
+        fileObject:
+          typeof r.fileObject === 'string' ? r.fileObject : (r.fileObject as BaseMediaObject)['@id']
+      })),
+      ...newResourceFiles.map((f: any) => ({ fileObject: f['@id'] }))
+    ]
+
     let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
     if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
       projectSubmission.id = props.project.id
@@ -661,6 +715,7 @@ const submitForm = handleSubmit(
       ...projectSubmission,
       images: existingHostedImages,
       partners: existingHostedPartnerImages,
+      resources, // <-- ajouté
       externalImages: existingExternalImages,
       logoToUpload: newLogo.value[0],
       imagesToUpload: [...imagesToUpload.value],
