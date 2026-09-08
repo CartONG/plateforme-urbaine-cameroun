@@ -3,16 +3,16 @@
 namespace App\Entity\File;
 
 use ApiPlatform\Metadata\ApiProperty;
-use App\Entity\Trait\TimestampableEntity;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 use App\Entity\Atlas;
 use App\Entity\DiverCity\Booking;
 use App\Entity\Project;
 use App\Entity\QgisMap;
 use App\Entity\Resource;
+use App\Entity\Trait\TimestampableEntity;
 use App\Entity\User\User;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 // use App\Entity\File\FileObject;
 
 #[ORM\Entity]
