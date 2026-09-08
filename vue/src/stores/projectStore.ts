@@ -118,7 +118,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   type filteringTrigger = 'filters' | 'map'
   const filterProjects = (from: filteringTrigger = 'filters') => {
     const projectsList = projects.value.filter((project) => {
-      const projectThematicIds = project.thematics.map((projectThematic) => projectThematic)
+      const projectThematicIds = (project.thematics ?? []).map(
+        (projectThematic) => projectThematic
+      )
 
       return (
         (filters.searchValue === '' ||
@@ -131,19 +133,21 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           filters.statuses.some((status) => project.status === status)) &&
         (filters.administrativeScopes.length === 0 ||
           filters.administrativeScopes.some((interventionZone) =>
-            project.administrativeScopes.some((scope) => scope === interventionZone)
+            (project.administrativeScopes ?? []).some((scope) => scope === interventionZone)
           )) &&
         (filters.odds.length === 0 ||
-          filters.odds.some((odd) => project.odds.some((projectOdd) => projectOdd === odd))) &&
+          filters.odds.some((odd) =>
+            (project.odds ?? []).some((projectOdd) => projectOdd === odd)
+          )) &&
         (filters.beneficiaryTypes.length === 0 ||
           filters.beneficiaryTypes.some((beneficiaryType) =>
-            project.beneficiaryTypes.some(
+            (project.beneficiaryTypes ?? []).some(
               (projectBeneficiaryType) => projectBeneficiaryType === beneficiaryType
             )
           )) &&
         (filters.financingTypes.length === 0 ||
           filters.financingTypes.some((financingType) =>
-            project.financingTypes.some(
+            (project.financingTypes ?? []).some(
               (projectFinancingType) => projectFinancingType === financingType
             )
           )) &&
@@ -185,8 +189,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           project.administrativeScopes,
           i18n.t(`projects.status.${project.status}`),
           project.focalPointName,
-          ...project.thematics,
-          ...project.beneficiaryTypes.map((beneficiaryType) =>
+          ...(project.thematics ?? []),
+          ...(project.beneficiaryTypes ?? []).map((beneficiaryType) =>
             i18n.t(`beneficiaryType.${beneficiaryType}`)
           )
         ])

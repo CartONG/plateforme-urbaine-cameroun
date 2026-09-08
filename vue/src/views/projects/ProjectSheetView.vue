@@ -86,6 +86,7 @@
         }}</span>
         <AdminBoundariesButton :entity="project" />
       </div>
+      
       <div v-if="project.status === Status.PLANNED || project.status === Status.ONGOING">
         <div class="SheetView__title SheetView__title--divider">
           <span>{{ $t('projectPage.followUp') }}</span>
@@ -111,6 +112,30 @@
             <span class="font-weight-bold">{{ $t('projects.form.fields.residualGap.label') + ':' }}</span>
             {{ project.residualGap.toLocaleString('fr-FR') }} FCFA
           </p>
+        </div>
+      </div>
+
+      <!-- ✅ SECTION RESSOURCES AJOUTÉE -->
+      <div v-if="project.resources && project.resources.length > 0">
+        <div class="SheetView__title SheetView__title--divider">
+          <span>{{ $t('projectPage.resources') }}</span>
+        </div>
+        <div class="SheetView__resourcesList">
+          <div
+            v-for="(resource, index) in project.resources"
+            :key="index"
+            class="SheetView__resourceItem"
+          >
+            <v-icon icon="$folder" size="small" class="mr-2" color="primary" />
+            <a
+              :href="getResourceUrl(resource)"
+              target="_blank"
+              class="SheetView__resourceLink"
+            >
+              {{ getResourceName(resource) }}
+            </a>
+            <v-icon icon="$openInNew" size="x-small" class="ml-2" color="primary" />
+          </div>
         </div>
       </div>
 
@@ -212,6 +237,59 @@ const images = computed(() => {
   return [...images, ...externalImages]
 })
 
+// ✅ Méthodes pour les ressources
+const getResourceUrl = (resource: any): string => {
+  if (!resource) return '#'
+  
+  // Si resource.fileObject est un objet avec contentUrl
+  if (resource.fileObject && typeof resource.fileObject === 'object') {
+    return resource.fileObject.contentUrl || '#'
+  }
+  
+  // Si resource.fileObject est une chaîne (URL)
+  if (typeof resource.fileObject === 'string') {
+    return resource.fileObject
+  }
+  
+  return '#'
+}
+
+const getResourceName = (resource: any): string => {
+  if (!resource) return 'Fichier'
+  
+  // Si resource.fileObject est un objet avec originalName
+  if (resource.fileObject && typeof resource.fileObject === 'object') {
+    return resource.fileObject.originalName || 'Fichier'
+  }
+  
+  // Si resource a un nom direct
+  if (resource.name) {
+    return resource.name
+  }
+  
+  // Extraire le nom du fichier depuis l'URL
+  const url = getResourceUrl(resource)
+  if (url && url !== '#') {
+    const parts = url.split('/')
+    const fileName = parts[parts.length - 1]
+    if (fileName) {
+      return decodeURIComponent(fileName)
+    }
+  }
+  
+  return 'Fichier'
+}
+
+const formatDate = (date: string): string => {
+  if (!date) return ''
+  const d = new Date(date)
+  return d.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 onBeforeRouteUpdate(async (to) => {
   if (
     (projectStore.project?.slug && projectStore.project.slug !== to.params.slug) ||
@@ -282,6 +360,47 @@ const formattedDescription = computed(() =>
     padding: 1.5em;
     width: 100%;
     background-color: rgb(var(--v-theme-light-yellow));
+  }
+
+  // ✅ Styles pour les ressources
+  &__resourcesList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  &__resourceItem {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: rgb(var(--v-theme-light-grey));
+    border-radius: 4px;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: rgba(var(--v-theme-light-grey), 0.5);
+    }
+  }
+
+  &__resourceLink {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: none;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__resourceDate {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    flex-shrink: 0;
   }
 }
 

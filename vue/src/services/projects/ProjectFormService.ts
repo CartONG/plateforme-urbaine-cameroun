@@ -47,7 +47,7 @@ export class ProjectFormService {
           required_error: i18n.t('forms.errorMessages.required')
         }),
         otherBeneficiary: z.string().optional(),
-        resources: z.array(zodModels.symfonyRelation).optional(),
+        resources: zodModels.resourceRelations,
         website: zodModels.website,
         banoc: zodModels.banoc,
         banocUrl: zodModels.banocUrl,

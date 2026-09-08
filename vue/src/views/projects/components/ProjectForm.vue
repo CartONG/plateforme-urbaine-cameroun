@@ -289,7 +289,7 @@
           :items="Object.values(BeneficiaryType)"
           :placeholder="$t('projects.form.section.beneficiaryTypes')"
           :item-title="(item) => $t('beneficiaryType.' + item)"
-          item-value="@id"
+          :item-value="(item) => item"
           :error-messages="form.beneficiaryTypes.errorMessage.value"
           @blur="form.beneficiaryTypes.handleChange(form.beneficiaryTypes.value.value)"
           return-object
@@ -493,7 +493,7 @@
               class="Form__existingFile mr-2 mb-2"
             >
               <v-icon icon="$folder" size="small" class="mr-1" />
-              {{ $t('forms.file') }}
+                {{ (res.fileObject as FileObject).originalName ?? $t('forms.file') }}
               <v-icon icon="$close" size="x-small" class="ml-1" @click.prevent="existingResources.splice(index, 1)" />
             </a>
             <v-chip
@@ -566,6 +566,7 @@ import { computed, onMounted, type Ref, ref } from 'vue'
 import FileUploader from '@/services/files/FileUploader'
 import type { ProjectResourceAttachment } from '@/models/interfaces/Project'
 import { useI18n } from 'vue-i18n'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
@@ -694,41 +695,89 @@ const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
     formError.value = false
 
-    const newResourceFiles = await Promise.all(
-      resourceFilesToUpload.value.map((file) => FileUploader.uploadFile(file))
-    )
+    try {
+      const newResourceFiles = await Promise.all(
+        resourceFilesToUpload.value.map((file) => FileUploader.uploadFile(file))
+      )
 
-    const resources: ProjectResourceAttachment[] = [
-      ...existingResources.value.map((r) => ({
-        fileObject:
-          typeof r.fileObject === 'string' ? r.fileObject : (r.fileObject as BaseMediaObject)['@id']
-      })),
-      ...newResourceFiles.map((f: any) => ({ fileObject: f['@id'] }))
-    ]
+      const resources: ProjectResourceAttachment[] = [
+        ...existingResources.value.map((r) => ({
+          fileObject:
+            typeof r.fileObject === 'string' ? r.fileObject : (r.fileObject as BaseMediaObject)['@id']
+        })),
+        ...newResourceFiles.map((f: any) => ({ fileObject: f['@id'] }))
+      ]
 
-    let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
-    if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
-      projectSubmission.id = props.project.id
+      let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
+      if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
+        projectSubmission.id = props.project.id
+      }
+
+      projectSubmission = {
+        ...projectSubmission,
+        images: existingHostedImages,
+        partners: existingHostedPartnerImages,
+        resources,
+        externalImages: existingExternalImages,
+        logoToUpload: newLogo.value[0],
+        imagesToUpload: [...imagesToUpload.value],
+        imagesPartnerToUpload: [...imagesPartnerToUpload.value],
+        focalPointTel: internationalPhoneNumber as string
+      }
+
+      const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
+      emit('submitted', submittedProject)
+    } catch (error: any) {
+      // Afficher l'erreur détaillée
+      console.error('Erreur lors de la soumission:', error)
+      
+      let errorMessage = i18n.t('forms.errors')
+      
+      // Gérer les erreurs de validation du backend
+      if (error.response?.data) {
+        const errorData = error.response.data
+        
+        // Erreurs de validation Symfony/API Platform
+        if (errorData.violations) {
+          const violations = errorData.violations
+          console.log('Violations de validation:', violations)
+          errorMessage = violations.map((v: any) => `${v.propertyPath}: ${v.message}`).join('\n')
+        }
+        // Erreur avec message personnalisé
+        else if (errorData.detail) {
+          errorMessage = errorData.detail
+        }
+        // Erreur générique
+        else if (errorData.message) {
+          errorMessage = errorData.message
+        }
+      }
+      
+      addNotification(errorMessage, NotificationType.ERROR)
+      formError.value = true
+      onInvalidSubmit()
     }
-
-    projectSubmission = {
-      ...projectSubmission,
-      images: existingHostedImages,
-      partners: existingHostedPartnerImages,
-      resources, // <-- ajouté
-      externalImages: existingExternalImages,
-      logoToUpload: newLogo.value[0],
-      imagesToUpload: [...imagesToUpload.value],
-      imagesPartnerToUpload: [...imagesPartnerToUpload.value],
-      focalPointTel: internationalPhoneNumber as string
-    }
-
-    const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
-    emit('submitted', submittedProject)
   },
-  () => {
+  (validationErrors) => {
+    // Erreurs de validation du formulaire
     formError.value = true
-    addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
+    console.log('Erreurs de validation du formulaire:', validationErrors)
+    
+    // Afficher les erreurs de validation dans la notification
+    let errorMessages = []
+    if (validationErrors && typeof validationErrors === 'object') {
+      for (const [field, errors] of Object.entries(validationErrors)) {
+        if (Array.isArray(errors)) {
+          errorMessages.push(`${field}: ${errors.join(', ')}`)
+        }
+      }
+    }
+    
+    const message = errorMessages.length > 0 
+      ? errorMessages.join('; ')
+      : i18n.t('forms.errors')
+    
+    addNotification(message, NotificationType.ERROR)
     onInvalidSubmit()
   }
 )

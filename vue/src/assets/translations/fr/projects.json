@@ -10,7 +10,9 @@
     "projectDeliverables": "Livrables du projet",
     "projectOwner": "Responsable du projet",
     "seeLocation": "Voir sur la carte des projets",
+    "resources": "Ressources du projet",
     "followUp": "Suivi du projet"
+
   },
   "projects": {
     "admin": {

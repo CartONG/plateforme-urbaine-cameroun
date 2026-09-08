@@ -53,7 +53,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class FileObject extends AbstractObject
 {
-    private const READ = 'file_object:read';
+    public const READ = 'file_object:read';
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups([

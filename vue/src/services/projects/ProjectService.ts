@@ -83,24 +83,18 @@ export class ProjectService {
     }
 
     // --- Ressources ---
-    const resources = await Promise.all(
-      projectToSubmit.resourcesToUpload.map(async (res) => await FileUploader.uploadFile(res.file))
-    )
-    if (resources.length > 0) {
-      symfonyProject.resources.push(
-        ...resources.map((f: any) => ({ fileObject: f['@id'] }))
-      )
-    } else if (projectToSubmit.resources.length === 0) {
+    // Contrairement à logo/images/partners, les fichiers de ressources sont déjà
+    // uploadés en amont par ProjectForm.vue (via FileUploader.uploadFile) : le champ
+    // `resourcesToUpload` n'existe pas dans ProjectSubmission, seul `resources` est
+    // rempli avec les IRIs déjà résolues. On ne refait donc pas d'upload ici.
+    if (!projectToSubmit.resources) {
       symfonyProject.resources = []
     }
 
     symfonyProject = transformSymfonyRelationToIRIs<Project>(symfonyProject)
     if (
       symfonyProject.id &&
-      (images.length > 0 ||
-        projectToSubmit.logoToUpload ||
-        partnerImages.length > 0 ||
-        resources.length > 0) // <-- ajouté
+      (images.length > 0 || projectToSubmit.logoToUpload || partnerImages.length > 0)
     ) {
       return await this.patchImages(symfonyProject)
     }
