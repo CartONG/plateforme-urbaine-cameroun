@@ -39,8 +39,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\File\FileObject;
-use App\Entity\ProjectResource;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Index(columns: ['slug', 'is_validated'], name: 'idx_project_slug_is_validated')]
