@@ -1,5 +1,5 @@
 <template>
-  <div class="BookingFormView" v-if="space">
+  <div class="BookingFormView" v-if="space" ref="formRoot">
     <div class="BookingFormView__header" v-if="!isDone">
       <PageTitle :title="isEditMode ? $t('divercity.booking.editTitle') : $t('divercity.booking.title')" />
     </div>
@@ -9,7 +9,7 @@
         v-if="!isDone && currentStep > 1"
         variant="outlined"
         color="main-blue"
-        @click="currentStep--"
+        @click="goPrevious"
       >
         {{ $t('divercity.form.previous') }}
       </v-btn>
@@ -263,17 +263,17 @@
             <div class="Form Form--booking">
               <div class="Form__fieldCtn BookingFormView__dateField">
                 <label class="Form__label required">{{ $t('divercity.booking.fields.date') }}</label>
-                <v-text-field
-                  type="date"
-                  density="compact"
-                  variant="outlined"
+                <BookingCalendarFilter
+                  :space-id="space.id"
                   v-model="form.date.value.value"
-                  :error-messages="form.date.errorMessage.value"
-                  @blur="form.date.handleChange"
+                  @update:model-value="form.date.handleChange(form.date.value.value)"
                 />
+                <span v-if="form.date.errorMessage.value" class="text-error text-caption">
+                  {{ form.date.errorMessage.value }}
+                </span>
               </div>
 
-              <div class="BookingFormView__availability" v-if="form.date.value.value">
+              <!-- <div class="BookingFormView__availability" v-if="form.date.value.value">
                 <v-progress-circular v-if="isCheckingAvailability" indeterminate size="20" color="main-blue" />
                 <template v-else-if="dayAvailability.length">
                   <p class="BookingFormView__availabilityTitle">
@@ -289,7 +289,7 @@
                   </ul>
                 </template>
                 <p v-else class="text-success">{{ $t('divercity.booking.availability.free') }}</p>
-              </div>
+              </div> -->
 
               <div class="Form__fieldCtn">
                 <label class="Form__label required">{{ $t('divercity.booking.fields.startTime') }}</label>
@@ -328,7 +328,7 @@
       </v-form>
 
       <div class="BookingFormView__actions">
-        <v-btn v-if="currentStep > 1" variant="outlined" color="main-blue" @click="currentStep--">
+        <v-btn v-if="currentStep > 1" variant="outlined" color="main-blue" @click="goPrevious">
           {{ $t('divercity.form.previous') }}
         </v-btn>
         <v-btn v-if="currentStep < 3" color="main-red" @click="goNext">
@@ -350,7 +350,9 @@
     <div v-else class="BookingFormView__done">
       <h2>{{ $t('divercity.booking.done.title') }}</h2>
       <p class="BookingFormView__doneMessage">{{ $t('divercity.booking.done.message') }}</p>
-
+      <v-alert type="info" variant="tonal" density="compact" class="BookingFormView__contactAlert">
+        {{ $t('divercity.booking.done.contactHint', { email: space.email }) }}
+      </v-alert>
       <div class="Form Form--booking">
         <label class="BookingFormView__informationSourceLabel">
           {{ $t('divercity.booking.done.informationSourceQuestion') }}
@@ -365,7 +367,17 @@
             :label="source.label"
             :value="source['@id']"
           />
+          <v-radio :label="$t('divercity.booking.done.other')" value="other" />
         </v-radio-group>
+
+        <v-text-field
+          v-if="sourceForm.informationSource.value.value === 'other'"
+          density="compact"
+          variant="outlined"
+          :placeholder="$t('divercity.booking.done.otherPlaceholder')"
+          v-model="otherSourceValue"
+          class="mt-2"
+        />
       </div>
 
       <v-btn color="main-red" :loading="isSourceSubmitting" @click="submitInformationSource">
@@ -407,6 +419,9 @@ import { useRoute, useRouter } from 'vue-router'
 import type { SpaceAvailability } from '@/models/interfaces/divercity/Booking'
 import { computed, onMounted, ref, watch } from 'vue'
 import { getHalfHourTimeOptions } from '@/services/utils/divercity/timeSlots'
+import { nextTick } from 'vue'
+import BookingCalendarFilter from './BookingCalendarFilter.vue'
+
 
 
 
@@ -431,6 +446,9 @@ const editingBooking = ref<Booking | null>(null)
 const eventActivityTypes = ref<EventActivityType[]>([])
 const informationSources = ref<InformationSource[]>([])
 const showCancelConfirm = ref(false)
+const otherSourceValue = ref('')
+const formRoot = ref<HTMLElement | null>(null)
+
 
 const { form, handleSubmit, isSubmitting, stepFields, setValues } = BookingFormService.getBookingForm(
   {
@@ -562,7 +580,15 @@ async function goNext() {
   const results = await Promise.all(fieldsToValidate.map((key) => form[key].validate()))
   if (results.every((r) => r.valid)) {
     currentStep.value++
+    await nextTick()
+    formRoot.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
+}
+
+async function goPrevious() {
+  currentStep.value--
+  await nextTick()
+  formRoot.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 const submitBooking = handleSubmit(
@@ -694,15 +720,27 @@ const submitEdit = handleSubmit(
 )
 
 async function submitInformationSource() {
-  if (!createdBookingId.value || !sourceForm.informationSource.value.value) {
+  if (!createdBookingId.value) {
+    router.push({ name: 'divercitySpace' })
+    return
+  }
+  const selected = sourceForm.informationSource.value.value as string | null
+  if (!selected) {
     router.push({ name: 'divercitySpace' })
     return
   }
   try {
-    await SpacesService.patchBookingInformationSource(
-      createdBookingId.value,
-      sourceForm.informationSource.value.value as string
-    )
+    if (selected === 'other') {
+      if (otherSourceValue.value.trim()) {
+        await SpacesService.patchBookingInformationSource(
+          createdBookingId.value,
+          null,
+          otherSourceValue.value.trim()
+        )
+      }
+    } else {
+      await SpacesService.patchBookingInformationSource(createdBookingId.value, selected)
+    }
   } finally {
     router.push({ name: 'divercitySpace' })
   }

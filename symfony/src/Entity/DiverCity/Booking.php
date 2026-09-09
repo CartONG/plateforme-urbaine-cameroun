@@ -139,6 +139,10 @@ class Booking
     #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
     private ?InformationSource $informationSource = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE])]
+    private ?string $informationSourceOther = null;
+
     #[ORM\Column(length: 200)]
     #[Assert\NotBlank]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE, self::GROUP_PUBLIC, self::GROUP_EDIT])]
@@ -318,6 +322,18 @@ class Booking
     public function setInformationSource(?InformationSource $informationSource): static
     {
         $this->informationSource = $informationSource;
+
+        return $this;
+    }
+
+    public function getInformationSourceOther(): ?string
+    {
+        return $this->informationSourceOther;
+    }
+
+    public function setInformationSourceOther(?string $informationSourceOther): static
+    {
+        $this->informationSourceOther = $informationSourceOther;
 
         return $this;
     }

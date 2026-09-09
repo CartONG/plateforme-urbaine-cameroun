@@ -60,10 +60,15 @@ export class SpacesService {
     return (await apiClient.post('/api/bookings', booking)).data
   }
 
-  static async patchBookingInformationSource(bookingId: string, informationSource: string): Promise<Booking> {
+ static async patchBookingInformationSource(
+    bookingId: string,
+    informationSource: string | null,
+    informationSourceOther?: string
+  ): Promise<Booking> {
     return (
       await apiClient.patch(`/api/divercity/bookings/${bookingId}/information-source`, {
-        informationSource
+        informationSource,
+        ...(informationSourceOther ? { informationSourceOther } : {})
       })
     ).data
   }

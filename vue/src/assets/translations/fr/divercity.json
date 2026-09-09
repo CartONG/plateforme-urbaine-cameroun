@@ -122,14 +122,17 @@
       "previous": "Précédent",
       "next": "Suivant",
       "finish": "Terminé",
+      "save": "Enregistrer",
       "close": "Fermer",
       "cancel": "Annuler"
     },
     "booking":{
       "title": "Formulaire de réservation",
+      "editTitle": "Modifier la réservation",
       "step1": "Identification du demandeur",
       "step2": "Informations sur l'évènement / activité",
       "step3": "Créneau horaire souhaité",
+      "editSuccess": "Votre réservation a bien été modifiée.",
       "fields": {         
         "lastName": "Nom",
         "firstName": "Prénom",
@@ -147,7 +150,11 @@
         "startTime": "Heure de début",
         "endTime": "Heure de fin",
         "duration": "Durée totale",
-        "maxCapacityHint": "max {max}"
+        "maxCapacityHint": "max {max}",
+        "currentAgenda": "Ordre du jour actuel",
+        "replaceAgenda": "Remplacer l'ordre du jour",
+        "currentResourceDocuments": "Documents ressources actuels",
+        "replaceResourceDocument": "Remplacer le(s) document(s) ressource(s)"
       },
       "placeholders": {
         "lastName": "Nom de famille",
@@ -181,7 +188,10 @@
       "done": {
         "title": "Réservation enregistrée",
         "message": "Votre demande de réservation a bien été enregistrée, elle est en attente de validation par un administrateur, vous serez informé(e) de la décision par e-mail.",
-        "informationSourceQuestion": "Comment avez-vous entendu parler du DiverCity Space ?"
+        "contactHint": "Si vous n'avez pas eu de réponse sous 48h, vous pouvez nous contacter à l'adresse {email}.",
+        "informationSourceQuestion": "Comment avez-vous entendu parler du DiverCity Space ?",
+        "other": "Autre",
+        "otherPlaceholder": "Précisez comment vous avez connu le tiers-lieu"
       },
       "cancelConfirm": {
         "title": "Quitter le formulaire ?",
