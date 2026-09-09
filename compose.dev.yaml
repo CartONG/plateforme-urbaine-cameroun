@@ -1,4 +1,8 @@
 services:
+  vue:
+    build:
+      target: vue_dev
+      
   frankenphp:
     build:
       context: ./symfony

@@ -93,6 +93,7 @@
             "https": "Veuillez renseigner un site en https://",
             "phone": "Veuillez renseigner un numéro de téléphone valide",
             "latLng": "Les coordonnées doivent être au format WGS84, avec des valeurs valides.",
+            "invalidNumber": "Veuillez saisir un montant valide",
             "file": {
                 "maxSize": "Le fichier est trop gros, la taille maximale est de {maxSize}Mo",
                 "wrongFormat": "Format de fichier incorrect, sont acceptés uniquement les fichiers au format {formats}"

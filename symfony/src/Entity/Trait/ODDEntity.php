@@ -22,7 +22,7 @@ trait ODDEntity
 
     public function setOdds(?array $odds): self
     {
-        $this->odds = $odds;
+        $this->odds = null !== $odds ? array_values($odds) : null;
 
         return $this;
     }
@@ -40,6 +40,7 @@ trait ODDEntity
     {
         if (($key = array_search($odd, $this->odds ?? [], true)) !== false) {
             unset($this->odds[$key]);
+            $this->odds = array_values($this->odds);
         }
 
         return $this;

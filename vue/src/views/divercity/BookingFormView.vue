@@ -406,7 +406,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useRoute, useRouter } from 'vue-router'
 import type { SpaceAvailability } from '@/models/interfaces/divercity/Booking'
 import { computed, onMounted, ref, watch } from 'vue'
-import { getQuarterHourTimeOptions } from '@/services/utils/divercity/timeSlots'
+import { getHalfHourTimeOptions } from '@/services/utils/divercity/timeSlots'
 
 
 
@@ -421,7 +421,7 @@ const currentStep = ref(1)
 const isDone = ref(false)
 const createdBookingId = ref<string | null>(null)
 
-const timeOptions = getQuarterHourTimeOptions()
+const timeOptions = getHalfHourTimeOptions()
 
 // Mode édition : présence de ?edit={id} dans l'URL.
 const editingBookingId = computed(() => (route.query.edit as string | undefined) ?? null)

@@ -14,6 +14,21 @@ export class CommonZodSchema {
       name: z.string()
     }) satisfies ZodType<SymfonyRelation>
 
+    const ResourceRelationSchema = z.object({
+      '@id': z.string().optional(),
+      fileObject: z.union([
+        z.string(), // @id simple
+        z.object({ '@id': z.string() }) // Objet FileObject
+      ])
+    }).transform((data) => {
+      // Normaliser pour correspondre à l'attente du backend
+      return {
+        fileObject: typeof data.fileObject === 'string' 
+          ? data.fileObject 
+          : data.fileObject['@id']
+      }
+    })
+
     const Admin1BoundarySchema = z.object({
       id: number(),
       '@id': z.string(),
@@ -88,6 +103,8 @@ export class CommonZodSchema {
         required_error: i18n.t('forms.errorMessages.required')
       }),
       symfonyRelation: SymfonyRelationSchema,
+      resourceRelation: ResourceRelationSchema,
+      resourceRelations: z.array(ResourceRelationSchema).optional().default([]),
       admin1Boundaries: z.array(Admin1BoundarySchema),
       admin3Boundaries: z.array(Admin3BoundarySchema),
       geoData: NotNullableGeoDataSchema,

@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
 use App\Entity\Atlas;
 use App\Entity\DiverCity\Booking; // <--- Import à ajouter
+use App\Entity\Project;
 use App\Entity\QgisMap;
 use App\Entity\Resource;
 use App\Entity\User\User;
@@ -52,7 +53,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class FileObject extends AbstractObject
 {
-    private const READ = 'file_object:read';
+    public const READ = 'file_object:read';
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'], writable: false)]
     #[Groups([
@@ -62,6 +63,7 @@ class FileObject extends AbstractObject
         Atlas::GET_FULL,
         QgisMap::GET_FULL,
         Booking::GROUP_READ, // <--- Groupe ajouté ici
+        Project::GET_FULL,
     ])]
     public ?string $contentUrl = null;
 
@@ -73,6 +75,7 @@ class FileObject extends AbstractObject
         Atlas::GET_FULL,
         QgisMap::GET_FULL,
         Booking::GROUP_READ, // <--- Groupe ajouté ici
+        Project::GET_FULL,
     ])]
     public ?array $contentsUrl = null;
 

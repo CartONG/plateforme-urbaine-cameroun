@@ -95,6 +95,45 @@
           }}</v-chip>
         </v-chip-group>
       </div>
+      <div class="Modal__block">
+        <label class="Modal__label">{{
+          $t('projects.popup.filters.technicalMaturity.label')
+        }}</label>
+        <v-chip-group
+          v-model="projectStore.filters.technicalMaturities"
+          column
+          multiple
+          class="Modal__chipGroup"
+        >
+          <v-chip
+            v-for="(maturity, key) in TechnicalMaturity"
+            :key="key"
+            :value="maturity"
+            variant="outlined"
+            >{{ $t(`projects.technicalMaturity.${maturity}`) }}</v-chip
+          >
+        </v-chip-group>
+      </div>
+
+      <div class="Modal__block">
+        <label class="Modal__label">{{
+          $t('projects.popup.filters.financialStatus.label')
+        }}</label>
+        <v-chip-group
+          v-model="projectStore.filters.financialStatuses"
+          column
+          multiple
+          class="Modal__chipGroup"
+        >
+          <v-chip
+            v-for="(financialStatus, key) in FinancialStatus"
+            :key="key"
+            :value="financialStatus"
+            variant="outlined"
+            >{{ $t(`projects.financialStatus.${financialStatus}`) }}</v-chip
+          >
+        </v-chip-group>
+      </div>
     </template>
     <template #footer-left>
       <span class="text-action" @click="resetFilters">{{ $t('labels.reset') }}</span>
@@ -115,6 +154,8 @@ import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingTy
 import { Status } from '@/models/enums/contents/Status'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import { useProjectStore } from '@/stores/projectStore'
+import { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 
 const projectStore = useProjectStore()
 

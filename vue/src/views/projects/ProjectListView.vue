@@ -38,26 +38,36 @@
             item-title="label"
             item-value="value"
           ></v-select> -->
-          <v-btn
-            class="ProjectsView__filterBtn"
-            variant="outlined"
-            color="main-blue"
-            @click="projectStore.isFilterModalShown = true"
-          >
-            <!-- <template v-slot:prepend> -->
-            <v-img :src="filterIcon" class="ProjectsView__filterBtnIcon" />
-            <!-- </template> -->
-            <span class="ProjectsView__filterBtnText">{{ $t('projects.map.filterProjects') }}</span>
-          </v-btn>
+                  <v-btn
+          class="ProjectsView__filterBtn"
+          variant="outlined"
+          color="main-blue"
+          @click="projectStore.isFilterModalShown = true"
+        >
+          <v-img :src="filterIcon" class="ProjectsView__filterBtnIcon" />
+          <span class="ProjectsView__filterBtnText">{{ $t('projects.map.filterProjects') }}</span>
+        </v-btn>
 
-          <v-btn
-            class="ProjectsView__resetFiltersBtn"
-            :icon="mdiRefresh"
-            variant="text"
-            density="comfortable"
-            @click="resetFilters"
-            :title="$t('labels.reset')"
-          ></v-btn>
+        <v-btn
+          class="ProjectsView__exportBtn"
+          variant="outlined"
+          color="main-blue"
+          :loading="isExporting"
+          :disabled="isExporting"
+          @click="exportProjects"
+        >
+          <v-icon :icon="mdiDownload" class="ProjectsView__exportBtnIcon" />
+          <span class="ProjectsView__exportBtnText">{{ $t('projects.export.button') }}</span>
+        </v-btn>
+
+        <v-btn
+          class="ProjectsView__resetFiltersBtn"
+          :icon="mdiRefresh"
+          variant="text"
+          density="comfortable"
+          @click="resetFilters"
+          :title="$t('labels.reset')"
+        ></v-btn>
       </div>
       </div>
       <div class="ProjectsView__list">
@@ -76,7 +86,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { mdiFilterVariant, mdiRefresh } from '@mdi/js'
+  import { mdiFilterVariant,mdiDownload, mdiRefresh } from '@mdi/js'
   import filterIcon from '@/assets/images/icons/map/mdi-filter.svg'
   import Pagination from '@/components/global/Pagination.vue'
   import { UserRoles } from '@/models/enums/auth/UserRoles'
@@ -89,9 +99,14 @@
   import ProjectCard from '@/views/projects/components/ProjectCard.vue'
   import ProjectMap from '@/views/projects/components/ProjectMap.vue'
   import { computed, onBeforeMount, ref, type Ref } from 'vue'
+  import { ProjectExportService } from '@/services/projects/ProjectExportService'
+
+
   const userStore = useUserStore()
   const applicationStore = useApplicationStore()
   const projectStore = useProjectStore()
+  const isExporting = ref(false)
+
 
   // const sortOptions = Object.values(SortKey).map((key) => {
   //   return {
@@ -113,6 +128,15 @@
     await projectStore.getAll()
     applicationStore.isLoading = false
   })
+
+  const exportProjects = async () => {
+    isExporting.value = true
+    try {
+      await ProjectExportService.exportToExcel(orderedProjects.value)
+    } finally {
+      isExporting.value = false
+    }
+  }
 
   const orderedProjects = computed(() => projectStore.orderedProjects)
   const isProjectMapFullWidth = computed(() => projectStore.isProjectMapFullWidth)
@@ -219,6 +243,33 @@
               .ProjectsView__filterBtnIcon {
                 width: 1.25rem;
                 height: 1.25rem;
+              }
+            }
+          }
+
+                    .ProjectsView__exportBtn {
+            height: auto;
+
+            :deep(.v-btn__prepend) {
+              margin-inline-end: 0.5rem;
+            }
+
+            .ProjectsView__exportBtnIcon {
+              margin-inline-end: 0.5rem;
+            }
+
+            @media (max-width: 960px) {
+              min-width: 0;
+              width: auto;
+              padding: 0.5rem;
+              aspect-ratio: 1 / 1;
+
+              .ProjectsView__exportBtnText {
+                display: none;
+              }
+
+              .ProjectsView__exportBtnIcon {
+                margin-inline-end: 0;
               }
             }
           }

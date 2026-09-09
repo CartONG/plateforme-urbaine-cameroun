@@ -10,6 +10,8 @@ import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { ODD } from '@/models/enums/contents/ODD'
 import type { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import type { Status } from '@/models/enums/contents/Status'
+import type { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import type { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import type { Thematic } from '@/models/enums/contents/Thematic'
 import type { Project, ProjectSubmission } from '@/models/interfaces/Project'
 import { i18n } from '@/plugins/i18n'
@@ -46,6 +48,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     odds: ODD[]
     beneficiaryTypes: BeneficiaryType[]
     financingTypes: ProjectFinancingType[]
+    technicalMaturities: TechnicalMaturity[]
+    financialStatuses: FinancialStatus[]
   }> = reactive({
     searchValue: '',
     thematics: [],
@@ -53,7 +57,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     administrativeScopes: [],
     odds: [],
     beneficiaryTypes: [],
-    financingTypes: []
+    financingTypes: [],
+    technicalMaturities: [],
+    financialStatuses: []
   })
 
   async function getAll(): Promise<void> {
@@ -112,7 +118,9 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
   type filteringTrigger = 'filters' | 'map'
   const filterProjects = (from: filteringTrigger = 'filters') => {
     const projectsList = projects.value.filter((project) => {
-      const projectThematicIds = project.thematics.map((projectThematic) => projectThematic)
+      const projectThematicIds = (project.thematics ?? []).map(
+        (projectThematic) => projectThematic
+      )
 
       return (
         (filters.searchValue === '' ||
@@ -125,22 +133,30 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           filters.statuses.some((status) => project.status === status)) &&
         (filters.administrativeScopes.length === 0 ||
           filters.administrativeScopes.some((interventionZone) =>
-            project.administrativeScopes.some((scope) => scope === interventionZone)
+            (project.administrativeScopes ?? []).some((scope) => scope === interventionZone)
           )) &&
         (filters.odds.length === 0 ||
-          filters.odds.some((odd) => project.odds.some((projectOdd) => projectOdd === odd))) &&
+          filters.odds.some((odd) =>
+            (project.odds ?? []).some((projectOdd) => projectOdd === odd)
+          )) &&
         (filters.beneficiaryTypes.length === 0 ||
           filters.beneficiaryTypes.some((beneficiaryType) =>
-            project.beneficiaryTypes.some(
+            (project.beneficiaryTypes ?? []).some(
               (projectBeneficiaryType) => projectBeneficiaryType === beneficiaryType
             )
           )) &&
         (filters.financingTypes.length === 0 ||
           filters.financingTypes.some((financingType) =>
-            project.financingTypes.some(
+            (project.financingTypes ?? []).some(
               (projectFinancingType) => projectFinancingType === financingType
             )
-          ))
+          )) &&
+        (filters.technicalMaturities.length === 0 ||
+          (project.technicalMaturity != null &&
+            filters.technicalMaturities.includes(project.technicalMaturity))) &&
+        (filters.financialStatuses.length === 0 ||
+          (project.financialStatus != null &&
+            filters.financialStatuses.includes(project.financialStatus)))
       )
     })
 
@@ -173,8 +189,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
           project.administrativeScopes,
           i18n.t(`projects.status.${project.status}`),
           project.focalPointName,
-          ...project.thematics,
-          ...project.beneficiaryTypes.map((beneficiaryType) =>
+          ...(project.thematics ?? []),
+          ...(project.beneficiaryTypes ?? []).map((beneficiaryType) =>
             i18n.t(`beneficiaryType.${beneficiaryType}`)
           )
         ])
@@ -269,6 +285,8 @@ export const useProjectStore = defineStore(StoresList.PROJECTS, () => {
     filters.odds = []
     filters.beneficiaryTypes = []
     filters.financingTypes = []
+    filters.technicalMaturities = []
+    filters.financialStatuses = []
   }
 
   return {

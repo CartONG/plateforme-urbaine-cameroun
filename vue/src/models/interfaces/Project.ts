@@ -1,6 +1,8 @@
 import type { AdministrativeScope } from '@/models/enums/AdministrativeScope'
 import type { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import type { Status } from '@/models/enums/contents/Status'
+import type { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import type { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { ContentImageFromUserFile } from '@/models/interfaces/ContentImage'
 import type { iri, SymfonyRelation } from '@/models/interfaces/SymfonyRelation'
@@ -14,6 +16,11 @@ import type { ProjectFinancingType } from '../enums/contents/ProjectFinancingTyp
 import type { Admin1Boundary, Admin3Boundary } from './AdminBoundaries'
 import type { BanocItem } from './common/BanocItem'
 import type { ODDItem } from './common/ODDItem'
+
+export interface ProjectResourceAttachment {
+  '@id'?: string
+  fileObject: BaseMediaObject | iri
+}
 
 export interface Project
   extends Timestampable,
@@ -51,6 +58,13 @@ export interface Project
   actor: Partial<Actor>
   otherActor?: string
   creatorMessage?: string
+  // --- Nouveaux champs ---
+  technicalMaturity?: TechnicalMaturity | null
+  financialStatus?: FinancialStatus | null
+  totalBudget?: number | null
+  mobilizedFunds?: number | null
+  readonly residualGap?: number | null
+  resources: ProjectResourceAttachment[]
 }
 
 export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
@@ -59,4 +73,5 @@ export interface ProjectSubmission extends Omit<Project, 'actor' | 'logo'> {
   logoToUpload: ContentImageFromUserFile
   imagesToUpload: ContentImageFromUserFile[]
   imagesPartnerToUpload: ContentImageFromUserFile[]
+  resourcesToUpload: ContentImageFromUserFile[]
 }

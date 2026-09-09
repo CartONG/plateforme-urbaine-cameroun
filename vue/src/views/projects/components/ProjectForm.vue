@@ -38,6 +38,97 @@
           />
         </div>
         <div class="Form__fieldCtn">
+          <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            chips
+            v-model="form.status.value.value as Status"
+            :items="Object.values(Status)"
+            :placeholder="$t('projects.form.fields.status.label')"
+            :item-title="(item) => $t('projects.status.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.status.errorMessage.value"
+            @blur="form.status.handleChange(form.status.value.value)"
+          />
+        </div>
+        <div class="Form__fieldCtn" v-if="(form.status.value.value as Status) === Status.PLANNED">
+          <label class="Form__label">{{ $t('projects.form.fields.technicalMaturity.label') }}</label>
+          <v-select
+            density="compact"
+            variant="outlined"
+            clearable
+            v-model="form.technicalMaturity.value.value as TechnicalMaturity"
+            :items="Object.values(TechnicalMaturity)"
+            :placeholder="$t('projects.form.fields.technicalMaturity.label')"
+            :item-title="(item) => $t('projects.technicalMaturity.' + item)"
+            :item-value="(item) => item"
+            :error-messages="form.technicalMaturity.errorMessage.value"
+            @blur="form.technicalMaturity.handleChange(form.technicalMaturity.value.value)"
+          />
+        </div>
+
+        <template v-if="showFinancialFields">
+          <div class="Form__fieldCtn">
+            <label class="Form__label">{{ $t('projects.form.fields.financialStatus.label') }}</label>
+            <v-select
+              density="compact"
+              variant="outlined"
+              clearable
+              v-model="form.financialStatus.value.value as FinancialStatus"
+              :items="Object.values(FinancialStatus)"
+              :placeholder="$t('projects.form.fields.financialStatus.label')"
+              :item-title="(item) => $t('projects.financialStatus.' + item)"
+              :item-value="(item) => item"
+              :error-messages="form.financialStatus.errorMessage.value"
+              @blur="form.financialStatus.handleChange(form.financialStatus.value.value)"
+            />
+          </div>
+
+          <div class="d-flex">
+            <div class="Form__fieldCtn flex-grow-1">
+              <label class="Form__label">{{ $t('projects.form.fields.totalBudget.label') }}</label>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                type="number"
+                min="0"
+                suffix="FCFA"
+                v-model="form.totalBudget.value.value"
+                :placeholder="$t('projects.form.fields.totalBudget.label')"
+                :error-messages="form.totalBudget.errorMessage.value"
+                @blur="form.totalBudget.handleChange(form.totalBudget.value.value)"
+              />
+            </div>
+            <div class="Form__fieldCtn ml-3 flex-grow-1">
+              <label class="Form__label">{{ $t('projects.form.fields.mobilizedFunds.label') }}</label>
+              <v-text-field
+                density="compact"
+                variant="outlined"
+                type="number"
+                min="0"
+                suffix="FCFA"
+                v-model="form.mobilizedFunds.value.value"
+                :placeholder="$t('projects.form.fields.mobilizedFunds.label')"
+                :error-messages="form.mobilizedFunds.errorMessage.value"
+                @blur="form.mobilizedFunds.handleChange(form.mobilizedFunds.value.value)"
+              />
+            </div>
+          </div>
+
+          <div class="Form__fieldCtn" v-if="residualGap !== null">
+            <label class="Form__label">{{ $t('projects.form.fields.residualGap.label') }}</label>
+            <v-text-field
+              density="compact"
+              variant="outlined"
+              suffix="FCFA"
+              :model-value="residualGap"
+              readonly
+              disabled
+            />
+          </div>
+        </template>
+        <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.deliverables.label') }}</label>
           <TextEditor
             v-model:content-model="form.deliverables.value.value"
@@ -65,21 +156,7 @@
           />
         </div>
 
-        <div class="Form__fieldCtn">
-          <label class="Form__label required">{{ $t('projects.form.fields.status.label') }}</label>
-          <v-select
-            density="compact"
-            variant="outlined"
-            chips
-            v-model="form.status.value.value as Status"
-            :items="Object.values(Status)"
-            :placeholder="$t('projects.form.fields.status.label')"
-            :item-title="(item) => $t('projects.status.' + item)"
-            :item-value="(item) => item"
-            :error-messages="form.status.errorMessage.value"
-            @blur="form.status.handleChange(form.status.value.value)"
-          />
-        </div>
+        
 
         <v-divider color="main-grey" class="border-opacity-100"></v-divider>
         <FormSectionTitle :text="$t('projects.form.section.adminScope')" />
@@ -212,7 +289,7 @@
           :items="Object.values(BeneficiaryType)"
           :placeholder="$t('projects.form.section.beneficiaryTypes')"
           :item-title="(item) => $t('beneficiaryType.' + item)"
-          item-value="@id"
+          :item-value="(item) => item"
           :error-messages="form.beneficiaryTypes.errorMessage.value"
           @blur="form.beneficiaryTypes.handleChange(form.beneficiaryTypes.value.value)"
           return-object
@@ -391,7 +468,7 @@
         <div class="Form__fieldCtn">
           <label class="Form__label">{{ $t('projects.form.fields.focalPointTel.label') }}</label>
           <vue-tel-input
-            v-model="form.focalPointTel.value.value"
+            v-model="(form.focalPointTel.value.value as string)"
             @validate="phoneValidation"
           ></vue-tel-input>
         </div>
@@ -405,6 +482,40 @@
           :existingImages="existingPartnerImages"
           :externalImagesLoader="false"
         />
+        <FormSectionTitle :text="$t('projects.form.section.resources')" />
+        <div class="Form__fieldCtn">
+          <div class="Form__attachedFiles" v-if="existingResources.length || resourceFilesToUpload.length">
+            <a
+              v-for="(res, index) in existingResources"
+              :key="res['@id'] ?? index"
+              :href="(res.fileObject as BaseMediaObject).contentUrl"
+              target="_blank"
+              class="Form__existingFile mr-2 mb-2"
+            >
+              <v-icon icon="$folder" size="small" class="mr-1" />
+                {{ (res.fileObject as FileObject).originalName ?? $t('forms.file') }}
+              <v-icon icon="$close" size="x-small" class="ml-1" @click.prevent="existingResources.splice(index, 1)" />
+            </a>
+            <v-chip
+              v-for="(file, index) in resourceFilesToUpload"
+              :key="'new-' + index"
+              closable
+              size="small"
+              class="mr-2 mb-2"
+              @click:close="resourceFilesToUpload.splice(index, 1)"
+            >
+              {{ file.name }}
+            </v-chip>
+          </div>
+          <v-file-input
+            density="compact"
+            variant="outlined"
+            multiple
+            accept=".pdf,.doc,.docx,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.svg"
+            :placeholder="$t('projects.form.fields.resources.label')"
+            @update:model-value="(files) => resourceFilesToUpload.push(...(Array.isArray(files) ? files : files ? [files] : []))"
+          />
+        </div>
       </v-form>
     </template>
     <template #footer-left>
@@ -432,6 +543,8 @@ import { BeneficiaryType } from '@/models/enums/contents/BeneficiaryType'
 import { ODD } from '@/models/enums/contents/ODD'
 import { ProjectFinancingType } from '@/models/enums/contents/ProjectFinancingType'
 import { Status } from '@/models/enums/contents/Status'
+import { TechnicalMaturity } from '@/models/enums/contents/TechnicalMaturity'
+import { FinancialStatus } from '@/models/enums/contents/FinancialStatus'
 import { Thematic } from '@/models/enums/contents/Thematic'
 import type { Actor } from '@/models/interfaces/Actor'
 import type { Admin1Boundary, Admin3Boundary } from '@/models/interfaces/AdminBoundaries'
@@ -450,11 +563,16 @@ import { useProjectStore } from '@/stores/projectStore'
 import { useUserStore } from '@/stores/userStore'
 import NewSubmission from '@/views/admin/components/form/NewSubmission.vue'
 import { computed, onMounted, type Ref, ref } from 'vue'
+import FileUploader from '@/services/files/FileUploader'
+import type { ProjectResourceAttachment } from '@/models/interfaces/Project'
+import { useI18n } from 'vue-i18n'
+import type { FileObject } from '@/models/interfaces/object/FileObject'
 
 const projectStore = useProjectStore()
 const actorsStore = useActorsStore()
 const adminBoundariesStore = useAdminBoundariesStore()
 const userStore = useUserStore()
+const { t } = useI18n()
 
 const props = defineProps<{
   type: FormType
@@ -467,6 +585,8 @@ const projectHasNoOwner = ref(false)
 const existingLogo = ref<(BaseMediaObject | string)[]>([])
 const existingImages = ref<(BaseMediaObject | string)[]>([])
 const existingPartnerImages = ref<BaseMediaObject[]>([])
+const existingResources = ref<ProjectResourceAttachment[]>([])
+const resourceFilesToUpload = ref<globalThis.File[]>([])
 let existingHostedImages: BaseMediaObject[] = []
 let existingExternalImages: string[] = []
 let existingHostedPartnerImages: BaseMediaObject[] = []
@@ -504,6 +624,18 @@ const otherFinancialTypeIsSelected = computed(() => {
     )
   }
   return false
+})
+
+const showFinancialFields = computed(() => {
+  const status = form.status.value?.value as Status | undefined
+  return status === Status.PLANNED || status === Status.ONGOING
+})
+
+const residualGap = computed(() => {
+  const total = form.totalBudget.value?.value as number | null | undefined
+  const mobilized = form.mobilizedFunds.value?.value as number | null | undefined
+  if (total == null || mobilized == null) return null
+  return total - mobilized
 })
 
 const projectHasNoActorInCharge = ref(false)
@@ -548,6 +680,7 @@ onMounted(async () => {
 
     existingPartnerImages.value = props.project.partners
     existingHostedPartnerImages = props.project.partners
+    existingResources.value = props.project.resources ?? []
   }
 })
 
@@ -561,28 +694,90 @@ function phoneValidation(phoneObject: any) {
 const submitForm = handleSubmit(
   async (values: Partial<Project | ProjectSubmission>) => {
     formError.value = false
-    let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
-    if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
-      projectSubmission.id = props.project.id
-    }
 
-    projectSubmission = {
-      ...projectSubmission,
-      images: existingHostedImages,
-      partners: existingHostedPartnerImages,
-      externalImages: existingExternalImages,
-      logoToUpload: newLogo.value[0],
-      imagesToUpload: [...imagesToUpload.value],
-      imagesPartnerToUpload: [...imagesPartnerToUpload.value],
-      focalPointTel: internationalPhoneNumber as string
-    }
+    try {
+      const newResourceFiles = await Promise.all(
+        resourceFilesToUpload.value.map((file) => FileUploader.uploadFile(file))
+      )
 
-    const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
-    emit('submitted', submittedProject)
+      const resources: ProjectResourceAttachment[] = [
+        ...existingResources.value.map((r) => ({
+          fileObject:
+            typeof r.fileObject === 'string' ? r.fileObject : (r.fileObject as BaseMediaObject)['@id']
+        })),
+        ...newResourceFiles.map((f: any) => ({ fileObject: f['@id'] }))
+      ]
+
+      let projectSubmission: ProjectSubmission = nestedObjectsToIri(values)
+      if ([FormType.EDIT, FormType.VALIDATE].includes(props.type) && props.project) {
+        projectSubmission.id = props.project.id
+      }
+
+      projectSubmission = {
+        ...projectSubmission,
+        images: existingHostedImages,
+        partners: existingHostedPartnerImages,
+        resources,
+        externalImages: existingExternalImages,
+        logoToUpload: newLogo.value[0],
+        imagesToUpload: [...imagesToUpload.value],
+        imagesPartnerToUpload: [...imagesPartnerToUpload.value],
+        focalPointTel: internationalPhoneNumber as string
+      }
+
+      const submittedProject = await projectStore.submitProject(projectSubmission, props.type)
+      emit('submitted', submittedProject)
+    } catch (error: any) {
+      // Afficher l'erreur détaillée
+      console.error('Erreur lors de la soumission:', error)
+      
+      let errorMessage = i18n.t('forms.errors')
+      
+      // Gérer les erreurs de validation du backend
+      if (error.response?.data) {
+        const errorData = error.response.data
+        
+        // Erreurs de validation Symfony/API Platform
+        if (errorData.violations) {
+          const violations = errorData.violations
+          console.log('Violations de validation:', violations)
+          errorMessage = violations.map((v: any) => `${v.propertyPath}: ${v.message}`).join('\n')
+        }
+        // Erreur avec message personnalisé
+        else if (errorData.detail) {
+          errorMessage = errorData.detail
+        }
+        // Erreur générique
+        else if (errorData.message) {
+          errorMessage = errorData.message
+        }
+      }
+      
+      addNotification(errorMessage, NotificationType.ERROR)
+      formError.value = true
+      onInvalidSubmit()
+    }
   },
-  () => {
+  (validationErrors) => {
+    // Erreurs de validation du formulaire
     formError.value = true
-    addNotification(i18n.t('forms.errors'), NotificationType.ERROR)
+    console.log('Erreurs de validation du formulaire:', validationErrors)
+    
+    // Afficher les erreurs de validation dans la notification
+    let errorMessages = []
+    if (validationErrors && typeof validationErrors === 'object') {
+      for (const [field, errors] of Object.entries(validationErrors)) {
+        if (Array.isArray(errors)) {
+          errorMessages.push(`${field}: ${errors.join(', ')}`)
+        }
+      }
+    }
+    
+    const message = errorMessages.length > 0 
+      ? errorMessages.join('; ')
+      : i18n.t('forms.errors')
+    
+    addNotification(message, NotificationType.ERROR)
     onInvalidSubmit()
   }
 )

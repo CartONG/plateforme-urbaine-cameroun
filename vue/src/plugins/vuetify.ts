@@ -102,7 +102,20 @@ import {
   mdiChartBar,
   mdiClockOutline,
   mdiCheckboxMarkedCircle,
-  mdiCheckboxBlankCircleOutline
+  mdiCheckboxBlankCircleOutline,
+
+
+  mdiAccountOutline,
+  mdiBriefcaseOutline,
+  mdiDomain,
+  mdiCalendarOutline,
+  mdiAccountGroupOutline,
+  mdiTextBoxOutline,
+  mdiTagOutline,
+  mdiInformationOutline,
+  mdiPaperclip,
+  mdiFileDocumentOutline,
+  mdiCheckCircleOutline
 } from '@mdi/js'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -183,7 +196,20 @@ export default createVuetify({
       trashCanOutlines: mdiTrashCanOutline,
       chartBar: mdiChartBar,
       checkboxMarkedCircle: mdiCheckboxMarkedCircle,
-      checkboxBlankCircleOutline: mdiCheckboxBlankCircleOutline
+      checkboxBlankCircleOutline: mdiCheckboxBlankCircleOutline,
+
+
+      accountOutline: mdiAccountOutline,
+      briefcaseOutline: mdiBriefcaseOutline,
+      domain: mdiDomain,
+      calendarOutline: mdiCalendarOutline,
+      accountGroupOutline: mdiAccountGroupOutline,
+      textBoxOutline: mdiTextBoxOutline,
+      tagOutline: mdiTagOutline,
+      informationOutline: mdiInformationOutline,
+      paperclip: mdiPaperclip,
+      fileDocumentOutline: mdiFileDocumentOutline,
+      checkCircleOutline: mdiCheckCircleOutline
     },
     sets: {
       mdi
