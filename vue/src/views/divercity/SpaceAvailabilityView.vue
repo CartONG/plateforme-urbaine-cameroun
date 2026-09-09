@@ -116,7 +116,7 @@ import { useRouter } from 'vue-router'
 import SpaceOccupiedTimeline from '@/views/divercity/components/SpaceOccupiedTimeline.vue'
 import { DatePicker as VCDatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
-import { getQuarterHourTimeOptions } from '@/services/utils/divercity/timeSlots'
+import { getHalfHourTimeOptions } from '@/services/utils/divercity/timeSlots'
 
 const applicationStore = useApplicationStore()
 const spacesStore = useSpacesStore()
@@ -136,7 +136,7 @@ const pickedStartTime = ref('')
 const pickedEndTime = ref('')
 
 // Génère les créneaux horaires de 08:30 à 17:30 avec un pas de 15 min
-const timeOptions = getQuarterHourTimeOptions()
+const timeOptions = getHalfHourTimeOptions()
 
 onMounted(async () => {
   await loadMonth(today)

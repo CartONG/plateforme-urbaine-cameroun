@@ -92,7 +92,7 @@
       
     },
     "space": {
-      "featuredResources": "Activités à la une",
+      "featuredResources": "Actualités à la une",
       "checkAvailability": "Vérifier les disponibilités",
       "bookSpace": "Réserver cet espace",
       "featured": "À la Une",
@@ -179,9 +179,9 @@
         }
       },
       "done": {
-        "title": "Terminé",
-        "message": "Votre demande de réservation a bien été enregistrée.\nElle est en attente de validation par un administrateur.\nVous serez informé(e) de la décision par e-mail.",
-        "informationSourceQuestion": "Comment avez-vous entendu parler de DiverCity ?"
+        "title": "Réservation enregistrée",
+        "message": "Votre demande de réservation a bien été enregistrée, elle est en attente de validation par un administrateur, vous serez informé(e) de la décision par e-mail.",
+        "informationSourceQuestion": "Comment avez-vous entendu parler du DiverCity Space ?"
       },
       "cancelConfirm": {
         "title": "Quitter le formulaire ?",

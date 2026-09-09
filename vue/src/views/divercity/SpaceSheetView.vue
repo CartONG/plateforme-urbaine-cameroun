@@ -165,7 +165,7 @@ function goToOrAskLogin(routeName: string) {
       max-width: none;
       margin: 0 auto 4rem;
       padding: 2rem;
-      border: 1px solid rgb(var(--v-theme-main-grey));
+      //border: 1px solid rgb(var(--v-theme-main-grey));
 
       > * {
         max-width: $dim-container-w;
